@@ -72,8 +72,11 @@ void	Platform_Init( void )
 
 	Random_Init();
 
+#ifdef dGODLIB_CUTSCENE
 	CutScene_System_AppInit();
+#endif
 
+#ifdef dGODLIB_PACKAGEMANGER
 	PackageManager_Init();
 	RelocaterManager_Init();
 	Relocator_ASB_Init();
@@ -86,6 +89,7 @@ void	Platform_Init( void )
 
 	PackageManager_SetFilePath( "UNLINK" );
 	PackageManager_SetLinkPath( "DATA" );
+#endif
 }
 
 
@@ -97,7 +101,9 @@ void	Platform_Init( void )
 
 void	Platform_DeInit( void )
 {
+#ifdef dGODLIB_CUTSCENE
 	CutScene_System_AppDeInit();
+#endif
 
 #ifdef	dSCREENGRAB
 	ScreenGrab_Disable();
@@ -110,6 +116,7 @@ void	Platform_DeInit( void )
 
 	Platform_Hardware_DeInit();
 
+#ifdef dGODLIB_PACKAGEMANGER
 	PackageManager_DeInit();
 	Relocator_ASB_DeInit();
 	Relocator_BSB_DeInit();
@@ -119,6 +126,7 @@ void	Platform_DeInit( void )
 	Relocator_RSB_DeInit();
 	Relocator_SPL_DeInit();
 	RelocaterManager_DeInit();
+#endif
 
 /*	DebugLog_Init( "MEMORY.LOG" );
 	Memory_ShowCurrentRecords();
@@ -139,7 +147,7 @@ void	Platform_Hardware_Init( void )
 {
 	System_Init();
 
-#ifdef	dEXCEPTION_SCREEN
+#ifdef	dGODLIB_EXCEPTION_SCREEN
 	Except_Init();
 #endif
 
@@ -149,7 +157,7 @@ void	Platform_Hardware_Init( void )
 	IKBD_Init();
 
 	Audio_Init();
-#ifdef	dAUDIO_MIXER
+#ifdef	dGODLIB_AUDIO_MIXER
 	AudioMixer_Init();
 	AudioMixer_Enable();
 #endif
@@ -162,8 +170,12 @@ void	Platform_Hardware_Init( void )
 
 	Graphic_Init();
 
+#ifdef	dGODLIB_FADE
 	Fade_Init();
+#endif
+#ifdef	dGODLIB_CLOCK
 	Clock_Init();
+#endif
 }
 
 
@@ -175,10 +187,14 @@ void	Platform_Hardware_Init( void )
 
 void	Platform_Hardware_DeInit( void )
 {
+#ifdef dGODLIB_CLOCK
 	Clock_DeInit();
+#endif
+#ifdef dGODLIB_FADE
 	Fade_DeInit();
+#endif
 	Graphic_DeInit();
-#ifdef	dAUDIO_MIXER
+#ifdef	dGODLIB_AUDIO_MIXER
 	AudioMixer_DeInit();
 #endif
 	Audio_DeInit();
@@ -189,7 +205,7 @@ void	Platform_Hardware_DeInit( void )
 	Video_DeInit();
 	Vbl_DeInit();
 
-#ifdef	dEXCEPTION_SCREEN
+#ifdef	dGODLIB_EXCEPTION_SCREEN
 	Except_DeInit();
 #endif
 

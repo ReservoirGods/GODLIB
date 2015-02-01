@@ -209,11 +209,16 @@ S32		File_SeekFromEnd( sFileHandle aHandle, S32 aOffset )
 
 S32		File_Close( sFileHandle aHandle )
 {
+	S32 lRes = -1;
 #ifdef	dGODLIB_PLATFORM_ATARI
-	return( GemDos_Fclose( (S16)aHandle ) );
+	lRes = GemDos_Fclose( (S16)aHandle );
 #else
-	return( fclose( (FILE*)aHandle ) );
+	if( aHandle )
+	{
+		lRes = fclose( (FILE*)aHandle );
+	}
 #endif
+	return( lRes );
 }
 
 

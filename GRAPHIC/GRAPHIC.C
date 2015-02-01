@@ -13,14 +13,18 @@
 ################################################################################### */
 
 #include	"GRAPHIC.H"
+#ifdef dGODLIB_16BPP
 #include	"GRF_16.H"
+#endif
 
 #include	<GODLIB/ASSERT/ASSERT.H>
 #include	<GODLIB/BLITTER/BLITTER.H>
-#include	<GODLIB/CHUNKY/CHUNKY.H>
 #include	<GODLIB/SYSTEM/SYSTEM.H>
 #include	<GODLIB/FONT/FONT.H>
 
+#ifdef dGODLIB_CHUNKY
+#include	<GODLIB/CHUNKY/CHUNKY.H>
+#endif
 
 /* ###################################################################################
 #  DATA
@@ -123,6 +127,7 @@ void	Graphic_Init( void )
 		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].DrawSprite  = Graphic_4BP_DrawSprite_Clip;
 	}
 
+#ifdef dGODLIB_CHUNKY
 	gGraphicFuncs[ eGRAPHIC_COLOURMODE_8BPP ].Blit        = ChunkySurface_Blit;
 	gGraphicFuncs[ eGRAPHIC_COLOURMODE_8BPP ].ClearScreen = ChunkySurface_ClearScreen;
 	gGraphicFuncs[ eGRAPHIC_COLOURMODE_8BPP ].CopyScreen  = ChunkySurface_CopyScreen;
@@ -138,7 +143,9 @@ void	Graphic_Init( void )
 	gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_8BPP ].DrawLine    = ChunkySurface_DrawLine_Clip;
 	gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_8BPP ].DrawPixel   = ChunkySurface_DrawPixel_Clip;
 	gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_8BPP ].DrawSprite  = ChunkySurface_DrawSprite_Clip;
+#endif
 
+#ifdef dGODLIB_16BPP
 	gGraphicFuncs[ eGRAPHIC_COLOURMODE_16BPP ].Blit        = Graphic_16BPP_Blit;
 	gGraphicFuncs[ eGRAPHIC_COLOURMODE_16BPP ].ClearScreen = Graphic_16BPP_ClearScreen;
 	gGraphicFuncs[ eGRAPHIC_COLOURMODE_16BPP ].CopyScreen  = Graphic_16BPP_CopyScreen;
@@ -147,6 +154,7 @@ void	Graphic_Init( void )
 	gGraphicFuncs[ eGRAPHIC_COLOURMODE_16BPP ].DrawPixel   = Graphic_16BPP_DrawPixel;
 	gGraphicFuncs[ eGRAPHIC_COLOURMODE_16BPP ].DrawSprite  = Graphic_16BPP_DrawSprite;
 	gGraphicFuncs[ eGRAPHIC_COLOURMODE_16BPP ].FontPrint   = Graphic_FontPrint;
+#endif
 
 	gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].FontPrint = Graphic_FontPrint;
 	gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].FontPrint = Graphic_FontPrintClip;

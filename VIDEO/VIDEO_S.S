@@ -924,17 +924,17 @@ Video_SetFalconSTLowVGA:
 	move.w	sr,-(a7)
 	move.w	#$2700,sr
 	move.l  #$170012,$ffff8282.w            ;falcon 60Hz 
-    move.l  #$1020e,$ffff8286.w             ;
-    move.l  #$d0012,$ffff828a.w             ;
-    move.l  #$41903ff,$ffff82a2.w           ;
-    move.l  #$3f008d,$ffff82a6.w            ;
-    move.l  #$3ad0415,$ffff82aa.w           ;
-    move.w  #$200,$ffff820a.w               ;
-    move.w  #$186,$ffff82c0.w               ;
-    clr.w   $ffff8266.w                     ;
-    clr.b   $ffff8260.w                     ;
-    move.w  #$5,$ffff82c2.w                 ;
-    move.w  #$50,$ffff8210.w                ;
+	move.l  #$1020e,$ffff8286.w             ;
+	move.l  #$d0012,$ffff828a.w             ;
+	move.l  #$41903ff,$ffff82a2.w           ;
+	move.l  #$3f008d,$ffff82a6.w            ;
+	move.l  #$3ad0415,$ffff82aa.w           ;
+	move.w  #$200,$ffff820a.w               ;
+	move.w  #$186,$ffff82c0.w               ;
+	clr.w   $ffff8266.w                     ;
+	clr.b   $ffff8260.w                     ;
+	move.w  #$5,$ffff82c2.w                 ;
+	move.w  #$50,$ffff8210.w                ;
 	move.w	(a7)+,sr
 	rts
 
@@ -942,17 +942,17 @@ Video_SetFalconSTLowRGBPAL_W:
 	move.w	sr,-(a7)
 	move.w	#$2700,sr
 	move.l  #$300027,$ffff8282.w            ;falcon 50Hz 
-    move.l  #$70229,$ffff8286.w             ;
-    move.l  #$1e002a,$ffff828a.w            ;
-    move.l  #$2710265,$ffff82a2.w           ;
-    move.l  #$2f0081,$ffff82a6.w            ;
-    move.l  #$211026b,$ffff82aa.w           ;
-    move.w  #$200,$ffff820a.w               ;
-    move.w  #$185,$ffff82c0.w               ;
-    clr.w   $ffff8266.w                     ;
-    clr.b   $ffff8260.w                     ;
-    clr.w   $ffff82c2.w                     ;
-    move.w  #$50,$ffff8210.w                ;
+	move.l  #$70229,$ffff8286.w             ;
+	move.l  #$1e002a,$ffff828a.w            ;
+	move.l  #$2710265,$ffff82a2.w           ;
+	move.l  #$2f0081,$ffff82a6.w            ;
+	move.l  #$211026b,$ffff82aa.w           ;
+	move.w  #$200,$ffff820a.w               ;
+	move.w  #$185,$ffff82c0.w               ;
+	clr.w   $ffff8266.w                     ;
+	clr.b   $ffff8260.w                     ;
+	clr.w   $ffff82c2.w                     ;
+	move.w  #$50,$ffff8210.w                ;
 	move.w	(a7)+,sr
 	rts
 
@@ -978,35 +978,35 @@ Video_SetFalconSTLowRGBNTSC_W:
 Video_SetFalconSTLowRGBPAL:
 	move.w	sr,-(a7)
 	move.w	#$2700,sr
-    move.l   #$3e0033,$ffff8282.w
-    move.l   #$a0005,$ffff8286.w
-    move.l   #$1e0036,$ffff828a.w
-    move.l   #$2710265,$ffff82a2.w
-    move.l   #$2f0081,$ffff82a6.w
-    move.l   #$211026b,$ffff82aa.w
-    move.w   #$200,$ffff820a.w
-    move.w   #$183,$ffff82c0.w
-    clr.w    $ffff8266.w
-    move.b   #$0,$ffff8260.w
-    move.w   #$0,$ffff82c2.w
-    move.w   #$50,$ffff8210.w
+	move.l   #$3e0033,$ffff8282.w
+	move.l   #$a0005,$ffff8286.w
+	move.l   #$1e0036,$ffff828a.w
+	move.l   #$2710265,$ffff82a2.w
+	move.l   #$2f0081,$ffff82a6.w
+	move.l   #$211026b,$ffff82aa.w
+	move.w   #$200,$ffff820a.w
+	move.w   #$183,$ffff82c0.w
+	clr.w    $ffff8266.w
+	move.b   #$0,$ffff8260.w
+	move.w   #$0,$ffff82c2.w
+	move.w   #$50,$ffff8210.w
 	move.w	(a7)+,sr
 	rts
 
 Video_SetFalconSTLowRGBNTSC:
 	move.w	sr,-(a7)
 	move.w	#$2700,sr
-    move.l   #$3e0032,$ffff8282.w
-    move.l   #$a0004,$ffff8286.w
-    move.l   #$1d0036,$ffff828a.w
-    move.l   #$20d0201,$ffff82a2.w
-    move.l   #$170043,$ffff82a6.w
-    move.l   #$1d30207,$ffff82aa.w
-    move.w   #$200,$ffff820a.w
-    move.w   #$183,$ffff82c0.w
-    clr.w    $ffff8266.w
-    move.b   #$0,$ffff8260.w
-    move.w   #$0,$ffff82c2.w
-    move.w   #$50,$ffff8210.w
+	move.l   #$3e0032,$ffff8282.w
+	move.l   #$a0004,$ffff8286.w
+	move.l   #$1d0036,$ffff828a.w
+	move.l   #$20d0201,$ffff82a2.w
+	move.l   #$170043,$ffff82a6.w
+	move.l   #$1d30207,$ffff82aa.w
+	move.w   #$200,$ffff820a.w
+	move.w   #$183,$ffff82c0.w
+	clr.w    $ffff8266.w
+	move.b   #$0,$ffff8260.w
+	move.w   #$0,$ffff82c2.w
+	move.w   #$50,$ffff8210.w
 	move.w	(a7)+,sr
 	rts
