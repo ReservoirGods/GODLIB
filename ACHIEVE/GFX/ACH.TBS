@@ -1,0 +1,40 @@
+################################################################################################################
+# RG ACHIEVEMENT SYSTEM 
+################################################################################################################
+
+################################################################################################################
+# CREATE MASKS 
+################################################################################################################
+
+MASKMAKE SRC\AWARDZ.PI1 SRC\MASKS\AWARDZ.PI1
+MASKMAKE SRC\AWDUNLKD.PI1 SRC\MASKS\AWDUNLKD.PI1
+MASKMAKE SRC\SAUSAGES.PI1 SRC\MASKS\SAUSAGES.PI1
+MASKMAKE SRC\SIGNIN.PI1 SRC\MASKS\SIGNIN.PI1
+MASKMAKE SRC\SOFTKEY.PI1 SRC\MASKS\SOFTKEY.PI1
+MASKMAKE SRC\FONTX.PI1 SRC\MASKS\FONTX.PI1
+MASKMAKE SRC\FONTY.PI1 SRC\MASKS\FONTY.PI1
+MASKMAKE SRC\FONT8X8.PI1 SRC\MASKS\FONT8X8.PI1
+MASKMAKE SRC\BALLZ.PI1 SRC\MASKS\BALLZ.PI1
+MASKMAKE SRC\FLASHES.PI1 SRC\MASKS\FLASHES.PI1
+MASKMAKE SRC\FONT6X6.PI1 SRC\MASKS\FONT6X6.PI1
+
+
+################################################################################################################
+# CREATE SPRITES 
+################################################################################################################
+
+BSBMAKE ACH.SCR
+
+################################################################################################################
+# CREATE PALETTES
+################################################################################################################
+
+PALMAKE SRC\SIGNIN.PI1 DST\ACH.PAL
+PALMAKE SRC\BALLZ.PI1 DST\ACHNEW.PAL
+
+################################################################################################################
+# CREATE LINKFILE
+################################################################################################################
+
+MAKELINK DST LINKFILE\ACHIEVE.LNK
+GODPACK LINKFILE\ACHIEVE.LNK

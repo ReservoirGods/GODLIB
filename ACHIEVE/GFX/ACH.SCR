@@ -1,0 +1,284 @@
+
+[ SPRITE ]
+{
+src         = SRC\SIGNIN.PI1
+msk         = SRC\MASKS\SIGNIN.PI1
+dst         = DST\SIGNIN.BSB
+x           = 0
+y           = 0
+stepx       = 16
+stepy       = 16
+width       = 320
+height      = 32
+planes      = 4
+canvaswidth = 320
+framecount  = 1
+opaque      = 1
+}
+
+[ SPRITE ]
+{
+src         = SRC\SOFTKEY.PI1
+msk         = SRC\MASKS\SOFTKEY.PI1
+dst         = DST\SOFTKEY0.BSB
+x           = 0
+y           = 0
+stepx       = 16
+stepy       = 16
+width       = 16
+height      = 16
+planes      = 4
+canvaswidth = 224
+framecount  = 56
+opaque      = 1
+}
+
+[ SPRITE ]
+{
+src         = SRC\SOFTKEY.PI1
+msk         = SRC\MASKS\SOFTKEY.PI1
+dst         = DST\SOFTKEY1.BSB
+x           = 0
+y           = 64
+stepx       = 16
+stepy       = 16
+width       = 16
+height      = 16
+planes      = 4
+canvaswidth = 224
+framecount  = 56
+opaque      = 1
+}
+
+[ SPRITE ]
+{
+src         = SRC\BALLZ.PI1
+msk         = SRC\MASKS\BALLZ.PI1
+dst         = DST\ACH_UNLK.BSB
+x           = 0
+y           = 0
+stepx       = 32
+stepy       = 32
+width       = 32
+height      = 32
+planes      = 4
+canvaswidth = 320
+framecount  = 8
+opaque      = 0
+}
+
+[ SPRITE ]
+{
+src         = SRC\SAUSAGES.PI1
+msk         = SRC\MASKS\SAUSAGES.PI1
+dst         = DST\ACH_USAS.BSB
+x           = 0
+y           = 24
+stepx       = 0
+stepy       = 14
+width       = 108
+height      = 14
+planes      = 4
+canvaswidth = 108
+framecount  = 2
+opaque      = 1
+}
+
+[ SPRITE ]
+{
+src         = SRC\SAUSAGES.PI1
+msk         = SRC\MASKS\SAUSAGES.PI1
+dst         = DST\ACH_CURS.BSB
+x           = 0
+y           = 0
+stepx       = 0
+stepy       = 16
+width       = 16
+height      = 2
+planes      = 4
+canvaswidth = 320
+framecount  = 1
+opaque      = 0
+}
+
+[ SPRITE ]
+{
+src         = SRC\SAUSAGES.PI1
+msk         = SRC\MASKS\SAUSAGES.PI1
+dst         = DST\ACH_NSAS.BSB
+x           = 0
+y           = 55
+stepx       = 0
+stepy       = 0
+width       = 256
+height      = 24
+planes      = 4
+canvaswidth = 320
+framecount  = 1
+opaque      = 1
+}
+
+[ SPRITE ]
+{
+src         = SRC\BALLZ.PI1
+msk         = SRC\MASKS\BALLZ.PI1
+dst         = DST\ACH_LOCK.BSB
+x           = 0
+y           = 32
+stepx       = 32
+stepy       = 32
+width       = 32
+height      = 32
+planes      = 4
+canvaswidth = 320
+framecount  = 8
+opaque      = 0
+}
+
+[ SPRITE ]
+{
+src         = SRC\FLASHES.PI1
+msk         = SRC\MASKS\FLASHES.PI1
+dst         = DST\ACH_BUTN.BSB
+x           = 0
+y           = 0
+stepx       = 0
+stepy       = 24
+width       = 288
+height      = 24
+planes      = 4
+canvaswidth = 320
+framecount  = 1
+opaque      = 1
+}
+
+[ SPRITE ]
+{
+src         = SRC\SAUSAGES.PI1
+msk         = SRC\MASKS\SAUSAGES.PI1
+dst         = DST\ACH_BSAS.BSB
+x           = 0
+y           = 80
+stepx       = 0
+stepy       = 24
+width       = 142
+height      = 24
+planes      = 4
+canvaswidth = 142
+framecount  = 2
+opaque      = 1
+}
+
+[ SPRITE ]
+{
+src         = SRC\AWARDZ.PI1
+msk         = SRC\MASKS\AWARDZ.PI1
+dst         = DST\AWARDZ.BSB
+x           = 0
+y           = 0
+stepx       = 0
+stepy       = 0
+width       = 320
+height      = 24
+planes      = 4
+canvaswidth = 142
+framecount  = 1
+opaque      = 1
+}
+
+[ SPRITE ]
+{
+src         = SRC\AWDUNLKD.PI1
+msk         = SRC\MASKS\AWDUNLKD.PI1
+dst         = DST\AWADUNLK.BSB
+x           = 0
+y           = 0
+stepx       = 0
+stepy       = 48
+width       = 320
+height      = 24
+planes      = 4
+canvaswidth = 320
+framecount  = 2
+opaque      = 1
+}
+
+[ FONT ]
+{
+src            = SRC\FONTX.PI1
+msk            = SRC\MASKS\FONTX.PI1
+dst            = DST\FONTX.BFB
+charfirstvalue = 20
+charlastvalue  = 127
+x              = 0
+y              = 0
+stepx          = 16
+stepy          = 16
+width          = 16
+height         = 16
+planes         = 4
+canvaswidth    = 320
+framecount     = 108
+spacewidth     = 4
+kerning        = 1
+}
+
+[ FONT ]
+{
+src            = SRC\FONTY.PI1
+msk            = SRC\MASKS\FONTY.PI1
+dst            = DST\FONTY.BFB
+charfirstvalue = 20
+charlastvalue  = 127
+x              = 0
+y              = 0
+stepx          = 16
+stepy          = 16
+width          = 16
+height         = 16
+planes         = 4
+canvaswidth    = 320
+framecount     = 108
+spacewidth     = 4
+kerning        = 1
+}
+
+[ FONT ]
+{
+src            = SRC\FONT8X8.PI1
+msk            = SRC\MASKS\FONT8X8.PI1
+dst            = DST\FONT8X8.BFB
+charfirstvalue = 0
+charlastvalue  = 127
+x              = 0
+y              = 48
+stepx          = 16
+stepy          = 8
+width          = 16
+height         = 8
+planes         = 4
+canvaswidth    = 320
+framecount     = 128
+spacewidth     = 4
+kerning        = 1
+}
+
+[ FONT ]
+{
+src            = SRC\FONT6X6.PI1
+msk            = SRC\MASKS\FONT6X6.PI1
+dst            = DST\FONT6X6.BFB
+charfirstvalue = 20
+charlastvalue  = 127
+x              = 0
+y              = 0
+stepx          = 16
+stepy          = 6
+width          = 16
+height         = 6
+planes         = 4
+canvaswidth    = 320
+framecount     = 104
+spacewidth     = 4
+kerning        = 1
+}

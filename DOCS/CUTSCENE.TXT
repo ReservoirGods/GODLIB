@@ -1,0 +1,513 @@
+######################################################################################
+ GODLIB CUTSCENE SYSTEM
+######################################################################################
+
+Cutscenes are controlled by simple text files.
+These are compiled into .CUT binary files using the CUTBUILD command in toolbase.
+The format of this command is:
+CUTBUILD SourceTextFile DestBinFile
+
+The cutscene text files have two distinct sets of components: code and data.
+The data is comprised of Animations, Assets, Samples, Sprites, Pages, Texts & Vars.
+The code is made up of scripts.
+
+
+######################################################################################
+ ANIMATIONS
+######################################################################################
+
+Animation define the sequence of frames to be played on a sprite.
+Animations specify a start frame, end frame, speed and looping type.
+Animations can be static if the start frame is equal to the end frame or speed is 0.
+The looping has three types:
+
+Off      : Show Frame0, Frame0+1, ... Frame1, stop at frame1
+Looping  : Show Frame0, Frame0+1,  ... Frame1, loop back to Frame0 & repeat
+PingPong : Frame0, Frame0+1,  ... Frame1, Frame1-1 .. Frame0 .. repeat
+
++--------------+-------+-------------------------------------+
+| FIELD        | TYPE  | DESCRIPTION                         |
++--------------+-------+-------------------------------------+
+| SPEED        | FLOAT | Speed through animation (frames/vbl)|
+| FRAME0       | INT   | Index of first frame of animation   |
+| FRAME1       | INT   | Index of last frame of animation    |
+| FLAGLOOP     | BOOL  | Looping on/off                      |
+| FLAGPINGPONG | BOOL  | PingPong on/off                     |
++--------------+-------+-------------------------------------+
+
+example:
+
+<ANIMATION NAME="ANM_BOSS">
+{
+ SPEED     = 1.0
+ FRAME0    = 3
+ FRAME1    = 3
+ FLAG_LOOP = 1
+}
+
+######################################################################################
+ ASSETS
+######################################################################################
+
+An asset is a file on disk. This file can either exist in a linkfile or a raw file in
+the file system. 
+
+An asset is addressed by a filename and a context.
+The filename is as you see it on disk.
+The context refers to the folder or linkfile that the asset resides in.
+Often there is a one to one mapping between context and folder/linkfile, but this is 
+not always the case. A context can encapsulate more than one folder or linkfile 
+depending on how it is set up in code.
+
+An example from Clogged Up.
+
++---------+----------+
+| FOLDER  | CONTEXT  |
++---------+----------+
+| GLOBAL  | GLOBAL   |
+| EXP     | EXP	     |
+| FE      |	FE_GFX   |
+| INTRO   |	INTRO	 |
+| LEVSEL  |	LEVSEL   |
+| HISCORES|	HISCORES |
+| WORLD0  |	GAME_GFX |
+| WORLD1  |	GAME_GFX |
+| WORLD2  |	GAME_GFX |
+| WORLD3  |	GAME_GFX |
+| WORLD4  |	GAME_GFX |
+| WORLD5  |	GAME_GFX |
+| WORLD6  |	GAME_GFX |
++---------+----------+
+
+As you can see, all worlds used the same context.
+This meant that the game could ask for an asset called "BOARD.PI1" in the context 
+"GAME_GFX" and depending on which world had been loaded you would get different
+graphics. The game didn't need to have a different set of filenames for each world.
+
+For cutscenes, most data will be mapped into the CUTSCENE context, with some bits
+in the GLOBAL context.
+
+So for a game with 3 cutscenes, we may map the data like this:
+
++---------+----------+
+| FOLDER  | CONTEXT  |
++---------+----------+
+| GLOBAL  | GLOBAL   |
+| CUT0    | CUTSCENE |
+| CUT1    | CUTSCENE |
+| CUT2    | CUTSCENE |
++---------+----------+
+
+So the fields in an asset are:
+
++--------------+--------+-------------------------------------+
+| FIELD        | TYPE   | DESCRIPTION                         |
++--------------+--------+-------------------------------------+
+| FILENAME     | STRING | Name of the file                    |
+| CONTEXT      | STRING | Name of context                     |
++--------------+--------+-------------------------------------+
+
+Types of assets that can be used in cutscenes:
+
++-----------+-----------------------+
+| EXTENSION | TYPE                  |
++-----------+-----------------------+
+| .BFB      | Bitplane Font Block   |
+| .BSB      | Bitplane Sprite Block |
+| .PAL      | 16 colour palette     |
+| .PI1      | Degas picture         |
+| .SPL      | Sound sample          |
++-----------+-----------------------+
+
+example:
+
+<ASSET NAME="ASS_BG">
+{
+ FILENAME = "CUT0_BG.PI1"
+ CONTEXT = "CUTSCENE"
+}
+
+
+######################################################################################
+ PAGES
+######################################################################################
+
+A page is a raw page of text. This can be rendered using the TEXT object.
+
+Everything between the curly braces is interpreted as text to be rendered.
+
+Example:
+
+<PAGE NAME="PGE_SUB0">
+{
+THE ADVENTURE BEGAN ON A STORMY NIGHT
+}
+
+
+######################################################################################
+ SAMPLES
+######################################################################################
+
+Sound samples should be recorded as 8-bit signed mono.
+You can make SPL files using TOOLBASE's SPLMAKE command.
+
+In this structure you can reference an asset which contains a .SPL file.
+You can specify the volume and stereo position of the sample.
+
++--------------+--------+-------------------------------------+
+| FIELD        | TYPE   | DESCRIPTION                         |
++--------------+--------+-------------------------------------+
+| ASSET        | STRING | Name of asset                       |
+| VOLUME       | INT    | Playback volume (0-255)             |
+| STEREOPOS    | INT    | Stereo position (0-255)             |
+| FLAGLOOP     | BOOL   | Looping flag                        |
++--------------+--------+-------------------------------------+
+
+example:
+
+<SAMPLE NAME="SAM_BANG">
+{
+ ASSET    = "ASS_BANG"
+ VOLUME   = 255
+ STEREPOS = 128
+ FLAGLOOP = 0
+}
+
+
+######################################################################################
+ SPRITE
+######################################################################################
+
+Sprites represent moving graphical elements of the cutscene.
+Sprites should be in .BSB format.
+You can create BSB files using TOOLBASE's BSBMAKE command.
+
+A sprite has a position, speed, bsb asset and animation associated with it.
+
+The position is its rendering position in screen space.
+The animation is a reference to an animation chunk which specifies how the frames
+of the sprite will appear.
+
+
++--------------+--------+-------------------------------------+
+| FIELD        | TYPE   | DESCRIPTION                         |
++--------------+--------+-------------------------------------+
+| ASSET        | STRING | Name of sprite asset                |
+| ANIMATION    | STRING | Name of animation                   |
+| SPEED        | FLOAT  | Movement speed (pixels/vbl)         |
+| X            | INT    | Initial X pos                       |
+| Y            | INT    | Initial Y pos                       |
++--------------+--------+-------------------------------------+
+
+example:
+
+<SPRITE NAME="SPR_BOSS">
+{
+ ASSET     = "ASS_BOSS"
+ ANIMATION = "ANM_BOSS"
+ X         = 160
+ Y         = 80
+ SPEED     = 2.0
+}
+
+
+######################################################################################
+ TEXT
+######################################################################################
+
+Text is a text rendering object.
+You can specify the rectangle on screen in which the text should appear and the font
+to use.
+
++--------------+--------+-------------------------------------+
+| FIELD        | TYPE   | DESCRIPTION                         |
++--------------+--------+-------------------------------------+
+| ASSET        | STRING | Name of font asset                  |
+| PAGE         | STRING | Name of page to use                 |
+| X            | INT    | Initial X pos                       |
+| Y            | INT    | Initial Y pos                       |
+| WIDTH        | INT    | Rectangle width                     |
+| HEIGHT       | INT    | Rectangle height                    |
++--------------+--------+-------------------------------------+
+
+example:
+
+<TEXT NAME="TXT_SUBTITLE">
+{
+ ASSET     = "ASS_TINYFONT"
+ X         = 10
+ Y         = 170
+ WIDTH     = 300
+ HEIGHT    = 20
+}
+
+######################################################################################
+ VARS
+######################################################################################
+
+Vars refer to in game variables that can be accessed from your script.
+
+You may want the script to set up some game mode or conditions for the next section
+of play.
+
+All variables are referenced by a simple string name.
+
+
++--------------+--------+-------------------------------------+
+| FIELD        | TYPE   | DESCRIPTION                         |
++--------------+--------+-------------------------------------+
+| VARNAME      | STRING | Name of variable                    |
++--------------+--------+-------------------------------------+
+
+example:
+
+<VAR NAME="VAR_LEVEL">
+{
+ VARNAME = "LEVEL"
+}
+
+
+######################################################################################
+ SCRIPTS
+######################################################################################
+
+The script is used to manipulate the defined data objects.
+
+A script is a series of commands defined between data brackets.
+
+Every frame, the script will execute all the commands it can until it hits a specific
+WAIT type command or the end of the script.
+
+Each script command consists of an operand and up to three arguments.
+Generally, the first argument is the destation data structure.
+
+General script command format:
+
+	OPERATION	DEST_OBJECT,SOURCE_OBJECT
+
+Each script has a name associated with it, and scripts can call other scripts.
+
+Here is a full list of the COMMANDS
+
+
+######################################################################################
+	CALL	aScriptName
+######################################################################################
+
+Jumps to script called "aScriptName".
+Once this script has finished, execution will continue at the line following the CALL.
+
+example:
+	CALL	SCR_BOSSAPPEAR
+
+######################################################################################
+	BG_GFX_SET	aAssetName
+######################################################################################
+
+Sets the background graphics.
+aAssetName should refer to an <ASSET> chunk which contains a PI1 file.
+
+example:
+	BG_GFX_SET	ASS_BG
+
+######################################################################################
+	BG_GFX_ENABLE
+######################################################################################
+
+Turns on background gfx.
+
+
+######################################################################################
+	BG_GFX_DISABLE
+######################################################################################
+
+Turns on background gfx.
+
+
+######################################################################################
+	FADE_SET	aAssetName,aFrameCount
+######################################################################################
+
+Starts a fade.
+aAssetName should refer to an <ASSET> that contains a PAL file.
+aFrameCount is the number of frames that this fade will span over.
+
+example:
+	FADE_SET	ASS_BGPAL,16
+
+
+######################################################################################
+	FADE_TOBLACK	aFrameCount
+######################################################################################
+
+Fades screen to black over aFrameCount VBLs.
+
+
+######################################################################################
+	FADE_TOWHITE	aFrameCount
+######################################################################################
+
+Fades screen to white over aFrameCount VBLs.
+
+
+######################################################################################
+	FADE_WAIT
+######################################################################################
+
+Waits for fade to complete.
+
+
+######################################################################################
+	SPRITE_ANIM_SET	aSprite,aAnim
+######################################################################################
+
+Specifies the animation a sprite should use.
+
+example:
+	SPRITE_ANIM_SET	SPR_BOSS,ANM_BOSS
+
+
+######################################################################################
+	SPRITE_ANIM_WAIT	aSprite
+######################################################################################
+
+Waits for an animation to complete. This only works for non-looping animations.
+
+example:
+	SPRITE_ANIM_WAIT	SPR_BOSS
+
+
+######################################################################################
+	SPRITE_DISABLE	aSprite
+######################################################################################
+
+Turns a sprite off.
+
+example:
+	SPRITE_DISABLE	SPR_BOSS
+
+
+######################################################################################
+	SPRITE_ENABLE	aSprite
+######################################################################################
+
+Turns a sprite on.
+
+example:
+	SPRITE_DISABLE	SPR_BOSS
+
+
+######################################################################################
+	SPRITE_GFX_SET	aSprite,aAsset
+######################################################################################
+
+Specifies which BSB a sprite should use.
+aAsset refers to an <ASSET> chunk containing a BSB.
+
+
+example:
+	SPRITE_GFX_SET	SPR_BOSS,ASS_BOSS
+
+
+######################################################################################
+	SPRITE_MOVE_TO	aSprite,aX,aY
+######################################################################################
+
+Starts sprite moving to location aX,aY.
+Over subsequent frames the sprite will move from its current position to aX,aY.
+The time this will take depends on the sprite's speed.
+
+
+example:
+	SPRITE_MOVE_TO	SPR_BOSS,100,30
+
+
+######################################################################################
+	SPRITE_MOVE_WAIT	aSprite
+######################################################################################
+
+Waits for a sprite to reach its destination.
+
+example:
+	SPRITE_MOVE_WAIT	SPR_BOSS
+
+
+######################################################################################
+	SPRITE_POS_SET	aSprite,aX,aY
+######################################################################################
+
+Sets the position for a sprite.
+Note: the sprite will immediately teleport to this position. 
+If you want it to move smoothly to this desitionation, use SPRITE_MOVE_TO.
+
+example:
+	SPRITE_POS_SET	SPR_BOSS,20,50
+
+
+######################################################################################
+	SPRITE_SPEED_SET	aSprite,aSpeed
+######################################################################################
+
+Sets the movement speed for a sprite.
+The speed is in pixels/vbl and is a floating point value.
+The default value is 1.0
+
+example:
+	SPRITE_SPEED_SET	SPR_BOSS,2.5
+
+######################################################################################
+	TEXT_DISABLE	aText
+######################################################################################
+
+Disables rendering for a text object.
+
+example:
+	TEXT_DISABLE	TXT_SUBTITLE
+
+######################################################################################
+	TEXT_ENABLE	aText
+######################################################################################
+
+Enables rendering for a text object.
+
+example:
+	TEXT_ENABLE		TXT_SUBTITLE
+
+######################################################################################
+	TEXT_FONT_SET	aText,aAsset
+######################################################################################
+
+Sets the font to be used for a text object.
+
+example:
+	TEXT_FONT_SET		TXT_SUBTITLE,ASS_BIGFONT
+
+
+######################################################################################
+	TEXT_PAGE_SET	aText,aPage
+######################################################################################
+
+Sets the page to be used for a text object
+
+example:
+	TEXT_PAGE_SET		TXT_SUBTITLE,PGE_SUB0
+
+
+######################################################################################
+	VAR_SET	aVar,aValue
+######################################################################################
+
+Sets the value of a game variable
+
+example:
+	VAR_SET		VAR_LEVEL,100
+
+
+######################################################################################
+	WAIT	aFrameCount
+######################################################################################
+
+Waits for a specified number of VBLs
+
+example:
+	WAIT	30

@@ -1,0 +1,145 @@
+###############################################################################
+#	CWMON GENERIC MAKEFILE
+#	(c) 2011 Leon O'Reilly / CwmOcean
+###############################################################################
+
+#include $(LIB_DIR)/MAKEFILES/PLATFORM/CWMON_MAKEFILE_$(PLATFORM).MF
+
+
+###############################################################################
+#	FILE EXTENSIONS
+###############################################################################
+
+#OBJ_EXT		=.OBJ
+OBJ_EXT		=.$(PLATFORM)_$(CONFIGURATION)_$(SYSTEM)_$(COMPILER).OBJ
+CPP_EXT		=.CPP
+
+
+###############################################################################
+#	ACTIONS
+###############################################################################
+
+define	AS_ACTION
+	@-$(MKDIR) -p $(dir $@)
+	@$(ECHO) -$(AS) $(AS_FLAGS) $(AS_INCLUDES) $< $(AS_OUT)$@ $(AS_PIPE)
+	@-$(AS) $(AS_FLAGS) $(AS_INCLUDES) $< $(AS_OUT)$@ $(AS_PIPE)
+	@$(call AS_POST_ACTION)
+endef
+
+define	CC_ACTION
+	@-$(MKDIR) -p $(dir $@)
+	@$(ECHO) @-$(CC) $(CC_FLAGS) $(CC_INCLUDES) $< $(CC_OUT)$@
+	@-$(CC) $(CC_FLAGS) $(CC_INCLUDES) $< $(CC_OUT)$@ $(CC_PIPE)
+	@$(call CC_POST_ACTION)
+endef
+
+define	LD_ACTION
+	@-$(MKDIR) -p $(dir $@)
+	@-$(RM) $@
+	@$(ECHO) $(LD) $(LD_FLAGS) $(LD_INCLUDES) $(OBJECTS) $(LD_LIBS) $(LD_AS_FLAGS) $(OBJECTS_AS) $(MAP_OUT)$(MAP_FILE) $(LD_OUT)$@ $(LD_PIPE_FILE)
+	@$(LD) $(LD_FLAGS) $(LD_INCLUDES) $(OBJECTS) $(LD_LIBS) $(LD_AS_FLAGS) $(OBJECTS_AS) $(MAP_OUT)$(MAP_FILE) $(LD_OUT)$@ $(LD_PIPE)
+	$(call LD_POST_ACTION)
+	$(call LD_POST_ACTION_CUSTOM)
+endef
+
+
+###############################################################################
+#	VARIABLES
+###############################################################################
+
+OBJ_DIR		=objs/$(PLATFORM)/$(CONFIGURATION)_$(SYSTEM)_$(COMPILER)
+OBJECTS		=$(foreach src, $(CODE_FILES), $(OBJ_DIR)/$(src:.CPP=$(OBJ_EXT)))
+OBJECTS		+=$(foreach src, $(CODE_FILES_C), $(OBJ_DIR)/$(src:.C=$(OBJ_EXT)))
+OBJECTS_AS	+=$(foreach src, $(CODE_FILES_S), $(OBJ_DIR)/$(src:.S=$(OBJ_EXT)))
+OBJECT_DIRS	=$(foreach src, $(CODE_FILES), $(OBJ_DIR)/$(dir $(src)) )
+
+#DEPS		= $(OBJECTS:$(OBJ_EXT)=.d)
+DEPS =
+
+CC_FLAGS	+= $(CC_DEF)dCWMON_BUILD_$(CONFIGURATION)
+CC_FLAGS	+= $(CC_DEF)dCWMON_PLATFORM_$(PLATFORM)
+CC_FLAGS	+= $(CC_DEF)dCWMON_BUILD_UNITY
+CC_INCLUDES	+= $(CC_INC)$(LIB_DIR)
+
+EXECUTABLE_DIR ?=/PRG/$(PLATFORM)
+EXECUTABLE_FILENAME ?= $(PROJECT)$(PRG_EXT)
+EXECUTABLE ?=$(EXECUTABLE_DIR)/$(EXECUTABLE_FILENAME)
+
+DEPS_EXTRA = $(PROJECT).MF
+DEPS_EXTRA += $(LIB_DIR)/MAKEFILE/GODLIB.MF
+DEPS_EXTRA += $(LIB_DIR)/MAKEFILE/PLATFORM/GODLIB_$(PLATFORM).MF
+
+
+###############################################################################
+#	TARGETS
+###############################################################################
+
+.PHONY:	all clean rebuild
+
+pre:
+	@$(call PRE_BUILD_ACTION)
+	@$(call PRE_BUILD_ACTION_CUSTOM)
+
+all: pre $(EXECUTABLE)
+
+deploy: all
+	@$(call DEPLOY_ACTION)
+
+run:	deploy
+	@$(call RUN_ACTION)
+
+clean:
+	@$(ECHO) cleaning ...
+	@-$(RM) $(OBJECTS)
+	@-$(RM) $(OBJECTS_AS)
+
+#	@-$(RM) -v $(DEPS)
+
+rebuild: clean all
+
+
+###############################################################################
+#	IMPLICIT RULES
+###############################################################################
+
+$(EXECUTABLE):$(OBJECTS) $(OBJECTS_AS) $(DEPS) $(DEPS_EXTRA)
+	$(LD_ACTION)
+
+$(OBJ_DIR)/%$(OBJ_EXT): $(LIB_DIR)/%.CPP
+	$(CC_ACTION)
+
+$(OBJ_DIR)/%$(OBJ_EXT): $(APP_DIR)/%.CPP
+	$(CC_ACTION)
+
+$(OBJ_DIR)/%$(OBJ_EXT): %.CPP
+	@$(CC_ACTION)
+
+$(OBJ_DIR)/%$(OBJ_EXT): $(LIB_DIR)/%.C
+	$(CC_ACTION)
+
+$(OBJ_DIR)/%$(OBJ_EXT): $(APP_DIR)/%.C
+	$(CC_ACTION)
+
+$(OBJ_DIR)/%$(OBJ_EXT): $(LIB_DIR)/%.S
+	$(AS_ACTION)
+
+$(OBJ_DIR)/%$(OBJ_EXT): $(APP_DIR)/%.S
+	$(AS_ACTION)
+
+
+$(OBJ_DIR)/%$(OBJ_EXT): %.C
+	@$(CC_ACTION)
+
+$(OBJ_DIR)/%.d: 
+
+#	we don't want non-existant dependency files throwing errors
+
+%::
+	@$(ECHO) ***not found [$@] or [$<]
+
+
+###############################################################################
+#	DEPENDENCY FILES
+###############################################################################
+
+-include	$(DEPS)

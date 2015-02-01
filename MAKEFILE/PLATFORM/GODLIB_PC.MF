@@ -1,0 +1,137 @@
+###############################################################################
+#	APPS
+###############################################################################
+#	these tools come from VC directory
+###############################################################################
+
+#VC_DIR="C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\"
+VC_DIR=
+
+AR		= $(VC_DIR)link
+AS		= $(VC_DIR)cl
+CC		= $(VC_DIR)cl.exe
+LD		= $(VC_DIR)link
+
+
+###############################################################################
+#	these are the cygwin/gnu tools
+###############################################################################
+
+CAT		= /usr/bin/cat
+CP		= /usr/bin/cp
+ECHO	= /usr/bin/echo
+GAWK	= /usr/bin/gawk
+MKDIR	= /usr/bin/mkdir
+MAKE	= /usr/bin/make
+MV		= /usr/bin/mv
+RM		= /usr/bin/rm
+SED		= /usr/bin/sed
+
+
+###############################################################################
+#	FLAGS
+###############################################################################
+#
+# CC flags:
+#	/c		: compile without linking
+#	/EHsc	: c++ exceptions only/extern c functions don't throw exceptions
+#	/errorReport : disable sending compiler errors to microsoft
+#	/Fd		: renames program database (pdb) file
+#	/nologo	: suppress compiler startup output messages
+#	/Od		: optimisation disabled
+#	/O2		: optimisation level
+#	/showIncludes	: output from this use to generate dependency .d file
+#	/W3		: warning level 3
+#	/Zi		: debugging info
+#	/Oy-	: enable frame pointers (for RtlCaptureContext, callstack dumping)
+#
+# LD flags:
+#	/ERRORREPOT	: manage internal compiler error settings
+#	/NOLOGO	: disable display of startup/copyright messages
+#
+###############################################################################
+
+AR_FLAGS	=
+AS_FLAGS	=
+CC_FLAGS	= /c /EHsc /Fd$(@:.OBJ=.pdb) /errorReport:none /nologo /showIncludes /W3 /Zi
+CC_FLAGS	+= /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE 
+CC_FLAGS	+= /D LUA_USE_LONGJMP
+#CC_FLAGS	+= /D _WINSOCKAPI_
+#CC_FLAGS	+= /analyze
+#CC_FLAGS	+= /D WIN32_LEAN_AND_MEAN
+#CC_FLAGS	+= /D dCWMON_MEMORY_GUARD
+LD_FLAGS	= /DEBUG /ERRORREPORT:none /NOLOGO
+
+ifeq ($(SYSTEM), CON)
+LD_FLAGS += /SUBSYSTEM:CONSOLE
+else
+LD_FLAGS += /SUBSYSTEM:WINDOWS
+endif
+
+MAP_OUT		= /MAP 
+MAP_FILE	=
+
+AS_PIPE			=
+
+CC_PIPE_FILE	= $(@:$(OBJ_EXT)=.pipe)
+CC_PIPE			= > $(CC_PIPE_FILE)
+LD_PIPE			=
+
+CC_DEF		= /D 
+CC_INC		= /I 
+CC_INCLUDES	= $(CC_INC)"$(DXSDK_DIR)\INCLUDE"
+CC_INCLUDES += $(CC_INC)"$(GLSDK_DIR)\include\gl"
+CC_INCLUDES += $(CC_INC)"$(LIB_DIR)\..\EXTERNAL\OPENGL\4.1\WINDOWS\INCLUDE"
+CC_OUT		= /Fo
+
+define CC_POST_ACTION
+	@$(GAWK) -v file_src=$< -v file_dst=$@ -f $(LIB_DIR)/MAKEFILES/PLATFORM/DEP_GEN_PC.AWK $(CC_PIPE_FILE) > $(@:$(OBJ_EXT)=.d)
+	@$(GAWK) '{ if( !match( $$0, "Note:.including file*") ) print $$0 }' $(CC_PIPE_FILE)
+endef
+
+define PRE_BUILD_ACTION
+#	$(TOOLS_DIR)"/REFLECTOR/PRG/PC/REFLECTOR_DEBUG_CON.EXE" -i=$(LIB_DIR) -d=$(LIB_DIR) -l=$(LIB_DIR)/REFLECTION/GEN -o=$(LIB_DIR)
+endef
+
+LD_INC		= /LIBPATH:
+LD_INCLUDES	= $(LD_INC)"$(DXSDK_DIR)\Lib\x86"
+LD_INCLUDES	+= $(LD_INC)"$(GLSDK_DIR)\lib"
+LD_OUT		= /OUT:
+LD_LIBS		= d3d9.lib dinput8.lib dxguid.lib d3dx9.lib d3d10.lib d3dx10.lib d3d11.lib d3dx11.lib d3dcompiler.lib dxgi.lib
+LD_LIBS		+= GLU32.lib opengl32.lib ws2_32.lib dbghelp.lib
+
+LD_LIBS += kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib
+
+PRG_EXT=.EXE
+
+VS_UNICODE_OUTPUT :=
+
+CC_FLAGS += $(CC_DEF)dCWMON_SYSTEM_$(SYSTEM)
+
+ifeq ($(CONFIGURATION), FINAL)
+CC_FLAGS += /O2
+endif
+
+#	/Oy-	: enable frame pointers (for RtlCaptureContext, callstack dumping)
+
+ifeq ($(CONFIGURATION), RELEASE)
+CC_FLAGS += /O2
+CC_FLAGS += /Oy-
+endif
+
+ifeq ($(CONFIGURATION), DEBUG)
+CC_FLAGS += /Od
+endif
+
+
+
+###############################################################################
+# UTILITY FUNCTION TO CONVERT DOS PATH TO CYGWIN PATH
+# usage: $(call DOS_TO_CYG,dospath)
+###############################################################################
+
+LOWER_CASE		=$(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(subst G,g,$(subst H,h,$(subst I,i,$(subst J,j,$(subst K,k,$(subst L,l,$(subst M,m,$(subst N,n,$(subst O,o,$(subst P,p,$(subst Q,q,$(subst R,r,$(subst S,s,$(subst T,t,$(subst U,u,$(subst V,v,$(subst W,w,$(subst X,x,$(subst Y,y,$(subst Z,z,$1))))))))))))))))))))))))))
+CYG_DRIVE_FIX	=$(subst :, ,$(subst \,/,$1))
+CYG_DRIVE		=$(call LOWER_CASE,$(word 1, $(call CYG_DRIVE_FIX,$1)))
+CYG_DIRECTORY	=$(word 2, $(call CYG_DRIVE_FIX,$1))
+DOS_TO_CYG		=/cygdrive/$(call CYG_DRIVE,$(1))$(call CYG_DIRECTORY,$1)
