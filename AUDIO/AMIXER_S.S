@@ -283,7 +283,7 @@ AudioMixer_DoMixing2:
 	move.b	(a5,d3.w),d4				; * left pos
 	move.b	(a6,d3.w),d3				; * right pos
 ;	move.b	d3,d4
-		
+
 	lsl.w	#8,d1						; into top byte
 	move.b	d2,d1						; byte of sample1
 
@@ -333,7 +333,7 @@ AudioMixer_DoMixing3:
 
 	add.b	d5,d3
 	add.b	d6,d4
-		
+
 	move.b	d3,d5
 	move.b	d4,d6
 	sub.b	d1,d5
@@ -601,7 +601,7 @@ AudioMixer_UpdateSamples:
 	lea		gAudioMixerSamples,a0
 
 .loop:
-	
+
 	tst.b	sAmixerSpl_mActiveFlag(a0)
 	beq.s	.next
 
@@ -619,7 +619,7 @@ AudioMixer_UpdateSamples:
 	clr.b	sAmixerSpl_mVolume(a0)
 	clr.b	sAmixerSpl_mGainLeft(a0)
 	clr.b	sAmixerSpl_mGainRight(a0)
-	
+
 .next:
 	lea		sAmixerSpl_msizeof(a0),a0
 	dbra	d1,.loop

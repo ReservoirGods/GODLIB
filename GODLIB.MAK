@@ -52,9 +52,9 @@ SOURCES = achieve/ach_main.c achieve/ach_show.c achieve/ach_sign.c achieve/ach_u
 	vbl/vbl.c \
 	video/vid_d3d.c video/vid_img.c video/vid_sdl.c video/videl.c video/video.c \
 	xbios/xbios.c
-	
-	
-	
+
+
+
 OBJECTS = $(SOURCES:.c=.go)
 CFLAGS = -Wall -static -g -D dSYSTEM_SDL=1 -D WIN32 -D dGODLIB_COMPILER_GCC -I"C:\cygwin\lib\gcc\i686-pc-cygwin\4.3.2\include" -I"C:\cygwin\usr\include\mingw" -I"C:\Program Files\STEEM\hard_drv\TOOLS\CODE\PURE_C\INCLUDE" -I"C:\LIB_SDL\SDL-1.2.13\include"
 LDFLAGS =
@@ -65,7 +65,7 @@ $(OUT): $(OBJECTS)
 
 $(OBJECTS): %.go: %.c
 	 $(CC) -c $(CFLAGS) $< -o $@
-	 
+
 clean:
 	rm -rf $(OBJECTS) $(OUT)
-	  
+

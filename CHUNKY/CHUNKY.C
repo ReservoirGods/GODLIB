@@ -26,7 +26,7 @@ void	ChunkySurface_Blit( sGraphicCanvas * apCanvas,sGraphicPos * apCoords,sGraph
 	U8 *	lpSrc1;
 	U8 *	lpDst0;
 	U8 *	lpDst1;
-	
+
 	lHeight = apRect->mHeight;
 
 	lpSrc0  = (U8*)apSrc->mpVRAM;
@@ -119,7 +119,7 @@ void	ChunkySurface_CopyScreen( sGraphicCanvas * apCanvas,void * apSrc )
 	U8 *	lpSrc1;
 	U8 *	lpDst0;
 	U8 *	lpDst1;
-	
+
 	lHeight = apCanvas->mHeight;
 
 	lpSrc0  = (U8*)apSrc;
@@ -151,7 +151,7 @@ void	ChunkySurface_DrawBox( sGraphicCanvas * apCanvas,sGraphicRect * apCoords,S1
 	S16		lWidth,lHeight;
 	U8 *	lpDst0;
 	U8 *	lpDst1;
-	
+
 	lHeight = apCoords->mHeight;
 
 	lpDst0  = (U8*)apCanvas->mpVRAM;
@@ -167,7 +167,7 @@ void	ChunkySurface_DrawBox( sGraphicCanvas * apCanvas,sGraphicRect * apCoords,S1
 			*lpDst1++ = (U8)aColour;
 		}
 		lpDst0 += apCanvas->mWidth;
-	}	
+	}
 }
 
 
@@ -193,24 +193,24 @@ void	ChunkySurface_DrawLine( sGraphicCanvas * apCanvas,sGraphicBox * apCoords,S1
 	lDy   = (S16)(lY1 - lY0);
 	lpDst = (U8*)apCanvas->mpVRAM;
 
-	if (lDy < 0) 
-	{ 
+	if (lDy < 0)
+	{
 		lDy    = (S16)(-lDy);
 		lStepY = (S16)-apCanvas->mWidth;
-	} 
-	else 
-	{ 
+	}
+	else
+	{
 		lStepY = apCanvas->mWidth;
 	}
 
-	if (lDx < 0) 
-	{ 
-		lDx    = (S16)(-lDx); 
-		lStepX = -1; 
-	} 
-	else 
-	{ 
-		lStepX = 1; 
+	if (lDx < 0)
+	{
+		lDx    = (S16)(-lDx);
+		lStepX = -1;
+	}
+	else
+	{
+		lStepX = 1;
 	}
 
 	lDy <<= 1;
@@ -221,12 +221,12 @@ void	ChunkySurface_DrawLine( sGraphicCanvas * apCanvas,sGraphicBox * apCoords,S1
 
 	lpDst[ lX0 + lY0 ] = (U8)aColour;
 
-	if( lDx > lDy ) 
+	if( lDx > lDy )
 	{
 		lFrac = (S16)(lDy - (lDx >> 1));
-		while( lX0 != lX1 ) 
+		while( lX0 != lX1 )
 		{
-			if( lFrac >= 0 ) 
+			if( lFrac >= 0 )
 			{
 				lY0   = (S16)(lY0 + lStepY);
 				lFrac = (S16)(lFrac - lDx);
@@ -235,22 +235,22 @@ void	ChunkySurface_DrawLine( sGraphicCanvas * apCanvas,sGraphicBox * apCoords,S1
 			lFrac = (S16)(lFrac + lDy);
 			lpDst[ lX0 + lY0 ] = (U8)aColour;
 		}
-	} 
-	else 
+	}
+	else
 	{
-        lFrac = (S16)(lDx - (lDy >> 1));
-        while (lY0 != lY1) 
+		lFrac = (S16)(lDx - (lDy >> 1));
+		while (lY0 != lY1)
 		{
-            if (lFrac >= 0) 
+			if (lFrac >= 0)
 			{
-                lX0   = (S16)(lX0   + lStepX);
-                lFrac = (S16)(lFrac - lDy);
-            }
-            lY0   = (S16)(lY0 + lStepY);
-            lFrac = (S16)(lFrac + lDx);
-            lpDst[ lX0 + lY0 ] = (U8)aColour;
-        }
-    }	
+				lX0   = (S16)(lX0   + lStepX);
+				lFrac = (S16)(lFrac - lDy);
+			}
+			lY0   = (S16)(lY0 + lStepY);
+			lFrac = (S16)(lFrac + lDx);
+			lpDst[ lX0 + lY0 ] = (U8)aColour;
+		}
+	}
 }
 
 
@@ -262,7 +262,7 @@ void	ChunkySurface_DrawLine( sGraphicCanvas * apCanvas,sGraphicBox * apCoords,S1
 
 void	ChunkySurface_DrawPixel( sGraphicCanvas * apCanvas,sGraphicPos * apCoords,S16 aColour )
 {
-	U8 *	lpDst;	
+	U8 *	lpDst;
 
 	lpDst  = (U8*)apCanvas->mpVRAM;
 	lpDst += apCoords->mY * apCanvas->mWidth;
@@ -370,7 +370,7 @@ void	ChunkySurface_Blit_Clip( sGraphicCanvas * apCanvas,sGraphicPos * apCoords,s
 	lCoords = *apCoords;
 	lRect   = *apRect;
 
-	if( ( lCoords.mX < (S16)apCanvas->mWidth  ) && 
+	if( ( lCoords.mX < (S16)apCanvas->mWidth  ) &&
 		( lCoords.mY < (S16)apCanvas->mHeight ) &&
 		( lRect.mX   < (S16)apSrc->mWidth     ) &&
 		( lRect.mY   < (S16)apSrc->mHeight    ) )
@@ -407,7 +407,7 @@ void	ChunkySurface_Blit_Clip( sGraphicCanvas * apCanvas,sGraphicPos * apCoords,s
 			lRect.mWidth = (S16)(lRect.mWidth - lDiff);
 		}
 
-		lDiff = (S16)((lRect.mY + lRect.mHeight) - apSrc->mHeight); 
+		lDiff = (S16)((lRect.mY + lRect.mHeight) - apSrc->mHeight);
 		if( lDiff > 0 )
 		{
 			lRect.mHeight = (S16)(lRect.mHeight - lDiff);
@@ -448,7 +448,7 @@ void	ChunkySurface_ConvertBlit_Clip( sGraphicCanvas * apCanvas,sGraphicPos * apC
 	lCoords = *apCoords;
 	lRect   = *apRect;
 
-	if( ( lCoords.mX < (S16)apCanvas->mWidth  ) && 
+	if( ( lCoords.mX < (S16)apCanvas->mWidth  ) &&
 		( lCoords.mY < (S16)apCanvas->mHeight ) &&
 		( lRect.mX   < (S16)apSrc->mWidth     ) &&
 		( lRect.mY   < (S16)apSrc->mHeight    ) )
@@ -524,7 +524,7 @@ void	ChunkySurface_DrawBox_Clip( sGraphicCanvas * apCanvas,sGraphicRect * apCoor
 
 	lRect   = *apCoords;
 
-	if( ( lRect.mX < apCanvas->mClipBox.mX1  ) && 
+	if( ( lRect.mX < apCanvas->mClipBox.mX1  ) &&
 		( lRect.mY < apCanvas->mClipBox.mY1 ) )
 	{
 
@@ -548,7 +548,7 @@ void	ChunkySurface_DrawBox_Clip( sGraphicCanvas * apCanvas,sGraphicRect * apCoor
 			lRect.mWidth = (S16)(lRect.mWidth - lDiff);
 		}
 
-		lDiff = (S16)((lRect.mY + lRect.mHeight) - apCanvas->mClipBox.mY1); 
+		lDiff = (S16)((lRect.mY + lRect.mHeight) - apCanvas->mClipBox.mY1);
 		if( lDiff > 0 )
 		{
 			lRect.mHeight = (S16)(lRect.mHeight - lDiff);
@@ -559,7 +559,7 @@ void	ChunkySurface_DrawBox_Clip( sGraphicCanvas * apCanvas,sGraphicRect * apCoor
 			ChunkySurface_DrawBox( apCanvas, &lRect, aColour );
 		}
 	}
-	
+
 }
 
 
@@ -741,7 +741,7 @@ void	ChunkySurface_DrawSprite_Clip( sGraphicCanvas * apCanvas,sGraphicPos * apCo
 				lpDst0 += apCanvas->mWidth;
 			}
 		}
-	}	
+	}
 }
 
 
@@ -769,7 +769,7 @@ void	ChunkySurface_DrawQuad_Clip( sGraphicCanvas * apCanvas,sGraphicPos * apCoor
 {
 	(void)apCanvas;
 	(void)apCoords;
-	(void)aColour;	
+	(void)aColour;
 }
 
 
@@ -784,7 +784,7 @@ void	ChunkySurface_From4Plane( sGraphicCanvas * apCanvas,sGraphicPos * apCoords,
 	S16		lWidth,lHeight;
 	U8 *	lpDst;
 	U16 *	lpSrc;
-	
+
 	(void)apSrc;
 
 	lHeight = apRect->mHeight;

@@ -25,7 +25,7 @@ sGodPackHeader *	GodPack_Pack( const void * apSrc,const U32 aSrcSize )
 	U32		lRleSize;
 	U32		lLzSize;
 	U32		lName;
-	
+
 	lpBuf0 = (U8*)mMEMCALLOC( (aSrcSize*2) );
 
 	lRleSize = GodPack_Rle_Encode( apSrc, lpBuf0, aSrcSize );

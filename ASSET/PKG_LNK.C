@@ -72,7 +72,7 @@ U32	PackageLnk_UnLoad( sPackage * apPackage )
 		lRet = PackageLnk_FolderUnLoad( apPackage, apPackage->mpLinkFile->mpRoot, 0 );
 	}
 
-	return( lRet );	
+	return( lRet );
 }
 
 
@@ -154,7 +154,7 @@ U32	PackageLnk_FolderLoad( sPackage * apPackage,sLinkFileFolder * apFolder, char
 
 				RelocaterManager_DoRelocate( lpAsset );
 				RelocaterManager_DoInit( lpAsset );
-				lRet &= Asset_OnLoad( lpAsset );			
+				lRet &= Asset_OnLoad( lpAsset );
 			}
 
 			apPackage->mFileCount++;
@@ -194,7 +194,7 @@ U32	PackageLnk_FolderUnLoad( sPackage * apPackage,sLinkFileFolder * apFolder,cha
 	sAsset *		lpAsset;
 	sLinkFileFile *	lpFile;
 	char			lName[ 128 ];
-	
+
 	lRet = 1;
 
 	if( apFolder )
@@ -244,7 +244,7 @@ U32	PackageLnk_FolderUnLoad( sPackage * apPackage,sLinkFileFolder * apFolder,cha
 		}
 	}
 
-	return( lRet );	
+	return( lRet );
 }
 
 

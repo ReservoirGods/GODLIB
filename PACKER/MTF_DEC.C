@@ -43,7 +43,7 @@ U32 GodPack_Mtf_Decode(const void * apSrc,void * apDst,const U32 aSize)
 			lByte--;
 		}
 		lOrder[ 0 ] = lFind;
-	}	
+	}
 
 	return( aSize );
 }

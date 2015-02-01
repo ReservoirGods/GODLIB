@@ -108,7 +108,7 @@ C2P_To4P:
 
 .loopY:
 	move.l	a3,a2								; width
-.loopX:	
+.loopX:
 	move.l	(a0)+,d0							; read pixels 0-3
 	move.l	(a0)+,d2							; read pixels 4-7
 	move.l	(a0)+,d1							; read pixels 8-11
@@ -127,7 +127,7 @@ C2P_To4P:
 
 	move.l	d1,d7								; pixels 8-15
 	lsr.l	#8,d7								; pixels 8-13
-	eor.l	d0,d7								
+	eor.l	d0,d7
 	and.l	d5,d7
 	eor.l	d7,d0
 	lsl.l	#8,d7
@@ -184,7 +184,7 @@ C2P_To4P:
 	cmpa.l	#0,a4								; reached end of box?
 	bne		.loopY								; loop for all y
 
-	
+
 	movem.l	(sp)+,d3-d7/a2-a6
 	rts
 
@@ -298,5 +298,5 @@ C2P_From4P:
 
 	movem.l	(sp)+,d3-d7/a2-a6
 	rts
-	
+
 

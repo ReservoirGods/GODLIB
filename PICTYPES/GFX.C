@@ -80,7 +80,7 @@ sGfx *		Gfx_Create( U16 aWidth, U16 aHeight, U8 aPlaneCount, U32 aLineSize, U16 
 				*lpPixels++ = lMask;
 				for( i=0; i<aPlaneCount; i++ )
 					*lpPixels++ = *lpSrc++;
-			
+
 			}
 		}
 	}

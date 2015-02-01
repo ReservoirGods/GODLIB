@@ -63,7 +63,7 @@ U32	Relocator_BSB_IsType( void * apData,const U32 aSize,const U32 aID )
 	(void)apData;
 	(void)aSize;
 	(void)aID;
-	return( 1 );	
+	return( 1 );
 }
 
 
@@ -77,8 +77,8 @@ U32	Relocator_BSB_DoDelocate( void * apData,const U32 aSize,const U32 aID )
 {
 	(void)aSize;
 	(void)aID;
-	Sprite_BlockDelocate( (sSpriteBlock*)apData );	
-	return( 1 );	
+	Sprite_BlockDelocate( (sSpriteBlock*)apData );
+	return( 1 );
 }
 
 

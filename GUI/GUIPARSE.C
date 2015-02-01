@@ -171,42 +171,42 @@ sTokeniserTagString	gGuiParseKeyStatusTags[] =
 sTokeniserTagString	gGuiParseScanCodeTags[] =
 {
 	{	eIKBDSCAN_A,					"A"			},
-	{	eIKBDSCAN_B,					"B"			},	
-	{	eIKBDSCAN_C,					"C"			},	
+	{	eIKBDSCAN_B,					"B"			},
+	{	eIKBDSCAN_C,					"C"			},
 	{	eIKBDSCAN_D,					"D"			},
 	{	eIKBDSCAN_E,					"E"			},
-	{	eIKBDSCAN_F,					"F"			},	
-	{	eIKBDSCAN_G,					"G"			},	
-	{	eIKBDSCAN_H,					"H"			},	
-	{	eIKBDSCAN_I,					"I"			},	
-	{	eIKBDSCAN_J,					"J"			},	
-	{	eIKBDSCAN_K,					"K"			},	
-	{	eIKBDSCAN_L,					"L"			},	
-	{	eIKBDSCAN_M,					"M"			},	
-	{	eIKBDSCAN_N,					"N"			},	
-	{	eIKBDSCAN_O,					"O"			},	
-	{	eIKBDSCAN_P,					"P"			},	
-	{	eIKBDSCAN_Q,					"Q"			},	
-	{	eIKBDSCAN_R,					"R"			},	
-	{	eIKBDSCAN_S,					"S"			},	
-	{	eIKBDSCAN_T,					"T"			},	
-	{	eIKBDSCAN_U,					"U"			},	
-	{	eIKBDSCAN_V,					"V"			},	
-	{	eIKBDSCAN_W,					"W"			},	
-	{	eIKBDSCAN_X,					"X"			},	
-	{	eIKBDSCAN_Y,					"Y"			},	
-	{	eIKBDSCAN_Z,					"Z"			},	
+	{	eIKBDSCAN_F,					"F"			},
+	{	eIKBDSCAN_G,					"G"			},
+	{	eIKBDSCAN_H,					"H"			},
+	{	eIKBDSCAN_I,					"I"			},
+	{	eIKBDSCAN_J,					"J"			},
+	{	eIKBDSCAN_K,					"K"			},
+	{	eIKBDSCAN_L,					"L"			},
+	{	eIKBDSCAN_M,					"M"			},
+	{	eIKBDSCAN_N,					"N"			},
+	{	eIKBDSCAN_O,					"O"			},
+	{	eIKBDSCAN_P,					"P"			},
+	{	eIKBDSCAN_Q,					"Q"			},
+	{	eIKBDSCAN_R,					"R"			},
+	{	eIKBDSCAN_S,					"S"			},
+	{	eIKBDSCAN_T,					"T"			},
+	{	eIKBDSCAN_U,					"U"			},
+	{	eIKBDSCAN_V,					"V"			},
+	{	eIKBDSCAN_W,					"W"			},
+	{	eIKBDSCAN_X,					"X"			},
+	{	eIKBDSCAN_Y,					"Y"			},
+	{	eIKBDSCAN_Z,					"Z"			},
 
-	{	eIKBDSCAN_0,					"0"			},	
-	{	eIKBDSCAN_1,					"1"			},	
-	{	eIKBDSCAN_2,					"2"			},	
-	{	eIKBDSCAN_3,					"3"			},	
-	{	eIKBDSCAN_4,					"4"			},	
-	{	eIKBDSCAN_5,					"5"			},	
-	{	eIKBDSCAN_6,					"6"			},	
-	{	eIKBDSCAN_7,					"7"			},	
-	{	eIKBDSCAN_8,					"8"			},	
-	{	eIKBDSCAN_9,					"9"			},	
+	{	eIKBDSCAN_0,					"0"			},
+	{	eIKBDSCAN_1,					"1"			},
+	{	eIKBDSCAN_2,					"2"			},
+	{	eIKBDSCAN_3,					"3"			},
+	{	eIKBDSCAN_4,					"4"			},
+	{	eIKBDSCAN_5,					"5"			},
+	{	eIKBDSCAN_6,					"6"			},
+	{	eIKBDSCAN_7,					"7"			},
+	{	eIKBDSCAN_8,					"8"			},
+	{	eIKBDSCAN_9,					"9"			},
 
 	{	eIKBDSCAN_F1,					"F1"		},
 	{	eIKBDSCAN_F2,					"F2"		},
@@ -219,53 +219,53 @@ sTokeniserTagString	gGuiParseScanCodeTags[] =
 	{	eIKBDSCAN_F9,					"F9"		},
 	{	eIKBDSCAN_F10,					"F10"		},
 
-	{	eIKBDSCAN_AT,					"@"			},	
+	{	eIKBDSCAN_AT,					"@"			},
 	{	eIKBDSCAN_AMPERSAND,			"&"			},
-	{	eIKBDSCAN_BAR,					"|"			},	
+	{	eIKBDSCAN_BAR,					"|"			},
 	{	eIKBDSCAN_BACKSLASH,			"\\"		},
 	{	eIKBDSCAN_CLOSEAPOSTROPHE,		"K"			},
 	{	eIKBDSCAN_CLOSEBRACKET,			")"			},
 	{	eIKBDSCAN_CLOSECURLYBRACKET,	"}"			},
 	{	eIKBDSCAN_CLOSESQUAREBRACKET,	"]"			},
-	{	eIKBDSCAN_COMMA,				","			},	
-	{	eIKBDSCAN_COLON,				":"			},	
+	{	eIKBDSCAN_COMMA,				","			},
+	{	eIKBDSCAN_COLON,				":"			},
 	{	eIKBDSCAN_DOLLARSIGN,			"$"			},
-	{	eIKBDSCAN_DOT,					"."			},	
+	{	eIKBDSCAN_DOT,					"."			},
 	{	eIKBDSCAN_EQUALS,				"="			},
 	{	eIKBDSCAN_EXCLAMATIONMARK,		"!"			},
 	{	eIKBDSCAN_FORWARDSLASH,			"/"			},
 	{	eIKBDSCAN_GREATERTHAN,			">"			},
-	{	eIKBDSCAN_HASH,					"#"			},	
+	{	eIKBDSCAN_HASH,					"#"			},
 	{	eIKBDSCAN_LESSTHAN,				"<"			},
-	{	eIKBDSCAN_MINUS,				"-"			},	
+	{	eIKBDSCAN_MINUS,				"-"			},
 	{	eIKBDSCAN_OPENAPOSTROPHE,		"K"			},
 	{	eIKBDSCAN_OPENBRACKET,			"("			},
 	{	eIKBDSCAN_OPENCURLYBRACKET,		"{"			},
 	{	eIKBDSCAN_OPENSQUAREBRACKET,	"["			},
 	{	eIKBDSCAN_OVERSCORE,			"-"			},
 	{	eIKBDSCAN_PERCENTAGE,			"%"			},
-	{	eIKBDSCAN_PLUS,					"+"			},	
+	{	eIKBDSCAN_PLUS,					"+"			},
 	{	eIKBDSCAN_POUNDSIGN,			"£"			},
 	{	eIKBDSCAN_QUOTEMARK,			"\""		},
 	{	eIKBDSCAN_QUESTTIONMARK,		"?"			},
 	{	eIKBDSCAN_SEMICOLON,			";"			},
-	{	eIKBDSCAN_STAR,					"*"			},	
-	{	eIKBDSCAN_TILDE,				"~"			},	
+	{	eIKBDSCAN_STAR,					"*"			},
+	{	eIKBDSCAN_TILDE,				"~"			},
 	{	eIKBDSCAN_UNDERSCORE,			"_"			},
 
-	{	eIKBDSCAN_NUMPAD0,				"N0"		},	
-	{	eIKBDSCAN_NUMPAD1,				"N1"		},	
-	{	eIKBDSCAN_NUMPAD2,				"N2"		},	
-	{	eIKBDSCAN_NUMPAD3,				"N3"		},	
-	{	eIKBDSCAN_NUMPAD4,				"N4"		},	
-	{	eIKBDSCAN_NUMPAD5,				"N5"		},	
-	{	eIKBDSCAN_NUMPAD6,				"N6"		},	
-	{	eIKBDSCAN_NUMPAD7,				"N7"		},	
-	{	eIKBDSCAN_NUMPAD8,				"N8"		},	
-	{	eIKBDSCAN_NUMPAD9,				"N9"		},	
+	{	eIKBDSCAN_NUMPAD0,				"N0"		},
+	{	eIKBDSCAN_NUMPAD1,				"N1"		},
+	{	eIKBDSCAN_NUMPAD2,				"N2"		},
+	{	eIKBDSCAN_NUMPAD3,				"N3"		},
+	{	eIKBDSCAN_NUMPAD4,				"N4"		},
+	{	eIKBDSCAN_NUMPAD5,				"N5"		},
+	{	eIKBDSCAN_NUMPAD6,				"N6"		},
+	{	eIKBDSCAN_NUMPAD7,				"N7"		},
+	{	eIKBDSCAN_NUMPAD8,				"N8"		},
+	{	eIKBDSCAN_NUMPAD9,				"N9"		},
 	{	eIKBDSCAN_NUMPADOPENBRACKET,	"N("		},
 	{	eIKBDSCAN_NUMPADCLOSEBRACKET,	"N)"		},
-	{	eIKBDSCAN_NUMPADDOT,			"N."		},	
+	{	eIKBDSCAN_NUMPADDOT,			"N."		},
 	{	eIKBDSCAN_NUMPADENTER,			"ENTER"		},
 	{	eIKBDSCAN_NUMPADMINUS,			"N-"		},
 	{	eIKBDSCAN_NUMPADPLUS,			"N+"		},
@@ -457,7 +457,7 @@ sTokeniserStructMember	gGuiParseListMembers[] =
 	{	eTOKENISER_TYPE_CHUNKNAME,	0,						0,				0,	"NAME",		mOFFSET( sGuiList, mInfo.mpName )					},
 	{	eTOKENISER_TYPE_CONSTANT,	eTOKENISER_TYPE_U16,	eGUI_TYPE_LIST,	0,	"TYPE",		mOFFSET( sGuiList, mInfo.mType )					},
 	{	eTOKENISER_TYPE_REFERENCE,	eGUIPARSE_CHUNK_VALUE,	0,				0,	"VALUE",	mOFFSET( sGuiList, mInfo.mpValue )					},
-	
+
 	{	0,	0,	0	},
 };
 
@@ -609,7 +609,7 @@ void	GuiParse_InfoInit( sTokeniserInfo * apInfo );
 
 void GuiParse_Init(void)
 {
-	
+
 }
 
 
@@ -621,7 +621,7 @@ void GuiParse_Init(void)
 
 void GuiParse_DeInit(void)
 {
-	
+
 }
 
 
@@ -674,7 +674,7 @@ void GuiParse_Relocate(sGuiData * apHeader)
 
 	GuiParse_InfoInit( &lInfo );
 
-	Tokeniser_Delocate( (U8*)apHeader, &lInfo );	
+	Tokeniser_Delocate( (U8*)apHeader, &lInfo );
 }
 
 
@@ -690,7 +690,7 @@ void GuiParse_ShowInfo(sGuiData * apHeader)
 
 	GuiParse_InfoInit( &lInfo );
 
-	Tokeniser_ShowInfo( (U8*)apHeader, &lInfo );	
+	Tokeniser_ShowInfo( (U8*)apHeader, &lInfo );
 }
 
 
@@ -708,7 +708,7 @@ void GuiParse_InfoInit(sTokeniserInfo * apInfo)
 		apInfo->mContainerSize  = sizeof( sGuiData );
 		apInfo->mOnWarning      = GuiParse_OnWarning;
 		apInfo->mpChunkDefs     = gGuiParseChunkDefs;
-		apInfo->mpTagStringList = gGuiParseTagLists;	
+		apInfo->mpTagStringList = gGuiParseTagLists;
 	}
 }
 
@@ -722,7 +722,7 @@ void GuiParse_InfoInit(sTokeniserInfo * apInfo)
 void	GuiParse_OnWarning( const char * apName )
 {
 	DebugLog_Printf0( apName );
-	printf( "%s\n", apName );	
+	printf( "%s\n", apName );
 }
 
 

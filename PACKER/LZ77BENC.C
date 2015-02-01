@@ -198,7 +198,7 @@ U32	GodPack_Lz77b_Encode( const void * apSrc,void * apDst,const U32 aSize )
 				}
 				lpDst[ lDstOff ]  = (U8)(dGODPACK_LZ77B_FLAG_LITERAL + j);
 				lDstOff++;
-				
+
 				j = ((j+1)<<2);
 				lLiteralRun -= j;
 
@@ -313,7 +313,7 @@ U32	GodPack_Lz77b_Encode( const void * apSrc,void * apDst,const U32 aSize )
 		}
 		lpDst[ lDstOff ]  = (U8)(dGODPACK_LZ77B_FLAG_LITERAL + j);
 		lDstOff++;
-		
+
 		j = ((j+1)<<2);
 		lLiteralRun -= j;
 
@@ -402,11 +402,11 @@ U16	GodPack_Lz77b_GetBitCount( const U32 aNumber )
 {
 	U16	lBitCount;
 	U32	lNumber;
-	
+
 	lBitCount = 0;
 	lNumber   = aNumber;
 
-	while( lNumber ) 
+	while( lNumber )
 	{
 		lNumber >>= 1L;
 		lBitCount++;
@@ -424,7 +424,7 @@ U16	GodPack_Lz77b_GetBitCount( const U32 aNumber )
 
 void GodPack_Lz77b_StatsLiteralsUpdate(const U32 aLitCount)
 {
-	gGodPackLz77bLiteralHistogram[ GodPack_Lz77b_GetBitCount(aLitCount) ]++;	
+	gGodPackLz77bLiteralHistogram[ GodPack_Lz77b_GetBitCount(aLitCount) ]++;
 }
 
 
@@ -436,7 +436,7 @@ void GodPack_Lz77b_StatsLiteralsUpdate(const U32 aLitCount)
 
 void GodPack_Lz77b_StatsOffsetUpdate(const U32 aOffset)
 {
-	gGodPackLz77bOffsetHistogram[ GodPack_Lz77b_GetBitCount(aOffset) ]++;		
+	gGodPackLz77bOffsetHistogram[ GodPack_Lz77b_GetBitCount(aOffset) ]++;
 }
 
 
@@ -448,7 +448,7 @@ void GodPack_Lz77b_StatsOffsetUpdate(const U32 aOffset)
 
 void GodPack_Lz77b_StatsCountUpdate(const U32 aCount)
 {
-	gGodPackLz77bCountHistogram[ GodPack_Lz77b_GetBitCount(aCount) ]++;	
+	gGodPackLz77bCountHistogram[ GodPack_Lz77b_GetBitCount(aCount) ]++;
 }
 
 
@@ -473,7 +473,7 @@ void GodPack_Lz77b_StatsOffsetCountUpdate(const U32 aOffset,const U32 aCount)
 
 void GodPack_Lz77b_StatsStringUpdate(const U32 aCount)
 {
-	gGodPackLz77bStringHistogram[ GodPack_Lz77b_GetBitCount(aCount) ]++;	
+	gGodPackLz77bStringHistogram[ GodPack_Lz77b_GetBitCount(aCount) ]++;
 }
 
 

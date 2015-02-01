@@ -637,7 +637,7 @@ U8	Video_SetMode( const U16 aWidth, const U16 aHeight, const U16 aMode, const U1
 
 U16	Video_GetMode( void )
 {
-	return( gVideo.mMode );	
+	return( gVideo.mMode );
 }
 
 
@@ -649,7 +649,7 @@ U16	Video_GetMode( void )
 
 U16	Video_GetWidth( void )
 {
-	return( gVideo.mWidth );	
+	return( gVideo.mWidth );
 }
 
 
@@ -661,7 +661,7 @@ U16	Video_GetWidth( void )
 
 U16	Video_GetHeight( void )
 {
-	return( gVideo.mHeight );	
+	return( gVideo.mHeight );
 }
 
 
@@ -804,7 +804,7 @@ void	Video_SetHorizontalOffset( const S16 aOff )
 	{
 		*(U16*)0xFFFF8288L = (U16)(gVideo.mHDB + aOff);
 		*(U16*)0xFFFF828AL = (U16)(gVideo.mHDE + aOff);
-	}	
+	}
 }
 
 
@@ -816,7 +816,7 @@ void	Video_SetHorizontalOffset( const S16 aOff )
 
 S16	Video_GetHorizontalOffset( void )
 {
-	return( gVideo.mHoff );	
+	return( gVideo.mHoff );
 }
 
 
@@ -833,7 +833,7 @@ void	Video_SetVerticalOffset( const S16 aOff )
 	{
 		*(U16*)0xFFFF82A8L = (U16)(gVideo.mVDB + (aOff<<1));
 		*(U16*)0xFFFF82AAL = (U16)(gVideo.mVDE + (aOff<<1));
-	}	
+	}
 }
 
 
@@ -845,7 +845,7 @@ void	Video_SetVerticalOffset( const S16 aOff )
 
 S16	Video_GetVerticalOffset( void )
 {
-	return( gVideo.mVoff );	
+	return( gVideo.mVoff );
 }
 
 #ifndef	dGODLIB_PLATFORM_ATARI

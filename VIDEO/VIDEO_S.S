@@ -23,7 +23,7 @@
 	export	Video_UpdateRegsSTE
 	export	Video_UpdateRegsTT
 	export	Video_UpdateRegsFalcon
-	
+
 	export	Video_GetPalST
 	export	Video_SetPalST
 	export	Video_GetPalTT
@@ -177,7 +177,7 @@ Video_RestoreRegsST:
 	lsr.l	#8,d1							; video address mid
 	move.l	d1,d2							; copy hi:mid
 	lsr.l	#8,d2							; video address hi
-	
+
 	move.b	d2,$FFFF8201.w					; set video hi
 	move.b	d1,$FFFF8203.w					; set video mid
 
@@ -252,7 +252,7 @@ Video_RestoreRegsSTE:
 	lsr.l	#8,d1											; video address mid
 	move.l	d1,d2											; copy hi:mid
 	lsr.l	#8,d2											; video address hi
-	
+
 	move.b	d2,$FFFF8201.w									; set video hi
 	move.b	d1,$FFFF8203.w									; set video mid
 	move.b	d0,$FFFF820D.w									; set video lo
@@ -307,11 +307,11 @@ Video_SaveRegsTT:
 
 Video_RestoreRegsTT:
 
-    move.l  sVideoSaveRegsTT_pLogic(a0),$0000044E.w 
-    move.l  sVideoSaveRegsTT_pPhysic(a0),$FFFF8200.w
-    move.b  sVideoSaveRegsTT_pPhysicLow(a0),$FFFF820D.w
-    move.b  sVideoSaveRegsTT_ResST(a0),$FFFF8260.w
-    move.w  sVideoSaveRegsTT_ResTT(a0),$FFFF8262.w
+	move.l  sVideoSaveRegsTT_pLogic(a0),$0000044E.w
+	move.l  sVideoSaveRegsTT_pPhysic(a0),$FFFF8200.w
+	move.b  sVideoSaveRegsTT_pPhysicLow(a0),$FFFF820D.w
+	move.b  sVideoSaveRegsTT_ResST(a0),$FFFF8260.w
+	move.w  sVideoSaveRegsTT_ResTT(a0),$FFFF8262.w
 	move.b	sVideoSaveRegsTT_Sync(a0),$FFFF820A.w
 	move.b	sVideoSaveRegsTT_Scroll(a0),$FFFF8265.w
 	move.b	sVideoSaveRegsTT_LineWidth(a0),$FFFF820F.w
@@ -349,7 +349,7 @@ Video_SaveRegsFalcon:
 	move.l	$ffff8200.w,(a6)+	; 0 vidhm
 	move.w	$ffff820c.w,(a6)+	; 4 vidl
 	move.l	$ffff8282.w,(a6)+	; 6 h-regs
-	move.l	$ffff8286.w,(a6)+	;10 
+	move.l	$ffff8286.w,(a6)+	;10
 	move.l	$ffff828a.w,(a6)+	;14
 	move.l	$ffff82a2.w,(a6)+	;18 v-regs
 	move.l	$ffff82a6.w,(a6)+	;22
@@ -429,11 +429,11 @@ Video_RestoreRegsFalcon:
 .ok:
 	move.w  2(a6),$ffff8260.w	; st-shift
 	move.w	-10(a6),$ffff82c2.w	; c_s
-	move.l	-8(a6),$ffff820e.w	; offset		
+	move.l	-8(a6),$ffff820e.w	; offset
 
 .video_restored:
 	movem.l	(a7)+,d0-d2/a0-a6	; restore regs
-	rts	
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -616,7 +616,7 @@ Video_UpdateRegsSTE:
 	lsr.l	#8,d1							; video address mid
 	move.l	d1,d2							; copy hi:mid
 	lsr.l	#8,d2							; video address hi
-	
+
 	move.b	d2,$FFFF8201.w					; set video hi
 	move.b	d1,$FFFF8203.w					; set video mid
 	move.b	d0,$FFFF820D.w					; set video lo
@@ -636,7 +636,7 @@ Video_UpdateRegsSTE:
 	move.b	d0,$FFFF8265.w							; set scroll position
 	move.b	sVideo_ScanLineWords0+1(a0),$FFFF820E.w	; set scanline length
 	bra.s	.no_scroll								; finish update
-.scroll0:	
+.scroll0:
 	clr.b	$ffff8265.w								; set scroll 0
 	move.b	sVideo_ScanLineWords1+1(a0),$FFFF820E.w	; set scanline length
 .no_scroll:
@@ -669,7 +669,7 @@ Video_UpdateRegsTT:
 	lsr.l	#8,d1							; video address mid
 	move.l	d1,d2							; copy hi:mid
 	lsr.l	#8,d2							; video address hi
-	
+
 	move.b	d2,$FFFF8201.w					; set video hi
 	move.b	d1,$FFFF8203.w					; set video mid
 	move.b	d0,$FFFF820D.w					; set video lo
@@ -688,7 +688,7 @@ Video_UpdateRegsTT:
 	move.b	d0,$FFFF8265.w							; set scroll position
 	move.b	sVideo_ScanLineWords0+1(a0),$FFFF820F.w	; set scanline length
 	bra.s	.no_scroll								; finish update
-.scroll0:	
+.scroll0:
 	clr.b	$ffff8265.w								; set scroll 0
 	move.b	sVideo_ScanLineWords1+1(a0),$FFFF820F.w	; set scanline length
 .no_scroll:
@@ -733,7 +733,7 @@ Video_UpdateRegsFalcon:
 	lsr.l	#8,d1							; video address mid
 	move.l	d1,d2							; copy hi:mid
 	lsr.l	#8,d2							; video address hi
-	
+
 	move.b	d2,$FFFF8201.w					; set video hi
 	move.b	d1,$FFFF8203.w					; set video mid
 	move.b	d0,$FFFF820D.w					; set video lo
@@ -748,7 +748,7 @@ Video_UpdateRegsFalcon:
 	move.b	d0,$FFFF8265.w							; set scroll position
 	move.w	sVideo_ScanLineWords0(a0),$FFFF820E.w	; set scanline length
 	bra.s	.no_scroll								; finish update
-.scroll0:	
+.scroll0:
 	clr.b	$ffff8265.w								; set scroll 0
 	move.w	sVideo_ScanLineWords1(a0),$FFFF820E.w	; set scanline length
 .no_scroll:
@@ -771,7 +771,7 @@ Video_UpdateRegsFalcon:
 	movem.l	(a1)+,d0-d6/a3					; read palette
 	movem.l	d0-d6/a3,(a2)					; set palette
 	lea		32(a2),a2						; next bank of registers
-	dbra	d7,.loop	
+	dbra	d7,.loop
 
 .no_palfalcon:
 
@@ -780,7 +780,7 @@ Video_UpdateRegsFalcon:
 
 Video_XbiosSetScreen:
 	movem.l	d0-a6,-(a7)
-	
+
 	move.w	d0,-(a7)
 	move.l	#-1,-(a7)
 	move.l	#-1,-(a7)
@@ -869,7 +869,7 @@ video_7:
 	lea.l	gVidelData+36*4*6,a0			;640*480 8bit
 
 
-	
+
 setvideo:
 	tst.w	monitor					;vga?
 	bne.s	.rgb					;>rgb
@@ -907,7 +907,7 @@ setvideo:
 	clr.w	$ffff8266.w				;spshift - videl colourmode
 	swap	d0					;
 	move.b	d0,$ffff8260.w				;st shifter resolution
-.set_video:	
+.set_video:
 	move.w	(a0)+,$ffff82c2.w			;vco - videl pixel width
 	move.w	(a0)+,$ffff8210.w			;scanlinewidth
 	rts						;
@@ -923,7 +923,7 @@ monitor:	dc.w	0
 Video_SetFalconSTLowVGA:
 	move.w	sr,-(a7)
 	move.w	#$2700,sr
-	move.l  #$170012,$ffff8282.w            ;falcon 60Hz 
+	move.l  #$170012,$ffff8282.w            ;falcon 60Hz
 	move.l  #$1020e,$ffff8286.w             ;
 	move.l  #$d0012,$ffff828a.w             ;
 	move.l  #$41903ff,$ffff82a2.w           ;
@@ -941,7 +941,7 @@ Video_SetFalconSTLowVGA:
 Video_SetFalconSTLowRGBPAL_W:
 	move.w	sr,-(a7)
 	move.w	#$2700,sr
-	move.l  #$300027,$ffff8282.w            ;falcon 50Hz 
+	move.l  #$300027,$ffff8282.w            ;falcon 50Hz
 	move.l  #$70229,$ffff8286.w             ;
 	move.l  #$1e002a,$ffff828a.w            ;
 	move.l  #$2710265,$ffff82a2.w           ;

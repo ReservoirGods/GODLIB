@@ -38,8 +38,8 @@ sMfpTimer			gPinkNoteInterruptTimer;
 
 sPinkNote			gPinkNoteSilence[2] =
 {
-	mPINKNOTE_VOLUME( 0, 0 ), 
-	mPINKNOTE_END 
+	mPINKNOTE_VOLUME( 0, 0 ),
+	mPINKNOTE_END
 };
 
 extern	sPinkNoteChannel	gPinkNoteChannel[ dPINKNOTE_CHANNEL_LIMIT ];

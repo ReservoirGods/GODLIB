@@ -53,7 +53,7 @@ void	Graphic_16BPP_Blit( struct sGraphicCanvas * apCanvas,sGraphicPos * apCoords
 		lSY++;
 		lDY++;
 		lH--;
-	}	
+	}
 }
 
 
@@ -66,7 +66,7 @@ void	Graphic_16BPP_Blit( struct sGraphicCanvas * apCanvas,sGraphicPos * apCoords
 void	Graphic_16BPP_ClearScreen( struct sGraphicCanvas * apCanvas )
 {
 	U32	lSize;
-	
+
 	lSize  = apCanvas->mWidth;
 	lSize *= apCanvas->mHeight;
 	lSize += lSize;
@@ -84,12 +84,12 @@ void	Graphic_16BPP_ClearScreen( struct sGraphicCanvas * apCanvas )
 void	Graphic_16BPP_CopyScreen( struct sGraphicCanvas * apCanvas,void * apSrc )
 {
 	U32	lSize;
-	
+
 	lSize  = apCanvas->mWidth;
 	lSize *= apCanvas->mHeight;
 	lSize += lSize;
 
-	Memory_Copy( lSize, apSrc, apCanvas->mpVRAM );	
+	Memory_Copy( lSize, apSrc, apCanvas->mpVRAM );
 }
 
 
@@ -120,7 +120,7 @@ void	Graphic_16BPP_DrawBox( struct sGraphicCanvas * apCanvas,sGraphicRect * apRe
 		}
 		lY++;
 		lH--;
-	}		
+	}
 }
 
 
@@ -166,7 +166,7 @@ void	Graphic_16BPP_DrawSprite( struct sGraphicCanvas * apCanvas,sGraphicPos * ap
 	U16			lMskCount;
 	U16			lW,lH;
 	sSprite *	lpSprite;
-	
+
 	lpSprite = (sSprite*)apSprite;
 	lpDst    = (U16*)apCanvas->mpVRAM;
 	lpDst   +=(apCoords->mY * apCanvas->mWidth);
@@ -238,7 +238,7 @@ void	Graphic_16BPP_DrawQuad( struct sGraphicCanvas * apCanvas,sGraphicPos * apCo
 {
 	(void)apCanvas;
 	(void)apCoords;
-	(void)aColour;	
+	(void)aColour;
 }
 
 
@@ -257,14 +257,14 @@ void	Graphic_16BPP_Blit_Clip( struct sGraphicCanvas * apCanvas,sGraphicPos * apC
 	lCoords = *apCoords;
 	lRect   = *apRect;
 
-	if( ( lCoords.mX                   < apCanvas->mClipBox.mX1 ) && 
+	if( ( lCoords.mX                   < apCanvas->mClipBox.mX1 ) &&
 		( lCoords.mY                   < apCanvas->mClipBox.mY1 ) &&
 		( lCoords.mX + apRect->mWidth  > apCanvas->mClipBox.mX0 ) &&
 		( lCoords.mY + apRect->mHeight > apCanvas->mClipBox.mY0 ) &&
 		( lRect.mX                     < apSrc->mClipBox.mX1    ) &&
 		( lRect.mY                     < apSrc->mClipBox.mY1    ) &&
 		( lRect.mX + apRect->mWidth    > apSrc->mClipBox.mX0    ) &&
-		( lRect.mY + apRect->mHeight   > apSrc->mClipBox.mY0    ) 
+		( lRect.mY + apRect->mHeight   > apSrc->mClipBox.mY0    )
 		)
 	{
 
@@ -306,7 +306,7 @@ void	Graphic_16BPP_Blit_Clip( struct sGraphicCanvas * apCanvas,sGraphicPos * apC
 			lRect.mWidth = (S16)(lRect.mWidth - lDiff);
 		}
 
-		lDiff = (S16)((lRect.mY + lRect.mHeight) - apSrc->mClipBox.mY1); 
+		lDiff = (S16)((lRect.mY + lRect.mHeight) - apSrc->mClipBox.mY1);
 		if( lDiff > 0 )
 		{
 			lRect.mHeight = (S16)(lRect.mHeight - lDiff);
@@ -328,7 +328,7 @@ void	Graphic_16BPP_Blit_Clip( struct sGraphicCanvas * apCanvas,sGraphicPos * apC
 		{
 			Graphic_16BPP_Blit( apCanvas, &lCoords, &lRect, apSrc );
 		}
-	}	
+	}
 }
 
 
@@ -345,7 +345,7 @@ void	Graphic_16BPP_DrawBox_Clip( struct sGraphicCanvas * apCanvas,sGraphicRect *
 
 	lRect   = *apCoords;
 
-	if( ( lRect.mX < apCanvas->mClipBox.mX1  ) && 
+	if( ( lRect.mX < apCanvas->mClipBox.mX1  ) &&
 		( lRect.mY < apCanvas->mClipBox.mY1 ) )
 	{
 
@@ -369,7 +369,7 @@ void	Graphic_16BPP_DrawBox_Clip( struct sGraphicCanvas * apCanvas,sGraphicRect *
 			lRect.mWidth = (S16)(lRect.mWidth - lDiff);
 		}
 
-		lDiff = (S16)((lRect.mY + lRect.mHeight) - apCanvas->mClipBox.mY1); 
+		lDiff = (S16)((lRect.mY + lRect.mHeight) - apCanvas->mClipBox.mY1);
 		if( lDiff > 0 )
 		{
 			lRect.mHeight = (S16)(lRect.mHeight-lDiff);
@@ -379,7 +379,7 @@ void	Graphic_16BPP_DrawBox_Clip( struct sGraphicCanvas * apCanvas,sGraphicRect *
 		{
 			Graphic_16BPP_DrawBox( apCanvas, &lRect, aColour );
 		}
-	}		
+	}
 }
 
 
@@ -411,7 +411,7 @@ void	Graphic_16BPP_DrawPixel_Clip( struct sGraphicCanvas * apCanvas,sGraphicPos 
 		( apCoords->mY  < apCanvas->mClipBox.mY1 ) )
 	{
 		Graphic_16BPP_DrawPixel( apCanvas, apCoords, aColour );
-	}		
+	}
 }
 
 
@@ -433,7 +433,7 @@ void	Graphic_16BPP_DrawSprite_Clip( struct sGraphicCanvas * apCanvas,sGraphicPos
 	sGraphicPos	lPos;
 	S16			lSprW,lSprH;
 	sSprite *	lpSprite;
-	
+
 	lpSprite = (sSprite*)apSprite;
 	lSprW = lpSprite->mWidth;
 	lSprH = lpSprite->mHeight;
@@ -500,7 +500,7 @@ void	Graphic_16BPP_DrawSprite_Clip( struct sGraphicCanvas * apCanvas,sGraphicPos
 			}
 			lpDst += lOff;
 			lH--;
-		}	
+		}
 	}
 }
 
@@ -513,9 +513,9 @@ void	Graphic_16BPP_DrawSprite_Clip( struct sGraphicCanvas * apCanvas,sGraphicPos
 
 void	Graphic_16BPP_DrawTri_Clip( struct sGraphicCanvas * apCanvas,sGraphicPos * apCoords,S16 aColour )
 {
-	(void)apCanvas;	
-	(void)apCoords;	
-	(void)aColour;	
+	(void)apCanvas;
+	(void)apCoords;
+	(void)aColour;
 }
 
 
@@ -527,9 +527,9 @@ void	Graphic_16BPP_DrawTri_Clip( struct sGraphicCanvas * apCanvas,sGraphicPos * 
 
 void	Graphic_16BPP_DrawQuad_Clip( struct sGraphicCanvas * apCanvas,sGraphicPos * apCoords,S16 aColour )
 {
-	(void)apCanvas;	
-	(void)apCoords;	
-	(void)aColour;		
+	(void)apCanvas;
+	(void)apCoords;
+	(void)aColour;
 }
 
 
@@ -544,7 +544,7 @@ U16	Graphic_16BPP_GetPixel( const sGraphicCanvas * apCanvas,const S16 aX,const S
 	U32		lOff;
 	U16 *	lpPixel;
 	U16		lPixel;
-	
+
 	lOff  = aY;
 	lOff *=(apCanvas->mWidth);
 	lOff += aX;
@@ -568,7 +568,7 @@ void	Graphic_16BPP_SetPixel( const sGraphicCanvas * apCanvas,const S16 aX,const 
 {
 	U32		lOff;
 	U16 *	lpPixel;
-	
+
 	lOff  = aY;
 	lOff *=(apCanvas->mWidth);
 	lOff += aX;

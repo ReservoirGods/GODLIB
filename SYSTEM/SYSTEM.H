@@ -137,8 +137,8 @@ typedef	struct
 	U32	mCycleCountAtVBL;	/* 16 */
 	U32	mCycleCountAtHBL;	/* 20 */
 	U16	mPad;				/* 24 */
-	U8	mPad2;				/* 26 */	
-	U8	mColourDepth;		/* 27 */	
+	U8	mPad2;				/* 26 */
+	U8	mColourDepth;		/* 27 */
 	U8	mResolution;
 } sSystemEmuDesc;
 

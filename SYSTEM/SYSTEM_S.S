@@ -182,7 +182,7 @@ System_GetIML:
 
 System_SetDataCache030:
 	rts
-	
+
 	tst.w	d0
 	beq.s	.cache_off
 
@@ -315,7 +315,7 @@ System_GetEmuName0:
 	addq.l	#2,a7
 
 	move.l	d6,d0
-	
+
 	movem.l	(a7)+,d1-d7/a0-a6
 	rts
 
@@ -336,7 +336,7 @@ System_GetEmuName1:
 	addq.l	#2,a7
 
 	move.l	d7,d0
-	
+
 	movem.l	(a7)+,d1-d7/a0-a6
 	rts
 
@@ -360,7 +360,7 @@ System_GetEmuVers:
 	move.b	(a0)+,d0
 	lsl.w	#8,d0
 	move.b	(a0)+,d0
-	
+
 	movem.l	(a7)+,d1-d7/a0-a6
 	rts
 

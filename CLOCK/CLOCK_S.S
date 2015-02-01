@@ -34,7 +34,7 @@ Clock_TimeVbl:
 	move.l	d0,-(a7)						;	save registers
 	move.l	d1,-(a7)						;	save registers
 	move.l	d2,-(a7)						;	save registers
-	
+
 	move.l	gClockTime,d0					;	old clock value
 	addq.b	#1,d0							;	inc frames
 	move.b	gClockFrameRate,d1
@@ -59,7 +59,7 @@ Clock_TimeVbl:
 .tc_storeclock:
 	move.l	d0,gClockTime					;	store clock
 
-	move.l	gClockTickAdd,d0				;	
+	move.l	gClockTickAdd,d0				;
 	move.l	gClockTicks,d1
 	move.l	gClockSubTickAdd,d2
 

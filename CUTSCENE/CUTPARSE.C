@@ -182,7 +182,7 @@ sTagValue	gCutSceneStructSizes[] =
 	{	eCUTPARSE_CHUNK_SPRITE,		sizeof(sCutSprite)		},
 	{	eCUTPARSE_CHUNK_TEXT,		sizeof(sCutText)		},
 	{	eCUTPARSE_CHUNK_VAR,		sizeof(sCutVar)			},
-	
+
 	{	eCUTPARSE_CHUNK_LIMIT,		0						}
 };
 
@@ -655,7 +655,7 @@ void CutSceneParse_ChunkItemsStrListBuild(sCutChunkItem * apItems,sStringList * 
 						U8 *				lpStruct;
 						char *				lpString;
 
-						
+
 						lpStruct = (U8*)lpItem->mpStruct;
 						lpString =*(char**)&lpStruct[ lpMembers->mOffset ];
 						lpStrIt  = StringList_ItemCreate( apList, lpString );
@@ -667,7 +667,7 @@ void CutSceneParse_ChunkItemsStrListBuild(sCutChunkItem * apItems,sStringList * 
 			}
 			lpItem = lpItem->mpNext;
 		}
-	}	
+	}
 }
 
 
@@ -685,7 +685,7 @@ void CutSceneParse_SceneStringsFix(sCutScene * apScene)
 	{
 		CutSceneParse_StructStringsFix( apScene, gCutSceneAnimationMembers, &apScene->mpAnimations[ i ] );
 	}
-	
+
 	for( i=0; i<apScene->mAssetCount; i++ )
 	{
 		CutSceneParse_StructStringsFix( apScene, gCutSceneAssetMembers, &apScene->mpAssets[ i ] );
@@ -840,7 +840,7 @@ void CutSceneParse_CommandsFix(sCutScene * apScene)
 	U32				lArg0;
 	U32				lArg1;
 	U32				lArg2;
-	
+
 	for( i=0; i<apScene->mScriptCount; i++ )
 	{
 		lpScript = &apScene->mpScripts[ i ];

@@ -98,7 +98,7 @@ void		PackageManager_AppendSlash( char * apString );
 
 void	PackageManager_Init( void )
 {
-	gpPackages = 0;	
+	gpPackages = 0;
 	gPackageOpQueueHead = 0;
 	gPackageOpQueueTail = 0;
 	gPackageLinkEnableFlag = 1;
@@ -220,7 +220,7 @@ void	PackageManager_UnLoad( sPackage * apPackage )
 
 	lpOp->mCmd      = ePACKAGEOP_UNLOAD;
 	lpOp->mpPackage = apPackage;
-	
+
 	gPackageOpQueueTail++;
 	if( gPackageOpQueueTail >= dPACKAGE_OPQ_LIMIT )
 	{
@@ -248,7 +248,7 @@ void	PackageManager_ReLoad( sPackage * apPackage )
 	case	ePACKAGESTATUS_RELOCATING:
 	case	ePACKAGESTATUS_RELOCATED:
 		PackageManager_UnLoad( apPackage );
-		PackageManager_Load( apPackage );	
+		PackageManager_Load( apPackage );
 		break;
 	}
 }
@@ -272,7 +272,7 @@ void	PackageManager_AppendSlash( char * apString )
 			apString[ lLen + 0 ] = '\\';
 			apString[ lLen + 1 ] = 0;
 		}
-	}	
+	}
 }
 
 
@@ -284,7 +284,7 @@ void	PackageManager_AppendSlash( char * apString )
 
 void	PackageManager_SetLinkPath( const char * apPath )
 {
-	strcpy( gPackageManagerLinkPath, apPath );	
+	strcpy( gPackageManagerLinkPath, apPath );
 	PackageManager_AppendSlash( gPackageManagerLinkPath );
 }
 
@@ -323,7 +323,7 @@ void		PackageManager_SetLinkEnableFlag( U16 aLinkEnableFlag )
 void	Package_Init( sPackage * apPackage,const char * apName,const char * apContext )
 {
 	U32			i;
-	
+
 	if( apPackage )
 	{
 		apPackage->mID         = Asset_BuildHash( apName );
@@ -366,7 +366,7 @@ void	Package_DeInit( sPackage * apPackage )
 		lpPackageLast = lpPackage;
 		lpPackage     = lpPackage->mpNext;
 	}
-	
+
 	if( lpPackage == apPackage )
 	{
 		if( lpPackageLast )
@@ -425,7 +425,7 @@ U32	Package_Load( sPackage * apPackage )
 		}
 	}
 
-	return( 1 );	
+	return( 1 );
 }
 
 
@@ -440,7 +440,7 @@ U32	Package_UnLoad( sPackage * apPackage )
 	U32			i;
 	U32			lRet;
 	sAsset *	lpAsset;
-	
+
 	lRet = 1;
 
 	if( (apPackage->mStatus != ePACKAGESTATUS_UNLOADED) || (apPackage->mStatus != ePACKAGESTATUS_NOTLOADED) )
@@ -502,7 +502,7 @@ void	PackageManager_ShowAll( fPackagePrint aPrint )
 	U16			lClientCount;
 	char		lString[ 128 ];
 	U32			i;
-	
+
 	lpPackage = gpPackages;
 
 	while( lpPackage )
@@ -542,7 +542,7 @@ void	PackageManager_ShowUnused( fPackagePrint aPrint )
 	U16			lClientCount;
 	char		lString[ 128 ];
 	U32			i;
-	
+
 	lpPackage = gpPackages;
 
 	while( lpPackage )
@@ -567,7 +567,7 @@ void	PackageManager_ShowUnused( fPackagePrint aPrint )
 			}
 		}
 		lpPackage =lpPackage->mpNext;
-	}	
+	}
 }
 
 
@@ -581,7 +581,7 @@ void	PackageManager_ShowStatus( fPackagePrint aPrint )
 {
 	sPackage *	lpPackage;
 	char		lString[ 128 ];
-	
+
 	lpPackage = gpPackages;
 
 	while( lpPackage )
@@ -589,7 +589,7 @@ void	PackageManager_ShowStatus( fPackagePrint aPrint )
 		sprintf( lString, "PACKAGE : %s CON: %s %d", &lpPackage->mName[ 0 ], &lpPackage->mpContext->mName[ 0 ], lpPackage->mStatus );
 		aPrint( lString );
 		lpPackage =lpPackage->mpNext;
-	}	
+	}
 }
 
 

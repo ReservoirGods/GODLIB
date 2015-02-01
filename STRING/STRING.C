@@ -20,7 +20,7 @@
 sString *	String_Create( const char * apChars )
 {
 	sString *	lpString;
-	
+
 	lpString = (sString*)mMEMCALLOC( sizeof(sString) );
 	if( apChars )
 	{
@@ -47,7 +47,7 @@ sString *	String_Create( const char * apChars )
 sString *	String_Create2( const char * apChars0,const char * apChars1 )
 {
 	sString *	lpString;
-	
+
 	lpString = (sString*)mMEMCALLOC( sizeof(sString) );
 	if( apChars0 && apChars1 )
 	{
@@ -155,7 +155,7 @@ void	String_CharInsert( sString * apString,const U16 aIndex,const U8 aChar )
 		lpChars = (char*)mMEMCALLOC( apString->mCharCount + 2 );
 		lpDst   = lpChars;
 		lpSrc   = apString->mpChars;
-		
+
 		i = 0;
 		for( i=0; i<apString->mCharCount; i++ )
 		{
@@ -199,7 +199,7 @@ void	String_CharRemove( sString * apString,const U16 aIndex )
 			lpChars = (char*)mMEMCALLOC( apString->mCharCount );
 			lpDst   = lpChars;
 			lpSrc   = apString->mpChars;
-			
+
 			i = 0;
 			for( i=0; i<apString->mCharCount; i++ )
 			{
@@ -273,7 +273,7 @@ void	String_Copy( sString * apDst,const sString * apSrc )
 U32	String_GetCharCount( const sString * apString )
 {
 	U32	lCount;
-	
+
 	if( apString )
 	{
 		lCount = apString->mCharCount;
@@ -303,7 +303,7 @@ void	String_Prepend( sString * apString,const char * apChars )
 		apString->mpChars     = (char*)mMEMCALLOC( apString->mCharCount + 1 );
 		String_StrCat( apString->mpChars, apChars, lpChars );
 		mMEMFREE( lpChars );
-	}	
+	}
 }
 
 
@@ -317,7 +317,7 @@ void	String_Update( sString * apString,const char * apChars )
 {
 	char *	lpChars;
 	U32		lCount;
-	
+
 	if( apString && apChars )
 	{
 		lCount = String_StrLen( apChars );
@@ -330,7 +330,7 @@ void	String_Update( sString * apString,const char * apChars )
 			lpChars              = apString->mpChars;
 			apString->mCharCount = lCount;
 			apString->mpChars    = (char*)mMEMCALLOC( apString->mCharCount + 1 );
-			String_StrCpy( apString->mpChars, apChars );			
+			String_StrCpy( apString->mpChars, apChars );
 
 			if( lpChars )
 			{
@@ -351,7 +351,7 @@ void	String_Update2( sString * apString,const char * apChars0,const char * apCha
 {
 	char *	lpChars;
 	U32		lCount;
-	
+
 	if( apString && apChars0 && apChars1 )
 	{
 		lCount  = String_StrLen( apChars0 );
@@ -365,7 +365,7 @@ void	String_Update2( sString * apString,const char * apChars0,const char * apCha
 			lpChars              = apString->mpChars;
 			apString->mCharCount = lCount;
 			apString->mpChars    = (char*)mMEMCALLOC( apString->mCharCount + 1 );
-			String_StrCat( apString->mpChars, apChars0, apChars1 );			
+			String_StrCat( apString->mpChars, apChars0, apChars1 );
 
 			if( lpChars )
 			{
@@ -373,7 +373,7 @@ void	String_Update2( sString * apString,const char * apChars0,const char * apCha
 			}
 		}
 	}
-	
+
 }
 
 
@@ -395,7 +395,7 @@ U32	String_StrLen( const char * apString )
 			lSize++;
 		}
 	}
-	
+
 	return( lSize );
 }
 
@@ -521,7 +521,7 @@ U8 String_StrCmpi(const char * apStr0,const char * apStr1)
 			{
 				lVal1 = (U8)(lVal1 + ( 'A'-'a' ));
 			}
-			
+
 			if( lVal0 != lVal1 )
 			{
 				return( 1 );
@@ -537,7 +537,7 @@ U8 String_StrCmpi(const char * apStr0,const char * apStr1)
 		return( 0 );
 	}
 
-	return( (U8)(*apStr0 | * apStr1) );	
+	return( (U8)(*apStr0 | * apStr1) );
 }
 
 
@@ -583,7 +583,7 @@ S32	String_ToValue( const char * apString )
 	lVal = 0;
 	if( lMode )
 	{
-		while( 
+		while(
 				( (*apString >= '0') && (*apString <= '9') )
 			||	( (*apString >= 'a') && (*apString <= 'f') )
 			||	( (*apString >= 'A') && (*apString <= 'F') )
@@ -616,7 +616,7 @@ S32	String_ToValue( const char * apString )
 	}
 
 	lVal *= lSign;
-	return( lVal );	
+	return( lVal );
 }
 
 

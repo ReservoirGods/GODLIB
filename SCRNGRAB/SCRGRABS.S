@@ -12,7 +12,7 @@
 
 	export	ScreenGrab_Vbl
 	export	gScreenGrabVblLockFlag
-	
+
 	import	ScreenGrab_Update
 	import	gScreenGrabEnableFlag
 

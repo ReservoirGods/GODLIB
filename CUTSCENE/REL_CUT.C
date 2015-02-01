@@ -66,7 +66,7 @@ U32	Relocator_CUT_IsType( void * apData,const U32 aSize,const U32 aID )
 	(void)apData;
 	(void)aSize;
 	(void)aID;
-	return( 1 );	
+	return( 1 );
 }
 
 
@@ -100,7 +100,7 @@ U32	Relocator_CUT_OnLoad( void * apData,const U32 aSize,const U32 aID )
 
 			lpVar->mpVar = HashTree_VarRegister( CutScene_System_GetpHashTree(), lpVar->mpVarName );
 		}
-	}	
+	}
 
 	return( 1 );
 }
@@ -135,7 +135,7 @@ U32	Relocator_CUT_OnUnLoad( void * apData,const U32 aSize,const U32 aID )
 			lpVar = &lpCut->mpVars[ i ];
 			HashTree_VarUnRegister( CutScene_System_GetpHashTree(), lpVar->mpVar );
 		}
-	}	
+	}
 
 	return( 1 );
 }
@@ -151,8 +151,8 @@ U32	Relocator_CUT_DoDelocate( void * apData,const U32 aSize,const U32 aID )
 {
 	(void)aSize;
 	(void)aID;
-	CutScene_Delocate( (sCutScene*)apData );	
-	return( 1 );	
+	CutScene_Delocate( (sCutScene*)apData );
+	return( 1 );
 }
 
 

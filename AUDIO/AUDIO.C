@@ -625,7 +625,7 @@ void	Audio_SetRightVolume( const U8 aVol )
 U8	Audio_GetVolume( void )
 {
 	U16	lVol;
-	
+
 	lVol  = (U16)( Audio_GetLeftVolume() + Audio_GetRightVolume() );
 	lVol >>= 1;
 
@@ -654,7 +654,7 @@ void	Audio_SetVolume( const U8 aVol )
 
 U8 *	Audio_GetpSavedYM( void )
 {
-	return( gAudioSavedYM );	
+	return( gAudioSavedYM );
 }
 
 
@@ -682,7 +682,7 @@ void	Audio_DmaSound_Relocate( sAudioDmaSound * apSnd )
 {
 	Endian_FromBigU32( &apSnd->mpSound );
 	Endian_FromBigU32( &apSnd->mLength );
-	*(U32*)&apSnd->mpSound += (U32)apSnd;	
+	*(U32*)&apSnd->mpSound += (U32)apSnd;
 }
 
 

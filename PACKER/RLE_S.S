@@ -23,7 +23,7 @@
 * CREATION : 23.02.05 PNK
 *------------------------------------------------------------------------------------*
 
-GodPack_Rle_Decode_Asm: 
+GodPack_Rle_Decode_Asm:
 	movem.l	d0-d7/a0-a6,-(a7)
 
 	move.b	(a0)+,d1

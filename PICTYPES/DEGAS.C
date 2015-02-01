@@ -47,7 +47,7 @@ void	Degas_DeCompress( U8 * apSrc, U8 * apDst, U32 aDepackSize )
 	lDepackIndex = 0;
 	lpDst        = apDst;
 	lpSrc        = apSrc;
-		
+
 
 	while( lDepackIndex < aDepackSize )
 	{
@@ -58,7 +58,7 @@ void	Degas_DeCompress( U8 * apSrc, U8 * apDst, U32 aDepackSize )
 			lByte = *lpSrc++;
 
 			lCode = (S16)(-lCode);
-			
+
 			for( i=0; i<=lCode; i++ )
 				*lpDst++ = lByte;
 
@@ -68,10 +68,10 @@ void	Degas_DeCompress( U8 * apSrc, U8 * apDst, U32 aDepackSize )
 		{
 			for( i=0; i<=lCode; i++ )
 				*lpDst++ = *lpSrc++;
-			
+
 			lDepackIndex += lCode+1;
 		}
-	} 
+	}
 }
 
 
@@ -159,7 +159,7 @@ sCanvas *		Degas_Pc1ToCanvas( sDegas * apDegas )
 	lpCanvas = Canvas_Create();
 
 	Canvas_PaletteFromST( &lPal[ 0 ], 16, apDegas->mHeader.mPalette );
-	
+
 	lpPixels = (U8*)mMEMALLOC( 32000 );
 
 	Degas_DeCompress( (U8*)&apDegas->mPixels[0], lpPixels, 32000 );
@@ -224,7 +224,7 @@ sCanvas *		Degas_Pc2ToCanvas( sDegas * apDegas )
 	lpCanvas = Canvas_Create();
 
 	Canvas_PaletteFromST( &lPal[ 0 ], 4, apDegas->mHeader.mPalette );
-	
+
 	lpPixels = (U8*)mMEMALLOC( 32000 );
 
 	Degas_DeCompress( (U8*)&apDegas->mPixels[0], lpPixels, 32000 );
@@ -281,7 +281,7 @@ sCanvas *		Degas_Pc3ToCanvas( sDegas * apDegas )
 	lpCanvas = Canvas_Create();
 
 	Canvas_PaletteFromST( &lPal[ 0 ], 2, apDegas->mHeader.mPalette );
-	
+
 	lpPixels = (U8*)mMEMALLOC( 32000 );
 
 	Degas_DeCompress( (U8*)&apDegas->mPixels[0], lpPixels, 32000 );
@@ -473,7 +473,7 @@ sCanvas *		Degas_ToCanvas(   sDegas * apDegas )
 
 sDegas *	Degas_FromCanvas( sCanvas * apCanvas, uCanvasPixel * apPalette )
 {
-	return( Degas_Pi1FromCanvas( apCanvas, apPalette ) );	
+	return( Degas_Pi1FromCanvas( apCanvas, apPalette ) );
 }
 
 

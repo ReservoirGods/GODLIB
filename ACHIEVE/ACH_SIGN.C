@@ -545,7 +545,7 @@ U16	Achieve_SignIn_Enter_Update( sInput * apInput )
 			break;
 		default:
 			lKey = IKBD_ConvertScancodeAsciiCaps( lKey );
-			if( ((lKey > ' ') && (lKey < 128)) || 
+			if( ((lKey > ' ') && (lKey < 128)) ||
 				((lKey == ' ') && gAchieveSignInClass.mCurrentArea == eACH_SI_AREA_NAME) )
 			{
 				gAchieveSignInClass.mUserName[ gAchieveSignInClass.mCursorPositions[ eACH_SI_AREA_NAME ].mX ] = lKey;
@@ -601,28 +601,28 @@ U16	Achieve_SignIn_Verify_Update( sInput * apInput )
 			lpBack->mpFuncs->DrawBox( lpBack, &gAchieveSignInVerifyRect, dACHIEVE_SI_V_BACK_COLOUR );
 			if( gAchieveSignInClass.mpFont )
 			{
-				Achieve_SignIn_PrintCentred( 
+				Achieve_SignIn_PrintCentred(
 					"SIGNING IN AS",
-					gAchieveSignInClass.mpFont, 
+					gAchieveSignInClass.mpFont,
 					&gAchieveSignInVerifyTitleRect,
 					lpBack );
 
-				Achieve_SignIn_PrintCentred( 
+				Achieve_SignIn_PrintCentred(
 					gAchieveSignInClass.mUserName,
-					gAchieveSignInClass.mpFont, 
+					gAchieveSignInClass.mpFont,
 					&gAchieveSignInVerifyUserNameRect,
 					lpBack );
 
-				Achieve_SignIn_PrintCentred( 
+				Achieve_SignIn_PrintCentred(
 					gAchieveSignInVerifyButtonTexts[ 0 ],
-					gAchieveSignInClass.mpFont, 
-					&gAchieveSignInVerifyButtonRects[ 0 ], 
+					gAchieveSignInClass.mpFont,
+					&gAchieveSignInVerifyButtonRects[ 0 ],
 					lpBack );
 
-				Achieve_SignIn_PrintCentred( 
+				Achieve_SignIn_PrintCentred(
 					gAchieveSignInVerifyButtonTexts[ 1 ],
-					gAchieveSignInClass.mpFont, 
-					&gAchieveSignInVerifyButtonRects[ 1 ], 
+					gAchieveSignInClass.mpFont,
+					&gAchieveSignInVerifyButtonRects[ 1 ],
 					lpBack );
 			}
 		}
@@ -644,16 +644,16 @@ U16	Achieve_SignIn_Verify_Update( sInput * apInput )
 	Achieve_SignIn_BorderDraw( lpLogic, &gAchieveSignInVerifyButtonRects[ gAchieveSignInClass.mButtonOldIndex ], dACHIEVE_SI_V_BACK_COLOUR );
 	Achieve_SignIn_BorderDraw( lpLogic, &gAchieveSignInVerifyButtonRects[ gAchieveSignInClass.mButtonIndex ], dACHIEVE_SI_V_HI_COLOUR );
 
-	Achieve_SignIn_PrintCentred( 
+	Achieve_SignIn_PrintCentred(
 		gAchieveSignInVerifyButtonTexts[ gAchieveSignInClass.mButtonIndex ],
-		gAchieveSignInClass.mpFont, 
-		&gAchieveSignInVerifyButtonRects[ gAchieveSignInClass.mButtonIndex ], 
+		gAchieveSignInClass.mpFont,
+		&gAchieveSignInVerifyButtonRects[ gAchieveSignInClass.mButtonIndex ],
 		lpLogic );
 
-	Achieve_SignIn_PrintCentred( 
+	Achieve_SignIn_PrintCentred(
 		gAchieveSignInVerifyButtonTexts[ gAchieveSignInClass.mButtonOldIndex ],
-		gAchieveSignInClass.mpFont, 
-		&gAchieveSignInVerifyButtonRects[ gAchieveSignInClass.mButtonOldIndex ], 
+		gAchieveSignInClass.mpFont,
+		&gAchieveSignInVerifyButtonRects[ gAchieveSignInClass.mButtonOldIndex ],
 		lpLogic );
 
 	if( apInput->mKeyStatus[ eINPUTKEY_LEFT ] & eINPUTKEYSTATUS_HIT )
@@ -963,7 +963,7 @@ void	Achieve_SignIn_ProfilesRender( sGraphicCanvas * apCanvas )
 		lPos.mX = (160-(108/2));
 		lPos.mY = lY - 4;
 
-		if( ((S16)i == gAchieveSignInClass.mCursorPositions[ eACH_SI_AREA_PROFILE ].mY) && 
+		if( ((S16)i == gAchieveSignInClass.mCursorPositions[ eACH_SI_AREA_PROFILE ].mY) &&
 			( eACH_SI_AREA_PROFILE == gAchieveSignInClass.mCurrentArea ) )
 		{
 			lPos.mY += 2;

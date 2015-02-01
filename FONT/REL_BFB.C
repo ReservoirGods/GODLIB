@@ -64,7 +64,7 @@ U32	Relocator_BFB_IsType( void * apData,const U32 aSize,const U32 aID )
 	(void)aSize;
 	(void)aID;
 
-	return( 1 );	
+	return( 1 );
 }
 
 
@@ -79,8 +79,8 @@ U32	Relocator_BFB_DoDelocate( void * apData,const U32 aSize,const U32 aID )
 	(void)aSize;
 	(void)aID;
 
-	Font_Delocate( (sFont*)apData );	
-	return( 1 );	
+	Font_Delocate( (sFont*)apData );
+	return( 1 );
 }
 
 

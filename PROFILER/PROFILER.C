@@ -67,7 +67,7 @@ extern	void	__text( void );
 
 U8		Profiler_Init( const U16 aGameBuildHi, const U16 aGameBuildLo)
 {
-	sProfilerHeader	lHeader;	
+	sProfilerHeader	lHeader;
 
 	gProfilerIndex  = 0;
 
@@ -94,7 +94,7 @@ U8		Profiler_Init( const U16 aGameBuildHi, const U16 aGameBuildLo)
 	strcpy( lHeader.mDateText, __DATE__ );
 	strcpy( lHeader.mTimeText, __TIME__ );
 
-	
+
 	File_Write( gProfilerHandle, sizeof(sProfilerHeader), &lHeader );
 
 	Vbl_AddCall( Profiler_VBL );
@@ -219,7 +219,7 @@ sProfilerHeader	*	Profiler_LoadProfile( char * apFileName )
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : Profiler_BuildSymbolTable( const sProgramHeader * apProgram, const sProfilerHeader * apProfile )
-* ACTION   : creates symbol table of count sorted symbols 
+* ACTION   : creates symbol table of count sorted symbols
 * CREATION : 01.05.01 PNK
 *-----------------------------------------------------------------------------------*/
 
@@ -295,7 +295,7 @@ sProfilerSymbolTable *	Profiler_BuildSymbolTable( const sProgramHeader * apProgr
 	strcpy( lpTable->mSymbol[ lValidCount ].mSymbol.mName, "DA_END" );
 	lpTable->mSymbol[ lValidCount ].mSymbol.mValue = lpTable->mHeader.mSize;
 
-	
+
 	printf( "program size %ld\n", lpTable->mHeader.mSize );
 	printf( "pText %lX\n", apProfile->mpText );
 
@@ -472,12 +472,12 @@ void	Profiler_Relocate( sProfilerHeader * apHeader )
 {
 	if( apHeader )
 	{
-		Endian_FromBigU32( &apHeader->mID ); 
-		Endian_FromBigU32( &apHeader->mVersion ); 
-		Endian_FromBigU16( &apHeader->mGameBuildHi ); 
-		Endian_FromBigU16( &apHeader->mGameBuildLo ); 
-		Endian_FromBigU32( &apHeader->mpText ); 
-		Endian_FromBigU32( &apHeader->mEntryCount ); 
+		Endian_FromBigU32( &apHeader->mID );
+		Endian_FromBigU32( &apHeader->mVersion );
+		Endian_FromBigU16( &apHeader->mGameBuildHi );
+		Endian_FromBigU16( &apHeader->mGameBuildLo );
+		Endian_FromBigU32( &apHeader->mpText );
+		Endian_FromBigU32( &apHeader->mEntryCount );
 	}
 }
 

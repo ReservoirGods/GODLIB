@@ -96,17 +96,17 @@ void	Snd_GetInfo( sSndHeader * apHeader, sSndInfo * apInfo )
 	else if( lpTxtB )
 	{
 		apInfo->mTimer.mType = eSND_TIMER_B;
-		Snd_GetTimerInfo( &apInfo->mTimer, lpTxtB );		
+		Snd_GetTimerInfo( &apInfo->mTimer, lpTxtB );
 	}
 	else if( lpTxtC )
 	{
 		apInfo->mTimer.mType = eSND_TIMER_C;
-		Snd_GetTimerInfo( &apInfo->mTimer, lpTxtC );		
+		Snd_GetTimerInfo( &apInfo->mTimer, lpTxtC );
 	}
 	else if( lpTxtD )
 	{
 		apInfo->mTimer.mType = eSND_TIMER_D;
-		Snd_GetTimerInfo( &apInfo->mTimer, lpTxtD );		
+		Snd_GetTimerInfo( &apInfo->mTimer, lpTxtD );
 	}
 	else if( lpTxtV )
 	{
@@ -135,7 +135,7 @@ char *	Snd_GetpFromLong( sSndHeader * apHeader, char * apID )
 
 	for( i=0; i<apHeader->mStart.mOffset; i++ )
 	{
-		if( 
+		if(
 				( apHeader->mData[ i   ] == apID[ 0 ] )
 			&&	( apHeader->mData[ i+1 ] == apID[ 1 ] )
 			&&	( apHeader->mData[ i+2 ] == apID[ 2 ] )
@@ -161,7 +161,7 @@ char *	Snd_GetpFromWord( sSndHeader * apHeader, char * apID )
 
 	for( i=0; i<apHeader->mStart.mOffset; i++ )
 	{
-		if( 
+		if(
 				( apHeader->mData[ i   ] == apID[ 0 ] )
 			&&	( apHeader->mData[ i+1 ] == apID[ 1 ] )
 			)
@@ -253,7 +253,7 @@ void	Snd_TuneDeInit( sSndInfo * apInfo )
 {
 	if( apInfo )
 	{
-		Mfp_HookDisableTimerC();	
+		Mfp_HookDisableTimerC();
 		Snd_CallFunction( apInfo->mStop );
 	}
 }

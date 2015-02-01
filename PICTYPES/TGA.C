@@ -110,7 +110,7 @@ sCanvas *		Tga_ToCanvas( sTga * apTga )
 	{
 		return( 0 );
 	}
-	
+
 	lpColourMap  = (U8*)apTga;
 	lpColourMap += sizeof(sTgaHeader);
 	lpColourMap += apTga->mHeader.mImageIDLength;

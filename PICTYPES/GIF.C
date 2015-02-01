@@ -137,7 +137,7 @@ S16		Gif_CodeTableFind( sGifHashEntry * apEntry, const S16 aPrefix, const U8 aBy
 			}
 		}
 		lIndex = apEntry[ lIndex ].NextIndex;
-	} 
+	}
 
 	return( - 1 );
 }
@@ -314,13 +314,13 @@ U32	Gif_Decode( sCanvasIC * apCanvas,U8 * apData,const U16 aCodeSize )
 	S16		lNext;
 	S16		lCurrCode;
 	S16		lFirst;
-    S16		lGrabbedBits;
-	S16		lCodeSize; 
-	S16		lCodeMask; 
+	S16		lGrabbedBits;
+	S16		lCodeSize;
+	S16		lCodeMask;
 	S16		lSP;
 	S16		lPrevCode;
 	U32		lWorkBits;
-    S16		lBufIndex;
+	S16		lBufIndex;
 	S16		lBufLen;
 	U8 *	lpSrc;
 	U8 *	lpDst;
@@ -351,11 +351,11 @@ U32	Gif_Decode( sCanvasIC * apCanvas,U8 * apData,const U16 aCodeSize )
 		lCodeMask     = (S16)((1 << lCodeSize) - 1);
 		lpDst         = apCanvas->mpPixels;
 
-		while (lCurrCode != lEOI) 
+		while (lCurrCode != lEOI)
 		{
-			while (lGrabbedBits < lCodeSize) 
+			while (lGrabbedBits < lCodeSize)
 			{
-				if (lBufIndex == lBufLen) 
+				if (lBufIndex == lBufLen)
 				{
 					lpSrc  += lBufLen;
 					lBufLen = *lpSrc++;
@@ -374,39 +374,39 @@ U32	Gif_Decode( sCanvasIC * apCanvas,U8 * apData,const U16 aCodeSize )
 				lCurrCode = lClearCode;
 			}
 
-			if (lCurrCode == lClearCode) 
-			{          
+			if (lCurrCode == lClearCode)
+			{
 				lCodeSize = (S16)(lBaseCodeSize + 1);      /* Original lCurrCode size */
 				lCodeMask = (S16)((1 << lCodeSize) - 1);   /* Corresponding mask */
 				lNext     = (S16)(lClearCode + 2);         /* lFirst pos. in tables */
 				lPrevCode = -1;                     /* Next lCurrCode is a root lCurrCode */
-			} 
-			else if (lCurrCode == lEOI) 
-			{        
-			} 
-			else if (lPrevCode == -1) 
-			{   
+			}
+			else if (lCurrCode == lEOI)
+			{
+			}
+			else if (lPrevCode == -1)
+			{
 				*lpDst++ = (U8)lCurrCode;
 				lFirst = lPrevCode = lCurrCode;
-			} 
-			else 
-			{                               
-				if (lCurrCode >= lNext) 
-				{    
+			}
+			else
+			{
+				if (lCurrCode >= lNext)
+				{
 					lpTable->Stack[lSP++] = lFirst;
 					lFirst = lPrevCode;
-				} 
-				else  
+				}
+				else
 				{
 					lFirst = lCurrCode;
 				}
-				while (lFirst >= lClearCode) 
-				{ 
+				while (lFirst >= lClearCode)
+				{
 					lpTable->Stack[lSP++] = lpTable->Ext[lFirst];
 					lFirst                = lpTable->Prefix[lFirst];
 				}
 				lpTable->Stack[lSP++] = lFirst;
-				while( lSP ) 
+				while( lSP )
 				{
 					*lpDst++ = (U8)lpTable->Stack[ --lSP ];
 				}
@@ -414,7 +414,7 @@ U32	Gif_Decode( sCanvasIC * apCanvas,U8 * apData,const U16 aCodeSize )
 				lpTable->Ext[lNext++]  = lFirst;
 				lPrevCode              = lCurrCode;
 
-				if( (lNext > lCodeMask) && (lCodeSize != 12) ) 
+				if( (lNext > lCodeMask) && (lCodeSize != 12) )
 				{
 					lCodeSize++;
 					lCodeMask = (S16)((1 << lCodeSize) - 1);
@@ -435,7 +435,7 @@ U32	Gif_Decode( sCanvasIC * apCanvas,U8 * apData,const U16 aCodeSize )
 *-----------------------------------------------------------------------------------*/
 
 sGif *		Gif_FromCanvas( sCanvas * apCanvas, uCanvasPixel * apPalette )
-{	
+{
 	sGif *					lpGif;
 	sCanvasIC *				lpCanvasIC;
 	sGifColour *			lpPal;

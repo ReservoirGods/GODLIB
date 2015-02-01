@@ -31,7 +31,7 @@ U32	GodPack_Lz77b_Decode( const void * apSrc,void * apDst,const U32 aSize )
 
 	lpSrc = (U8*)apSrc;
 	lpDst = (U8*)apDst;
-	
+
 	i = 0;
 
 	while( i < aSize )
@@ -82,7 +82,7 @@ U32	GodPack_Lz77b_Decode( const void * apSrc,void * apDst,const U32 aSize )
 				lCount += (U16)(dGODPACK_LZ77B_SYMBOL0_COST+1);
 /*				DebugLog_Printf3( "%ld:\t%ld\t%ld\tS0\n", (U32)lpDst-(U32)apDst, lBackOff, lCount );*/
 			}
-			else 
+			else
 			{
 				lBackOff   = (((U32)*lpSrc++)<< dGODPACK_LZ77B_OFF1_RSHIFT);
 				lBackOff  |= (*lpSrc);

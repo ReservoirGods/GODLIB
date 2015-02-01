@@ -71,12 +71,12 @@ enum
 
 /* public interface */
 
-#define	mTHREAD_INIT( _a )		(_a)->mPC = 0; (_a)->mSleepTicks=0; (_a)->mState=eTHREAD_STATE_NONE; (_a)->mFlags |= eTHREAD_FLAG_INITED; 
-#define	mTHREAD_DEINIT( _a )	(_a)->mPC = 0; (_a)->mSleepTicks=0; (_a)->mState=eTHREAD_STATE_NONE; (_a)->mFlags &= ~eTHREAD_FLAG_INITED; 
+#define	mTHREAD_INIT( _a )		(_a)->mPC = 0; (_a)->mSleepTicks=0; (_a)->mState=eTHREAD_STATE_NONE; (_a)->mFlags |= eTHREAD_FLAG_INITED;
+#define	mTHREAD_DEINIT( _a )	(_a)->mPC = 0; (_a)->mSleepTicks=0; (_a)->mState=eTHREAD_STATE_NONE; (_a)->mFlags &= ~eTHREAD_FLAG_INITED;
 #define	mTHREAD_RESTART( _a )	_miTHREAD_VERIFY_IN(_a); mTHREAD_INIT(_a); _miTHREAD_RETURN(_a,eTHREAD_STATE_YIELDED)
 
-#define	mTHREAD_BEGIN( _a )	{  U8 _lThreadYieldFlag=0; sThread * _lpThread = (_a); _miTHREAD_VERIFY_INIT(_a); _miTHREAD_CONTEXT_RESTORE(_a); 
-#define	mTHREAD_END( _a )	 _miTHREAD_VERIFY_IN(_a); (void)_lThreadYieldFlag; (void)_lpThread; } ((_a)->mPC = 0); _miTHREAD_RETURN(_a,eTHREAD_STATE_ENDED); } 
+#define	mTHREAD_BEGIN( _a )	{  U8 _lThreadYieldFlag=0; sThread * _lpThread = (_a); _miTHREAD_VERIFY_INIT(_a); _miTHREAD_CONTEXT_RESTORE(_a);
+#define	mTHREAD_END( _a )	 _miTHREAD_VERIFY_IN(_a); (void)_lThreadYieldFlag; (void)_lpThread; } ((_a)->mPC = 0); _miTHREAD_RETURN(_a,eTHREAD_STATE_ENDED); }
 
 #define	mTHREAD_WAIT_UNTIL( _a, _aCond ) _miTHREAD_VERIFY_IN(_a); _miTHREAD_CONTEXT_SAVE( _a ); if( !(_aCond)) {_miTHREAD_RETURN(_a,eTHREAD_STATE_WAITING);}
 #define	mTHREAD_WAIT_WHILE( _a, _aCond ) mTHREAD_WAIT_UNTIL( _a, !(_aCond) )

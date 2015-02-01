@@ -19,12 +19,12 @@
 	export	Graphic_16BPP_Blit
 	export	Graphic_16BPP_ClearScreen
 	export	Graphic_16BPP_CopyScreen
-	export	Graphic_16BPP_DrawBox 
-	export	Graphic_16BPP_DrawLine 
-	export	Graphic_16BPP_DrawPixel 
-	export	Graphic_16BPP_DrawSprite 
-	export	Graphic_16BPP_DrawTri  
-	export	Graphic_16BPP_DrawQuad 
+	export	Graphic_16BPP_DrawBox
+	export	Graphic_16BPP_DrawLine
+	export	Graphic_16BPP_DrawPixel
+	export	Graphic_16BPP_DrawSprite
+	export	Graphic_16BPP_DrawTri
+	export	Graphic_16BPP_DrawQuad
 
 	export	Graphic_16BPP_Blit_Clip
 	export	Graphic_16BPP_ClearScreen_Clip
@@ -228,7 +228,7 @@ Graphic_16BPP_DrawSprite:
 
 	move.l	sGraphicCanvas_mpVRAM(a0),a0
 	add.l	d1,a0
-	
+
 	move.l	sGraphicSprite_mpGfx(a2),a3		; gfx
 	move.l	sGraphicSprite_mpMask(a2),a4	; mask
 	move.w	sGraphicSprite_mHeight(a2),d1	; spr height

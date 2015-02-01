@@ -109,7 +109,7 @@ void	RenderGui_Init( void )
 
 void	RenderGui_DeInit( void )
 {
-	
+
 }
 
 
@@ -265,11 +265,11 @@ void	RenderGui_ButtonDraw( sGuiButton * apButton,sGraphicCanvas * apCanvas,sGuiB
 				else if( lRedrawFlag )
 				{
 					{
-						if( apButton->mInfo.mFlags & eGUIINFO_FLAG_LOCKED ) 
+						if( apButton->mInfo.mFlags & eGUIINFO_FLAG_LOCKED )
 						{
 							RenderGui_FillDraw( lpStyle->mpFillLocked, apCanvas, &apButton->mInfo.mRectPair.mWorld );
 						}
-						else if( apButton->mInfo.mFlags & eGUIINFO_FLAG_SELECTED ) 
+						else if( apButton->mInfo.mFlags & eGUIINFO_FLAG_SELECTED )
 						{
 							RenderGui_FillDraw( lpStyle->mpFillSelected, apCanvas, &apButton->mInfo.mRectPair.mWorld );
 						}
@@ -627,7 +627,7 @@ void	RenderGui_StringDraw( sGuiString * apString,sGraphicCanvas * apCanvas,sGuiF
 						lPos.mY = (S16)(apString->mRects.mWorld.mY + 2);
 						break;
 					}
-					
+
 					apCanvas->mpClipFuncs->FontPrint( apCanvas, &lPos, lpFont, lpChars );
 
 					if( lpString )
@@ -635,7 +635,7 @@ void	RenderGui_StringDraw( sGuiString * apString,sGraphicCanvas * apCanvas,sGuiF
 						lpTextLine = Gui_GetpTextLine();
 						if( (lpString == lpTextLine->mpString) && (lpTextLine->mEditFlag) )
 						{
-							RenderGui_CursorDraw( 
+							RenderGui_CursorDraw(
 								apCanvas,
 								(S16)(lPos.mX + Font_GetStringCharX( lpFont, lpChars, lpTextLine->mCursorX )),
 								lPos.mY,
@@ -682,7 +682,7 @@ void	RenderGui_MouseSave( sRGuiMouseBlock * apBlock,sGraphicCanvas * apCanvas,sG
 		apBlock->mHeight = dRGUI_MOUSE_HEIGHT;
 	}
 
-	
+
 	if( apBlock->mHeight > 0 )
 	{
 		for( i=0; i<apBlock->mHeight; i++ )
@@ -931,7 +931,7 @@ U8	RenderGui_SetClipBox( sGraphicCanvas * apCanvas,const sGuiRect * apRect )
 
 void	RenderGui_SetCustomRender( fRenderGui aCustomRender )
 {
-	gRenderGui.mpCustomRenderer = aCustomRender;	
+	gRenderGui.mpCustomRenderer = aCustomRender;
 }
 
 
@@ -943,7 +943,7 @@ void	RenderGui_SetCustomRender( fRenderGui aCustomRender )
 
 U16	RenderGui_GetScreenIndex( void )
 {
-	return( (U16)(gRenderGui.mScreenIndex & 1) );	
+	return( (U16)(gRenderGui.mScreenIndex & 1) );
 }
 
 

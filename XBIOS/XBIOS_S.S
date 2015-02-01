@@ -67,8 +67,8 @@ Xbios_Call:
 	move.w	d0,-(a7)
 	trap	#14
 	addq.l	#2,a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -85,8 +85,8 @@ Xbios_Call_L:
 	move.w	d0,-(a7)
 	trap	#14
 	addq.l	#6,a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -103,8 +103,8 @@ Xbios_Call_P:
 	move.w	d0,-(a7)
 	trap	#14
 	addq.l	#6,a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -117,12 +117,12 @@ Xbios_Call_P:
 Xbios_Call_W:
 	pea		(a2)
 
-	move.w	d1,-(a7)	
+	move.w	d1,-(a7)
 	move.w	d0,-(a7)
 	trap	#14
 	addq.l	#4,a7
 
-	move.l	(a7)+,a2	
+	move.l	(a7)+,a2
 	rts
 
 
@@ -135,13 +135,13 @@ Xbios_Call_W:
 Xbios_Call_LL:
 	pea		(a2)
 
-	move.l	d2,-(a7)	
-	move.l	d1,-(a7)	
+	move.l	d2,-(a7)
+	move.l	d1,-(a7)
 	move.w	d0,-(a7)
 	trap	#14
 	lea		10(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -159,8 +159,8 @@ Xbios_Call_PP:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		10(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -178,8 +178,8 @@ Xbios_Call_WP:
 	move.w	d0,-(a7)
 	trap	#14
 	addq.l	#8,a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -192,13 +192,13 @@ Xbios_Call_WP:
 Xbios_Call_WW:
 	pea		(a2)
 
-	move.w	d2,-(a7)	
-	move.w	d1,-(a7)	
+	move.w	d2,-(a7)
+	move.w	d1,-(a7)
 	move.w	d0,-(a7)
 	trap	#14
 	addq.l	#6,a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -212,13 +212,13 @@ Xbios_Call_LLW:
 	pea		(a2)
 
 	move.w	eXBIOS_STACKOFFSET(a7),-(a7)
-	move.l	d2,-(a7)	
-	move.w	d1,-(a7)	
+	move.l	d2,-(a7)
+	move.w	d1,-(a7)
 	move.w	d0,-(a7)
 	trap	#14
 	lea		10(a7),a7
-		
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -232,13 +232,13 @@ Xbios_Call_WWL:
 	pea		(a2)
 
 	move.l	eXBIOS_STACKOFFSET(a7),-(a7)
-	move.w	d2,-(a7)	
-	move.w	d1,-(a7)	
+	move.w	d2,-(a7)
+	move.w	d1,-(a7)
 	move.w	d0,-(a7)
 	trap	#14
 	lea		10(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -252,13 +252,13 @@ Xbios_Call_WWP:
 	pea		(a2)
 
 	pea		(a0)
-	move.w	d2,-(a7)	
-	move.w	d1,-(a7)	
+	move.w	d2,-(a7)
+	move.w	d1,-(a7)
 	move.w	d0,-(a7)
 	trap	#14
 	lea		10(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -271,14 +271,14 @@ Xbios_Call_WWP:
 Xbios_Call_PLW:
 	pea		(a2)
 
-	move.w	d2,-(a7)	
-	move.l	d1,-(a7)	
+	move.w	d2,-(a7)
+	move.l	d1,-(a7)
 	pea		(a0)
 	move.w	d0,-(a7)
 	trap	#14
 	lea		12(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -297,8 +297,8 @@ Xbios_Call_PPP:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		14(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -317,8 +317,8 @@ Xbios_Call_PPW:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		12(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -337,8 +337,8 @@ Xbios_Call_PWP:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		12(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -357,8 +357,8 @@ Xbios_Call_WPP:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		12(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -378,8 +378,8 @@ Xbios_Call_WWWP:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		12(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -399,8 +399,8 @@ Xbios_Call_WLPL:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		16(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -420,8 +420,8 @@ Xbios_Call_LLPP:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		18(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -441,8 +441,8 @@ Xbios_Call_LWPW:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		16(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -462,8 +462,8 @@ Xbios_Call_PLLP:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		18(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -483,8 +483,8 @@ Xbios_Call_PLPL:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		18(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -504,8 +504,8 @@ Xbios_Call_PLWW:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		14(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -525,8 +525,8 @@ Xbios_Call_PPWW:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		18(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -547,8 +547,8 @@ Xbios_Call_WWWWW:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		12(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -570,8 +570,8 @@ Xbios_Call_WWWWWW:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		14(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -593,8 +593,8 @@ Xbios_Call_PPLLLP:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		26(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -617,8 +617,8 @@ Xbios_Call_PLWWWWW:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		20(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -641,8 +641,8 @@ Xbios_Call_PLWWWWWW:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		22(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 
@@ -668,8 +668,8 @@ Xbios_Call_PPWWWWWLW:
 	move.w	d0,-(a7)
 	trap	#14
 	lea		28(a7),a7
-	
-	move.l	(a7)+,a2	
+
+	move.l	(a7)+,a2
 	rts
 
 

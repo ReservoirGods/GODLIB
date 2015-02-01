@@ -14,13 +14,13 @@
 #  ENUMS
 ################################################################################### */
 
-enum 
+enum
 {
 	eMFP_TIMER_A,
 	eMFP_TIMER_B,
 	eMFP_TIMER_C,
 	eMFP_TIMER_D,
-	
+
 	eMFP_TIMER_LIMIT
 };
 

@@ -272,8 +272,8 @@ U32		sTagValue_GetID(    const U32 aValue, const sTagValue * apTagValues, const 
 
 #ifdef	dGODLIB_ENDIAN_LITTLE
 
-#define	Endian_FromLittleU16( apU16 )	
-#define	Endian_FromLittleU32( apU32 )	
+#define	Endian_FromLittleU16( apU16 )
+#define	Endian_FromLittleU32( apU32 )
 
 #define	Endian_FromBigU16( apU16 )		Endian_Twiddle_U16( (U8*)apU16 )
 #define	Endian_FromBigU32( apU32 )		Endian_Twiddle_U32( (U8*)apU32 )
@@ -295,8 +295,8 @@ U32		sTagValue_GetID(    const U32 aValue, const sTagValue * apTagValues, const 
 #define	Endian_FromLittleU16( apU16 )	Endian_Twiddle_U16( (U8*)apU16 )
 #define	Endian_FromLittleU32( apU32 )	Endian_Twiddle_U32( (U8*)apU32 )
 
-#define	Endian_FromBigU16( apU16 )		
-#define	Endian_FromBigU32( apU32 )		
+#define	Endian_FromBigU16( apU16 )
+#define	Endian_FromBigU32( apU32 )
 
 #define	Endian_ReadBigU16( apU16, aValue )			( aValue = *apU16 )
 #define	Endian_ReadBigU32( apU32, aValue )			( aValue = *apU32 )

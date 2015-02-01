@@ -15,12 +15,12 @@
 	export	Graphic_TC_Blit
 	export	Graphic_TC_ClearScreen
 	export	Graphic_TC_CopyScreen
-	export	Graphic_TC_DrawBox 
-	export	Graphic_TC_DrawLine 
-	export	Graphic_TC_DrawPixel 
-	export	Graphic_TC_DrawSprite 
-	export	Graphic_TC_DrawTri  
-	export	Graphic_TC_DrawQuad 
+	export	Graphic_TC_DrawBox
+	export	Graphic_TC_DrawLine
+	export	Graphic_TC_DrawPixel
+	export	Graphic_TC_DrawSprite
+	export	Graphic_TC_DrawTri
+	export	Graphic_TC_DrawQuad
 
 	export	Graphic_TC_Blit_Clip
 	export	Graphic_TC_ClearScreen_Clip
@@ -132,91 +132,91 @@ Graphic_TC_Blit_Clip:
 	move.w	sGraphicPos_X(a1),d4			; X
 	move.w	sGraphicPos_Y(a1),d5			; Y
 
-	tst.w	d0								; X < 0?	
-	bpl		.rectx0_ok						; X >= 0, no left clip	
+	tst.w	d0								; X < 0?
+	bpl		.rectx0_ok						; X >= 0, no left clip
 
-	add.w	d0,d2							; Clip Width	
-	ble		.clip							; Entirely off left, clip	
-	moveq	#0,d0							; Set New X0	
-	
+	add.w	d0,d2							; Clip Width
+	ble		.clip							; Entirely off left, clip
+	moveq	#0,d0							; Set New X0
+
 .rectx0_ok:
 
 	move.w	d0,d6							; X
 	add.w	d2,d6							; X+Width
 	sub.w	sGraphicCanvas_Width(a3),d6		; Check Amount off right of screen
 	ble		.rectx1_ok						; None, no clipping
-	
-	sub.w	d6,d2							; Clip Width	
-	ble		.clip							; Entirely Off Left, Cull	
+
+	sub.w	d6,d2							; Clip Width
+	ble		.clip							; Entirely Off Left, Cull
 
 .rectx1_ok:
 
-	tst.w	d1								; Y < 0 ?	
-	bpl		.recty0_ok						; Y >= 0, no top clip	
+	tst.w	d1								; Y < 0 ?
+	bpl		.recty0_ok						; Y >= 0, no top clip
 
-	add.w	d1,d3							; Clip Height	
-	ble		.clip							; Entirely Off Top, Cull	
-	moveq	#0,d1							; Clip Y	
-	
+	add.w	d1,d3							; Clip Height
+	ble		.clip							; Entirely Off Top, Cull
+	moveq	#0,d1							; Clip Y
+
 .recty0_ok:
 
-	move.w	d1,d6							; Y	
-	add.w	d3,d6							; Y+Width	
-	sub.w	sGraphicCanvas_Height(a3),d6	; Check amount off bottom	
-	ble		.recty1_ok						; None, no bot clip	
-	
-	sub.w	d6,d3							; Clip Height	
-	ble		.clip							; Entirely off bottom, Cull	
+	move.w	d1,d6							; Y
+	add.w	d3,d6							; Y+Width
+	sub.w	sGraphicCanvas_Height(a3),d6	; Check amount off bottom
+	ble		.recty1_ok						; None, no bot clip
+
+	sub.w	d6,d3							; Clip Height
+	ble		.clip							; Entirely off bottom, Cull
 
 .recty1_ok:
 
 
 
-	tst.w	d4								; X < 0?	
-	bpl		.x0_ok							; X >= 0, no left clip	
+	tst.w	d4								; X < 0?
+	bpl		.x0_ok							; X >= 0, no left clip
 
-	add.w	d4,d2							; Clip Width	
-	ble		.clip							; Entirely off left, clip	
+	add.w	d4,d2							; Clip Width
+	ble		.clip							; Entirely off left, clip
 	sub.w	d4,d0							; adjust rect x
-	moveq	#0,d4							; Set New X0	
-	
+	moveq	#0,d4							; Set New X0
+
 .x0_ok:
 
-	move.w	d4,d6							; X	
-	add.w	d2,d6							; X+Width	
-	sub.w	sGraphicCanvas_Width(a0),d6		; Check Amount off right of screen	
-	ble		.x1_ok							; None, no clipping	
-	
-	sub.w	d6,d2							; Clip Width	
-	ble		.clip							; Entirely Off Left, Cull	
+	move.w	d4,d6							; X
+	add.w	d2,d6							; X+Width
+	sub.w	sGraphicCanvas_Width(a0),d6		; Check Amount off right of screen
+	ble		.x1_ok							; None, no clipping
+
+	sub.w	d6,d2							; Clip Width
+	ble		.clip							; Entirely Off Left, Cull
 
 .x1_ok:
 
-	tst.w	d5								; Y < 0 ?	
-	bpl		.y0_ok							; Y >= 0, no top clip	
+	tst.w	d5								; Y < 0 ?
+	bpl		.y0_ok							; Y >= 0, no top clip
 
-	add.w	d5,d3							; Clip Height	
-	ble		.clip							; Entirely Off Top, Cull	
+	add.w	d5,d3							; Clip Height
+	ble		.clip							; Entirely Off Top, Cull
 	sub.w	d5,d1							; adjust rect y
-	moveq	#0,d5							; Clip Y	
-	
+	moveq	#0,d5							; Clip Y
+
 .y0_ok:
 
-	move.w	d5,d6							; Y	
-	add.w	d3,d6							; Y+Width	
-	sub.w	sGraphicCanvas_Height(a3),d6	; Check amount off bottom	
-	ble		.y1_ok							; None, no bot clip	
-	
-	sub.w	d6,d3							; Clip Height	
-	ble		.clip							; Entirely off bottom, Cull	
+	move.w	d5,d6							; Y
+	add.w	d3,d6							; Y+Width
+	sub.w	sGraphicCanvas_Height(a3),d6	; Check amount off bottom
+	ble		.y1_ok							; None, no bot clip
+
+	sub.w	d6,d3							; Clip Height
+	ble		.clip							; Entirely off bottom, Cull
 
 .y1_ok:
 
 
-	bra		Graphic_TC_Blit_Go				; Blit it	
+	bra		Graphic_TC_Blit_Go				; Blit it
 
 .clip:
-	movem.l	(a7)+,d3-d7/a2-a6				; restore registers	
+	movem.l	(a7)+,d3-d7/a2-a6				; restore registers
 	rts
 
 
@@ -229,12 +229,12 @@ Graphic_TC_Blit_Clip:
 *
 * D0 : gfx0             A0 : VRAM Line Offset
 * D1 : gfx1             A1 : GFX Line Offset
-* D2 : Width/gfx2       A2 : 
+* D2 : Width/gfx2       A2 :
 * D3 : Height/gfx3      A3 : pSpriteGFX
 * D4 : msk              A4 : LoopY
 * D5 : BITMASK          A5 : pVRAM
 * D6 : SHIFT            A6 : LoopX
-* D7 : temp                  
+* D7 : temp
 
 Graphic_TC_Blit:
 	movem.l	d3-d7/a2-a6,-(a7)
@@ -275,7 +275,7 @@ Graphic_TC_Blit_Go:
 	move.l	sGraphicCanvas_LineOffsets+4(a3),d5	; SRC line offset
 	sub.l	d2,d5
 	sub.l	d2,d5
-	
+
 	subq.w	#1,d2
 	bra.s	.first
 .loopY:
@@ -295,7 +295,7 @@ GTC_Blit_RTS:
 
 
 
-	
+
 
 *------------------------------------------------------------------------------------*
 * FUNCTION: void (*	ClearScreen )( const struct sGraphicCanvas * apCanvas );
@@ -513,14 +513,14 @@ Graphic_TC_DrawBox_Clip:
 	add.w	d1,d3								; Clip Width
 	ble		.clip								; Entirely off left, clip
 	moveq	#0,d1								; Set New X0
-	
+
 .x0_ok:
 
 	move.w	d1,d5								; X
 	add.w	d3,d5								; X+Width
 	sub.w	sGraphicCanvas_Width(a0),d5			; Check Amount off right of screen
 	ble		.x1_ok								; None, no clipping
-	
+
 	sub.w	d5,d3								; Clip Width
 	ble		.clip								; Entirely Off Left, Cull
 
@@ -532,14 +532,14 @@ Graphic_TC_DrawBox_Clip:
 	add.w	d2,d3								; Clip Height
 	ble		.clip								; Entirely Off Top, Cull
 	moveq	#0,d2								; Clip Y
-	
+
 .y0_ok:
 
 	move.w	d2,d5								; Y
 	add.w	d4,d5								; Y+Width
 	sub.w	sGraphicCanvas_Height(a0),d5		; Check amount off bottom
 	ble		.y1_ok								; None, no bot clip
-	
+
 	sub.w	d5,d4								; Clip Height
 	ble		.clip								; Entirely off bottom, Cull
 
@@ -612,7 +612,7 @@ Graphic_TC_DrawPixel_Clip:
 	bhs.s	.clip								; Clip X
 	cmp.w	sGraphicCanvas_Height(a0),d2		; Canvas Height
 	bhs.s	.clip								; Clip Y
-	
+
 	bra		Graphic_TC_DrawPixel_Go			; Draw Pixel
 
 .clip:
@@ -747,7 +747,7 @@ Graphic_TC_DrawSprite_Clip:
 * D4 : msk              A4 : pSpriteMSK
 * D5 : BITMASK          A5 : pVRAM
 * D6 : SHIFT            A6 : LoopX
-* D7 : temp                  
+* D7 : temp
 * 0(a7) loopx
 * 4(a7) loopy
 
@@ -817,15 +817,15 @@ Graphic_TC_DrawSprite_Go:
 	moveq	#15,d3
 	and.w	d2,d3
 	beq		.noRM
-	or.w	#dSPRCHUNK_RIGHT,d4	
+	or.w	#dSPRCHUNK_RIGHT,d4
 	and.w	#$FFF0,d2
 	suba.l	#8,a0
 	move.w	d3,d6
 .noRM:
 	sub.w	d1,d2								; chunk count
 	ble		.noCM
-	or.w	#dSPRCHUNK_MID,d4	
-.noCM:			
+	or.w	#dSPRCHUNK_MID,d4
+.noCM:
 	lsr.w	#4,d2
 	bpl.s	.cPL
 	moveq	#0,d2

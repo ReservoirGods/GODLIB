@@ -77,7 +77,7 @@ void	Font8x8_Print( const char * apString, U16 * apScreen, U16 aX, U16 aY )
 			lpScreen++;
 			lNextX =1;
 		}
-		
+
 	}
 }
 

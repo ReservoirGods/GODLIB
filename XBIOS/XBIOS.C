@@ -172,7 +172,7 @@ extern	S32	Xbios_Call_PPWWWWWLW( const S16 aOp, const void * ap0,  const void * 
 
 S32	Xbios_Bconmap( const S16 aDevNo )
 {
-	return( Xbios_Call_W( eXBIOS_BCONMAP, aDevNo ) ); 	
+	return( Xbios_Call_W( eXBIOS_BCONMAP, aDevNo ) );
 }
 
 
@@ -184,7 +184,7 @@ S32	Xbios_Bconmap( const S16 aDevNo )
 
 void	Xbios_BiosKeys( void )
 {
-	Xbios_Call( eXBIOS_BIOSKEYS );	
+	Xbios_Call( eXBIOS_BIOSKEYS );
 }
 
 
@@ -220,7 +220,7 @@ S32	Xbios_Buffptr( const sXbiosBufPtr * apBuffer )
 
 S16	Xbios_Cursconf( const S16 aMode,const S16 aRate )
 {
-	return( (S16)Xbios_Call_WW( eXBIOS_CURSCONF, aMode, aRate ) );	
+	return( (S16)Xbios_Call_WW( eXBIOS_CURSCONF, aMode, aRate ) );
 }
 
 
@@ -232,7 +232,7 @@ S16	Xbios_Cursconf( const S16 aMode,const S16 aRate )
 
 void	Xbios_Dbmsg( const S16 aRsrved,const S16 aMsgNum,const S32 aMsgArg )
 {
-	Xbios_Call_WWL( eXBIOS_DBMSG, aRsrved, aMsgNum, aMsgArg );		
+	Xbios_Call_WWL( eXBIOS_DBMSG, aRsrved, aMsgNum, aMsgArg );
 }
 
 
@@ -268,7 +268,7 @@ S32	Xbios_Dmaread( const S32 aSector,const S16 aCount,void * apBuffer,const S16 
 
 S32	Xbios_Dmawrite( const S32 aSector,const S16 aCount,void * apBuffer,const S16 aDev )
 {
-	return( Xbios_Call_LWPW( eXBIOS_DMAWRITE, aSector, aCount, apBuffer, aDev ) );	
+	return( Xbios_Call_LWPW( eXBIOS_DMAWRITE, aSector, aCount, apBuffer, aDev ) );
 }
 
 
@@ -280,7 +280,7 @@ S32	Xbios_Dmawrite( const S32 aSector,const S16 aCount,void * apBuffer,const S16
 
 void	Xbios_Dosound( const char * apCmdList )
 {
-	Xbios_Call_P( eXBIOS_DOSOUND, apCmdList );	
+	Xbios_Call_P( eXBIOS_DOSOUND, apCmdList );
 }
 
 
@@ -292,7 +292,7 @@ void	Xbios_Dosound( const char * apCmdList )
 
 void	Xbios_DspAvailable( const S32 * apXavail,const S32 * apYavail )
 {
-	Xbios_Call_PP( eXBIOS_DSPAVAILABLE, apXavail, apYavail );	
+	Xbios_Call_PP( eXBIOS_DSPAVAILABLE, apXavail, apYavail );
 }
 
 
@@ -304,7 +304,7 @@ void	Xbios_DspAvailable( const S32 * apXavail,const S32 * apYavail )
 
 void	Xbios_DspBlkBytes( const U8 * apSrc,const S32 aSrcSize,U8 * apDst,const S32 aDstSize )
 {
-	Xbios_Call_PLPL( eXBIOS_DSPBLKBYTES, apSrc, aSrcSize, apDst, aDstSize );	
+	Xbios_Call_PLPL( eXBIOS_DSPBLKBYTES, apSrc, aSrcSize, apDst, aDstSize );
 }
 
 
@@ -328,7 +328,7 @@ void	Xbios_DspBlkHandShake( const U8 * apSrc,const S32 aSrcSize,U8 * apDst,const
 
 void	Xbios_DspBlkUnpacked( const U32 * apSrc,const S32 aSrcSize,U32 * apDst,const S32 aDstSize )
 {
-	Xbios_Call_PLPL( eXBIOS_DSPBLKUNPACKED, apSrc, aSrcSize, apDst, aDstSize );	
+	Xbios_Call_PLPL( eXBIOS_DSPBLKUNPACKED, apSrc, aSrcSize, apDst, aDstSize );
 }
 
 
@@ -340,7 +340,7 @@ void	Xbios_DspBlkUnpacked( const U32 * apSrc,const S32 aSrcSize,U32 * apDst,cons
 
 void	Xbios_DspBlkWords( const U16 * apSrc,const S32 aSrcSize,U16 * apDst,const S32 aDstSize )
 {
-	Xbios_Call_PLPL( eXBIOS_DSPBLKWORDS, apSrc, aSrcSize, apDst, aDstSize );		
+	Xbios_Call_PLPL( eXBIOS_DSPBLKWORDS, apSrc, aSrcSize, apDst, aDstSize );
 }
 
 
@@ -352,7 +352,7 @@ void	Xbios_DspBlkWords( const U16 * apSrc,const S32 aSrcSize,U16 * apDst,const S
 
 void	Xbios_DspDoBlock( const U8 * apSrc,const S32 aSrcSize,U8 * apDst,const S32 aDstSize )
 {
-	Xbios_Call_PLPL( eXBIOS_DSPDOBLOCK, apSrc, aSrcSize, apDst, aDstSize );			
+	Xbios_Call_PLPL( eXBIOS_DSPDOBLOCK, apSrc, aSrcSize, apDst, aDstSize );
 }
 
 
@@ -364,7 +364,7 @@ void	Xbios_DspDoBlock( const U8 * apSrc,const S32 aSrcSize,U8 * apDst,const S32 
 
 void	Xbios_DspExecBoot( const U8 * apCode,const U32 aCodeSize,const S16 aAbility )
 {
-	Xbios_Call_PLW( eXBIOS_DSPEXECBOOT, apCode, aCodeSize, aAbility );	
+	Xbios_Call_PLW( eXBIOS_DSPEXECBOOT, apCode, aCodeSize, aAbility );
 }
 
 
@@ -376,7 +376,7 @@ void	Xbios_DspExecBoot( const U8 * apCode,const U32 aCodeSize,const S16 aAbility
 
 void	Xbios_DspExecProg( const U8 * apCode,const U32 aCodeSize,const S16 aAbility )
 {
-	Xbios_Call_PLW( eXBIOS_DSPEXECPROG, apCode, aCodeSize, aAbility );	
+	Xbios_Call_PLW( eXBIOS_DSPEXECPROG, apCode, aCodeSize, aAbility );
 }
 
 
@@ -388,7 +388,7 @@ void	Xbios_DspExecProg( const U8 * apCode,const U32 aCodeSize,const S16 aAbility
 
 void	Xbios_DspFlushSubroutines( void )
 {
-	Xbios_Call( eXBIOS_DSPFLUSHSUBROUTINES );	
+	Xbios_Call( eXBIOS_DSPFLUSHSUBROUTINES );
 }
 
 
@@ -412,7 +412,7 @@ S16	Xbios_DspGetProgAbility( void )
 
 S16	Xbios_DspGetWordSize( void )
 {
-	return( (S16)Xbios_Call( eXBIOS_DSPGETWORDSIZE ) );	
+	return( (S16)Xbios_Call( eXBIOS_DSPGETWORDSIZE ) );
 }
 
 
@@ -436,7 +436,7 @@ S16	Xbios_DspHf0( const S16 aFlag )
 
 S16	Xbios_DspHf1( const S16 aFlag )
 {
-	return( (S16)Xbios_Call_W( eXBIOS_DSPHF1, aFlag ) );	
+	return( (S16)Xbios_Call_W( eXBIOS_DSPHF1, aFlag ) );
 }
 
 
@@ -448,7 +448,7 @@ S16	Xbios_DspHf1( const S16 aFlag )
 
 S16	Xbios_DspHf2( const S16 aFlag )
 {
-	return( (S16)Xbios_Call_W( eXBIOS_DSPHF2, aFlag ) );	
+	return( (S16)Xbios_Call_W( eXBIOS_DSPHF2, aFlag ) );
 }
 
 
@@ -472,7 +472,7 @@ S16	Xbios_DspHf3( const S16 aFlag )
 
 U8	Xbios_DspHstat( void )
 {
-	return( (U8)Xbios_Call( eXBIOS_DSPHSTAT ) );	
+	return( (U8)Xbios_Call( eXBIOS_DSPHSTAT ) );
 }
 
 
@@ -484,7 +484,7 @@ U8	Xbios_DspHstat( void )
 
 S16	Xbios_DspInqSubrAbility( const S16 aAbility )
 {
-	return( (S16)Xbios_Call_W( eXBIOS_DSPINQSUBRABILITY, aAbility ) );		
+	return( (S16)Xbios_Call_W( eXBIOS_DSPINQSUBRABILITY, aAbility ) );
 }
 
 
@@ -509,7 +509,6 @@ void	Xbios_DspInStream( const U8 * apSrc,const U32 aBlockSize,const U32 aBlockCo
 void	Xbios_DspIOStream( const U8 * apSrc,U8 * apDst,const U32 aSrcBlkSize,const U32 aDstBlkSize,const U32 aBlkCount,U32 * apBlocksDone )
 {
 	Xbios_Call_PPLLLP( eXBIOS_DSPIOSTREAM, apSrc, apDst, aSrcBlkSize, aDstBlkSize, aBlkCount, apBlocksDone );
-	
 }
 
 
@@ -545,7 +544,7 @@ S16	Xbios_DspLoadSubroutine( const U8 * apCode,const U32 aSize,const S16 aAbilit
 
 S16	Xbios_DspLock( void )
 {
-	return( (S16)Xbios_Call( eXBIOS_DSPLOCK ) );	
+	return( (S16)Xbios_Call( eXBIOS_DSPLOCK ) );
 }
 
 
@@ -593,7 +592,7 @@ void	Xbios_DspOutStream( U8 * apData,const U32 aBlockSize,const U32 aBlockCount,
 
 void	Xbios_DspRemoveInterrupts( const S16 aMask )
 {
-	Xbios_Call_W( eXBIOS_DSPREMOVEINTERRUPTS, aMask );	
+	Xbios_Call_W( eXBIOS_DSPREMOVEINTERRUPTS, aMask );
 }
 
 
@@ -737,7 +736,7 @@ S16	Xbios_EsetColor( const U16 aIndex,const U16 aColour )
 
 S16	Xbios_EsetGray( const S16 aMode )
 {
-	return( (S16)Xbios_Call_W( eXBIOS_ESETGRAY, aMode ) );	
+	return( (S16)Xbios_Call_W( eXBIOS_ESETGRAY, aMode ) );
 }
 
 
@@ -749,7 +748,7 @@ S16	Xbios_EsetGray( const S16 aMode )
 
 void	Xbios_EsetPalette( const U16 aStart,const U16 aCount,const U16 * apPal )
 {
-	Xbios_Call_WWP( eXBIOS_ESETPALETTE, aStart, aCount, apPal );	
+	Xbios_Call_WWP( eXBIOS_ESETPALETTE, aStart, aCount, apPal );
 }
 
 
@@ -797,7 +796,7 @@ S16	Xbios_Flopfmt( const void * apBuffer,const U16 * apSkew,const U16 aDev,const
 
 S16	Xbios_Floprate( const U16 aDev,const U16 aRate )
 {
-	return( (S16)Xbios_Call_WW( eXBIOS_FLOPRATE, aDev, aRate ) );	
+	return( (S16)Xbios_Call_WW( eXBIOS_FLOPRATE, aDev, aRate ) );
 }
 
 
@@ -845,7 +844,7 @@ S16	Xbios_Flopwr( const void * apBuffer,const U32 aReserved,const U16 aDev,const
 
 U16	Xbios_GetRez( void )
 {
-	return( (U16)Xbios_Call( eXBIOS_GETREZ ) );	
+	return( (U16)Xbios_Call( eXBIOS_GETREZ ) );
 }
 
 
@@ -1133,7 +1132,7 @@ void	Xbios_Puntaes( void )
 
 U32		Xbios_Random( void )
 {
-	return( Xbios_Call( eXBIOS_RANDOM ) );	
+	return( Xbios_Call( eXBIOS_RANDOM ) );
 }
 
 
@@ -1181,7 +1180,7 @@ S32	Xbios_SetBuffer( const U16 aMode,const void * apStart,const void * apEnd )
 
 S16	Xbios_Setcolor( void )
 {
-	return( (S16)Xbios_Call( eXBIOS_SETCOLOR ) );	
+	return( (S16)Xbios_Call( eXBIOS_SETCOLOR ) );
 }
 
 
@@ -1445,7 +1444,7 @@ void	Xbios_Vsync( void )
 
 S16	Xbios_WavePlay( const U16 aFlags,const U32 aRate,void * apSample,const U32 aLen )
 {
-	return( (S16)Xbios_Call_WLPL( eXBIOS_WAVEPLAY, aFlags, aRate, apSample, aLen ) );	
+	return( (S16)Xbios_Call_WLPL( eXBIOS_WAVEPLAY, aFlags, aRate, apSample, aLen ) );
 }
 
 

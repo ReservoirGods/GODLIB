@@ -50,7 +50,7 @@ sFade_sizeof:			ds.w	1
 *------------------------------------------------------------------------------------*
 
 Fade_Vbl:
-	
+
 	tst.b	gFadeVblActiveFlag
 	beq.s	.nofade
 
@@ -80,7 +80,7 @@ Fade_Vbl:
 	jsr		Video_SetNextPalST
 
 	movem.l	(a7)+,d0-a6
-	clr.b	gFadeVblLockFlag	
+	clr.b	gFadeVblLockFlag
 
 .nofade:
 	rts

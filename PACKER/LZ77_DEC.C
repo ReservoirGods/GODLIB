@@ -28,7 +28,7 @@ U32	GodPack_Lz77_Decode( const void * apSrc,void * apDst,const U32 aSize )
 	lpDst = (U8*)apDst;
 
 	GodPack_BitStream_Init( &lStream, (void*)apSrc, aSize );
-	
+
 	i = 0;
 	while( i < aSize )
 	{

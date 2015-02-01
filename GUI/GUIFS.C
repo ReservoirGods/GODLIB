@@ -81,7 +81,7 @@ typedef	struct sGuiFSClass
 	U32						mAllocFlag;
 	sGemDosDTA				mDTA;
 	sGemDosDTA *			mpDTAs;
-	sGuiFSInfo *			mpInfo;			
+	sGuiFSInfo *			mpInfo;
 } sGuiFSClass;
 
 
@@ -130,7 +130,7 @@ void	GuiFS_Init( sHashTree * apTree )
 	gGuiFS.mpTree = apTree;
 
 	lDrive = Drive_GetDrive();
-	
+
 	lString[ 0 ] = (char)('A' + lDrive);
 	lString[ 1 ] = 0;
 
@@ -222,9 +222,9 @@ U16	GuiFS_GetFolderCount( char * apFileSpec )
 	}
 
 	DebugLog_Printf2( "GuiFS_GetFolderCount() %s %d", apFileSpec, lCount );
-	
+
 	return( lCount );
-	
+
 }
 
 
@@ -254,7 +254,7 @@ U16	GuiFS_GetFileCount( char * apFileSpec )
 	}
 
 	DebugLog_Printf2( "GuiFS_GetFileCount() %s %d", apFileSpec, lCount );
-	
+
 	return( lCount );
 }
 
@@ -509,7 +509,7 @@ void	GuiFS_OnDrive( sHashTreeVarClient  * apClient )
 				}
 			}
 		}
-	}	
+	}
 }
 
 
@@ -553,7 +553,7 @@ void	GuiFS_OnFolderBack( sHashTreeVarClient  * apClient )
 					String_Destroy( lpString );
 
 					HashTree_VarWrite( lpVar, &lpFilePath );
-	
+
 /*					lpVar = gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_FILEPATH ]->mpVar;
 					if( lpVar )
 					{
@@ -759,7 +759,7 @@ void	GuiFS_OnOK( sHashTreeVarClient  * apClient )
 				lpInfo->mpCB( lpInfo );
 			}
 		}
-	}	
+	}
 }
 
 
@@ -787,7 +787,7 @@ void	GuiFS_OnCancel( sHashTreeVarClient  * apClient )
 				lpInfo->mpCB( lpInfo );
 			}
 		}
-	}		
+	}
 }
 
 
@@ -801,11 +801,11 @@ void	GuiFSInfo_Init( sGuiFSInfo * apInfo,const char * apTitle,const char * apMas
 {
 	char	lString[ 512 ];
 	U16		lDrive;
-	
+
 	if( apInfo )
 	{
 		lDrive = Drive_GetDrive();
-		
+
 		lString[ 0 ] = (char)('A' + lDrive);
 		lString[ 1 ] = 0;
 
@@ -857,7 +857,7 @@ void GuiFSInfo_DeInit(sGuiFSInfo * apInfo)
 sString * GuiFSInfo_FullNameBuild(sGuiFSInfo * apInfo)
 {
 	sString *	lpString;
-	
+
 	if( apInfo )
 	{
 		lpString = String_Create( apInfo->mpDrive->mpChars );
@@ -883,7 +883,7 @@ sString * GuiFSInfo_FullNameBuild(sGuiFSInfo * apInfo)
 
 int	GuiFS_DTASort( const void * apDTA0,const void * apDTA1 )
 {
-	sGemDosDTA *	lpDTA0;	
+	sGemDosDTA *	lpDTA0;
 	sGemDosDTA *	lpDTA1;
 	int				lRes;
 	U16				i;

@@ -47,7 +47,7 @@ sVideoImageClass	gVideoImageClass;
 
 void	Video_Image_Init( void )
 {
-	Memory_Clear( sizeof(sVideoImageClass), &gVideoImageClass );	
+	Memory_Clear( sizeof(sVideoImageClass), &gVideoImageClass );
 }
 
 
@@ -59,7 +59,7 @@ void	Video_Image_Init( void )
 
 void	Video_Image_DeInit( void )
 {
-	
+
 }
 
 
@@ -115,7 +115,7 @@ void	Video_Image_ConvPalST( const U16 aFormat )
 				gVideoImageClass.mPalConvST[ i ] = (lR<<12) | (lG<<28);
 				break;
 		}
-	}	
+	}
 }
 
 
@@ -140,14 +140,14 @@ void	Video_Image_ConvPalFalcon( const U16 aFormat )
 void	Video_SetPalFalcon( const U32 * apPal )
 {
 	U16	i;
-	
+
 	if( apPal )
 	{
 		for( i=0; i<256; i++ )
 		{
 			gVideoImageClass.mPalOriginalFalcon[ i ] = apPal[ i ];
 		}
-	}	
+	}
 }
 
 
@@ -160,14 +160,14 @@ void	Video_SetPalFalcon( const U32 * apPal )
 void	Video_GetPalFalcon( U32 * apPal )
 {
 	U16	i;
-	
+
 	if( apPal )
 	{
 		for( i=0; i<256; i++ )
 		{
 			apPal[ i ] = gVideoImageClass.mPalOriginalFalcon[ i ];
 		}
-	}	
+	}
 }
 
 
@@ -245,7 +245,7 @@ void	Video_Image_4BP_ToU8( const U8 * apSrc,U8 *  apDst,const U16 aWidth,const U
 		}
 		lpSrc0 += aSrcPitch;
 		lpDst0 += aDstPitch;
-	}		
+	}
 }
 
 
@@ -323,7 +323,7 @@ void	Video_Image_4BP_ToU16( const U8 * apSrc,U16 * apDst,const U16 aWidth,const 
 		}
 		lpSrc0 += aSrcPitch;
 		lpDst0 += (aDstPitch>>1);
-	}			
+	}
 }
 
 
@@ -403,7 +403,7 @@ void	Video_Image_4BP_ToU24( const U8 * apSrc,U8 *  apDst,const U16 aWidth,const 
 		}
 		lpSrc0 += aSrcPitch;
 		lpDst0 += aDstPitch;
-	}		
+	}
 }
 
 
@@ -481,7 +481,7 @@ void	Video_Image_4BP_ToU32( const U8 * apSrc,U32 * apDst,const U16 aWidth,const 
 		}
 		lpSrc0 += aSrcPitch;
 		lpDst0 += (aDstPitch>>2);
-	}				
+	}
 }
 
 

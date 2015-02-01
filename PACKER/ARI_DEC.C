@@ -69,7 +69,7 @@ U16	GodPack_Ari_SymbolDecode( sGodPackAriTables * apTables,sGodPackBitStream * a
 	U16	lCum;
 	U16	lSymbol;
 	U16	lTrue;
-	
+
 	lRange =  (apTables->mHigh  - apTables->mLow)+1;
 	lCum   =(U16)((((apTables->mValue - apTables->mLow + 1) * apTables->mCumFreq[ 0 ]) - 1) / lRange);
 	lSymbol= 1;

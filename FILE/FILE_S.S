@@ -2,14 +2,14 @@
 *
 * File Library
 *
-* [c] 2008 Reservoir Gods 
+* [c] 2008 Reservoir Gods
 *
 **************************************************************************************
 
 **************************************************************************************
 ;	EXPORT / IMPORT
 **************************************************************************************
-	
+
 	export	File_FileSelectorAES
 
 	import	gpGemDosStackUser
@@ -20,7 +20,7 @@
 **************************************************************************************
 
 	OFFSET
-	
+
 sAESControl_OpCode:			ds.w	1
 sAESControl_IntInCount:		ds.w	1
 sAESControl_IntOutCount:	ds.w	1
@@ -41,9 +41,9 @@ sAESControl_sizeof:			ds.w	1
 *------------------------------------------------------------------------------------*
 
 File_FileSelectorAES:
-	move.l	a0,gFileSelectorArgs+0	
-	move.l	a1,gFileSelectorArgs+4	
-	move.l	4(a7),gFileSelectorArgs+8	
+	move.l	a0,gFileSelectorArgs+0
+	move.l	a1,gFileSelectorArgs+4
+	move.l	4(a7),gFileSelectorArgs+8
 
 	movem.l	d1-d7/a0-a6,-(a7)
 
@@ -51,22 +51,22 @@ File_FileSelectorAES:
 	move.w	#$20,-(a7)
 	trap	#1
 	addq.l	#6,a7
-	
+
 	move.w	d0,gFileSelectorSuperFlag
 
 	tst.w	d0
 	beq		.usermode
-	
+
 	move	usp,a0
 	move.l	a0,gFileSelectorSP
 	lea		-32(a7),a0
-	move	a0,usp	
-	
+	move	a0,usp
+
 	move.l	gpGemDosStackUser,-(a7)
 	move.w	#$20,-(a7)
 	trap	#1
 	addq.l	#6,a7
-			
+
 .usermode:
 
 	lea		gFileControlAES,a3
@@ -74,11 +74,11 @@ File_FileSelectorAES:
 	move.w	#0,sAESControl_IntInCount(a3)
 	move.w	#1,sAESControl_IntOutCount(a3)
 	move.w	#0,sAESControl_AddrInCount(a3)
-	move.w	#0,sAESControl_AddrOutCount(a3)	
+	move.w	#0,sAESControl_AddrOutCount(a3)
 	move.l	#gFileParameterBlockAES,d1
 	move.w	#200,d0
 	trap	#2
-	
+
 	dc.w	$a009
 
 	lea		gFileControlAES,a3
@@ -92,13 +92,13 @@ File_FileSelectorAES:
 	blt.s	.aeslo
 	moveq	#91,d0								; fsel_exinput
 	move.w	#3,sAESControl_AddrInCount(a3)
-.aeslo:	
+.aeslo:
 
 
-	move.w	d0,sAESControl_OpCode(a3)	
+	move.w	d0,sAESControl_OpCode(a3)
 	move.w	#0,sAESControl_IntInCount(a3)
 	move.w	#2,sAESControl_IntOutCount(a3)
-	move.w	#0,sAESControl_AddrOutCount(a3)	
+	move.w	#0,sAESControl_AddrOutCount(a3)
 	move.l	#gFileParameterBlockAES,d1
 	move.w	#200,d0
 	trap	#2
@@ -111,7 +111,7 @@ File_FileSelectorAES:
 	move.w	#0,sAESControl_IntInCount(a3)
 	move.w	#1,sAESControl_IntOutCount(a3)
 	move.w	#0,sAESControl_AddrInCount(a3)
-	move.w	#0,sAESControl_AddrOutCount(a3)	
+	move.w	#0,sAESControl_AddrOutCount(a3)
 	move.l	#gFileParameterBlockAES,d1
 	move.w	#200,d0
 	trap	#2
@@ -122,12 +122,12 @@ File_FileSelectorAES:
 	clr.l	-(a7)
 	move.w	#$20,-(a7)
 	trap	#1
-	
+
 	move.l	gFileSelectorSP,a0
 	move	a0,usp
-	
+
 	lea		36(a7),a7
-	
+
 .noswapback:
 
 	moveq	#0,d0
@@ -141,7 +141,7 @@ File_FileSelectorAES:
 **************************************************************************************
 gFileSelectorSuperFlag:
 	ds.w	1
-	
+
 gFileSelectorSP:
 	ds.l	4
 gFileSelectorArgs:
@@ -149,16 +149,16 @@ gFileSelectorArgs:
 
 gFileControlAES:
 	ds.w	sAESControl_sizeof
-	
+
 gFileGlobalAES:
 	ds.w	15
 
 gFileIntInAES:
 	ds.w	16
-	
-gFileIntOutAES: 
+
+gFileIntOutAES:
 	ds.w	7
-	
+
 gFileAddrInAES:
 	ds.l	2
 
@@ -172,7 +172,7 @@ gFileParameterBlockAES:
 	dc.l	gFileIntOutAES
 	dc.l	gFileAddrInAES
 	dc.l	gFileAddrOutAES
-	
+
 
 **************************************************************************************
 	BSS

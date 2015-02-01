@@ -148,7 +148,7 @@ void	ScreenGrab_Update( void )
 		if( !gScreenGrabKeyState )
 		{
 			sprintf( lFileName, "%sGRAB%04x.PI1", gScreenGrabDirectory, gScreenGrabIndex );
-			
+
 			lHandle = File_Create( lFileName );
 
 			if( lHandle > 0 )

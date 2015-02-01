@@ -185,7 +185,7 @@ S16	GemDos_Cauxin( void )
 
 S16	GemDos_Cauxis( void )
 {
-	return( (S16)GemDos_Call( eGEMDOS_CAUXIS ) );	
+	return( (S16)GemDos_Call( eGEMDOS_CAUXIS ) );
 }
 
 
@@ -197,7 +197,7 @@ S16	GemDos_Cauxis( void )
 
 S16	GemDos_Cauxos( void )
 {
-	return( (S16)GemDos_Call( eGEMDOS_CAUXOS ) );	
+	return( (S16)GemDos_Call( eGEMDOS_CAUXOS ) );
 }
 
 
@@ -209,7 +209,7 @@ S16	GemDos_Cauxos( void )
 
 S16	GemDos_Cauxout( const U16 aChar )
 {
-	return( (S16)GemDos_Call_W( eGEMDOS_CAUXOUT, aChar ) );	
+	return( (S16)GemDos_Call_W( eGEMDOS_CAUXOUT, aChar ) );
 }
 
 
@@ -221,7 +221,7 @@ S16	GemDos_Cauxout( const U16 aChar )
 
 S32	GemDos_Cconin( void )
 {
-	return( GemDos_Call( eGEMDOS_CCONIN ) );	
+	return( GemDos_Call( eGEMDOS_CCONIN ) );
 }
 
 
@@ -233,7 +233,7 @@ S32	GemDos_Cconin( void )
 
 S16	GemDos_Cconis( void )
 {
-	return( (S16)GemDos_Call( eGEMDOS_CCONIS ) );	
+	return( (S16)GemDos_Call( eGEMDOS_CCONIS ) );
 }
 
 
@@ -245,7 +245,7 @@ S16	GemDos_Cconis( void )
 
 S16	GemDos_Cconos( void )
 {
-	return( (S16)GemDos_Call( eGEMDOS_CCONOS ) );	
+	return( (S16)GemDos_Call( eGEMDOS_CCONOS ) );
 }
 
 
@@ -257,7 +257,7 @@ S16	GemDos_Cconos( void )
 
 S16	GemDos_Cconout( const U16 aChar )
 {
-	return( (S16)GemDos_Call_W( eGEMDOS_CCONOUT, aChar ) );	
+	return( (S16)GemDos_Call_W( eGEMDOS_CCONOUT, aChar ) );
 }
 
 
@@ -269,7 +269,7 @@ S16	GemDos_Cconout( const U16 aChar )
 
 void	GemDos_Cconrs( char * apString )
 {
-	GemDos_Call_P( eGEMDOS_CCONRS, apString );	
+	GemDos_Call_P( eGEMDOS_CCONRS, apString );
 }
 
 
@@ -281,7 +281,7 @@ void	GemDos_Cconrs( char * apString )
 
 void	GemDos_Cconws( const char * apString )
 {
-	GemDos_Call_P( eGEMDOS_CCONWS, apString );		
+	GemDos_Call_P( eGEMDOS_CCONWS, apString );
 }
 
 
@@ -305,7 +305,7 @@ S32	GemDos_Cnecin( void )
 
 S16	GemDos_Cprnout( const U16 aChar )
 {
-	return( (S16)GemDos_Call_W( eGEMDOS_CPRNOUT, aChar ) );	
+	return( (S16)GemDos_Call_W( eGEMDOS_CPRNOUT, aChar ) );
 }
 
 
@@ -341,7 +341,7 @@ S32	GemDos_Crawio( const U16 aChar )
 
 S32	GemDos_Dclosedir( const S32 aDirHandle )
 {
-	return( GemDos_Call_L( eGEMDOS_DCLOSEDIR, aDirHandle ) );	
+	return( GemDos_Call_L( eGEMDOS_DCLOSEDIR, aDirHandle ) );
 }
 
 
@@ -353,7 +353,7 @@ S32	GemDos_Dclosedir( const S32 aDirHandle )
 
 S32	GemDos_Dcntl( const S16 aCmd,const char * apName,const S32 aArg )
 {
-	return( GemDos_Call_WPL( eGEMDOS_DCNTL, aCmd, apName, aArg ) );		
+	return( GemDos_Call_WPL( eGEMDOS_DCNTL, aCmd, apName, aArg ) );
 }
 
 
@@ -365,7 +365,7 @@ S32	GemDos_Dcntl( const S16 aCmd,const char * apName,const S32 aArg )
 
 S32	GemDos_Dcreate( const char * apPath )
 {
-	return( GemDos_Call_P( eGEMDOS_DCREATE, apPath ) );	
+	return( GemDos_Call_P( eGEMDOS_DCREATE, apPath ) );
 }
 
 
@@ -377,7 +377,7 @@ S32	GemDos_Dcreate( const char * apPath )
 
 S32	GemDos_Ddelete( const char * apPath )
 {
-	return( GemDos_Call_P( eGEMDOS_DDELETE, apPath ) );		
+	return( GemDos_Call_P( eGEMDOS_DDELETE, apPath ) );
 }
 
 
@@ -401,7 +401,7 @@ S32	GemDos_Dfree( sGemDosDiskInfo * apInfo,const U16 aDrive )
 
 U16	GemDos_Dgetdrv( void )
 {
-	return( (U16)GemDos_Call( eGEMDOS_DGETDRV ) );	
+	return( (U16)GemDos_Call( eGEMDOS_DGETDRV ) );
 }
 
 
@@ -425,7 +425,7 @@ S32	GemDos_Dgetpath( char * apPath,const U16 aDrive )
 
 S32	GemDos_Dlock( const U16 aMode,const U16 aDrive )
 {
-	return( GemDos_Call_WW( eGEMDOS_DLOCK, aMode, aDrive ) );	
+	return( GemDos_Call_WW( eGEMDOS_DLOCK, aMode, aDrive ) );
 }
 
 
@@ -449,7 +449,7 @@ S32	GemDos_Dopendir( const char * apDir,const U16 aFlag )
 
 S32	GemDos_Dpathconf( const char * apFileSys,const U16 aMode )
 {
-	return( GemDos_Call_PW( eGEMDOS_DPATHCONF, apFileSys, aMode ) );	
+	return( GemDos_Call_PW( eGEMDOS_DPATHCONF, apFileSys, aMode ) );
 }
 
 
@@ -485,7 +485,7 @@ S32	GemDos_Drewinddir( const S32 aHandle )
 
 S32	GemDos_Dsetdrv( const U16 aDrive )
 {
-	return( GemDos_Call_W( eGEMDOS_DSETDRV, aDrive ) );	
+	return( GemDos_Call_W( eGEMDOS_DSETDRV, aDrive ) );
 }
 
 
@@ -509,7 +509,7 @@ S32	GemDos_Dsetpath( const char * apPath )
 
 S32	GemDos_Fattrib( const char * apFileName,const U16 aFlag,const U16 aAttr )
 {
-	return( GemDos_Call_PWW( eGEMDOS_FATTRIB, apFileName, aFlag, aAttr ) );	
+	return( GemDos_Call_PWW( eGEMDOS_FATTRIB, apFileName, aFlag, aAttr ) );
 }
 
 
@@ -521,7 +521,7 @@ S32	GemDos_Fattrib( const char * apFileName,const U16 aFlag,const U16 aAttr )
 
 S32	GemDos_Fchmod( const char * apFileName,const U16 aMode )
 {
-	return( GemDos_Call_PW( eGEMDOS_FCHMOD, apFileName, aMode ) );	
+	return( GemDos_Call_PW( eGEMDOS_FCHMOD, apFileName, aMode ) );
 }
 
 
@@ -533,7 +533,7 @@ S32	GemDos_Fchmod( const char * apFileName,const U16 aMode )
 
 S32	GemDos_Fchown( const char * apFileName,const U16 aUser,const U16 aGroup )
 {
-	return( GemDos_Call_PWW( eGEMDOS_FCHOWN, apFileName, aUser, aGroup ) );	
+	return( GemDos_Call_PWW( eGEMDOS_FCHOWN, apFileName, aUser, aGroup ) );
 }
 
 
@@ -545,7 +545,7 @@ S32	GemDos_Fchown( const char * apFileName,const U16 aUser,const U16 aGroup )
 
 S32	GemDos_Fclose( const S16 aHandle )
 {
-	return( GemDos_Call_W( eGEMDOS_FCLOSE, aHandle ) );	
+	return( GemDos_Call_W( eGEMDOS_FCLOSE, aHandle ) );
 }
 
 
@@ -557,7 +557,7 @@ S32	GemDos_Fclose( const S16 aHandle )
 
 S32	GemDos_Fcntl( const S16 aHandle,const S32 aArg,const U16 aCmd )
 {
-	return( GemDos_Call_WLW( eGEMDOS_FCNTL, aHandle, aArg, aCmd ) );		
+	return( GemDos_Call_WLW( eGEMDOS_FCNTL, aHandle, aArg, aCmd ) );
 }
 
 
@@ -581,7 +581,7 @@ S32	GemDos_Fcreate( const char * apFileName,const S16 aHandle )
 
 S32	GemDos_Fdatime( sGemDosDateTime * apDateTime,const S16 aHandle,const U16 aFlag )
 {
-	return( GemDos_Call_PWW( eGEMDOS_FDATIME, apDateTime, aHandle, aFlag ) );	
+	return( GemDos_Call_PWW( eGEMDOS_FDATIME, apDateTime, aHandle, aFlag ) );
 }
 
 
@@ -605,7 +605,7 @@ S32	GemDos_Fdelete( const char * apFileName )
 
 S32	GemDos_Fdup( const S16 aHandle )
 {
-	return( GemDos_Call_W( eGEMDOS_FDUP, aHandle ) );	
+	return( GemDos_Call_W( eGEMDOS_FDUP, aHandle ) );
 }
 
 
@@ -629,7 +629,7 @@ S32	GemDos_Fforce( const S16 aOldHandle,const S16 aNewHandle )
 
 S32	GemDos_Fgetchar( const S16 aHandle,const U16 aMode )
 {
-	return( GemDos_Call_WW( eGEMDOS_FGETCHAR, aHandle, aMode ) );	
+	return( GemDos_Call_WW( eGEMDOS_FGETCHAR, aHandle, aMode ) );
 }
 
 
@@ -653,7 +653,7 @@ sGemDosDTA *	GemDos_Fgetdta( void )
 
 S32	GemDos_Finstat( const S16 aHandle )
 {
-	return( GemDos_Call_W( eGEMDOS_FINSTAT, aHandle ) );	
+	return( GemDos_Call_W( eGEMDOS_FINSTAT, aHandle ) );
 }
 
 
@@ -665,7 +665,7 @@ S32	GemDos_Finstat( const S16 aHandle )
 
 S32	GemDos_Flink( const char * apOldFileName,char * apNewFileName )
 {
-	return( GemDos_Call_PP( eGEMDOS_FLINK, apOldFileName, apNewFileName ) );		
+	return( GemDos_Call_PP( eGEMDOS_FLINK, apOldFileName, apNewFileName ) );
 }
 
 
@@ -845,7 +845,7 @@ S16	GemDos_Fsnext( void )
 
 S32	GemDos_Fsymlink( const char * apOldName,const char * apNewName )
 {
-	return( GemDos_Call_PP( eGEMDOS_FSYMLINK, apOldName, apNewName ) );	
+	return( GemDos_Call_PP( eGEMDOS_FSYMLINK, apOldName, apNewName ) );
 }
 
 
@@ -881,7 +881,7 @@ S32	GemDos_Fxattr( const U16 aFlag,const char * apName,sGemDosXATTR * apXATTR )
 
 S32	GemDos_Maddalt( void * apStar,const U32 aSize )
 {
-	return( GemDos_Call_PL( eGEMDOS_MADDALT, apStar, aSize ) );	
+	return( GemDos_Call_PL( eGEMDOS_MADDALT, apStar, aSize ) );
 }
 
 
@@ -941,7 +941,7 @@ void *	GemDos_Mxalloc( const U32 aAmount,const U16 aMode )
 
 void	GemDos_Pause( void )
 {
-	GemDos_Call( eGEMDOS_PAUSE );	
+	GemDos_Call( eGEMDOS_PAUSE );
 }
 
 
@@ -989,7 +989,7 @@ S16	GemDos_Pfork( void )
 
 S16	GemDos_Pgetegid( void )
 {
-	return( (S16)GemDos_Call( eGEMDOS_PGETEGID ) );	
+	return( (S16)GemDos_Call( eGEMDOS_PGETEGID ) );
 }
 
 
@@ -1001,7 +1001,7 @@ S16	GemDos_Pgetegid( void )
 
 S16	GemDos_Pgeteuid( void )
 {
-	return( (S16)GemDos_Call( eGEMDOS_PGETEUID ) );		
+	return( (S16)GemDos_Call( eGEMDOS_PGETEUID ) );
 }
 
 
@@ -1037,7 +1037,7 @@ S16	GemDos_Pgetpgrp( void )
 
 S16	GemDos_Pgetpid( void )
 {
-	return( (S16)GemDos_Call( eGEMDOS_PGETPID ) );	
+	return( (S16)GemDos_Call( eGEMDOS_PGETPID ) );
 }
 
 
@@ -1049,7 +1049,7 @@ S16	GemDos_Pgetpid( void )
 
 S16	GemDos_Pgetppid( void )
 {
-	return( (S16)GemDos_Call( eGEMDOS_PGETPPID ) );	
+	return( (S16)GemDos_Call( eGEMDOS_PGETPPID ) );
 }
 
 
@@ -1061,7 +1061,7 @@ S16	GemDos_Pgetppid( void )
 
 S16	GemDos_Pgetuid( void )
 {
-	return( (S16)GemDos_Call( eGEMDOS_PGETUID ) );	
+	return( (S16)GemDos_Call( eGEMDOS_PGETUID ) );
 }
 
 
@@ -1073,7 +1073,7 @@ S16	GemDos_Pgetuid( void )
 
 S16	GemDos_Pkill( const S16 aPID,const S16 aSignal )
 {
-	return( (S16)GemDos_Call_WW( eGEMDOS_PKILL, aPID, aSignal ) );	
+	return( (S16)GemDos_Call_WW( eGEMDOS_PKILL, aPID, aSignal ) );
 }
 
 
@@ -1109,7 +1109,7 @@ S16	GemDos_Pnice( const S16 aDelta )
 
 S32	GemDos_Prenice( const S16 aPID,const S16 aDelta )
 {
-	return( GemDos_Call_WW( eGEMDOS_PNICE, aPID, aDelta ) );	
+	return( GemDos_Call_WW( eGEMDOS_PNICE, aPID, aDelta ) );
 }
 
 
@@ -1121,7 +1121,7 @@ S32	GemDos_Prenice( const S16 aPID,const S16 aDelta )
 
 void	GemDos_Prusage( U32 * apResInfo )
 {
-	GemDos_Call_P( eGEMDOS_PRUSAGE, apResInfo );	
+	GemDos_Call_P( eGEMDOS_PRUSAGE, apResInfo );
 }
 
 
@@ -1145,7 +1145,7 @@ S32	GemDos_Psemaphore( const U16 aMode,const U32 aID,const U32 aTimeOut )
 
 S16	GemDos_Psetgid( const U16 aGID )
 {
-	return( (S16)GemDos_Call_W( eGEMDOS_PGETUID, aGID ) );		
+	return( (S16)GemDos_Call_W( eGEMDOS_PGETUID, aGID ) );
 }
 
 
@@ -1181,7 +1181,7 @@ S32	GemDos_Psetpgrp( const U16 aPID,const S16 aNewGrp )
 
 S16	GemDos_Psetuid( const U16 aPID )
 {
-	return( (S16)GemDos_Call_W( eGEMDOS_PSETUID, aPID ) );	
+	return( (S16)GemDos_Call_W( eGEMDOS_PSETUID, aPID ) );
 }
 
 
@@ -1205,7 +1205,7 @@ S32	GemDos_Psigaction( const U16 aSignal,const sGemDosSigAction * apAct,const sG
 
 S32	GemDos_Psigblock( const U32 aMask )
 {
-	return( GemDos_Call_L( eGEMDOS_PSIGBLOCK, aMask ) );		
+	return( GemDos_Call_L( eGEMDOS_PSIGBLOCK, aMask ) );
 }
 
 
@@ -1255,7 +1255,7 @@ S32	GemDos_Psigpending( void )
 
 S32	GemDos_Psigreturn( void )
 {
-	return( GemDos_Call( eGEMDOS_PSIGRETURN ) );	
+	return( GemDos_Call( eGEMDOS_PSIGRETURN ) );
 }
 
 
@@ -1267,7 +1267,7 @@ S32	GemDos_Psigreturn( void )
 
 S32	GemDos_Psigsetmask( const U32 aMask )
 {
-	return( GemDos_Call_L( eGEMDOS_PSIGSETMASK, aMask ) );	
+	return( GemDos_Call_L( eGEMDOS_PSIGSETMASK, aMask ) );
 }
 
 
@@ -1303,7 +1303,7 @@ void	GemDos_Pterm0( void )
 
 void	GemDos_Ptermres( const U32 aSize,const S16 aRetCode )
 {
-	GemDos_Call_LW( eGEMDOS_PTERM0, aSize, aRetCode );	
+	GemDos_Call_LW( eGEMDOS_PTERM0, aSize, aRetCode );
 }
 
 
@@ -1327,7 +1327,7 @@ S16	GemDos_Pumask( const S16 aMode )
 
 S32	GemDos_Pusrval( const S32 aVal )
 {
-	return( GemDos_Call_L( eGEMDOS_PUSRVAL, aVal ) );	
+	return( GemDos_Call_L( eGEMDOS_PUSRVAL, aVal ) );
 }
 
 
@@ -1339,7 +1339,7 @@ S32	GemDos_Pusrval( const S32 aVal )
 
 S16	GemDos_Pvfork( void )
 {
-	return( (S16)GemDos_Call( eGEMDOS_PVFORK ) );		
+	return( (S16)GemDos_Call( eGEMDOS_PVFORK ) );
 }
 
 
@@ -1351,7 +1351,7 @@ S16	GemDos_Pvfork( void )
 
 S32	GemDos_Pwait( void )
 {
-	return( GemDos_Call( eGEMDOS_PWAIT ) );	
+	return( GemDos_Call( eGEMDOS_PWAIT ) );
 }
 
 
@@ -1363,7 +1363,7 @@ S32	GemDos_Pwait( void )
 
 S32	GemDos_Pwait3( const S16 aFlag,const U32 * apUsage )
 {
-	return( GemDos_Call_WP( eGEMDOS_PWAIT3, aFlag, apUsage ) );		
+	return( GemDos_Call_WP( eGEMDOS_PWAIT3, aFlag, apUsage ) );
 }
 
 
@@ -1387,7 +1387,7 @@ S32	GemDos_Pwaitpid( const S16 aPid,const S16 aFlag,const U32 * apUsage )
 
 void	GemDos_Salert( const char * apStr )
 {
-	GemDos_Call_P( eGEMDOS_SALERT, apStr );	
+	GemDos_Call_P( eGEMDOS_SALERT, apStr );
 }
 
 
@@ -1442,7 +1442,7 @@ void	GemDos_Syield( void )
 
 S32	GemDos_Sysconf( const S16 aInq )
 {
-	return( GemDos_Call_W( eGEMDOS_SYSCONF, aInq ) );	
+	return( GemDos_Call_W( eGEMDOS_SYSCONF, aInq ) );
 }
 
 
@@ -1466,7 +1466,7 @@ S32	GemDos_Talarm( const S32 aTime )
 
 U16	GemDos_Tgetdate( void )
 {
-	return( (U16)GemDos_Call( eGEMDOS_TGETDATE ) );	
+	return( (U16)GemDos_Call( eGEMDOS_TGETDATE ) );
 }
 
 
@@ -1478,7 +1478,7 @@ U16	GemDos_Tgetdate( void )
 
 U16	GemDos_Tgettime( void )
 {
-	return( (U16)GemDos_Call( eGEMDOS_TGETTIME ) );	
+	return( (U16)GemDos_Call( eGEMDOS_TGETTIME ) );
 }
 
 
@@ -1490,7 +1490,7 @@ U16	GemDos_Tgettime( void )
 
 S16	GemDos_Tsetdate( const U16 aDate )
 {
-	return( (S16)GemDos_Call_W( eGEMDOS_TSETDATE, aDate ) );	
+	return( (S16)GemDos_Call_W( eGEMDOS_TSETDATE, aDate ) );
 }
 
 
@@ -1502,7 +1502,7 @@ S16	GemDos_Tsetdate( const U16 aDate )
 
 S16	GemDos_Tsettime( const U16 aTime )
 {
-	return( (S16)GemDos_Call_W( eGEMDOS_TSETTIME, aTime ) );		
+	return( (S16)GemDos_Call_W( eGEMDOS_TSETTIME, aTime ) );
 }
 
 

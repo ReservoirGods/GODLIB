@@ -58,7 +58,7 @@ void	GuiData_Init( sGuiData * apData,sHashTree * apTree )
 	for( i=0; i<apData->mVarCount; i++ )
 	{
 		apData->mpVars[ i ].mpVar = HashTree_VarRegister( apTree, apData->mpVars[ i ].mpName );
-	}	
+	}
 }
 
 
@@ -90,7 +90,7 @@ void	GuiData_DeInit( sGuiData * apData, sHashTree * apTree )
 	for( i=0; i<apData->mVarCount; i++ )
 	{
 		HashTree_VarUnRegister( apTree, apData->mpVars[ i ].mpVar );
-	}	
+	}
 }
 
 
@@ -547,7 +547,7 @@ U32	GuiData_GetSize( sGuiData * apData )
 	lSize += apData->mWindowCount      * (sizeof( sGuiWindow )      );
 	lSize += GuiData_GetArraysSize( apData );
 	lSize += GuiData_GetStringsSize( apData );
-	
+
 	return( lSize );
 }
 
@@ -925,7 +925,7 @@ void	GuiData_EventsRegister( sGuiData * apData,sHashTree * apTree )
 {
 	U16	i;
 	char	lString[ 128 ];
-	
+
 	for( i=0; i<apData->mButtonCount; i++ )
 	{
 		sprintf( lString, "GUI\\BUTTONS\\%s", apData->mpButtons[ i ].mInfo.mpName );

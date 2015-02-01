@@ -121,7 +121,7 @@ void	RenderFed_Init( void )
 
 void	RenderFed_DeInit( void )
 {
-	
+
 }
 
 
@@ -231,7 +231,7 @@ void	RenderFed_BGDraw( sFedPage * apPage,sGraphicCanvas * apCanvas )
 	if( lpImage )
 	{
 		RenderFed_ImageDraw( lpImage, apCanvas, &lBox, 1 );
-	}	
+	}
 }
 
 
@@ -247,7 +247,7 @@ void	RenderFed_PageDraw( sFedPage * apPage,sGraphicCanvas * apCanvas,U16 aRedraw
 	sFedPageStyle *		lpPageStyle;
 	sFedFontGroup *		lpControlFonts;
 	sFedBox				lBox;
-	
+
 	lBox.mPos.mX = 0;
 	lBox.mPos.mY = 0;
 	lBox.mSize.mWidth = 320;
@@ -414,7 +414,7 @@ void	RenderFed_ListDraw( sFedList * apList,sGraphicCanvas * apCanvas,const sFedB
 	S32 *	lpData;
 	S32		lVal;
 
-	
+
 	if( (apList) && (aRedrawFlag) )
 	{
 		lBox.mPos.mX = (S16)(apBox->mPos.mX + apList->mPos.mX);
@@ -635,7 +635,7 @@ void	RenderFed_SliderDraw( sFedSlider * apSlider,sGraphicCanvas * apCanvas,const
 		lRect.mHeight -= 2;
 		lRect.mWidth  -= 2;
 		apCanvas->mpClipFuncs->DrawBox( apCanvas, &lRect, 0 );
-		
+
 		lRect.mWidth = (S16)lWidth;
 
 		apCanvas->mpClipFuncs->DrawBox( apCanvas, &lRect, 1 );
@@ -925,7 +925,7 @@ void	RenderFed_LockEvaluate( sFedLock * apLock,sRenderFedLock * apRFL )
 				}
 			}
 		}
-	}	
+	}
 #endif
 }
 
@@ -948,7 +948,7 @@ void	RenderFed_CursorSave( sFedSprite * apCursor,const sFedBox * apBox )
 		if( lpBlock )
 		{
 			lpBox  = &gRenderFed.mRedrawBoxes[ gRenderFed.mRedrawIndex ];
-			
+
 			lpBox->mPos.mX       = (S16)(apBox->mPos.mX + apCursor->mPos.mX);
 			lpBox->mPos.mY       = (S16)(apBox->mPos.mY + apCursor->mPos.mY);
 			lpBox->mSize.mWidth  = (S16)(lpBlock->mpSprite[ 0 ]->mWidth);
@@ -1020,7 +1020,7 @@ void	RenderFed_OutroInit( sFedTransition * apTrans )
 	if( apTrans )
 	{
 		DebugLog_Printf0( "rfed outro init" );
-		gRenderFed.mTransition       = *apTrans;	
+		gRenderFed.mTransition       = *apTrans;
 		gRenderFed.mTransMode        = eRFED_TRANS_OUTRO;
 		gRenderFed.mTransStartedFlag = 0;
 		RenderFed_TransitionStart();

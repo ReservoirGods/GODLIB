@@ -84,7 +84,7 @@ U32 GodPack_Bwt_Encode(const void * apSrc,void * apDst,const U32 aSize)
 
 		lOffset += gBwtBlockSize;
 	}
-	
+
 
 	mMEMFREE( gpBwtIndices );
 	mMEMFREE( gpBwtBlockData );
@@ -140,7 +140,7 @@ int	GodPack_Bwt_Compare( const void * apIndex0,const void * apIndex1 )
 U32	GodPack_Bwt_CalcSize( const U32 aSrcSize )
 {
 	U32	lSize;
-	
+
 	lSize  = aSrcSize + dGODPACK_BWT_BLOCK_SIZE - 1;
 	lSize /= dGODPACK_BWT_BLOCK_SIZE;
 	lSize *= sizeof(U16);

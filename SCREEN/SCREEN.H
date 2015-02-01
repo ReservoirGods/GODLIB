@@ -39,7 +39,7 @@ enum
 void	Screen_Init( const U16 aWidth, const U16 aHeight, const U16 aBitDepth, const U16 aScrollFlags );
 void	Screen_Update( void );
 void	Screen_DeInit( void );
- 
+
 U16 *	Screen_GetpPhysic( void );
 U16 *	Screen_GetpLogic( void );
 U16 *	Screen_GetpBack( void );

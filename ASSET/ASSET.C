@@ -40,7 +40,7 @@ U32	Asset_BuildHash( const char * apString )
 		lHash &= ~lTemp;
 	}
 
-	return( lHash );		
+	return( lHash );
 }
 
 
@@ -98,7 +98,7 @@ sAsset *	Asset_Create( const char * apFileName )
 		lpAsset->mFileName[ i ] = 0;
 
 	}
-	
+
 	return( lpAsset );
 }
 
@@ -111,7 +111,7 @@ sAsset *	Asset_Create( const char * apFileName )
 
 void	Asset_Destroy( sAsset * apAsset )
 {
-	mMEMFREE( apAsset );	
+	mMEMFREE( apAsset );
 }
 
 
@@ -125,8 +125,8 @@ U32	Asset_OnLoad( sAsset * apAsset )
 {
 	U32				lRet;
 	sAssetClient *	lpClient;
-	
-	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "Asset_OnLoad(): %s", apAsset->mFileName );	
+
+	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "Asset_OnLoad(): %s", apAsset->mFileName );
 
 	lpClient = apAsset->mpClients;
 
@@ -159,7 +159,7 @@ U32	Asset_OnUnLoad( sAsset * apAsset )
 	U32				lRet;
 	sAssetClient *	lpClient;
 
-	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "Asset_OnUnLoad(): %s", apAsset->mFileName );	
+	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "Asset_OnUnLoad(): %s", apAsset->mFileName );
 
 	lpClient = apAsset->mpClients;
 
@@ -177,7 +177,7 @@ U32	Asset_OnUnLoad( sAsset * apAsset )
 		lpClient = lpClient->mpNext;
 	}
 
-	return( lRet );	
+	return( lRet );
 }
 
 

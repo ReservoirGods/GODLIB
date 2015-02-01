@@ -611,7 +611,7 @@ U8	Achieve_Compiler_Pass2_Consumer_Thread( sThread * apThread, sAchieveCompilerL
 		{
 			if( !String_StrCmpi( apLine->mpTokens[ 0 ], "ENTRYCOUNT" ) )
 			{
-				gAchieveCompiler.mpScoreTableEntryCounts[ gAchieveCompiler.mScoreTableIndex ] = String_ToValue( apLine->mpTokens[ 1 ] );	
+				gAchieveCompiler.mpScoreTableEntryCounts[ gAchieveCompiler.mScoreTableIndex ] = String_ToValue( apLine->mpTokens[ 1 ] );
 			}
 		}
 		mTHREAD_YIELD( apThread );
@@ -789,7 +789,7 @@ U8	Achieve_Compiler_Line_Consumer_Thread( sThread * apThread, sAchieveCompilerLi
 			apLine->mTokenSpace[ apLine->mTokenSpaceOffset ] = aChar;
 			apLine->mTokenSpaceOffset++;
 			mTHREAD_YIELD( apThread );
-		} 
+		}
 	}
 	else
 	{
@@ -799,8 +799,8 @@ U8	Achieve_Compiler_Line_Consumer_Thread( sThread * apThread, sAchieveCompilerLi
 			apLine->mTokenSpace[ apLine->mTokenSpaceOffset ] = aChar;
 			apLine->mTokenSpaceOffset++;
 			mTHREAD_YIELD( apThread );
-		} 
-	}		
+		}
+	}
 	apLine->mTokenSpace[ apLine->mTokenSpaceOffset ] = 0;
 	apLine->mTokenSpaceOffset++;
 
@@ -837,7 +837,7 @@ U8	Achieve_Compiler_PassSyntax_Consumer_Thread( sThread * apThread, sAchieveComp
 	mTHREAD_BEGIN( apThread );
 
 	/* find block header */
-	
+
 	do
 	{
 		Achieve_Compiler_GetBlockType( apLine );

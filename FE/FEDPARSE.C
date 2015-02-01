@@ -244,8 +244,8 @@ sTagValue	gFedParseStructSizes[ eFEDPARSE_CHUNK_LIMIT ] =
 	{	eFEDPARSE_CHUNK_SPRITEGROUP,	sizeof( sFedSpriteGroup )	},
 	{	eFEDPARSE_CHUNK_SPRITELIST,		sizeof( sFedSpriteList )	},
 	{	eFEDPARSE_CHUNK_TEXT,			sizeof( sFedText )			},
-	{	eFEDPARSE_CHUNK_TRANSITION,		sizeof( sFedTransition )	},	
-	{	eFEDPARSE_CHUNK_VAR,			sizeof( sFedVar )			},	
+	{	eFEDPARSE_CHUNK_TRANSITION,		sizeof( sFedTransition )	},
+	{	eFEDPARSE_CHUNK_VAR,			sizeof( sFedVar )			},
 };
 
 sFedParserMember	gFedParseAssetMembers[] =
@@ -632,7 +632,7 @@ void	FedParse_Pass1_Init( const char * apTitle,const U16 aIndex,const char * apN
 
 void	FedParse_Pass1_DeInit( void )
 {
-	
+
 }
 
 
@@ -693,7 +693,7 @@ void	FedParse_Pass2_Init( const char * apTitle,const U16 aIndex,const char * apN
 			lpList->mpHashes[ lpList->mItemIndex ] = HashList_BuildHash( apName );
 			lpList->mItemIndex++;
 		}
-	}	
+	}
 	else
 	{
 		gFedParser.mpMembers = 0;
@@ -724,14 +724,14 @@ void	FedParse_Pass3_Init( const char * apTitle,const U16 aIndex,const char * apN
 		lpList = &gFedParser.mLists[ gFedParser.mChunkIndex ];
 
 		gFedParser.mpMembers = lpList->mpMembers;
-		gFedParser.mpData    = lpList->mpData; 
+		gFedParser.mpData    = lpList->mpData;
 		FedParse_SetItemArrayPtrs();
 	}
 	else
 	{
 		printf( "WARNING: Unknown chunk type %s::%s\n", apTitle, apName );
 		gFedParser.mpMembers = 0;
-	}	
+	}
 }
 
 
@@ -949,7 +949,7 @@ void	FedParse_Pass3_Var( sTokeniserArgs * apArgs )
 			lpMember++;
 		}
 		printf( "FedParse : Unknown Var %s in Chunk %s::%s\n", apArgs->mpStrings[0], gFedParser.mpCurrentChunkTitle, gFedParser.mpCurrentChunkName );
-	}	
+	}
 }
 
 
@@ -1054,7 +1054,7 @@ void	FedParse_SetItemArrayCount( void )
 		((sFedSpriteList*)gFedParser.mpData)->mSpriteCount = gFedParser.mItemArrayCount;
 		break;
 	}
-	
+
 }
 
 
@@ -1101,7 +1101,7 @@ void	FedParse_SetItemHash( void )
 void	FedParse_HashListsInit( void )
 {
 	U16	i;
-	
+
 	for( i=0; i<eFEDPARSE_CHUNK_LIMIT; i++ )
 	{
 		if( gFedParser.mLists[ i ].mItemCount )
@@ -1334,7 +1334,7 @@ void	FedParse_ShowItem( U8 * apItem,sFedParserMember * apMember )
 	U32						lU32;
 	FP32					lFP32;
 	char *					lpString;
-	
+
 	while( apMember->mpString )
 	{
 		printf( "%s : ", apMember->mpString );
@@ -1426,7 +1426,7 @@ void	FedParse_ShowItem( U8 * apItem,sFedParserMember * apMember )
 
 sFedHeader *	FedParse_GetpFed( void )
 {
-	return( gFedParser.mpHeader );	
+	return( gFedParser.mpHeader );
 }
 
 
@@ -1438,7 +1438,7 @@ sFedHeader *	FedParse_GetpFed( void )
 
 U32	FedParse_GetSize( void )
 {
-	return( gFedParser.mDataSize );	
+	return( gFedParser.mDataSize );
 }
 
 
@@ -1452,7 +1452,7 @@ void *	FedParse_StringTempAlloc( const char * apSrcString )
 {
 	S32		lLen;
 	char *	lpString;
-	
+
 	if( apSrcString )
 	{
 		lLen  = strlen( apSrcString );
@@ -1469,7 +1469,7 @@ void *	FedParse_StringTempAlloc( const char * apSrcString )
 		lpString = 0;
 	}
 
-	return( lpString );	
+	return( lpString );
 }
 
 
@@ -1481,7 +1481,7 @@ void *	FedParse_StringTempAlloc( const char * apSrcString )
 
 void	FedParse_StringTempFree( void * apMem )
 {
-	mMEMFREE( apMem );	
+	mMEMFREE( apMem );
 }
 
 

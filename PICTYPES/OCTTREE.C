@@ -189,7 +189,7 @@ void			OctTree_DeleteNode( sOctTree * apTree, sOctTreeNode * apNode )
 	apTree->mNodeCount--;
 
 	if( apNode )
-	{	
+	{
 		if( !apNode->mLeafFlag )
 		{
 			for( i=0; i<dOCTTREE_CHILD_LIMIT; i++ )
@@ -246,7 +246,7 @@ void			OctTree_MakeReducible( sOctTree * apTree, sOctTreeNode * apNode )
 {
 	U16				lLevel;
 	sOctTreeNode *	lpHead;
-	
+
 	lLevel         = apNode->mLevel;
 	lpHead         = apTree->mppReducibles[ lLevel ];
 	apNode->mpNext = lpHead;

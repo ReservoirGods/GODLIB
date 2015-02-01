@@ -94,7 +94,7 @@ void	Input_UpdateStatus( sInput * apInput, const U16 aIndex, const U8 aState )
 
 	if( aState )
 	{
-		if( *lpKey ==eINPUTKEYSTATUS_NONE )  
+		if( *lpKey ==eINPUTKEYSTATUS_NONE )
 		{
 			*lpKey = eINPUTKEYSTATUS_HIT | eINPUTKEYSTATUS_HELD;
 			apInput->mMovedFlag = 1;
@@ -376,7 +376,7 @@ void	Input_ProcessJagPad( sInput * apInput, U8 aDir, U16 aKey )
 void	Input_CombinedInit( sInput * apDst,sInput * apSrc,const U16 aCount )
 {
 	U16	i;
-	
+
 	Input_Init( apDst );
 	for( i=0; i<aCount; i++ )
 	{
@@ -474,7 +474,7 @@ char *	Input_GetTypeName( const sInput * apInput )
 
 void	Input_BuildHeldString( const sInput * apInput,char * apOutput )
 {
-	Input_BuildStatusString( apInput, eINPUTKEYSTATUS_HELD, apOutput );	
+	Input_BuildStatusString( apInput, eINPUTKEYSTATUS_HELD, apOutput );
 }
 
 
@@ -486,7 +486,7 @@ void	Input_BuildHeldString( const sInput * apInput,char * apOutput )
 
 void	Input_BuildHitString( const sInput * apInput,char * apOutput )
 {
-	Input_BuildStatusString( apInput, eINPUTKEYSTATUS_HIT, apOutput );	
+	Input_BuildStatusString( apInput, eINPUTKEYSTATUS_HIT, apOutput );
 }
 
 
@@ -498,7 +498,7 @@ void	Input_BuildHitString( const sInput * apInput,char * apOutput )
 
 void	Input_BuildUnHitString( const sInput * apInput,char * apOutput )
 {
-	Input_BuildStatusString( apInput, eINPUTKEYSTATUS_UNHIT, apOutput );	
+	Input_BuildStatusString( apInput, eINPUTKEYSTATUS_UNHIT, apOutput );
 }
 
 
@@ -558,8 +558,8 @@ void Input_Combine(sInput * apDst,const sInput * apSrc0,const sInput * apSrc1)
 		lpSrc1++;
 		lpDst++;
 	}
-	apDst->mMovedFlag |= apSrc0->mMovedFlag;	
-	apDst->mMovedFlag |= apSrc1->mMovedFlag;	
+	apDst->mMovedFlag |= apSrc0->mMovedFlag;
+	apDst->mMovedFlag |= apSrc1->mMovedFlag;
 }
 
 
@@ -587,8 +587,8 @@ void	Input_CombineFire( sInput * apDst,const sInput * apSrc0,const sInput * apSr
 	{
 		*lpDst = *lpSrc1;
 	}
-	apDst->mMovedFlag |= apSrc0->mMovedFlag;	
-	apDst->mMovedFlag |= apSrc1->mMovedFlag;		
+	apDst->mMovedFlag |= apSrc0->mMovedFlag;
+	apDst->mMovedFlag |= apSrc1->mMovedFlag;
 }
 
 
@@ -600,10 +600,10 @@ void	Input_CombineFire( sInput * apDst,const sInput * apSrc0,const sInput * apSr
 
 void Input_DirClear(sInput * apInput)
 {
-	apInput->mKeyStatus[ eINPUTKEY_LEFT  ] = eINPUTKEYSTATUS_NONE;	
-	apInput->mKeyStatus[ eINPUTKEY_RIGHT ] = eINPUTKEYSTATUS_NONE;	
-	apInput->mKeyStatus[ eINPUTKEY_DOWN  ] = eINPUTKEYSTATUS_NONE;	
-	apInput->mKeyStatus[ eINPUTKEY_UP    ] = eINPUTKEYSTATUS_NONE;	
+	apInput->mKeyStatus[ eINPUTKEY_LEFT  ] = eINPUTKEYSTATUS_NONE;
+	apInput->mKeyStatus[ eINPUTKEY_RIGHT ] = eINPUTKEYSTATUS_NONE;
+	apInput->mKeyStatus[ eINPUTKEY_DOWN  ] = eINPUTKEYSTATUS_NONE;
+	apInput->mKeyStatus[ eINPUTKEY_UP    ] = eINPUTKEYSTATUS_NONE;
 }
 
 

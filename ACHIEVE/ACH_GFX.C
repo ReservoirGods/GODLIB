@@ -200,7 +200,7 @@ U16	AchieveGfx_Fade_Update( void )
 		}
 #ifdef	dGODLIB_PLATFORM_ATARI
 		memcpy( (void*)0xFFFF8240L, &gAchieveGfxClass.mPalTmp[0], 32 );
-#else	
+#else
 		Video_SetNextPalST( &gAchieveGfxClass.mPalTmp[0] );
 #endif
 	}
@@ -543,7 +543,7 @@ void	Achieve_Gfx_FontDraw( const char * apText, U16 * apScreen, const U16 aColou
 			if( (lPos.mX + (lLen<<3)) > apClipRect->mX1 )
 			{
 				S16	lClipX = ( (lPos.mX + (lLen<<3)) - apClipRect->mX1 );
-				
+
 				lClipX >>= 3;
 				lLen    -= lClipX;
 
@@ -842,8 +842,8 @@ void	Achieve_Input_Update( const U8 aPacket, const U8 aKey )
 		lPacket |= eACH_INPUT_PACKET_FIRE;
 	}
 
-	gAchieveGfxClass.mInputHit    = (~gAchieveGfxClass.mInputPacket) & lPacket; 
-	gAchieveGfxClass.mInputUnHit  = (gAchieveGfxClass.mInputPacket)  & (~lPacket); 
+	gAchieveGfxClass.mInputHit    = (~gAchieveGfxClass.mInputPacket) & lPacket;
+	gAchieveGfxClass.mInputUnHit  = (gAchieveGfxClass.mInputPacket)  & (~lPacket);
 	gAchieveGfxClass.mInputPacket = aPacket;
 	gAchieveGfxClass.mInputKey    = lKey;
 }

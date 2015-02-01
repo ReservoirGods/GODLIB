@@ -86,7 +86,7 @@ U8				Cli_StringsAreEqual( const char * apStr0, const char * apStr1 );
 void			Cli_InitCurrentLine( void);
 void			Cli_DrawCli( void );
 void			Cli_DrawHistory( void );
-void			Cli_DrawCurrentLine( void );		
+void			Cli_DrawCurrentLine( void );
 void			Cli_ProcessCurrentLine( void );
 void			Cli_DeleteChar( void );
 void			Cli_BackSpaceChar( void );
@@ -118,7 +118,7 @@ void			Cli_Init( void )
 {
 	U16	i;
 	U16	lWhite;
-	
+
 
 	lWhite = 0xFFF;
 	for( i=0; i<16; i++ )
@@ -200,7 +200,7 @@ void			Cli_DeInit( void )
 void			Cli_CmdInit( char * apCommandString, fCliCommandFunc afCmd )
 {
 	U16	i;
-	
+
 	Cli_CmdDeInit( apCommandString );
 
 	for( i=0; i<dCLI_CMD_LIMIT; i++ )
@@ -356,7 +356,7 @@ void	Cli_Main()
 		Video_SetPalST( &gCli.mPal[ 0 ] );
 
 		lExitFlag = 0;
-		
+
 		Cli_ClearScreen( Video_GetpPhysic() );
 		Cli_InitCurrentLine();
 		Cli_DrawCli();
@@ -756,7 +756,7 @@ U8				Cli_StringsAreEqual( const char * apStr0, const char * apStr1 )
 	{
 		return( 0 );
 	}
-	
+
 	return( 1 );
 }
 
@@ -915,7 +915,7 @@ S32				Cli_GrabNumber( const char * apTxt )
 	lVal = 0;
 	if( lMode )
 	{
-		while( 
+		while(
 				( (*apTxt >= '0') && (*apTxt <= '9') )
 			||	( (*apTxt >= 'a') && (*apTxt <= 'f') )
 			||	( (*apTxt >= 'A') && (*apTxt <= 'F') )
@@ -1087,7 +1087,7 @@ void	Cli_ScrollDown( void )
 			gCli.mDisplayLineIndex = 0;
 		}
 	}
-	Cli_DrawCli();	
+	Cli_DrawCli();
 }
 
 

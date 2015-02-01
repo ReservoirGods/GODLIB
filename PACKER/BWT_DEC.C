@@ -38,7 +38,7 @@ U32 GodPack_Bwt_Decode(const void * apSrc,void * apDest, const U32 aSize)
 	U32		i;
 	U8 *	lpSrc;
 	U8 *	lpDst;
-	
+
 
 	gpBwtTransform = (U16*)mMEMCALLOC( dGODPACK_BWT_BLOCK_SIZE * sizeof(U16) );
 
@@ -57,7 +57,7 @@ U32 GodPack_Bwt_Decode(const void * apSrc,void * apDest, const U32 aSize)
 		lSize += 2;
 
 		GodPack_Bwt_BlockDecode( lpSrc, lpDst, lSize );
-		lpSrc     +=(dGODPACK_BWT_BLOCK_SIZE+2); 
+		lpSrc     +=(dGODPACK_BWT_BLOCK_SIZE+2);
 		lpDst     += dGODPACK_BWT_BLOCK_SIZE;
 
 		lOffset   +=(dGODPACK_BWT_BLOCK_SIZE+2);
@@ -88,7 +88,7 @@ U32	GodPack_Bwt_BlockDecode( const void * apSrc,void * apDest,const U32 aSize )
 	U8 *	lpSrc;
 	U8 *	lpDst;
 	U16		i;
-	
+
 	lFirst = *(U16*)apSrc;
 	lpSrc  = (U8*)apSrc;
 	lpSrc += 2;

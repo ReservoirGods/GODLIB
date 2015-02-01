@@ -23,7 +23,7 @@
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION    : sTagString_GetString( const S32 aID, const sTagString * apTagStrings, const U32 aLimit )
-* DESCRIPTION : returns the sTagString string from an id. 
+* DESCRIPTION : returns the sTagString string from an id.
 * AUTHOR      : 09.01.00 PNK
 *-----------------------------------------------------------------------------------*/
 
@@ -42,7 +42,7 @@ char *	sTagString_GetpString( const U32 aID, const sTagString * apTagStrings, co
 			return( lpTagString->pString );
 		}
 		lpTagString++;
-			
+
 	}
 
 	return( 0 );
@@ -70,7 +70,7 @@ U32		sTagString_GetID( const char * apString, const sTagString * apTagStrings, c
 			return( lpTagString->ID );
 		}
 
-		lpTagString++;			
+		lpTagString++;
 	}
 
 	return( 0 );
@@ -98,10 +98,10 @@ U8	sTagString_StringExists( const char * apString,const sTagString * apTagString
 			return( 1 );
 		}
 
-		lpTagString++;			
+		lpTagString++;
 	}
 
-	return( 0 );	
+	return( 0 );
 }
 
 
@@ -126,16 +126,16 @@ U8	sTagString_IDExists( const U32 aID,const sTagString * apTagStrings,const U32 
 			return( 1 );
 		}
 		lpTagString++;
-			
+
 	}
 
-	return( 0 );		
+	return( 0 );
 }
 
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION    : sTagValue_GetValue( const U32 aID, const sTagValue * apTagStrings, const U32 aLimit )
-* DESCRIPTION : returns the value string from an id. 
+* DESCRIPTION : returns the value string from an id.
 * AUTHOR      : 09.01.00 PNK
 *-----------------------------------------------------------------------------------*/
 
@@ -181,7 +181,7 @@ U32		sTagValue_GetID( const U32 aValue, const sTagValue * apTagValues, const U32
 			return( lpTagValue->ID );
 		}
 
-		lpTagValue++;			
+		lpTagValue++;
 	}
 
 	return( 0 );
@@ -351,7 +351,7 @@ S32	AsciiToS32( const char * apTxt )
 	lVal = 0;
 	if( lMode )
 	{
-		while( 
+		while(
 				( (*apTxt >= '0') && (*apTxt <= '9') )
 			||	( (*apTxt >= 'a') && (*apTxt <= 'f') )
 			||	( (*apTxt >= 'A') && (*apTxt <= 'F') )
@@ -397,7 +397,7 @@ S32	AsciiToS32( const char * apTxt )
 void Endian_Twiddle_U16(U8 * apU16)
 {
 	U8	lB0,lB1;
-	
+
 	if( apU16 )
 	{
 		lB0 = apU16[ 0 ];
@@ -417,7 +417,7 @@ void Endian_Twiddle_U16(U8 * apU16)
 void Endian_Twiddle_U32(U8 * apU32)
 {
 	U8	lB0,lB1,lB2,lB3;
-	
+
 	if( apU32 )
 	{
 		lB0 = apU32[ 0 ];
@@ -429,7 +429,7 @@ void Endian_Twiddle_U32(U8 * apU32)
 		apU32[ 2 ] = lB1;
 		apU32[ 3 ] = lB0;
 	}
-	
+
 }
 
 

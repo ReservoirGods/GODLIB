@@ -63,7 +63,7 @@ GemDos_Call:
 
 	move.w	d0,-(a7)
 	trap	#1
-	addq.l	#2,a7	
+	addq.l	#2,a7
 
 	move.l	(a7)+,a2
 	rts
@@ -81,8 +81,8 @@ GemDos_Call_L:
 	move.l	d1,-(a7)
 	move.w	d0,-(a7)
 	trap	#1
-	addq.l	#6,a7	
-	
+	addq.l	#6,a7
+
 	move.l	(a7)+,a2
 	rts
 
@@ -99,8 +99,8 @@ GemDos_Call_P:
 	pea		(a0)
 	move.w	d0,-(a7)
 	trap	#1
-	addq.l	#6,a7	
-	
+	addq.l	#6,a7
+
 	move.l	(a7)+,a2
 	rts
 
@@ -117,8 +117,8 @@ GemDos_Call_W:
 	move.w	d1,-(a7)
 	move.w	d0,-(a7)
 	trap	#1
-	addq.l	#4,a7	
-	
+	addq.l	#4,a7
+
 	move.l	(a7)+,a2
 	rts
 
@@ -136,8 +136,8 @@ GemDos_Call_LW:
 	move.l	d1,-(a7)
 	move.w	d0,-(a7)
 	trap	#1
-	addq.l	#8,a7	
-	
+	addq.l	#8,a7
+
 	move.l	(a7)+,a2
 	rts
 
@@ -155,8 +155,8 @@ GemDos_Call_PL:
 	pea		(a0)
 	move.w	d0,-(a7)
 	trap	#1
-	lea		10(a7),a7	
-	
+	lea		10(a7),a7
+
 	move.l	(a7)+,a2
 	rts
 
@@ -174,8 +174,8 @@ GemDos_Call_PP:
 	pea		(a0)
 	move.w	d0,-(a7)
 	trap	#1
-	lea		10(a7),a7	
-	
+	lea		10(a7),a7
+
 	move.l	(a7)+,a2
 	rts
 
@@ -193,8 +193,8 @@ GemDos_Call_PW:
 	pea		(a0)
 	move.w	d0,-(a7)
 	trap	#1
-	addq.l	#8,a7	
-	
+	addq.l	#8,a7
+
 	move.l	(a7)+,a2
 	rts
 
@@ -212,8 +212,8 @@ GemDos_Call_WL:
 	move.w	d1,-(a7)
 	move.w	d0,-(a7)
 	trap	#1
-	addq.l	#8,a7	
-	
+	addq.l	#8,a7
+
 	move.l	(a7)+,a2
 	rts
 
@@ -231,8 +231,8 @@ GemDos_Call_WP:
 	move.w	d1,-(a7)
 	move.w	d0,-(a7)
 	trap	#1
-	addq.l	#8,a7	
-	
+	addq.l	#8,a7
+
 	move.l	(a7)+,a2
 	rts
 
@@ -250,8 +250,8 @@ GemDos_Call_WW:
 	move.w	d1,-(a7)
 	move.w	d0,-(a7)
 	trap	#1
-	addq.l	#6,a7	
-	
+	addq.l	#6,a7
+
 	move.l	(a7)+,a2
 	rts
 
@@ -271,7 +271,7 @@ GemDos_Call_LWW:
 	move.w	d0,-(a7)
 	trap	#1
 	lea		10(a7),a7
-	
+
 	move.l	(a7)+,a2
 	rts
 
@@ -291,7 +291,7 @@ GemDos_Call_PWW:
 	move.w	d0,-(a7)
 	trap	#1
 	lea		10(a7),a7
-	
+
 	move.l	(a7)+,a2
 	rts
 
@@ -311,7 +311,7 @@ GemDos_Call_WLP:
 	move.w	d0,-(a7)
 	trap	#1
 	lea		12(a7),a7
-	
+
 	move.l	(a7)+,a2
 	rts
 
@@ -331,7 +331,7 @@ GemDos_Call_WLL:
 	move.w	d0,-(a7)
 	trap	#1
 	lea		12(a7),a7
-	
+
 	move.l	(a7)+,a2
 	rts
 
@@ -351,7 +351,7 @@ GemDos_Call_WLW:
 	move.w	d0,-(a7)
 	trap	#1
 	lea		10(a7),a7
-	
+
 	move.l	(a7)+,a2
 	rts
 
@@ -371,7 +371,7 @@ GemDos_Call_WPL:
 	move.w	d0,-(a7)
 	trap	#1
 	lea		12(a7),a7
-	
+
 	move.l	(a7)+,a2
 	rts
 
@@ -391,7 +391,7 @@ GemDos_Call_WPP:
 	move.w	d0,-(a7)
 	trap	#1
 	lea		12(a7),a7
-	
+
 	move.l	(a7)+,a2
 	rts
 
@@ -411,7 +411,7 @@ GemDos_Call_WWP:
 	move.w	d0,-(a7)
 	trap	#1
 	lea		10(a7),a7
-	
+
 	move.l	(a7)+,a2
 	rts
 
@@ -431,7 +431,7 @@ GemDos_Call_WWW:
 	move.w	d0,-(a7)
 	trap	#1
 	addq.l	#8,a7
-		
+
 	move.l	(a7)+,a2
 	rts
 
@@ -452,7 +452,7 @@ GemDos_Call_WPPL:
 	move.w	d0,-(a7)
 	trap	#1
 	lea		14(a7),a7
-	
+
 	move.l	(a7)+,a2
 	rts
 
@@ -473,7 +473,7 @@ GemDos_Call_WPPP:
 	move.w	d0,-(a7)
 	trap	#1
 	lea		16(a7),a7
-	
+
 	move.l	(a7)+,a2
 	rts
 
@@ -494,7 +494,7 @@ GemDos_Call_WWLL:
 	move.w	d0,-(a7)
 	trap	#1
 	lea		14(a7),a7
-	
+
 	move.l	(a7)+,a2
 	rts
 

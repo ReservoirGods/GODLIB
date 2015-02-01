@@ -50,13 +50,13 @@ example:
 ######################################################################################
 
 An asset is a file on disk. This file can either exist in a linkfile or a raw file in
-the file system. 
+the file system.
 
 An asset is addressed by a filename and a context.
 The filename is as you see it on disk.
 The context refers to the folder or linkfile that the asset resides in.
-Often there is a one to one mapping between context and folder/linkfile, but this is 
-not always the case. A context can encapsulate more than one folder or linkfile 
+Often there is a one to one mapping between context and folder/linkfile, but this is
+not always the case. A context can encapsulate more than one folder or linkfile
 depending on how it is set up in code.
 
 An example from Clogged Up.
@@ -80,7 +80,7 @@ An example from Clogged Up.
 +---------+----------+
 
 As you can see, all worlds used the same context.
-This meant that the game could ask for an asset called "BOARD.PI1" in the context 
+This meant that the game could ask for an asset called "BOARD.PI1" in the context
 "GAME_GFX" and depending on which world had been loaded you would get different
 graphics. The game didn't need to have a different set of filenames for each world.
 
@@ -437,7 +437,7 @@ example:
 ######################################################################################
 
 Sets the position for a sprite.
-Note: the sprite will immediately teleport to this position. 
+Note: the sprite will immediately teleport to this position.
 If you want it to move smoothly to this desitionation, use SPRITE_MOVE_TO.
 
 example:

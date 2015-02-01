@@ -43,7 +43,7 @@ void	Gsm_Delocate( sGsm * apGsm )
 		Endian_FromBigU16( &apGsm->mHeader.mBlockXSize );
 		Endian_FromBigU16( &apGsm->mHeader.mBlockYSize );
 		Endian_FromBigU16( &apGsm->mHeader.mColourMode );
-	}	
+	}
 }
 
 
@@ -69,7 +69,7 @@ sGsm *	Gsm_FromCanvas( sCanvas * apCanvas )
 sCanvas *	Gsm_ToCanvas( sGsm * apGsm )
 {
 	(void)apGsm;
-	return( 0 );	
+	return( 0 );
 }
 
 

@@ -164,7 +164,7 @@ Wipe_Update:
 
 	cmpi.w	#eWIPE_MODE_IN,d0
 	bne.s	.checkout
-	
+
 	move.l	a0,a1
 	move.l	gpWipeGfx,a0
 	move.l	gpWipeMask,a2
@@ -175,7 +175,7 @@ Wipe_Update:
 	ble		.wipe_end
 	bra		.ret
 
-.checkout:	
+.checkout:
 	cmpi.w	#eWIPE_MODE_OUT,d0
 	bne.s	.ret
 
@@ -239,7 +239,7 @@ Wipe_Render_STE:
 * CREATION: 09.02.04 PNK
 *------------------------------------------------------------------------------------*
 
-Wipe_In_Render:	
+Wipe_In_Render:
 	move.w	#199,d0
 
 	moveq	#16,d1
@@ -272,7 +272,7 @@ Wipe_In_Render:
 *------------------------------------------------------------------------------------*
 
 Wipe_Out_Render:
-	
+
 	move.w	#199,d0
 
 	moveq	#16,d1
@@ -996,7 +996,7 @@ gWipeData36:
 	dc.w $FFFF,$FFFF,$FFFF,$FFFF,$FFFF,$FFFF,$FFFF,$FFFF,$FFFF,$FFFF,$FFFF,$FFFF,$FFFF,$FFFF,$FFFF,$FFFF
 gWipeData36_End:
 
-gWipeData37:         
+gWipeData37:
 	dc.w $8000,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	dc.w $C000,$C000,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	dc.w $E000,$E000,$E000,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
@@ -1016,7 +1016,7 @@ gWipeData37:
 gWipeData37_End:
 
 
-gWipeData38:         
+gWipeData38:
 	dc.w $FE7F,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$FE7F
 	dc.w $FE7F,$1C38,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$1C38,$FE7F
 	dc.w $FE7F,$7C3E,$1818,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$1818,$7C3E,$FE7F
@@ -1035,7 +1035,7 @@ gWipeData38:
 gWipeData38_End:
 
 
-gWipeData39:    
+gWipeData39:
 	dc.w $8001,$4002,$2004,$1008,$0810,$0420,$0240,$0180,$0180,$0240,$0420,$0810,$1008,$2004,$4002,$8001
 	dc.w $8003,$C006,$600C,$3018,$1810,$0420,$0240,$0180,$0180,$0240,$0420,$0818,$180C,$3006,$6003,$C001
 	dc.w $8007,$C00E,$E00C,$7018,$1830,$0C60,$0640,$0180,$0180,$0260,$0630,$0C18,$180E,$3007,$7003,$E001

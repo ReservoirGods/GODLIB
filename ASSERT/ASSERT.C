@@ -22,7 +22,7 @@
 #  DATA
 ################################################################################### */
 
-#ifdef	dAssertTXT	
+#ifdef	dAssertTXT
 
 char gAssertString[ 1024 ];
 

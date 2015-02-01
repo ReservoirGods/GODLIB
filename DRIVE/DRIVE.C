@@ -172,7 +172,7 @@ S32	Drive_GetPath( U16 aDrive, char * apPath )
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : Drive_SetPath( char * apPath )
-* ACTION   : sets current path 
+* ACTION   : sets current path
 * CREATION : 11.09.99 PNK
 *-----------------------------------------------------------------------------------*/
 

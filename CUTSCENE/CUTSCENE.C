@@ -15,7 +15,7 @@ sCutCmdDef	gCutSceneCmdDefs[] =
 {
 	{	eCUT_CMD_CALL,				"CALL",				eCUT_CMD_ARG_SCRIPT,	eCUT_CMD_ARG_NONE,		eCUT_CMD_ARG_NONE		},
 	{	eCUT_CMD_CALLBACK,			"CALLBACK",			eCUT_CMD_ARG_INT,		eCUT_CMD_ARG_NONE,		eCUT_CMD_ARG_NONE		},
-	
+
 	{	eCUT_CMD_BG_GFX_CLEAR,		"BG_GFX_CLEAR",		eCUT_CMD_ARG_NONE,		eCUT_CMD_ARG_NONE,		eCUT_CMD_ARG_NONE		},
 	{	eCUT_CMD_BG_GFX_SET,		"BG_GFX_SET",		eCUT_CMD_ARG_ASSET,		eCUT_CMD_ARG_NONE,		eCUT_CMD_ARG_NONE		},
 	{	eCUT_CMD_BG_GFX_ENABLE,		"BG_GFX_ENABLE",	eCUT_CMD_ARG_NONE,		eCUT_CMD_ARG_NONE,		eCUT_CMD_ARG_NONE		},
@@ -233,7 +233,7 @@ void	CutScene_Relocate( sCutScene * apCutScene )
 {
 	U16	i,j;
 
-	Endian_FromBigU32( &apCutScene->mID      );	
+	Endian_FromBigU32( &apCutScene->mID      );
 	Endian_FromBigU32( &apCutScene->mVersion );
 
 	Endian_FromBigU16( &apCutScene->mAnimationCount );
@@ -398,7 +398,7 @@ U32	CutScene_GetSize( sCutScene * apCutScene )
 {
 	U32	lSize;
 	U16	i;
-	
+
 	lSize = 0;
 	if( apCutScene )
 	{
@@ -471,7 +471,7 @@ U32	CutScene_GetSize( sCutScene * apCutScene )
 sCutCmdDef *	CutScene_CmdDefFind( const char * apString )
 {
 	sCutCmdDef *	lpDef;
-	
+
 	lpDef = 0;
 
 	if( apString )
@@ -489,7 +489,7 @@ sCutCmdDef *	CutScene_CmdDefFind( const char * apString )
 	}
 
 	return( lpDef );
-	
+
 }
 
 
@@ -502,7 +502,7 @@ sCutCmdDef *	CutScene_CmdDefFind( const char * apString )
 sCutCmdDef *	CutScene_CmdDefFindByID( U16 aID )
 {
 	sCutCmdDef *	lpDef;
-	
+
 	lpDef =	gCutSceneCmdDefs;
 
 	while( (lpDef->mpString) && (lpDef->mIndex != aID) )
@@ -514,7 +514,7 @@ sCutCmdDef *	CutScene_CmdDefFindByID( U16 aID )
 		lpDef = 0;
 	}
 
-	return( lpDef );	
+	return( lpDef );
 }
 
 

@@ -30,7 +30,7 @@ typedef	struct	sOctTreeNode
 
 	U16						mLevel;
 	U16						mIndex;
-	U16						mChildrenCount;				
+	U16						mChildrenCount;
 
 	U8						mLeafFlag;
 	U8						mMarkFlag;

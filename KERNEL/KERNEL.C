@@ -189,7 +189,7 @@ void	Kernel_Init( sKernelTask * apTasks,const U16 aTaskCount,sPackage * apPackag
 void	Kernel_DeInit( void )
 {
 	U16	i;
-	
+
 	for( i=0; i<gKernelClass.mPackageCount; i++ )
 	{
 		Package_DeInit( &gKernelClass.mpPackages[ i ] );
@@ -341,7 +341,7 @@ void	Kernel_Main( void )
 
 void	Kernel_RequestShutdown( void )
 {
-	gKernelClass.mShutDownFlag = 1;	
+	gKernelClass.mShutDownFlag = 1;
 }
 
 
@@ -359,7 +359,7 @@ void	Kernel_Clocks_Update( void )
 	for( i=0; i<eKERNEL_CLOCK_LIMIT; i++ )
 	{
 		Clock_Update( &gKernelClass.mClocks[ i ] );
-	}	
+	}
 }
 
 
@@ -412,7 +412,7 @@ void	Kernel_PackagesUnLoad( const U32 aFlags )
 		lIndex--;
 		lMask >>= 1L;
 	}
-	
+
 	gKernelClass.mPackageCurrentFlags &= ~aFlags;
 }
 
@@ -438,7 +438,7 @@ void	Kernel_GlobalPackagesLoad( const U32 aFlags )
 
 void	Kernel_GlobalPackagesUnLoad( const U32 aFlags )
 {
-	Kernel_PackagesUnLoad( aFlags );	
+	Kernel_PackagesUnLoad( aFlags );
 	gKernelClass.mPackageGlobalFlags &= ~aFlags;
 }
 
@@ -588,7 +588,7 @@ void	Kernel_InputsEnumerate( void )
 void	Kernel_Input_Update( void )
 {
 	U16	i;
-	
+
 	Input_CombinedUpdate( &gKernelClass.mCombinedInput, &gKernelClass.mDirInputs[ 0 ], gKernelClass.mDirInputCount );
 	for( i=0; i<gKernelClass.mFireInputCount; i++ )
 	{
@@ -623,7 +623,7 @@ void	Kernel_MonitorInputsUpdate( void )
 		{
 			gKernelClass.mMonitoredCounts[ i ]++;
 		}
-	}	
+	}
 }
 
 
@@ -668,7 +668,7 @@ sKernelTask *	Kernel_GetpTask( const U16 aIndex )
 			return( &gKernelClass.mpTasks[ i ] );
 		}
 	}
-		
+
 	return( 0 );
 }
 
@@ -690,8 +690,8 @@ sPackage *	Kernel_GetpPackage( const U16 aIndex )
 			return( &gKernelClass.mpPackages[ i ] );
 		}
 	}
-		
-	return( 0 );	
+
+	return( 0 );
 }
 
 
@@ -703,7 +703,7 @@ sPackage *	Kernel_GetpPackage( const U16 aIndex )
 
 sClock *	Kernel_GetpClock( const U16 aClockIndex )
 {
-	return( &gKernelClass.mClocks[ aClockIndex ] );	
+	return( &gKernelClass.mClocks[ aClockIndex ] );
 }
 
 
@@ -716,7 +716,7 @@ sClock *	Kernel_GetpClock( const U16 aClockIndex )
 void Kernel_ClockStartCountDown(const U16 aIndex,const U8 aMinutes,const U8 aSeconds)
 {
 	sClock *	lpClock;
-	
+
 	if( aIndex < eKERNEL_CLOCK_LIMIT )
 	{
 		lpClock = &gKernelClass.mClocks[ aIndex ];
@@ -874,7 +874,7 @@ void	Kernel_CLI_achunlock( const char * apArgs )
 	(void)apArgs;
 /*
 	U16	lTemp;
-	
+
 	lTemp = (U16)atoi( apArgs );
 
 	Achieve_Task_UnLock( lTemp );*/
@@ -891,12 +891,12 @@ void	Kernel_CLI_mem( const char * apArgs )
 {
 	(void)apArgs;
 	Cli_PrintLine( "MEMORY DEBUG:" );
-	Cli_PrintfLine1( "allocs : %ld", Memory_GetAllocCount() );	
-	Cli_PrintfLine1( "size   : %ld", Memory_GetAllocatedSize() );	
-	Cli_PrintfLine1( "hitide : %ld", Memory_GetHighTide() );	
-	Cli_PrintfLine1( "bigal  : %ld", Memory_GetLargestAlloc() );	
-	Cli_PrintfLine1( "lilal  : %ld", Memory_GetSmallestAlloc() );	
-	Cli_PrintfLine1( "fail   : %ld", Memory_GetFailedSize() );	
+	Cli_PrintfLine1( "allocs : %ld", Memory_GetAllocCount() );
+	Cli_PrintfLine1( "size   : %ld", Memory_GetAllocatedSize() );
+	Cli_PrintfLine1( "hitide : %ld", Memory_GetHighTide() );
+	Cli_PrintfLine1( "bigal  : %ld", Memory_GetLargestAlloc() );
+	Cli_PrintfLine1( "lilal  : %ld", Memory_GetSmallestAlloc() );
+	Cli_PrintfLine1( "fail   : %ld", Memory_GetFailedSize() );
 }
 
 
@@ -909,7 +909,7 @@ void	Kernel_CLI_mem( const char * apArgs )
 void	Kernel_CLI_ass( const char * apArgs )
 {
 	(void)apArgs;
-	Cli_Action( PackageManager_ShowAll( Cli_PrintLine ) );	
+	Cli_Action( PackageManager_ShowAll( Cli_PrintLine ) );
 }
 
 
@@ -922,7 +922,7 @@ void	Kernel_CLI_ass( const char * apArgs )
 void	Kernel_CLI_assunused( const char * apArgs )
 {
 	(void)apArgs;
-	Cli_Action( PackageManager_ShowUnused( Cli_PrintLine ) );		
+	Cli_Action( PackageManager_ShowUnused( Cli_PrintLine ) );
 }
 
 
@@ -937,7 +937,7 @@ void	Kernel_CLI_build( const char * apArgs )
 	(void)apArgs;
 
 	Cli_PrintfLine1( "DATE  : %s", __DATE__ );
-	Cli_PrintfLine1( "TIME  : %s", __TIME__ );	
+	Cli_PrintfLine1( "TIME  : %s", __TIME__ );
 }
 
 
@@ -999,15 +999,15 @@ void	Kernel_CLI_quit( const char * apArgs )
 void	Kernel_CLI_sys( const char * apArgs )
 {
 	(void)apArgs;
-	Cli_PrintfLine1( "CPU : %s", System_GetNameCPU() );	
-	Cli_PrintfLine1( "BLT : %s", System_GetNameBLT() );	
-	Cli_PrintfLine1( "DSP : %s", System_GetNameDSP() );	
-	Cli_PrintfLine1( "EMU : %s", System_GetNameEMU() );	
-	Cli_PrintfLine1( "FPU : %s", System_GetNameFPU() );	
-	Cli_PrintfLine1( "MCH : %s", System_GetNameMCH() );	
-	Cli_PrintfLine1( "MON : %s", System_GetNameMON() );	
-	Cli_PrintfLine1( "MEM : %ld", System_GetMemory() );	
-	Cli_PrintfLine1( "TOS : %x", System_GetTosVersion() );	
+	Cli_PrintfLine1( "CPU : %s", System_GetNameCPU() );
+	Cli_PrintfLine1( "BLT : %s", System_GetNameBLT() );
+	Cli_PrintfLine1( "DSP : %s", System_GetNameDSP() );
+	Cli_PrintfLine1( "EMU : %s", System_GetNameEMU() );
+	Cli_PrintfLine1( "FPU : %s", System_GetNameFPU() );
+	Cli_PrintfLine1( "MCH : %s", System_GetNameMCH() );
+	Cli_PrintfLine1( "MON : %s", System_GetNameMON() );
+	Cli_PrintfLine1( "MEM : %ld", System_GetMemory() );
+	Cli_PrintfLine1( "TOS : %x", System_GetTosVersion() );
 	Cli_PrintfLine2( "FRQ : %d.%d", System_GetRefreshRate()->w.w1, System_GetRefreshRate()->w.w0 );
 }
 
@@ -1030,7 +1030,7 @@ void	Kernel_CLI_vid( const char * apArgs )
 	Cli_PrintfLine1( "NTSC   : %d", lConfig.mNTSCFlag   );
 	Cli_PrintfLine1( "Cinema : %d", lConfig.mWideScreenFlag  );
 	Cli_PrintfLine1( "H Off  : %d", Video_GetHorizontalOffset() );
-	Cli_PrintfLine1( "V Off  : %d", Video_GetVerticalOffset() );	
+	Cli_PrintfLine1( "V Off  : %d", Video_GetVerticalOffset() );
 }
 
 

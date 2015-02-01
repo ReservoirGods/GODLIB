@@ -185,7 +185,7 @@ void	Gui_Init( sHashTree * apTree )
 
 void	Gui_DeInit( void )
 {
-	
+
 }
 
 
@@ -342,7 +342,7 @@ void	Gui_DataAdd( sGuiData * apHeader )
 		lRect.mHeight = gGuiClass.mScreen.mHeight;
 		GuiWindow_SetWorldPos( &apHeader->mpWindows[i], &lRect, 0 );
 	}
-	Gui_WindowOpen( &gGuiClass, &apHeader->mpWindows[ 0 ] );	
+	Gui_WindowOpen( &gGuiClass, &apHeader->mpWindows[ 0 ] );
 }
 
 
@@ -364,7 +364,7 @@ void	Gui_DataRemove( sGuiData * apHeader )
 		}
 	}
 
-	gGuiClass.mpData = 0;	
+	gGuiClass.mpData = 0;
 	GuiData_EventsUnRegister( apHeader, gGuiClass.mpTree );
 }
 
@@ -466,7 +466,7 @@ sGuiWindow *	Gui_GetpWindow( sGuiClass * apData )
 	DebugLog_Printf2( "Gui_GetpWindow() %lx stackpos %d", apData, apData->mWindowStackPos );
 
 	lpWindow = 0;
-	
+
 	if( apData->mWindowStackPos )
 	{
 		lpWindow = apData->mpWindows[ apData->mWindowStackPos - 1 ];
@@ -526,7 +526,7 @@ void	GuiWindow_EventClose( sGuiWindow * apWindow )
 				GuiWindow_EventOpen( lpWindow );
 			}
 		}
-	}	
+	}
 }
 
 
@@ -640,7 +640,7 @@ void	Gui_WindowRefresh( sGuiClass * apData,sGuiWindow * apWindow )
 
 	apWindow->mInfo.mEvent.mEvent = eGUIEVENT_WINDOW_REFRESH;
 	HashTree_VarWrite( apWindow->mInfo.mpEventVar, &apWindow->mInfo.mEvent );
-	Gui_WorldPosUpdate();	
+	Gui_WorldPosUpdate();
 }
 
 
@@ -673,7 +673,7 @@ U16	Gui_GetWindowIndex( sGuiClass * apData,sGuiWindow * apWindow )
 void	GuiButton_SetWorldPos( sGuiButton * apButton,const sGuiRect * apParentRect, const sGuiRect * apScroll )
 {
 	sGuiRect	lRect;
-	
+
 	if( apButton )
 	{
 		lRect     = *apParentRect;
@@ -743,7 +743,7 @@ void	GuiSlider_SetWorldPos( sGuiSlider * apSlider,const sGuiRect * apParentRect,
 	if( apSlider )
 	{
 		GuiRect_BuildScrolled( apParentRect, &apSlider->mInfo.mRectPair.mLocal, &apSlider->mInfo.mRectPair.mWorld, apScroll );
-		
+
 		switch( apSlider->mSliderType )
 		{
 		case	eGUI_SLIDER_HORIZONTAL:
@@ -872,7 +872,7 @@ void	GuiWindow_SetWorldPos( sGuiWindow * apWindow,const sGuiRect * apParentRect,
 	{
 		GuiRect_BuildScrolled( apParentRect, &apWindow->mInfo.mRectPair.mLocal, &apWindow->mInfo.mRectPair.mWorld, apScroll );
 		GuiWindowControls_SetWorldPos( apWindow );
-	}		
+	}
 }
 
 
@@ -906,7 +906,7 @@ void	GuiWindowControls_SetWorldPos( sGuiWindow * apWindow )
 				break;
 			}
 		}
-	}	
+	}
 }
 
 
@@ -919,7 +919,7 @@ void	GuiWindowControls_SetWorldPos( sGuiWindow * apWindow )
 void	Gui_WorldPosUpdate( void )
 {
 	DebugLog_Printf0( "Gui_WorldPosUpdate()" );
-	Gui_SetWorldPos( &gGuiClass );	
+	Gui_SetWorldPos( &gGuiClass );
 }
 
 
@@ -942,7 +942,7 @@ void	Gui_SetWorldPos( sGuiClass * apData )
 		lRect.mHeight = apData->mScreen.mHeight;
 
 		GuiWindow_SetWorldPos( Gui_GetpWindow(apData), &lRect, 0 );
-	}		
+	}
 }
 
 
@@ -975,7 +975,7 @@ sGuiInfo *	GuiSlider_GetFocusControl( sGuiSlider * apSlider,S16 aX,S16 aY )
 {
 	sGuiInfo *	lpInfo;
 	U16			i;
-	
+
 	lpInfo = 0;
 	if( apSlider )
 	{
@@ -1168,7 +1168,7 @@ void	GuiRect_BuildScrolled( const sGuiRect * apParent,const sGuiRect * apChild,s
 		}
 
 	}
-	
+
 }
 
 
@@ -1182,7 +1182,7 @@ U8	GuiRect_ContainsPoint( const sGuiRect * apRect,const S16 aX,const S16 aY )
 {
 	U8	lRes;
 	S16	lX,lY;
-	
+
 	lRes = 0;
 
 	if( apRect )
@@ -1210,7 +1210,7 @@ void	Gui_MouseUpdate( sGuiClass * apData )
 {
 	S16			lX,lY;
 	U8			lLeft,lRight;
-	
+
 	lX     = IKBD_GetMouseX();
 	lY     = IKBD_GetMouseY();
 	lLeft  = IKBD_GetMouseButtonLeft();
@@ -1299,7 +1299,7 @@ U8	GuiMouse_GetButton( const U8 aOldState,const U8 aNewState )
 void	Gui_IkbdUpdate( sGuiIKBD * apIKBD )
 {
 	apIKBD->mCount = 0;
-	
+
 	while( (IKBD_GetKbdBytesWaiting()) && (apIKBD->mCount < dGUI_IKBD_LIMIT) )
 	{
 		apIKBD->mData[ apIKBD->mCount ] = IKBD_PopKbdByte();
@@ -1332,7 +1332,7 @@ void	GuiInfo_FocusUpdate( sGuiInfo * apInfo,sGuiClass * apData )
 			break;
 
 		}
-	}	
+	}
 }
 
 
@@ -1357,7 +1357,7 @@ void	GuiInfo_DeFocusUpdate( sGuiInfo * apInfo,sGuiClass * apData )
 			break;
 
 		}
-	}	
+	}
 }
 
 
@@ -1384,7 +1384,7 @@ void	GuiInfo_HeldUpdate( sGuiInfo * apInfo,sGuiClass * apData )
 			GuiSlider_HeldUpdate( (sGuiSlider*)apInfo, apData );
 			break;
 		}
-	}		
+	}
 }
 
 
@@ -1650,7 +1650,7 @@ void	GuiSlider_Update( sGuiSlider * apSlider,const U8 aUpdateFromPosFlag )
 					lPageSize = apSlider->mSizeMin;
 				}
 			}
-			
+
 
 			lBackSize -= lPageSize;
 
@@ -1762,7 +1762,7 @@ void	GuiSlider_Update( sGuiSlider * apSlider,const U8 aUpdateFromPosFlag )
 				apSlider->mpWindow->mInfo.mRedrawFlag = 2;
 			}
 		}
-	}	
+	}
 }
 
 
@@ -2039,7 +2039,7 @@ void	GuiSlider_ValueAdd( sGuiSlider * apSlider,const S32 aAdd )
 			}
 			GuiSlider_Update( apSlider, 0 );
 		}
-	}	
+	}
 }
 
 
@@ -2085,7 +2085,7 @@ void	GuiButton_FocusUpdate( sGuiButton * apButton,sGuiClass * apData )
 		if( apButton->mButtonType == eGUI_BUTTON_TEXTLINE )
 		{
 			if( GuiTextLine_Init( &apData->mTextLine, apButton->mString.mVar.mpVar ) )
-			{ 
+			{
 				apButton->mInfo.mFlags |= eGUIINFO_FLAG_SELECTED;
 				apButton->mInfo.mRedrawFlag = 2;
 				apData->mMode = eGUI_MODE_TEXTEDIT;
@@ -2126,13 +2126,13 @@ void	GuiButton_FocusUpdate( sGuiButton * apButton,sGuiClass * apData )
 			HashTree_VarWrite( apButton->mInfo.mpEventVar, &apButton->mInfo.mEvent );
 		}
 
-		if( (apButton->mButtonType == eGUI_BUTTON_SPRING) || 
-			(apButton->mButtonType == eGUI_BUTTON_SLIDERX) || 
+		if( (apButton->mButtonType == eGUI_BUTTON_SPRING) ||
+			(apButton->mButtonType == eGUI_BUTTON_SLIDERX) ||
 			(apButton->mButtonType == eGUI_BUTTON_SLIDERY) ||
 			(apButton->mButtonType == eGUI_BUTTON_SLIDERLINEADD) ||
 			(apButton->mButtonType == eGUI_BUTTON_SLIDERLINESUB) ||
 			(apButton->mButtonType == eGUI_BUTTON_SLIDERPAGEADD) ||
-			(apButton->mButtonType == eGUI_BUTTON_SLIDERPAGESUB) 
+			(apButton->mButtonType == eGUI_BUTTON_SLIDERPAGESUB)
 			)
 		{
 			if( !apButton->mInfo.mFlags & eGUIINFO_FLAG_SELECTED )
@@ -2241,7 +2241,7 @@ void	GuiButton_DeFocusUpdate( sGuiButton * apButton,sGuiClass * apData )
 			apButton->mInfo.mFlags &= ~eGUIINFO_FLAG_SELECTED;
 			apButton->mInfo.mRedrawFlag = 2;
 		}
-	}	
+	}
 }
 
 
@@ -2307,7 +2307,7 @@ void	GuiList_FocusUpdate( sGuiList * apList,sGuiClass * apData )
 		apList->mOpenFlag         = 1;
 		apList->mInfo.mRedrawFlag = 2;
 		break;
-	}	
+	}
 }
 
 
@@ -2452,7 +2452,7 @@ sGuiWindow **	Gui_GetpWindowStack( void )
 
 sGuiMouse *	Gui_GetpMouse( void )
 {
-	return( &gGuiClass.mMouseCursor );	
+	return( &gGuiClass.mMouseCursor );
 }
 
 
@@ -2464,7 +2464,7 @@ sGuiMouse *	Gui_GetpMouse( void )
 
 sHashTree *	Gui_GetpHashTree( void )
 {
-	return( gGuiClass.mpTree );	
+	return( gGuiClass.mpTree );
 }
 
 
@@ -2476,7 +2476,7 @@ sHashTree *	Gui_GetpHashTree( void )
 
 struct sGuiTextLine *	Gui_GetpTextLine( void )
 {
-	return( &gGuiClass.mTextLine );	
+	return( &gGuiClass.mTextLine );
 }
 
 
@@ -2581,7 +2581,7 @@ void	GuiVar_WriteS32( sGuiVar * apVar,const S32 aValue )
 				break;
 			}
 		}
-	}	
+	}
 }
 
 
@@ -2629,7 +2629,7 @@ sGuiWindow * Gui_GetpWindowFromName(const char * apName)
 	sGuiData *		lpData;
 	U32				lHash;
 	U16				i;
-	
+
 	lpWindow = 0;
 	if( apName )
 	{
@@ -2638,7 +2638,7 @@ sGuiWindow * Gui_GetpWindowFromName(const char * apName)
 		i        = 0;
 		while( (i<lpData->mWindowCount) && (!lpWindow) )
 		{
-			if( lpData->mpWindows[ i ].mInfo.mHash == lHash ) 
+			if( lpData->mpWindows[ i ].mInfo.mHash == lHash )
 			{
 				lpWindow = &lpData->mpWindows[ i ];
 			}
@@ -2660,7 +2660,7 @@ void GuiButton_Select(sGuiButton * apButton)
 {
 	if( apButton );
 	{
-		apButton->mInfo.mFlags     |= eGUIINFO_FLAG_SELECTED;	
+		apButton->mInfo.mFlags     |= eGUIINFO_FLAG_SELECTED;
 		apButton->mInfo.mRedrawFlag = 2;
 	}
 }
@@ -2676,7 +2676,7 @@ void GuiButton_DeSelect(sGuiButton * apButton)
 {
 	if( apButton )
 	{
-		apButton->mInfo.mFlags     &= ~eGUIINFO_FLAG_SELECTED;	
+		apButton->mInfo.mFlags     &= ~eGUIINFO_FLAG_SELECTED;
 		apButton->mInfo.mRedrawFlag = 2;
 	}
 }
@@ -2693,7 +2693,7 @@ void GuiWindow_DeBounceSprings(sGuiWindow * apWindow)
 	sGuiButton *	lpButton;
 	sGuiSlider *	lpSlider;
 	U16				i,j;
-	
+
 	if( apWindow )
 	{
 		for( i=0; i<apWindow->mControlCount; i++ )
@@ -2734,7 +2734,7 @@ void GuiWindow_DeBounceSprings(sGuiWindow * apWindow)
 void	Gui_OnStringVarWrite( sHashTreeVarClient * apClient )
 {
 	sGuiButton *	lpButton;
-	
+
 	lpButton = (sGuiButton*)apClient->mUserData;
 	if( lpButton )
 	{
@@ -2754,7 +2754,7 @@ void	Gui_OnStringVarWrite( sHashTreeVarClient * apClient )
 
 void	Gui_SetCustomFocus( fGuiFocus apFocus )
 {
-	gGuiClass.mpCustomFocus = apFocus;		
+	gGuiClass.mpCustomFocus = apFocus;
 }
 
 
@@ -2780,7 +2780,7 @@ void GuiKeyActions_Update(sGuiClass * apClass)
 {
 	sGuiWindow *	lpWindow;
 	U16				i;
-	
+
 	lpWindow = Gui_GetpWindow( apClass );
 	if( lpWindow )
 	{

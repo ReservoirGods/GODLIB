@@ -90,7 +90,7 @@ U8				CanvasIC_CreateImage( sCanvasIC * apCanvasIC, U16 aWidth, U16 aHeight )
 		apCanvasIC->mHeight = 0;
 		return( 0 );
 	}
-	
+
 	apCanvasIC->mWidth  = aWidth;
 	apCanvasIC->mHeight = aHeight;
 
@@ -133,11 +133,11 @@ U8				CanvasIC_DestroyImage( sCanvasIC * apCanvasIC )
 *-----------------------------------------------------------------------------------*/
 
 U8				CanvasIC_CreateDefaultPalette( sCanvasIC * apCanvasIC, U16 aColourCount )
-{	
+{
 	U16	i;
 	U32	lCol;
 
-	
+
 	for( i=0; i<aColourCount; i++ )
 	{
 		lCol  = i * 0xFF;
@@ -167,7 +167,7 @@ U8			CanvasIC_PaletteFromST( sCanvasIC * apCanvasIC, U16 aColourCount, U16 * apP
 	{
 		CanvasICPixel_FromST( &apCanvasIC->mPalette[ i ], &apPalette[ i ] );
 	}
-	
+
 	return( 1 );
 }
 
@@ -186,7 +186,7 @@ U8			CanvasIC_PaletteToST(   sCanvasIC * apCanvasIC, U16 aColourCount, U16 * apP
 	{
 		CanvasICPixel_ToST( &apCanvasIC->mPalette[ i ], &apPalette[ i ] );
 	}
-	
+
 	return( 1 );
 }
 
@@ -785,7 +785,7 @@ void CanvasIC_ReduceColourDepth(sCanvasIC * apCanvasIC,U16 aColourCount)
 sCanvasIC *	CanvasIC_Load(   sCanvasIC * apCanvasIC, char * apFileName )
 {
 	sCanvasIC *	lpCanvasIC;
-	
+
 
 	return( lpCanvasIC );
 }

@@ -170,7 +170,7 @@ void	Fade_PalST( U16 * apDest, U16 * apSrc, U16 * apTarget, U16 aColourCount, U1
 
 		lR0 <<= 8;
 		lG0 <<= 4;
-		
+
 		apDest[ i ] = (U16)(lR0 | lG0 | lB0);
 	}
 
@@ -332,7 +332,7 @@ void	Fade_PalFalcon( U32 * apDest, U32 * apSrc, U32 * apTarget, U16 aColourCount
 
 		lR0 <<= 24;
 		lG0 <<= 16;
-		
+
 		apDest[ i ] = lR0 | lG0 | lB0;
 	}
 }
@@ -360,7 +360,7 @@ U16 *	Fade_GetpBlackPal( void )
 
 U16 *	Fade_GetpWhitePal( void )
 {
-	return( &gFadeWhitePal[ 0 ] );	
+	return( &gFadeWhitePal[ 0 ] );
 }
 
 
@@ -372,7 +372,7 @@ U16 *	Fade_GetpWhitePal( void )
 
 void	Fade_SetGamma( const U16 aGamma )
 {
-	gFadeGamma = aGamma;	
+	gFadeGamma = aGamma;
 }
 
 
@@ -430,7 +430,7 @@ void	Fade_BuildGammaCorrectedPal( const U16 * apPal, U16 * apDst )
 		lCol = (U16)(lR0 | lG0 | lB0);
 
 		Endian_WriteBigU16( &apDst[ i ], lCol );
-	}	
+	}
 }
 
 

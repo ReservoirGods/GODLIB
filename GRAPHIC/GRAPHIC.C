@@ -340,7 +340,7 @@ void	Graphic_FontPrintClip( struct sGraphicCanvas * apCanvas,sGraphicPos * apCoo
 		}
 		lPos.mX = (S16)(lPos.mX +lpFont->mKerning);
 		apString++;
-	}	
+	}
 }
 
 
@@ -495,7 +495,7 @@ void	Graphic_ChunkList_Store( sGraphicChunkList * apList, sGraphicCanvas * apCan
 	Assert( ( apList->mActiveCount + lCount ) < apList->mChunkCount );
 
 	apList->mActiveCount += lCount;
-	
+
 	while( lCount )
 	{
 		lpChunk->mHeight = lH;
@@ -524,7 +524,7 @@ void	Graphic_ChunkList_ReStore( sGraphicChunkList * apList, sGraphicCanvas * apS
 
 	lCount = apList->mActiveCount;
 
-	
+
 	lpChunk = &apList->mChunks[ 0 ];
 	while( lCount )
 	{

@@ -79,7 +79,7 @@ U16 *	RleSprite_PixelsOutput( U16 * apRle,const U16 * apPixels,U16 aPixelCount )
 			aPixelCount--;
 		}
 	}
-	return( apRle );	
+	return( apRle );
 }
 
 
@@ -210,7 +210,7 @@ void	RleSprite_Destroy( sRleSprite * apSprite )
 U32	RleSprite_GetSize( const sRleSprite * apSprite )
 {
 	U32	lSize;
-	
+
 	lSize = 0;
 	if( apSprite )
 	{
@@ -219,7 +219,7 @@ U32	RleSprite_GetSize( const sRleSprite * apSprite )
 		lSize += ( (U32)(apSprite->mpLines[apSprite->mHeader.mHeight]) - (U32)(apSprite->mpLines[0]) );
 	}
 	return( lSize );
-}	
+}
 
 
 /*-----------------------------------------------------------------------------------*
@@ -241,7 +241,7 @@ void	RleSprite_Delocate( sRleSprite * apSprite )
 		}
 		Endian_FromBigU16( &apSprite->mHeader.mHeight );
 		Endian_FromBigU16( &apSprite->mHeader.mWidth  );
-	}	
+	}
 }
 
 
@@ -264,7 +264,7 @@ void	RleSprite_Relocate( sRleSprite * apSprite )
 			Endian_FromBigU32( &apSprite->mpLines[ i ] );
 			*(U32*)&apSprite->mpLines[ i ] += (U32)apSprite;
 		}
-	}		
+	}
 }
 
 
@@ -291,7 +291,7 @@ sRleSpriteBlock *	RleSpriteBlock_Create( const U16 aSpriteCount )
 		lpBlock->mHeader.mVersion     = dRLESPRITEBLOCK_VERSION;
 		lpBlock->mHeader.mSpriteCount = aSpriteCount;
 	}
-	return( lpBlock );	
+	return( lpBlock );
 }
 
 
@@ -303,7 +303,7 @@ sRleSpriteBlock *	RleSpriteBlock_Create( const U16 aSpriteCount )
 
 void	RleSpriteBlock_Destroy( sRleSpriteBlock * apBlock )
 {
-	mMEMFREE( apBlock );	
+	mMEMFREE( apBlock );
 }
 
 
@@ -350,7 +350,7 @@ sRleSpriteBlock *	RleSpriteBlock_Serialise( const sRleSpriteBlock * apBlock )
 		}
 	}
 
-	return( lpBlock );	
+	return( lpBlock );
 }
 
 
@@ -375,7 +375,7 @@ void	RleSpriteBlock_Delocate( sRleSpriteBlock * apBlock )
 		Endian_FromBigU32( &apBlock->mHeader.mID          );
 		Endian_FromBigU16( &apBlock->mHeader.mVersion     );
 		Endian_FromBigU16( &apBlock->mHeader.mSpriteCount );
-	}	
+	}
 }
 
 
@@ -400,7 +400,7 @@ void	RleSpriteBlock_Relocate( sRleSpriteBlock * apBlock )
 			*(U32*)&apBlock->mpSprites[ i ] += (U32)apBlock;
 			RleSprite_Relocate( apBlock->mpSprites[ i ] );
 		}
-	}		
+	}
 }
 
 
@@ -414,7 +414,7 @@ U32	RleSpriteBlock_GetSize( const sRleSpriteBlock * apBlock )
 {
 	U32	lSize;
 	U16	i;
-	
+
 	lSize = 0;
 	if( apBlock )
 	{
@@ -439,8 +439,8 @@ U32	RleSpriteBlock_GetSize( const sRleSpriteBlock * apBlock )
 
 void	RleSprite_Draw( const sRleSprite * apSprite,U16 * apScreen,U32 aScreenWidth )
 {
-	U16 *	lpDst0;	
-	U16 *	lpDst1;	
+	U16 *	lpDst0;
+	U16 *	lpDst1;
 	U16 *	lpRle;
 	U16		lH;
 	U16		lSkip;
@@ -483,8 +483,8 @@ void	RleSprite_Draw( const sRleSprite * apSprite,U16 * apScreen,U32 aScreenWidth
 
 void	RleSprite_DrawClip( const sRleSprite * apSprite,U16 * apScreen,U32 aScreenWidth,const sSpriteRect * apRect )
 {
-	U16 *	lpDst0;	
-	U16 *	lpDst1;	
+	U16 *	lpDst0;
+	U16 *	lpDst1;
 	U16 *	lpRle;
 	U16		lH;
 	U16		lX;
@@ -524,7 +524,7 @@ void	RleSprite_DrawClip( const sRleSprite * apSprite,U16 * apScreen,U32 aScreenW
 
 		lpDst0 += aScreenWidth;
 		lH--;
-	}	
+	}
 }
 
 
@@ -536,10 +536,10 @@ void	RleSprite_DrawClip( const sRleSprite * apSprite,U16 * apScreen,U32 aScreenW
 
 void	RleSprite_Clear( const sRleSprite * apSprite,const U16 * apSrc,U16 * apDst,U32 aScreenWidth )
 {
-	U16 *		lpDst0;	
-	U16 *		lpDst1;	
-	const U16 *	lpSrc0;	
-	const U16 *	lpSrc1;	
+	U16 *		lpDst0;
+	U16 *		lpDst1;
+	const U16 *	lpSrc0;
+	const U16 *	lpSrc1;
 	U16 *		lpRle;
 	U16			lH;
 	U16			lSkip;
@@ -576,7 +576,7 @@ void	RleSprite_Clear( const sRleSprite * apSprite,const U16 * apSrc,U16 * apDst,
 		lpSrc0 += aScreenWidth;
 		lH--;
 	}
-	
+
 }
 
 

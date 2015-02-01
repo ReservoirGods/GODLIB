@@ -30,7 +30,7 @@ U32	gProfilerHiTideTag;
 
 void	Profile_Init( sProfile * apProfile )
 {
-	Memory_Clear( sizeof(sProfile), apProfile );	
+	Memory_Clear( sizeof(sProfile), apProfile );
 }
 
 

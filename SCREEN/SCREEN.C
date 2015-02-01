@@ -63,7 +63,7 @@ void	Screen_Init( const U16 aWidth,const U16 aHeight,const U16 aBitDepth, const 
 	U32	lBase;
 	U16	lHeight;
 	U16	lWidth;
-	
+
 	Memory_Clear( sizeof(sScreenClass), &gScreenClass );
 
 	if( aScrollFlags & eSCREEN_SCROLL_V )
@@ -237,7 +237,7 @@ void	Screen_Update( void )
 
 U16 *	Screen_GetpPhysic( void )
 {
-	return( gScreenClass.mpBuffers[ gScreenClass.mPhysicIndex ] );	
+	return( gScreenClass.mpBuffers[ gScreenClass.mPhysicIndex ] );
 }
 
 
@@ -249,7 +249,7 @@ U16 *	Screen_GetpPhysic( void )
 
 U16 *	Screen_GetpLogic( void )
 {
-	return( gScreenClass.mpBuffers[ gScreenClass.mPhysicIndex ^ 1 ] );		
+	return( gScreenClass.mpBuffers[ gScreenClass.mPhysicIndex ^ 1 ] );
 }
 
 
@@ -261,7 +261,7 @@ U16 *	Screen_GetpLogic( void )
 
 U16 *	Screen_GetpBack( void )
 {
-	return( gScreenClass.mpBuffers[ eSCREEN_BACK ] );	
+	return( gScreenClass.mpBuffers[ eSCREEN_BACK ] );
 }
 
 
@@ -285,7 +285,7 @@ U16	Screen_GetPhysicIndex( void )
 
 U16	Screen_GetLogicIndex( void )
 {
-	return( (U16)(gScreenClass.mPhysicIndex ^ 1) );	
+	return( (U16)(gScreenClass.mPhysicIndex ^ 1) );
 }
 
 
@@ -297,7 +297,7 @@ U16	Screen_GetLogicIndex( void )
 
 void	Screen_SetFrameRate( U32 aRate )
 {
-	gScreenClass.mFrameRate = aRate;	
+	gScreenClass.mFrameRate = aRate;
 }
 
 
@@ -309,7 +309,7 @@ void	Screen_SetFrameRate( U32 aRate )
 
 void	Screen_SetScrollY( U16 aScrollY )
 {
-	gScreenClass.mScrollY = aScrollY;	
+	gScreenClass.mScrollY = aScrollY;
 }
 
 
@@ -321,7 +321,7 @@ void	Screen_SetScrollY( U16 aScrollY )
 
 U16	Screen_GetScrollY( void )
 {
-	return( gScreenClass.mScrollY );	
+	return( gScreenClass.mScrollY );
 }
 
 

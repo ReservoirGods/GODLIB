@@ -68,7 +68,7 @@ void						Tokeniser_ShiftPtr( U32 * apPtr, sTokeniserBuilder * apBuilder );
 
 void						Tokeniser_Pass1_Init( const char * apTitle, const U16 aIndex, const char * apName );
 void						Tokeniser_Pass1_DeInit( void );
-void						Tokeniser_Pass1_Var( sTokeniserArgs * apArgs );	
+void						Tokeniser_Pass1_Var( sTokeniserArgs * apArgs );
 
 void						Tokeniser_Pass2_Init( const char * apTitle, const U16 aIndex, const char * apName );
 void						Tokeniser_Pass2_DeInit( void );
@@ -131,10 +131,10 @@ void	Tokeniser_Parse( const char * apText,const U32 aSize,const sTokeniserHandle
 	lTokeniser.mpHandlers    = apHandlers;
 	lTokeniser.mpHandler     = 0;
 	lTokeniser.mMode         = eTOKENISER_MODE_FINDCHUNK;
-	lTokeniser.mHandlerCount = aHandlerCount; 
+	lTokeniser.mHandlerCount = aHandlerCount;
 	gpTokeniserNameSpace     = String_Create( "" );
 	lpName                   = String_Create( "NAME" );
-	
+
 	while( lTokeniser.mOffset < lTokeniser.mTextSize )
 	{
 		lTokeniser.mOffset = TokeniserArgs_Build( &lArgs, lTokeniser.mpText, lTokeniser.mOffset, lTokeniser.mTextSize );
@@ -176,7 +176,7 @@ void	Tokeniser_Parse( const char * apText,const U32 aSize,const sTokeniserHandle
 						{
 							lTokeniser.mpHandler->mpOnChunkInit( lArgs.mpStrings[1], lTokeniser.mHandlerIndex, lpName->mpChars );
 						}
-		
+
 						lTokeniser.mMode = eTOKENISER_MODE_FINDOPEN;
 					}
 				}
@@ -282,7 +282,7 @@ S32	TokeniserArgs_GetInt( const sTokeniserArgs * apArgs )
 		}
 
 		lHexFlag = 0;
-		
+
 		while( (*lpString) && (*lpString<'0') )
 		{
 			if( '$' == *lpString )
@@ -300,7 +300,7 @@ S32	TokeniserArgs_GetInt( const sTokeniserArgs * apArgs )
 
 		if( lHexFlag )
 		{
-			while( (*lpString) &&  
+			while( (*lpString) &&
 				( ((*lpString>='0') && (*lpString<='9')) ||
 				  ((*lpString>='a') && (*lpString<='f')) ||
 				  ((*lpString>='A') && (*lpString<='F')) )
@@ -339,7 +339,7 @@ S32	TokeniserArgs_GetInt( const sTokeniserArgs * apArgs )
 			lVal = -lVal;
 		}
 	}
-	
+
 	return( lVal );
 }
 
@@ -364,7 +364,7 @@ S32	TokeniserArgs_GetS32( const sTokeniserArgs * apArgs )
 
 S16	TokeniserArgs_GetS16( const sTokeniserArgs * apArgs )
 {
-	return( (S16)TokeniserArgs_GetS32( apArgs ) );	
+	return( (S16)TokeniserArgs_GetS32( apArgs ) );
 }
 
 
@@ -376,7 +376,7 @@ S16	TokeniserArgs_GetS16( const sTokeniserArgs * apArgs )
 
 U16	TokeniserArgs_GetU16( const sTokeniserArgs * apArgs )
 {
-	return( (U16)TokeniserArgs_GetU32( apArgs ) );	
+	return( (U16)TokeniserArgs_GetU32( apArgs ) );
 }
 
 
@@ -408,7 +408,7 @@ FP32	TokeniserArgs_GetFP32( const sTokeniserArgs * apArgs )
 	{
 		lVal = (FP32)atof( apArgs->mpStrings[ 2 ] );
 	}
-	
+
 	return( lVal );
 }
 
@@ -422,7 +422,7 @@ FP32	TokeniserArgs_GetFP32( const sTokeniserArgs * apArgs )
 U32	TokeniserArgs_GetTagID( const sTokeniserArgs * apArgs,const sTagString * apTags,const U32 aTagLimit )
 {
 	U32	lVal;
-	
+
 	if( apArgs->mArgCount >= 3 )
 	{
 		lVal = sTagString_GetID( apArgs->mpStrings[ 2 ], apTags, aTagLimit );
@@ -432,7 +432,7 @@ U32	TokeniserArgs_GetTagID( const sTokeniserArgs * apArgs,const sTagString * apT
 		lVal = 0;
 	}
 
-	return( lVal );		
+	return( lVal );
 }
 
 
@@ -445,7 +445,7 @@ U32	TokeniserArgs_GetTagID( const sTokeniserArgs * apArgs,const sTagString * apT
 U32	TokeniserArgs_GetTagValue( const sTokeniserArgs * apArgs,const sTagValue * apTags,const U32 aTagLimit )
 {
 	U32	lVal;
-	
+
 	if( apArgs->mArgCount >= 3 )
 	{
 		lVal = atoi( apArgs->mpStrings[ 2 ] );
@@ -456,7 +456,7 @@ U32	TokeniserArgs_GetTagValue( const sTokeniserArgs * apArgs,const sTagValue * a
 		lVal = 0;
 	}
 
-	return( lVal );		
+	return( lVal );
 }
 
 
@@ -606,7 +606,7 @@ U32 TokeniserArgs_Build(sTokeniserArgs * apArgs,const char * apText,U32 aOffset,
 U8	TokeniserArgs_IsChunkHeader( const sTokeniserArgs * apArgs )
 {
 	U8	lRes;
-	
+
 	lRes = 0;
 
 	if( apArgs )
@@ -1227,7 +1227,7 @@ void	Tokeniser_Pass1_Init( const char * apTitle,const U16 aIndex,const char * ap
 
 void Tokeniser_Pass1_DeInit(void)
 {
-	
+
 }
 
 
@@ -1433,7 +1433,7 @@ void Tokeniser_Pass3_Init(const char * apTitle,const U16 aIndex,const char * apN
 
 void Tokeniser_Pass3_DeInit(void)
 {
-	
+
 }
 
 
@@ -1659,7 +1659,7 @@ void	Tokeniser_GrabData( const sTokeniserStructMember * apMember, const sTokenis
 			}
 		}
 		break;
-	}	
+	}
 }
 
 
@@ -1774,7 +1774,7 @@ const sTokeniserTagString * Tokeniser_GetTagStringFromID(const sTokeniserTagStri
 			apList++;
 		}
 	}
-	return( 0 );	
+	return( 0 );
 }
 
 
@@ -2066,7 +2066,7 @@ void Tokeniser_ShowType(const U16 aType,const U16 aSubType, const U32 aCountOffs
 	case	eTOKENISER_TYPE_NONE:
 	default:
 		break;
-	}	
+	}
 }
 
 
@@ -2123,7 +2123,7 @@ void Tokeniser_Delocate(U8 * apData,sTokeniserInfo * apInfo)
 										lpArray[ j ] -= (U32)apData;
 									}
 									break;
-								}								
+								}
 							}
 						}
 						break;
@@ -2209,7 +2209,7 @@ void Tokeniser_Relocate(U8 * apData,sTokeniserInfo * apInfo)
 										lpArray[ j ] += (U32)apData;
 									}
 									break;
-								}								
+								}
 							}
 						}
 						break;
@@ -2252,7 +2252,7 @@ void	TokeniserArgs_MemberBuild( const sTokeniserArgs * apArgs,sTokeniserMember *
 {
 	sTokeniserMember *	lpMember;
 	U8 *				lpStruct;
-	
+
 	lpStruct = (U8*)apStruct;
 
 	if( apArgs->mArgCount >= 3 )

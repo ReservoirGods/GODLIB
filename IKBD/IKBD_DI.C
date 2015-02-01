@@ -38,9 +38,9 @@ typedef	struct	sIkbdDiRemap
 
 extern	sIKBD	gIKBD;
 
-LPDIRECTINPUT8       gpIkbdDI         = NULL;         
-LPDIRECTINPUTDEVICE8 gpIkbdDIKeyboard = NULL;     
-LPDIRECTINPUTDEVICE8 gpIkbdDIMouse    = NULL;     
+LPDIRECTINPUT8       gpIkbdDI         = NULL;
+LPDIRECTINPUTDEVICE8 gpIkbdDIKeyboard = NULL;
+LPDIRECTINPUTDEVICE8 gpIkbdDIMouse    = NULL;
 HWND				 gIkbdDIHwnd;
 
 U8	gIkbdDiToGod[ 256 ];
@@ -72,7 +72,7 @@ U8 gIkbdDIAscii[256] =
 	/* 220 - 229 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
 	/* 230 - 239 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
 	/* 240 - 249 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
-	/* 250 - 255 */		0,		0,		0,		0,		0,		0												
+	/* 250 - 255 */		0,		0,		0,		0,		0,		0
 };
 
 U8 gIkbdDIAsciiCaps[256] =
@@ -102,12 +102,12 @@ U8 gIkbdDIAsciiCaps[256] =
 	/* 220 - 229 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
 	/* 230 - 239 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
 	/* 240 - 249 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
-	/* 250 - 255 */		0,		0,		0,		0,		0,		0												
+	/* 250 - 255 */		0,		0,		0,		0,		0,		0
 };
 
 U8 gIkbdDIAsciiShift[256] =
 {
-	/*   0 - 9   */		0,		0,	'!',	'"',	
+	/*   0 - 9   */		0,		0,	'!',	'"',
 		0, /* was '£',	*/
 		'$',	'%',	'^',	'&',	'*',
 	/*  10 - 19  */		'(',	')',	'_',	'+',	0,		0,		'Q',	'W',	'E',	'R',
@@ -134,7 +134,7 @@ U8 gIkbdDIAsciiShift[256] =
 	/* 220 - 229 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
 	/* 230 - 239 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
 	/* 240 - 249 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
-	/* 250 - 255 */		0,		0,		0,		0,		0,		0											
+	/* 250 - 255 */		0,		0,		0,		0,		0,		0
 };
 
 sIkbdDiRemap	gIkbdDiRemaps[] =
@@ -188,8 +188,8 @@ sIkbdDiRemap	gIkbdDiRemaps[] =
 	{	eIKBDSCAN_F9,	DIK_F9	},
 	{	eIKBDSCAN_F10,	DIK_F10	},
 
-	{	eIKBDSCAN_AT				,	DIK_AT	},	
-//	{	eIKBDSCAN_AMPERSAND			,	DIK_8	},	
+	{	eIKBDSCAN_AT				,	DIK_AT	},
+//	{	eIKBDSCAN_AMPERSAND			,	DIK_8	},
 	{	eIKBDSCAN_BAR				,	DIK_BACKSLASH	},
 	{	eIKBDSCAN_BACKSLASH			,	DIK_BACKSLASH	},
 	{	eIKBDSCAN_CLOSEAPOSTROPHE	,	DIK_APOSTROPHE	},
@@ -295,12 +295,12 @@ void	IKBD_DI_Init( void )
 	lDip.diph.dwObj        = 0;
 	lDip.diph.dwHow        = DIPH_DEVICE;
 
-	DirectInput8Create( 
-		GetModuleHandle(NULL), 
+	DirectInput8Create(
+		GetModuleHandle(NULL),
 		DIRECTINPUT_VERSION,
-		&IID_IDirectInput8, 
-		(void**)&gpIkbdDI, 
-		NULL );	
+		&IID_IDirectInput8,
+		(void**)&gpIkbdDI,
+		NULL );
 
 	lDip.dwData            = dIKBDDI_KBDBUFFER_LIMIT;
 	IDirectInput8_CreateDevice( gpIkbdDI, &GUID_SysKeyboard, &gpIkbdDIKeyboard, NULL );
@@ -343,14 +343,14 @@ void	IKBD_DI_DeInit( void )
 {
 	if( gpIkbdDIKeyboard )
 	{
-		IDirectInputDevice8_Unacquire( gpIkbdDIKeyboard );	
-		IDirectInputDevice8_Release(   gpIkbdDIKeyboard );	
+		IDirectInputDevice8_Unacquire( gpIkbdDIKeyboard );
+		IDirectInputDevice8_Release(   gpIkbdDIKeyboard );
 		gpIkbdDIKeyboard = 0;
 	}
 	if( gpIkbdDIMouse )
 	{
-		IDirectInputDevice8_Unacquire( gpIkbdDIMouse );	
-		IDirectInputDevice8_Release(   gpIkbdDIMouse );	
+		IDirectInputDevice8_Unacquire( gpIkbdDIMouse );
+		IDirectInputDevice8_Release(   gpIkbdDIMouse );
 		gpIkbdDIKeyboard = 0;
 	}
 	if( gpIkbdDI )
@@ -391,7 +391,7 @@ void	IKBD_DI_Flush( void )
 	DWORD				lElementCount;
 
 	IDirectInputDevice8_GetDeviceData(
-		gpIkbdDIKeyboard, 
+		gpIkbdDIKeyboard,
 		sizeof(DIDEVICEOBJECTDATA),
 		lData,
 		&lElementCount,
@@ -419,7 +419,7 @@ void	IKBD_DI_KbdUpdate( void )
 		lElementCount = dIKBDDI_KBDBUFFER_LIMIT;
 
 		lRes = IDirectInputDevice8_GetDeviceData(
-			gpIkbdDIKeyboard, 
+			gpIkbdDIKeyboard,
 			sizeof(DIDEVICEOBJECTDATA),
 			lData,
 			&lElementCount,
@@ -427,10 +427,10 @@ void	IKBD_DI_KbdUpdate( void )
 
 		if( DI_OK != lRes )
 		{
-			lRes = IDirectInputDevice8_Acquire( gpIkbdDIKeyboard );	
+			lRes = IDirectInputDevice8_Acquire( gpIkbdDIKeyboard );
 			while( lRes == DIERR_INPUTLOST )
 			{
-				lRes = IDirectInputDevice8_Acquire( gpIkbdDIKeyboard );	
+				lRes = IDirectInputDevice8_Acquire( gpIkbdDIKeyboard );
 			}
 		}
 
@@ -483,15 +483,15 @@ void	IKBD_DI_MouseUpdate( void )
 {
 	DWORD				lElementCount;
 	DWORD				i;
-    DIDEVICEOBJECTDATA	lData[ dIKBDDI_MOUSEBUFFER_LIMIT ];
-    HRESULT				lRes;
+	DIDEVICEOBJECTDATA	lData[ dIKBDDI_MOUSEBUFFER_LIMIT ];
+	HRESULT				lRes;
 
 	if( gpIkbdDIMouse )
 	{
 		lElementCount = dIKBDDI_MOUSEBUFFER_LIMIT;
 
 		lRes = IDirectInputDevice8_GetDeviceData(
-			gpIkbdDIMouse, 
+			gpIkbdDIMouse,
 			sizeof(DIDEVICEOBJECTDATA),
 			lData,
 			&lElementCount,
@@ -499,10 +499,10 @@ void	IKBD_DI_MouseUpdate( void )
 
 		if( DI_OK != lRes )
 		{
-			lRes = IDirectInputDevice8_Acquire( gpIkbdDIMouse );	
+			lRes = IDirectInputDevice8_Acquire( gpIkbdDIMouse );
 			while( lRes == DIERR_INPUTLOST )
 			{
-				lRes = IDirectInputDevice8_Acquire( gpIkbdDIMouse );	
+				lRes = IDirectInputDevice8_Acquire( gpIkbdDIMouse );
 			}
 		}
 
@@ -544,7 +544,7 @@ void	IKBD_DI_MouseUpdate( void )
 				}
 			}
 		}
-	}	
+	}
 }
 
 

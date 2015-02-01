@@ -55,7 +55,7 @@ U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 			apPackage->mFileCount++;
 		} while( !File_ReadNext() );
 	}
-	
+
 	if( apPackage->mFileCount )
 	{
 		apPackage->mpItems = (sPackageItem*)mMEMCALLOC( sizeof(sPackageItem) * apPackage->mFileCount );
@@ -106,7 +106,7 @@ U32	PackageDir_UnLoad( sPackage * apPackage )
 	U32			i;
 	U32			lRet;
 	sAsset *	lpAsset;
-	
+
 	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "PackageDir_UnLoad(): %s", apPackage->mName );
 
 	lRet = 1;

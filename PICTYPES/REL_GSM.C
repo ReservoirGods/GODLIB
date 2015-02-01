@@ -63,7 +63,7 @@ U32	Relocator_GSM_IsType( void * apData,const U32 aSize,const U32 aID )
 	(void)apData;
 	(void)aSize;
 	(void)aID;
-	return( 1 );	
+	return( 1 );
 }
 
 
@@ -77,8 +77,8 @@ U32	Relocator_GSM_DoDelocate( void * apData,const U32 aSize,const U32 aID )
 {
 	(void)aSize;
 	(void)aID;
-	Gsm_Delocate( (sGsm*)apData );	
-	return( 1 );	
+	Gsm_Delocate( (sGsm*)apData );
+	return( 1 );
 }
 
 

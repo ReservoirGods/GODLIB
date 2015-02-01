@@ -25,7 +25,7 @@ U32	ElfHash_BuildHash( const char * apString )
 	if( apString )
 	{
 		lIndex = 0;
-		while( apString[ lIndex ] ) 
+		while( apString[ lIndex ] )
 		{
 			char lChr = apString[ lIndex ];
 			if( (lChr>='A') && (lChr<='Z') )
@@ -43,7 +43,7 @@ U32	ElfHash_BuildHash( const char * apString )
 		}
 	}
 
-    return( lHash );		
+	return( lHash );
 }
 
 

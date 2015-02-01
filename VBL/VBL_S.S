@@ -53,7 +53,7 @@ sVBL_pCalls:			ds.l	1
 
 *------------------------------------------------------------------------------------*
 * Function:    void (*Get_VblHander( void ))()
-* 
+*
 * Action:      returns pointer to current vbl handler function
 *
 * Created:     24.03.00 PNK
@@ -66,7 +66,7 @@ Vbl_GetHandler:
 
 *------------------------------------------------------------------------------------*
 * Function:    void Vbl_SetHander( void (*apHandler()) )
-* 
+*
 * Action:      returns pointer to current vbl handler function
 *
 * Created:     24.03.00 PNK
@@ -144,7 +144,7 @@ Vbl_Handler:
 	tas		gVbl+sVBL_LockFlag				; already in vbl interrupt?
 	bne.s	.vbl_locked						; don't interrupt yourself
 	movem.l	d0-d7/a0-a6,-(a7)				; save register
-	
+
 	move.l	gVbl+sVBL_pVideoFunc,a0
 	jsr		(a0)
 

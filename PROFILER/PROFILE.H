@@ -53,8 +53,8 @@ void	Profile_CliPrint( sProfile * apProfile, const char * apName );
 	}
 */
 
-#define	Profile_CpuBegin( _aP )	
-#define	Profile_CpuEnd( _aP )	
+#define	Profile_CpuBegin( _aP )
+#define	Profile_CpuEnd( _aP )
 
 
 #else
@@ -69,7 +69,7 @@ void	Profile_CliPrint( sProfile * apProfile, const char * apName );
 	{														\
 		(_aP)->mHiTide = (_aP)->mCurrent;					\
 		(_aP)->mHiTideTag = gProfilerHiTideTag;					\
-	}													
+	}
 
 #endif
 

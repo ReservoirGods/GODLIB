@@ -36,11 +36,11 @@ char gDebugChannelString[ 1024 ];
 #  DATA
 ################################################################################### */
 
-void	DebugChannel_FileOpen( U16 aChannel, char * apFileName ); 
-void	DebugChannel_FileClose( U16 aChannel ); 
-void	DebugChannel_FileWrite( U16 aChannel, const char * aString ); 
-void	DebugChannel_CliWrite( U16 aChannel, const char * aString ); 
-void	DebugChannel_ScreenWrite( U16 aChannel, const char * aString ); 
+void	DebugChannel_FileOpen( U16 aChannel, char * apFileName );
+void	DebugChannel_FileClose( U16 aChannel );
+void	DebugChannel_FileWrite( U16 aChannel, const char * aString );
+void	DebugChannel_CliWrite( U16 aChannel, const char * aString );
+void	DebugChannel_ScreenWrite( U16 aChannel, const char * aString );
 void	DebugChannel_SteemWrite( U16 aChannel, const char * aString );
 
 

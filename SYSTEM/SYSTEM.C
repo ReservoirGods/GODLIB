@@ -33,7 +33,7 @@
 #define	dSYSTEM_EMU_PACIFIST1	mSTRING_TO_U32( 'f', 'i', 'S', 'T' )
 
 /*#define	dSYSTEM_DBG_PRINT( apTxt )	printf( apTxt )*/
-#define	dSYSTEM_DBG_PRINT( apTxt )	
+#define	dSYSTEM_DBG_PRINT( apTxt )
 
 
 /* ###################################################################################
@@ -303,7 +303,7 @@ eSYSTEM_MCH	System_CalcMCH()
 			if( lCookie == 2 )
 				return( MCH_TT );
 			if( lCookie == 3 )
-				return( MCH_FALCON );			
+				return( MCH_FALCON );
 		}
 		return( MCH_ST );
 	}
@@ -994,7 +994,7 @@ void System_Calibrate(void)
 	{
 		Vbl_WaitVbl();
 	}
-	
+
 	lCounterHBL = gSystemHblTempCounter;
 	lCounterTC  = gSystem200hzTempCounter;
 	if( !lCounterTC )
@@ -1052,7 +1052,7 @@ void	System_CalibrateVbl( void )
 	{
 		Vbl_WaitVbl();
 	}
-	
+
 	lCounterTC  = Mfp_GetCounter200hz() - lCounterTC;
 	if( !lCounterTC )
 	{
@@ -1064,7 +1064,7 @@ void	System_CalibrateVbl( void )
 
 	gSystem.mRefreshRate.w.w1 = (U16)(lRate>>16L);
 	gSystem.mRefreshRate.w.w0 = (U16)(lRate&0xFFFFL);
-	
+
 }
 
 
@@ -1153,7 +1153,7 @@ void	System_InstructionCacheDisable( void )
 	else if( gSystem.mCPU == CPU_68060 )
 	{
 		System_SetInstructionCache060( 0 );
-	}	
+	}
 }
 
 
@@ -1172,7 +1172,7 @@ void	System_InstructionCacheEnable( void )
 	else if( gSystem.mCPU == CPU_68060 )
 	{
 		System_SetInstructionCache060( 1 );
-	}		
+	}
 }
 
 
@@ -1564,7 +1564,7 @@ U32	System_GetCycleCounter( void )
 	}
 
 	return( lCount );
-	
+
 }
 
 

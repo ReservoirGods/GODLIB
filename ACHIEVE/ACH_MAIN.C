@@ -565,7 +565,7 @@ S16	Achieve_ScoreTable_SetNewScore_Internal( sAchieveHeader * apHeader, const U1
 		lpTable->mpNames[ lIndex ]  = *apUserName;
 	}
 	apHeader->mCheckSum = Achieve_CheckSumBuild( apHeader );
-	
+
 	return( lIndex );
 }
 
@@ -654,7 +654,7 @@ U16	Achieve_ScoreTable_GetEntryCount( const U16 aTableIndex )
 
 U16	Achieve_ScoreTables_GetCount( void )
 {
-	return( gAchieveMainClass.mpHeader->mGameInfo.mScoreTableCount );	
+	return( gAchieveMainClass.mpHeader->mGameInfo.mScoreTableCount );
 }
 
 
@@ -1219,7 +1219,7 @@ void				Achieve_Delocate( sAchieveHeader * apHeader )
 			{
 				Endian_FromBigU32( &lpUser->mpStatValues[ j ] );
 			}
-			
+
 			mACH_DELOC2( lpUser->mpStatValues );
 			mACH_DELOC2( lpUser->mpTaskValues );
 			mACH_DELOC2( lpUser->mpScoreTableValues );
@@ -1376,7 +1376,7 @@ U8				Achieve_Relocate( sAchieveHeader * apHeader )
 				for( j=0; j<apHeader->mGameInfo.mStatCount; j++ )
 				{
 					Endian_FromBigU32( &lpUser->mpStatValues[ j ] );
-				}				
+				}
 
 				lpUser = lpUser->mpUserNext;
 			}
@@ -1643,7 +1643,7 @@ void	Achieve_UserCreate( const char * apName )
 
 		lpUser = Achieve_DataAdd( sizeof(sAchieveUser) );
 		lpUser->mpUserNext = 0;
-		
+
 		lpUserOld = &gAchieveMainClass.mpHeader->mUserInfo;
 		while( lpUserOld->mpUserNext )
 		{

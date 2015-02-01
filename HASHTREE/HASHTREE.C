@@ -90,7 +90,7 @@ U32	HashTree_BuildHash( const char * apName )
 		lHash &= ~lTemp;
 	}
 
-	return( lHash );		
+	return( lHash );
 }
 
 
@@ -132,7 +132,7 @@ void	HashTree_DeInit( sHashTree * apTree )
 sHashTreeNode *	HashTree_NodeCreate( sHashTree * apTree, const U32 aGlobalID,const U32 aLocalID )
 {
 	sHashTreeNode *	lpNode;
-	
+
 	lpNode = (sHashTreeNode*)mMEMCALLOC( sizeof(sHashTreeNode) );
 
 	if( lpNode )
@@ -193,7 +193,7 @@ sHashTreeNode *	HashTree_NodeRegister( sHashTree * apTree,const char * apName )
 {
 	sHashTreeTokeniser	lTokeniser;
 	sHashTreeNode *		lpNode;
-	
+
 	HashTree_Tokenise( &lTokeniser, apName );
 
 	lpNode = HashTree_NodeTokReg( apTree, &lTokeniser );
@@ -341,7 +341,7 @@ void	HashTree_SubNodesDestroy( sHashTree * apTree, sHashTreeNode * apNode )
 		lpNodeNext = lpNode->mpNext;
 		HashTree_NodeDestroy( apTree, lpNode );
 		lpNode     = lpNodeNext;
-	}	
+	}
 }
 
 
@@ -355,7 +355,7 @@ sHashTreeVar *	HashTree_VarInit( sHashTree * apTree,const char * apName,const U3
 {
 	sHashTreeVar *			lpVar;
 	sHashTreeVarClient *	lpClient;
-	
+
 
 	lpVar = HashTree_VarRegister( apTree, apName );
 
@@ -499,7 +499,7 @@ sHashTreeVar *	HashTree_VarRegister( sHashTree * apTree,const char * apName )
 			lpVar = lpNode->mpVars;
 
 			lLocalHash = lTokeniser.mLocalHash[ lTokeniser.mTokenCount ];
-			
+
 
 			while( (lpVar) && (lpVar->mLocalID != lLocalHash) )
 			{
@@ -661,7 +661,7 @@ void	HashTree_VarWrite( sHashTreeVar * apVar,void * apData )
 	{
 		if( (apVar->mDataSize) && (apVar->mpData) )
 		{
-			Memory_Copy( apVar->mDataSize, apData, apVar->mpData );	
+			Memory_Copy( apVar->mDataSize, apData, apVar->mpData );
 
 			lpClient = apVar->mpClients;
 			while( lpClient )
@@ -762,7 +762,7 @@ void	HashTree_Tokenise( sHashTreeTokeniser * apToken,const char * apString )
 		lSrcString[ lDstIndex-1 ] = 0;
 	}
 	lSrcString[ lDstIndex ] =0;
-	
+
 
 	lExitFlag = 0;
 	lDstIndex = 0;
@@ -870,7 +870,7 @@ void	HashTree_SaveNodeDestroy( sHashTree * apTree, const char * apNodeName, sHas
 	sHashTreeSaveNode *	lpNode;
 	sHashTreeSaveNode *	lpNodeNext;
 
-	
+
 	lpNode = apNode;
 
 	while( lpNode )
@@ -950,7 +950,7 @@ U32	HashTree_SaveNodeGetSize( const sHashTreeSaveNode * apSaveNode )
 	U32							lSize;
 	U16							i;
 	const sHashTreeSaveNode *	lpNode;
-	
+
 /*	DebugLog_Printf1( "HashTree_SaveNodeGetSize() size %lX", apSaveNode );*/
 
 	lSize  = 0;
@@ -1015,7 +1015,7 @@ U32	HashTree_NodeGetSaveSize( sHashTreeNode * apNode )
 		lSize  += HashTree_NodeGetSaveSize( lpNode->mpChild );
 		lpNode  = lpNode->mpNext;
 	}
-		
+
 /*	DebugLog_Printf2( "HashTree_NodeGetSaveSize() %lx size %ld", apNode, lSize );*/
 
 	return( lSize );
@@ -1081,7 +1081,7 @@ U8 *	HashTree_NodeSave( const sHashTreeNode * apNode, sHashTreeSaveNode * apLast
 		lpSaveNode->mLocalID  = apNode->mLocalID;
 		lpSaveNode->mpVars    = (sHashTreeSaveVar*)lpMem;
 		lpSaveNode->mpNext    = 0;
-		
+
 		lpSaveNode->mVarCount = 0;
 
 		lpSaveVar = (sHashTreeSaveVar*)lpMem;
@@ -1120,7 +1120,7 @@ U8 *	HashTree_NodeSave( const sHashTreeNode * apNode, sHashTreeSaveNode * apLast
 	}
 
 
-	return( lpMem );	
+	return( lpMem );
 }
 
 
@@ -1239,7 +1239,7 @@ void	HashTree_NodesLoad( sHashTree * apTree, sHashTreeNode * apNode,const sHashT
 	const sHashTreeSaveNode *	lpSrcNode;
 
 /*	DebugLog_Printf2( "HashTree_SaveNodesLoad() apDst:%lX apSrc:%lx", apNode, apSrc );*/
-	
+
 	if( apNode )
 	{
 		lpSrcNode = apSrc;
@@ -1422,7 +1422,7 @@ void	HashTree_SaveNodeRelocate( sHashTreeSaveNode * apNode )
 				}
 			}
 		}
-	}	
+	}
 }
 
 

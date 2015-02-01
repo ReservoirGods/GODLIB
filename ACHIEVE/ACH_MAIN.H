@@ -166,7 +166,7 @@ void			Achieve_AppDeInit( void );
 void			Achieve_Create( const U16 aScoreTableCount, const U16 aStatCount, const U16 aTaskCount, void * apBuffer, const U32 aBufferSize );
 void			Achieve_Destroy( void );
 
-void			Achieve_SetGameInfo( const char * apGameName, const U32 aGameID, const U32 aBuildID ); 
+void			Achieve_SetGameInfo( const char * apGameName, const U32 aGameID, const U32 aBuildID );
 void			Achieve_SetUserInfo( const char * apUserName );
 U16				Achieve_GetUserCount( void );
 const char *	Achieve_GetUserName( const U16 aIndex );

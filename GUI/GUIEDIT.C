@@ -51,7 +51,7 @@ U8	GuiTextLine_Init( sGuiTextLine * apLine,sHashTreeVar * apVar )
 
 void	GuiTextLine_DeInit( sGuiTextLine * apLine )
 {
-	apLine->mEditFlag = 0;	
+	apLine->mEditFlag = 0;
 }
 
 
@@ -89,7 +89,7 @@ U16	GuiTextLine_Update( sGuiTextLine * apLine,sGuiIKBD * apIKBD )
 				}
 			}
 
-			else switch( lKey )		
+			else switch( lKey )
 			{
 			case	eIKBDSCAN_BACKSPACE:
 				if( apLine->mCursorX )
@@ -210,7 +210,7 @@ U8	GuiTextLine_GetValidAscii( sGuiTextLine * apLine,const U8 aScan )
 			}
 			break;
 		case	eGUI_EDITTYPE_HEX:
-			if( (lAscii < '0') || 
+			if( (lAscii < '0') ||
 				( (lAscii > '9') && (lAscii <'A') ) ||
 				( (lAscii > 'F') && (lAscii <'a') ) ||
 				(lAscii > 'f') )

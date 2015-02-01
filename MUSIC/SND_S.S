@@ -45,7 +45,7 @@ Snd_Player:
 
 	move.l	Snd_pPlayFunc,a0
 	jsr		(a0)
-	
+
 	move.l	Snd_pChaserFunc,a0
 	jsr		(a0)
 

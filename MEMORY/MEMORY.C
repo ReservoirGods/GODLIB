@@ -345,13 +345,13 @@ void * 	Memory_ScreenAlloc( const U32 aSize )
 	{
 		lpMem = GemDos_Malloc( lSize );
 	}
-	
+
 #endif
 	if( !lpMem )
 	{
 		DebugChannel_Printf1( eDEBUGCHANNEL_MEMORY, "Memory_ScreenAlloc() : failed %ld bytes\n", aSize );
 	}
-	
+
 /*	Debug_Action( Memory_TrackAlloc( lpMem, aSize ) );*/
 #ifdef	dMEMORY_GUARD
 	if( lpMem )
@@ -560,7 +560,7 @@ U32		Memory_GetFree( void )
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : Memory_GetAllocCount( void )
-* ACTION   : returns number 
+* ACTION   : returns number
 * CREATION : 11.09.99 PNK
 *-----------------------------------------------------------------------------------*/
 
@@ -657,7 +657,7 @@ U8 Memory_Validate(void)
 	U8		lRes;
 	U8 *	lpMem;
 	U16		i,j;
-	
+
 	lRes = 1;
 
 	for( i=0; i<dMEMORY_RECORD_LIMIT; i++ )
@@ -677,7 +677,7 @@ U8 Memory_Validate(void)
 				DebugChannel_Printf2( eDEBUGCHANNEL_MEMORY, "Memory_ValidateError() head %lx %ld", gMemoryRecord[ i ].mpMem, gMemoryRecord[ i ].mSize );
 				*(U32*)0 = 0;
 			}
-			
+
 			lpMem  = gMemoryRecord[ i ].mpMem;
 			lpMem += gMemoryRecord[ i ].mSize;
 			j = 0;
@@ -721,7 +721,7 @@ void *	Memory_DbgScreenCalloc( const U32 aSize,const char * apFile,const U32 aLi
 #endif
 	Memory_Validate();
 
-	return( lpMem );	
+	return( lpMem );
 }
 
 
@@ -805,7 +805,7 @@ S32	Memory_DbgScreenFree( void * apMem,const char * apFile,const U32 aLine )
 #ifdef dMEMORY_TRACK
 	Debug_Action( Memory_TrackFree( apMem ) );
 #endif
-	return( Memory_ScreenRelease( apMem ) );	
+	return( Memory_ScreenRelease( apMem ) );
 }
 
 

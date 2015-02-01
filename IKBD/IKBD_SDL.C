@@ -64,7 +64,7 @@ U8 gIkbdSdlAscii[256] =
 	/* 220 - 229 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
 	/* 230 - 239 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
 	/* 240 - 249 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
-	/* 250 - 255 */		0,		0,		0,		0,		0,		0												
+	/* 250 - 255 */		0,		0,		0,		0,		0,		0
 };
 
 U8 gIkbdSdlAsciiCaps[256] =
@@ -94,12 +94,12 @@ U8 gIkbdSdlAsciiCaps[256] =
 	/* 220 - 229 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
 	/* 230 - 239 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
 	/* 240 - 249 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
-	/* 250 - 255 */		0,		0,		0,		0,		0,		0												
+	/* 250 - 255 */		0,		0,		0,		0,		0,		0
 };
 
 U8 gIkbdSdlAsciiShift[256] =
 {
-	/*   0 - 9   */		0,		0,	'!',	'"',	
+	/*   0 - 9   */		0,		0,	'!',	'"',
 		0, /* was '£',	*/
 		'$',	'%',	'^',	'&',	'*',
 	/*  10 - 19  */		'(',	')',	'_',	'+',	0,		0,		'Q',	'W',	'E',	'R',
@@ -126,7 +126,7 @@ U8 gIkbdSdlAsciiShift[256] =
 	/* 220 - 229 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
 	/* 230 - 239 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
 	/* 240 - 249 */		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
-	/* 250 - 255 */		0,		0,		0,		0,		0,		0											
+	/* 250 - 255 */		0,		0,		0,		0,		0,		0
 };
 
 sIkbdSdlRemap	gIkbdSdlRemaps[] =
@@ -180,8 +180,8 @@ sIkbdSdlRemap	gIkbdSdlRemaps[] =
 	{	eIKBDSCAN_F9,	SDLK_F9	},
 	{	eIKBDSCAN_F10,	SDLK_F10	},
 
-	{	eIKBDSCAN_AT				,	SDLK_AT	},	
-//	{	eIKBDSCAN_AMPERSAND			,	SDLK_8	},	
+	{	eIKBDSCAN_AT				,	SDLK_AT	},
+//	{	eIKBDSCAN_AMPERSAND			,	SDLK_8	},
 	{	eIKBDSCAN_BAR				,	SDLK_BACKSLASH	},
 	{	eIKBDSCAN_BACKSLASH			,	SDLK_BACKSLASH	},
 //	{	eIKBDSCAN_CLOSEAPOSTROPHE	,	SDLK_APOSTROPHE	},
@@ -282,7 +282,7 @@ void	IKBD_SDL_Init( void )
 	U16				i;
 	sIkbdSdlRemap *	lpRemap;
 
-	Memory_Clear( sizeof(sIkbdSdlClass), &gIkbdSdlClass );	
+	Memory_Clear( sizeof(sIkbdSdlClass), &gIkbdSdlClass );
 
 	gIKBD.mpUnshiftTable = gIkbdSdlAscii;
 	gIKBD.mpShiftTable   = gIkbdSdlAsciiShift;
@@ -310,7 +310,7 @@ void	IKBD_SDL_Init( void )
 
 void	IKBD_SDL_DeInit( void )
 {
-	
+
 }
 
 
@@ -388,7 +388,7 @@ void	IKBD_SDL_KbdUpdate( void )
 			}
 		}
 	}
-	
+
 }
 
 

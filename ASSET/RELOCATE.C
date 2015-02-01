@@ -119,7 +119,7 @@ void	Relocater_Destroy( sRelocater * apReloc )
 			gpRelocaters = lpReloc->mpNext;
 		}
 		mMEMFREE( lpReloc );
-	}	
+	}
 }
 
 
@@ -131,7 +131,7 @@ void	Relocater_Destroy( sRelocater * apReloc )
 
 sRelocater *	RelocaterManager_Find( sAsset * apAsset )
 {
-	sRelocater *	lpReloc;	
+	sRelocater *	lpReloc;
 
 
 	lpReloc = gpRelocaters;
@@ -181,7 +181,7 @@ U32	RelocaterManager_DoInit( sAsset * apAsset )
 					apAsset->mInitFlag = 1;
 				}
 			}
-		}	
+		}
 	}
 
 	return( lRet );
@@ -198,7 +198,7 @@ U32	RelocaterManager_DoDeInit( sAsset * apAsset )
 {
 	sRelocater *	lpReloc;
 	U32				lRet;
-	
+
 	lRet    = 0;
 
 	if( apAsset->mInitFlag )
@@ -219,7 +219,7 @@ U32	RelocaterManager_DoDeInit( sAsset * apAsset )
 			{
 				apAsset->mInitFlag = 0;
 			}
-		}		
+		}
 		else
 		{
 			apAsset->mInitFlag = 0;
@@ -299,7 +299,7 @@ U32	RelocaterManager_DoRelocate( sAsset * apAsset )
 			}
 		}
 	}
-	return( lRet );	
+	return( lRet );
 }
 
 

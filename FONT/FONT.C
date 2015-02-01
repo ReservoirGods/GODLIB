@@ -136,7 +136,7 @@ sFont *	Font_Create( const sSpriteBlock * apBlock,const U8 * apCharMapString,con
 						lpSprite->mHeight         = apBlock->mpSprite[ i ]->mHeight;
 						lpSprite->mMaskPlaneCount = apBlock->mpSprite[ i ]->mMaskPlaneCount;
 						lpSprite->mWidth          = apBlock->mpSprite[ i ]->mWidth;
-						
+
 						lpSprite->mpMask          = (U16*)&lpMem[ lOff ];
 						lBytes                    = Sprite_GetMskSize( apBlock->mpSprite[ i ] );
 						Memory_Copy( lBytes, apBlock->mpSprite[ i ]->mpMask, lpSprite->mpMask );
@@ -217,7 +217,7 @@ void	Font_Destroy( sFont * apFont )
 U16	Font_GetStringWidth( const sFont * apFont,const char * apString )
 {
 	U16	lWidth;
-	
+
 	lWidth = 0;
 	while( *apString )
 	{
@@ -242,7 +242,7 @@ U16	Font_GetStringCharX( const sFont * apFont,const char * apString,const U16 aI
 {
 	U16	lWidth;
 	U16	i;
-	
+
 	lWidth = 0;
 	i      = 0;
 	while( (*apString) && (i<aIndex) )
@@ -256,7 +256,7 @@ U16	Font_GetStringCharX( const sFont * apFont,const char * apString,const U16 aI
 		i++;
 	}
 	return( lWidth );
-	
+
 }
 
 
@@ -344,7 +344,7 @@ U16	Font_GetCharX1( const sFont * apFont,const U8 aChar )
 			lX1 = apFont->mSpaceWidth;
 		}
 	}
-	return( lX1 );	
+	return( lX1 );
 }
 
 
@@ -369,7 +369,7 @@ sSpriteRegion*	Font_GetpSpriteRegion( const sFont * apFont,const char aChar )
 			lpRegion = &apFont->mpRegions[ lIndex ];
 		}
 	}
-	return( lpRegion );	
+	return( lpRegion );
 }
 
 
@@ -401,7 +401,7 @@ sSprite *	Font_GetpSprite( const sFont * apFont,const char aChar )
 			}
 		}
 	}
-	return( lpSprite );	
+	return( lpSprite );
 }
 
 

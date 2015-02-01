@@ -57,9 +57,7 @@ U32	GodPack_Ari_Encode( const void * apSrc,void * apDst,const U32 aSize )
 
 	GodPack_BitStream_DeInit( &lStream );
 
-	
-
-	return( lStream.mOffset );	
+	return( lStream.mOffset );
 }
 
 
@@ -72,7 +70,7 @@ U32	GodPack_Ari_Encode( const void * apSrc,void * apDst,const U32 aSize )
 void	GodPack_Ari_TablesInit( sGodPackAriTables * apTables )
 {
 	U16	i;
-	
+
 	apTables->mIndexToChar[ 0 ] = 0;
 	for( i=0; i<256; i++ )
 	{
@@ -101,12 +99,12 @@ void	GodPack_Ari_SymbolEncode( sGodPackAriTables * apTables,sGodPackBitStream * 
 {
 	U32	lRange;
 	U16	lTrue;
-	
+
 	lRange  = apTables->mHigh - apTables->mLow + 1;
 
 	apTables->mHigh = apTables->mLow + ((lRange*apTables->mCumFreq[aSymbol-1])/apTables->mCumFreq[0]) - 1;
 	apTables->mLow += ((lRange*apTables->mCumFreq[aSymbol])/apTables->mCumFreq[0]);
-	
+
 	lTrue = 1;
 	while( lTrue )
 	{
@@ -151,7 +149,7 @@ void	GodPack_Ari_ModelUpdate( sGodPackAriTables * apTables,U16 aSymbol )
 	U16	lCum;
 	U16	lIndex;
 	U16	lSymbol;
-	
+
 	if( apTables->mCumFreq[ 0 ] == dGODPACK_ARI_FREQ_LIMIT )
 	{
 		lCum = 0;

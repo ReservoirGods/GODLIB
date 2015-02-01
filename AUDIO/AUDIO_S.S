@@ -36,7 +36,7 @@
 Audio_ReplayEndInt:
 	clr.b	gAudioDmaPlayingFlag
 	bclr.b	#7,$fffffa0f.w			; signal end of ikbd interrupt
-	
+
 	rte
 
 
@@ -49,7 +49,7 @@ Audio_ReplayEndInt:
 Audio_SoundChipOff:
 	movem.l	a0/a1,-(a7)				; save registers
 	move.w	sr,-(a7)
-	
+
 	ori.w	#$0700,sr
 
 	movea.w	#$8800,a0				; YM2149F register base

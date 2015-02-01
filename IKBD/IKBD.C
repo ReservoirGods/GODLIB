@@ -50,7 +50,7 @@ extern	void	IKBD_InitTosLink( U32 apBuffer, U32 aFunction );
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : IKBD_Init()
-* ACTION   : gets keyboard tables, saves old kbd handler, 
+* ACTION   : gets keyboard tables, saves old kbd handler,
 *			 installs new kbd/midi handler
 * CREATION : 25.03.00 PNK
 *-----------------------------------------------------------------------------------*/
@@ -148,7 +148,7 @@ void	IKBD_DeInit()
 void	IKBD_Update( void )
 {
 #if defined (dGODLIB_SYSTEM_D3D)
-	IKBD_DI_Update();	
+	IKBD_DI_Update();
 #elif defined (dGODLIB_SYSTEM_SDL)
 	IKBD_SDL_Update();
 #endif
@@ -332,7 +332,7 @@ U8	IKBD_GetMouseButtonLeft( void )
 
 U8	IKBD_GetMouseButtonRight( void )
 {
-	return( (U8)(gIKBD.mMouseKeys & 1) );	
+	return( (U8)(gIKBD.mMouseKeys & 1) );
 }
 
 
@@ -518,7 +518,7 @@ U8		IKBD_ConvertScancodeAsciiCaps( U8 aScan )
 
 U8	IKBD_GetAsciiNormal( const U8 aScan )
 {
-	return( gIKBD.mpUnshiftTable[ aScan ] );	
+	return( gIKBD.mpUnshiftTable[ aScan ] );
 }
 
 
@@ -530,7 +530,7 @@ U8	IKBD_GetAsciiNormal( const U8 aScan )
 
 U8	IKBD_GetAsciiCaps( const U8 aScan )
 {
-	return( gIKBD.mpCapsTable[ aScan ] );	
+	return( gIKBD.mpCapsTable[ aScan ] );
 }
 
 
@@ -576,7 +576,7 @@ void	IKBD_WaitAnyKey()
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : IKBD_ClearBuffer( void )
-* ACTION   : 
+* ACTION   :
 * CREATION : 04.12.00 PNK
 *-----------------------------------------------------------------------------------*/
 
@@ -717,7 +717,7 @@ U8	IKBD_IsPad1Enabled( void )
 
 U8	IKBD_IsMouseEnabled( void )
 {
-	return( gIKBD.mMouseEnabledFlag );	
+	return( gIKBD.mMouseEnabledFlag );
 }
 
 
@@ -729,7 +729,7 @@ U8	IKBD_IsMouseEnabled( void )
 
 U8	IKBD_IsJoystickEnabled( void )
 {
-	return( gIKBD.mJoystickEnabledFlag );	
+	return( gIKBD.mJoystickEnabledFlag );
 }
 
 
@@ -768,7 +768,7 @@ U8	IKBD_IsTeamTap1Enabled( void )
 U16	IKBD_GetKbdBytesWaiting( void )
 {
 	S16	lRes;
-	
+
 	lRes = (S16)(gIKBD.mKbdTail - gIKBD.mKbdHead);
 	if( lRes < 0 )
 	{
@@ -788,7 +788,7 @@ U16	IKBD_GetKbdBytesWaiting( void )
 U8	IKBD_PopKbdByte( void )
 {
 	U8	lRes;
-	
+
 	lRes = gIKBD.mKbdBuffer[ gIKBD.mKbdHead ];
 	gIKBD.mKbdHead++;
 	gIKBD.mKbdHead &= 2047;

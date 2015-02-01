@@ -146,7 +146,7 @@ void	Clock_Update( sClock * apClock )
 	{
 		gClockTime.mMicroSeconds = (U8)(gClockTime.mMicroSeconds + lTicks);
 	}
-	
+
 #endif
 
 	if( apClock->mState == eCLOCK_STATE_ACTIVE )
@@ -169,7 +169,7 @@ void	Clock_Update( sClock * apClock )
 		}
 
 		apClock->mElapsedTicks = gClockTicks - apClock->mStartTicks;
-	}	
+	}
 }
 
 
@@ -197,7 +197,7 @@ void	Clock_Start( sClock * apClock )
 
 	apClock->mStartTicks                  = gClockTicks;
 	apClock->mPauseTicks                  = apClock->mStartTicks;
-	apClock->mElapsedTicks                = 0;	
+	apClock->mElapsedTicks                = 0;
 }
 
 
@@ -223,7 +223,7 @@ void	Clock_Pause( sClock * apClock )
 {
 	apClock->mPauseTime  = gClockTime;
 	apClock->mState      = eCLOCK_STATE_PAUSE;
-	apClock->mPauseTicks = gClockTicks;	
+	apClock->mPauseTicks = gClockTicks;
 }
 
 
@@ -241,7 +241,7 @@ void	Clock_UnPause( sClock * apClock )
 	Time_Add( &apClock->mStartTime, &lTime,             &apClock->mStartTime );
 	apClock->mStartTicks += (gClockTicks - apClock->mPauseTicks);
 	apClock->mState       = eCLOCK_STATE_ACTIVE;
-	
+
 }
 
 
@@ -260,7 +260,7 @@ U32	Time_ToU32( sTime * apTime )
 	lTicks += (U32)apTime->mMinutes * 60L * 200L;
 	lTicks += (U32)apTime->mHours   * 60L * 60L * 200L;
 
-	return( lTicks );	
+	return( lTicks );
 }
 
 
@@ -286,7 +286,7 @@ void	Time_FromU32( sTime * apTime,U32 aTicks )
 	apTime->mSeconds  = (U8)lTicks;
 	aTicks           -= lTicks * 200L;
 
-	apTime->mMicroSeconds = (U8)aTicks;	
+	apTime->mMicroSeconds = (U8)aTicks;
 }
 
 
@@ -405,7 +405,7 @@ U32	Time_GetAbsTime( void )
 	struct tm * lpTime;
 	U32	lTime;
 	U32	lDate;
-	
+
 	time( &lTimeT );
 	lpTime = gmtime( &lTimeT );
 

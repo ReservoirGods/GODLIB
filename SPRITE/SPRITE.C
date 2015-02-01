@@ -504,7 +504,7 @@ sSprite *	Sprite_CreateTC( U16 * apGfxBase,U16 aMskColour,sSpriteRect * apDstRec
 		}
 	}
 
-	return( lpSprite );		
+	return( lpSprite );
 }
 
 
@@ -533,8 +533,8 @@ void					Sprite_Destroy( sSprite * apSprite )
 
 void					Sprite_Delocate( sSprite * apSprite )
 {
-	*(U32*)&apSprite->mpGfx  -= (U32) apSprite;	
-	*(U32*)&apSprite->mpMask -= (U32) apSprite;	
+	*(U32*)&apSprite->mpGfx  -= (U32) apSprite;
+	*(U32*)&apSprite->mpMask -= (U32) apSprite;
 	Endian_FromBigU16( &apSprite->mGfxPlaneCount  );
 	Endian_FromBigU16( &apSprite->mMaskPlaneCount  );
 	Endian_FromBigU16( &apSprite->mHeight  );
@@ -560,8 +560,8 @@ void					Sprite_Relocate( sSprite * apSprite )
 
 	Endian_FromBigU32( &apSprite->mpGfx  );
 	Endian_FromBigU32( &apSprite->mpMask );
-	*(U32*)&apSprite->mpGfx  += (U32) apSprite;	
-	*(U32*)&apSprite->mpMask += (U32) apSprite;	
+	*(U32*)&apSprite->mpGfx  += (U32) apSprite;
+	*(U32*)&apSprite->mpMask += (U32) apSprite;
 }
 
 
@@ -596,7 +596,7 @@ U32	Sprite_GetMskSize( sSprite * apSprite )
 {
 	U32	lSize;
 	U32	lXwords;
-	
+
 	lSize = 0;
 	if( apSprite )
 	{
@@ -622,7 +622,7 @@ U32	Sprite_GetGfxSize( sSprite * apSprite )
 {
 	U32	lSize;
 	U32	lXwords;
-	
+
 	lSize   = 0;
 	lXwords = ((apSprite->mWidth+15)>>4);
 
@@ -637,7 +637,7 @@ U32	Sprite_GetGfxSize( sSprite * apSprite )
 	lSize *= apSprite->mGfxPlaneCount;
 	lSize>>= 3;
 	lSize *= apSprite->mHeight;
-	
+
 	return( lSize );
 }
 
@@ -749,7 +749,7 @@ void					Sprite_BlockRelocate( sSpriteBlock * apBlock )
 	{
 		return;
 	}
-	
+
 	Endian_FromBigU16( &apBlock->mHeader.mSpriteCount );
 	for( i=0; i<apBlock->mHeader.mSpriteCount; i++ )
 	{
@@ -869,7 +869,7 @@ void	Sprite_FlipH( sSprite * apBlock )
 	U16		lByte1;
 	U16		lStack[ 256 ];
 	U16		lStackIndex;
-	
+
 	lpGfx = (U8*)apBlock->mpGfx;
 	lpMsk = (U8*)apBlock->mpMask;
 
@@ -888,7 +888,7 @@ void	Sprite_FlipH( sSprite * apBlock )
 			{
 				lByte0 = lpGfx[ 0 ];
 				lByte1 = lpGfx[ 1 ];
-	
+
 				lByte0 = gSpriteFlipTable[ lByte0 ];
 				lByte1 = gSpriteFlipTable[ lByte1 ];
 
@@ -921,7 +921,7 @@ void	Sprite_FlipH( sSprite * apBlock )
 			{
 				lByte0 = lpMsk[ 0 ];
 				lByte1 = lpMsk[ 1 ];
-	
+
 				lByte0 = gSpriteFlipTable[ lByte0 ];
 				lByte1 = gSpriteFlipTable[ lByte1 ];
 
@@ -1002,7 +1002,7 @@ void	Sprite_GetRegion( sSprite * apSprite,sSpriteRegion * apRegion )
 				lBits = (U16)(~ lBits);
 				lpMask++;
 /*				lBits = ~*lpMask++;*/
-				
+
 				if( lBits )
 				{
 					if( y < lY0 )
@@ -1200,7 +1200,7 @@ sSpriteBlock *	SpriteBlock_Rot90( const sSpriteBlock * apSrc )
 	U32				lSize;
 	U16				lChunks;
 	U16				i;
-	
+
 	lSize = 0;
 	for( i=0; i<apSrc->mHeader.mSpriteCount; i++ )
 	{
@@ -1251,7 +1251,7 @@ sSpriteBlock *	SpriteBlock_Rot90( const sSpriteBlock * apSrc )
 */
 	}
 
-	return( lpBlock );	
+	return( lpBlock );
 }
 
 
@@ -1265,7 +1265,7 @@ U16	Sprite_BitRead( U16 * apBase,U16 aBitPlaneCount,U16 aBitPlane,U16 aX )
 {
 	U32	lOff;
 	U16	lBit;
-	
+
 	lOff   = (aX>>4);
 	lOff  *= aBitPlaneCount;
 	lOff  += aBitPlane;
@@ -1290,7 +1290,7 @@ void	Sprite_BitWrite( U16 * apBase,U16 aBitPlaneCount,U16 aBitPlane,U16 aX,U16 a
 	U16	lBit;
 	U16	lPix;
 	U16 lMask;
-	
+
 	lOff   = (aX>>4);
 	lOff  *= aBitPlaneCount;
 	lOff  += aBitPlane;
@@ -1298,7 +1298,7 @@ void	Sprite_BitWrite( U16 * apBase,U16 aBitPlaneCount,U16 aBitPlane,U16 aX,U16 a
 	lBit   = (U16)(aBit & 1);
 	lBit <<= (15 - (aX&15));
 	lMask = 1 << (15 - (aX&15));
-	
+
 	Endian_ReadBigU16( &apBase[ lOff ], lPix );
 	lPix &= ~lMask;
 	lPix |= lBit;

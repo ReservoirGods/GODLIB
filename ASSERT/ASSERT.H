@@ -28,7 +28,7 @@ extern	char gAssertString[ 1024 ];
 
 
 #ifdef dGODLIB_PLATFORM_WIN
-#define	dAssertTXT	
+#define	dAssertTXT
 
 void	Assert_Display( const char * apString );
 char *	Assert_GetpString( void );
@@ -38,7 +38,7 @@ char *	Assert_GetpString( void );
 	{																										\
 		sprintf( gAssertString, "\nAssertion Failed\n%s\n%s\nLine:%d\n", #aExpr, __FILE__, __LINE__ );		\
 		Assert_Display( Assert_GetpString() );																\
-	}	
+	}
 
 
 #else

@@ -2,7 +2,7 @@
 *
 * GodLib Keyboard Library
 *
-* [c] 2000-2002 Reservoir Gods 
+* [c] 2000-2002 Reservoir Gods
 *
 * thanks to scy/tscc for jaguar teamtap info
 **************************************************************************************
@@ -137,7 +137,7 @@ IKBD_GetMidiBytesWaiting:
 
 IKBD_PopMidiByte:
 	movem.l	a0/d1,-(a7)					; save registers
-	
+
 	move.w	gIKBD+sIKBD_MidiHead,d1		; current head index
 	lea		gIKBD+sIKBD_MidiBuffer,a0	; midi buffer
 	move.b	(a0,d1.w),d0				; retrieve byte from buffer
@@ -174,7 +174,7 @@ IKBD_GetKbdBytesWaiting:
 
 IKBD_PopKbdByte:
 	movem.l	a0/d1,-(a7)					; save registers
-	
+
 	move.w	gIKBD+sIKBD_KbdHead,d1		; current head index
 	lea		gIKBD+sIKBD_KbdBuffer,a0	; midi buffer
 	move.b	(a0,d1.w),d0				; retrieve byte from buffer
@@ -222,7 +222,7 @@ IKBD_FlushGemdos:
 
 	tst.w	d0					; characters waiting?
 	beq		.empty				; no, empty
-	
+
 	move.w	#8,-(a7)			; Cnecin()
 	trap	#1					; call GEMDOS
 	addq.l	#2,a7				; fix stack
@@ -301,7 +301,7 @@ IKBD_CheckPacket:
 	move.b	2(a0),d1				; flush ikbd by reading data
 .no_packet:
 
-	rts	
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -320,7 +320,7 @@ IKBD_MidiPacketHandler:
 	move.b	d0,(a1,d2.w)				; store received byte in buffer
 	addq.w	#1,d2						; inc tail
 	and.w	#2047,d2					; clip to cyclical buffer (2048 entry)
-	cmp.w	sIKBD_MidiHead(a3),d2		; buffer full? ( tail has reached head pos) 
+	cmp.w	sIKBD_MidiHead(a3),d2		; buffer full? ( tail has reached head pos)
 	beq.s	.full						; yes,
 	move.w	d2,sIKBD_MidiTail(a3)		; update tail position
 	rts
@@ -353,7 +353,7 @@ IKBD_KbdDeterminePacket:
 	beq.s	.overflow					; skip tail update
 	move.w	d2,sIKBD_KbdTail(a3)		; store update tail position
 .overflow:
-	move.b	d0,(a2)						; store key in ikbd buffer	
+	move.b	d0,(a2)						; store key in ikbd buffer
 
 	lea		sIKBD_KbdPressTable(a3),a2	; keyboard press table
 	bclr	#7,d0						; key press?
@@ -398,7 +398,7 @@ IKBD_KbdDeterminePacket:
 IKBD_GrabStatus0:
 	move.b	d0,sIKBD_StatusData+0(a3)					; store first byte of status packet
 	move.l	#IKBD_GrabStatus1,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -410,7 +410,7 @@ IKBD_GrabStatus0:
 IKBD_GrabStatus1:
 	move.b	d0,sIKBD_StatusData+1(a3)					; store second byte of status packet
 	move.l	#IKBD_GrabStatus2,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -422,7 +422,7 @@ IKBD_GrabStatus1:
 IKBD_GrabStatus2:
 	move.b	d0,sIKBD_StatusData+2(a3)					; store third byte of status packet
 	move.l	#IKBD_GrabStatus3,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -434,7 +434,7 @@ IKBD_GrabStatus2:
 IKBD_GrabStatus3:
 	move.b	d0,sIKBD_StatusData+3(a3)					; store fourth byte of status packet
 	move.l	#IKBD_GrabStatus4,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -446,7 +446,7 @@ IKBD_GrabStatus3:
 IKBD_GrabStatus4:
 	move.b	d0,sIKBD_StatusData+4(a3)					; store fourth byte of status packet
 	move.l	#IKBD_GrabStatus5,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -458,7 +458,7 @@ IKBD_GrabStatus4:
 IKBD_GrabStatus5:
 	move.b	d0,sIKBD_StatusData+5(a3)					; store sixth byte of status packet
 	move.l	#IKBD_GrabStatus6,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -470,7 +470,7 @@ IKBD_GrabStatus5:
 IKBD_GrabStatus6:
 	move.b	d0,sIKBD_StatusData+6(a3)					; store sevent byte of status packet
 	move.l	#IKBD_KbdDeterminePacket,kbdIkbdHandler		; end of packet, back to main ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -482,7 +482,7 @@ IKBD_GrabStatus6:
 IKBD_GrabAbsMouse:
 	move.b	d0,sIKBD_MouseKeys(a3)						; store mouse keys
 	move.l	#IKBD_GrabAbsMouseX0,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -494,7 +494,7 @@ IKBD_GrabAbsMouse:
 IKBD_GrabAbsMouseX0:
 	move.b	d0,sIKBD_Temp(a3)							; store mouse x MSB
 	move.l	#IKBD_GrabAbsMouseX1,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -507,7 +507,7 @@ IKBD_GrabAbsMouseX1:
 	move.b	d0,sIKBD_MouseX+1(a3)						; store mouse X LSB
 	move.b	sIKBD_Temp,sIKBD_MouseX+0					; copy mouse X MSB to correct place
 	move.l	#IKBD_GrabAbsMouseY0,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -519,7 +519,7 @@ IKBD_GrabAbsMouseX1:
 IKBD_GrabAbsMouseY0:
 	move.b	d0,sIKBD_Temp(a3)							; store mouse Y MSB
 	move.l	#IKBD_GrabAbsMouseY1,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -533,7 +533,7 @@ IKBD_GrabAbsMouseY1:
 	move.b	sIKBD_Temp,sIKBD_MouseY+0					; copy mouse Y MSB to correct place
 	move.l	#IKBD_KbdDeterminePacket,kbdIkbdHandler		; next ikbd handler
 	st.b	sIKBD_MouseMovedFlag(a3)					; flag mouse moved
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -547,7 +547,7 @@ IKBD_GrabRelMouseX:
 	ext.w	d2											; sign extend
 	add.w	d2,sIKBD_MouseX(a3)							; move mouse x relatively
 	move.l	#IKBD_GrabRelMouseY,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -562,7 +562,7 @@ IKBD_GrabRelMouseY:
 	add.w	d2,sIKBD_MouseY(a3)							; move mouse y relatively
 	move.l	#IKBD_KbdDeterminePacket,kbdIkbdHandler		; next ikbd handler
 	st.b	sIKBD_MouseMovedFlag(a3)					; flag mouse moved
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -574,7 +574,7 @@ IKBD_GrabRelMouseY:
 IKBD_GrabTimeOfDay0:
 	move.b	d0,sIKBD_TimeOfDay+0(a3)					; store first byte of time of day
 	move.l	#IKBD_GrabTimeOfDay1,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -586,7 +586,7 @@ IKBD_GrabTimeOfDay0:
 IKBD_GrabTimeOfDay1:
 	move.b	d0,sIKBD_TimeOfDay+1(a3)					; store second byte of time of day
 	move.l	#IKBD_GrabTimeOfDay2,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -598,7 +598,7 @@ IKBD_GrabTimeOfDay1:
 IKBD_GrabTimeOfDay2:
 	move.b	d0,sIKBD_TimeOfDay+2(a3)					; store third byte of time of day
 	move.l	#IKBD_GrabTimeOfDay3,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -610,7 +610,7 @@ IKBD_GrabTimeOfDay2:
 IKBD_GrabTimeOfDay3:
 	move.b	d0,sIKBD_TimeOfDay+3(a3)					; store fourth byte of time of day
 	move.l	#IKBD_GrabTimeOfDay4,kbdIkbdHandler			; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -622,7 +622,7 @@ IKBD_GrabTimeOfDay3:
 IKBD_GrabTimeOfDay4:
 	move.b	d0,sIKBD_TimeOfDay+4(a3)					; store fifth byte of time of day
 	move.l	#IKBD_GrabTimeOfDay5,kbdIkbdHandler			; next ikbd handler
-	rts						
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -634,7 +634,7 @@ IKBD_GrabTimeOfDay4:
 IKBD_GrabTimeOfDay5:
 	move.b	d0,sIKBD_TimeOfDay+5(a3)					; store sixth byte of time of day
 	move.l	#IKBD_KbdDeterminePacket,kbdIkbdHandler		; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -646,7 +646,7 @@ IKBD_GrabTimeOfDay5:
 IKBD_GrabJoyReport:
 	move.b	d0,sIKBD_Joy0Packet(a3)						; store joystick 0 packet
 	move.l	#IKBD_GrabJoy1,kbdIkbdHandler				; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -658,9 +658,9 @@ IKBD_GrabJoyReport:
 IKBD_GrabJoy0:
 	move.b	d0,sIKBD_Joy0Packet(a3)						; store joystick 0 packet
 	move.l	#IKBD_KbdDeterminePacket,kbdIkbdHandler		; next ikbd handler
-	rts		
-						
-																				
+	rts
+
+
 *------------------------------------------------------------------------------------*
 * FUNCTION : IKBD_GrabJoy1
 * ACTION   : grabs joystick 1 packet
@@ -670,7 +670,7 @@ IKBD_GrabJoy0:
 IKBD_GrabJoy1:
 	move.b	d0,sIKBD_Joy1Packet(a3)						; store joystick 1 packet
 	move.l	#IKBD_KbdDeterminePacket,kbdIkbdHandler		; next ikbd handler
-	rts												
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -711,7 +711,7 @@ IKBD_KeyHandler:
 	beq.s	.overflow					; skip tail update
 	move.w	d1,sIKBD_KbdTail(a3)		; store update tail position
 .overflow:
-	move.b	d0,(a2)						; store key in ikbd buffer	
+	move.b	d0,(a2)						; store key in ikbd buffer
 
 	lea		sIKBD_KbdPressTable(a3),a2	; keyboard press table
 	bclr	#7,d0						; key press?
@@ -726,7 +726,7 @@ IKBD_KeyHandler:
 
 .endkey:
 	move.w	(a7)+,d1					; restore registers
-	rts                             
+	rts
 
 
 *------------------------------------------------------------------------------------*
@@ -749,7 +749,7 @@ IKBD_PowerpadHandler:
 	lea		gKbdJagPadMasksA,a0
 	lea		gIKBD+sIKBD_TeamTapDirs,a1
 	lea		gIKBD+sIKBD_TeamTapKeys,a2
-.loop0:		
+.loop0:
 	bsr		IKBD_ReadPadMatrixA
 	addq.l	#4,a0
 	addq.l	#1,a1
@@ -757,7 +757,7 @@ IKBD_PowerpadHandler:
 	dbra	d0,.loop0
 
 	bra.s	.check1
-	
+
 .noTeamTap0:
 
 	lea		gKbdJagPadMasksA,a0
@@ -901,7 +901,7 @@ IKBD_ReadPowerpadB:
 	btst	#3,d3				; check fire_b
 	bne.s	.no_fireb			; if set, fire_b is not pressed
 	bset	#6,d1				; fire_b is pressed, set relevant bit
-.no_fireb:	
+.no_fireb:
 	lsr.w	#8,d0
 	lsr.w	#4,d0				; shift key data into bits 0-3
 	and.w	#$0F,d0				; mask off unwanted data (%1111)
@@ -914,7 +914,7 @@ IKBD_ReadPowerpadB:
 	btst	#3,d3				; check for fire_c
 	bne.s	.no_firec			; if set, fire_c is not pressed
 	bset	#5,d1				; fire_c is pressed, set relevant bit
-.no_firec:		
+.no_firec:
 	lsr.w	#8,d0				; shift key data into bits 4-7
 	and.w	#$F0,d0				; mask off unwanted data (%11110000)
 	or.w	d0,d2				; store in key word
@@ -959,7 +959,7 @@ IKBD_ReadPowerpadB:
 
 ; a0->table
 ; a1->dirs
-; a2->keys	
+; a2->keys
 
 
 
@@ -1125,13 +1125,13 @@ gfIkbdGrabbers:
 	dc.l	IKBD_GrabJoy1			;	$ff
 
 
-gKbdJagPadMasksA:	
+gKbdJagPadMasksA:
 	dc.b	$fe,$fd,$fb,$f7
 	dc.b	$f0,$f1,$f2,$f3
 	dc.b	$f4,$f5,$f6,$f8
 	dc.b	$f9,$fa,$fc,$ff
 
-gKbdJagPadMasksB:	
+gKbdJagPadMasksB:
 	dc.b	$ef,$df,$bf,$7f
 	dc.b	$0f,$1f,$2f,$3f
 	dc.b	$4f,$5f,$6f,$8f

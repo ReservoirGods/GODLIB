@@ -109,7 +109,7 @@ RleSprite_DrawClipY:
 	dbra	d1,.rleLoopY					; loop for height
 
 	rts
-		
+
 
 *------------------------------------------------------------------------------------*
 * FUNCTION : RleSprite_DrawClip( const sRleSprite * apSprite,U16 * apScreen,U32 aScreenWidth,sSpriteRect * apRect )
@@ -157,7 +157,7 @@ RleSprite_DrawClip:
 	add.w	d3,d2							; draw + (-clipx)
 	sub.w	d2,d3							; -clipx
 	ble		.rleClipNextY
-	add.w	d2,d2							; * pixel size		
+	add.w	d2,d2							; * pixel size
 	add.w	d2,a0							; skip clipped pixels
 	move.w	d5,d2							; width
 	bra.s	.rleClipDrawStart1

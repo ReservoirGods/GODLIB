@@ -70,7 +70,7 @@ GodPack_Lz77b_Decode_Asm:
 	addq.w	#1,d1
 	add.w	d1,d1
 	add.w	d1,d1
-	
+
 	sub.l	d1,d0
 	bge.s	.lzb_lit4_first
 	move.l	d0,d1

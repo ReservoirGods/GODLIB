@@ -1203,7 +1203,7 @@ void	Ssd_Init( void )
 
 	gSsdClass.mEnableFlag  = 1;
 	gSsdClass.mPlayingFlag = 0;
-	
+
 	Ssd_SetSongFreq( dSSD_SONG_FREQ );
 }
 
@@ -1234,7 +1234,7 @@ void	Ssd_Start( void * apVoiceSet,void * apTune )
 		Ssd_RepStart( apVoiceSet, apTune );
 		Mfp_HookIntoTimerC( &gSsdClass.mTimer );
 		gSsdClass.mPlayingFlag = 1;
-	}	
+	}
 }
 
 
@@ -1266,7 +1266,7 @@ void	Ssd_SetSongFreq( const U16 aHz )
 	gSsdClass.mTimer.mData       = (U8)(12288L / aHz);
 	gSsdClass.mTimer.mMode       = 7;
 	gSsdClass.mTimer.mFreq       = (U16)aHz;
-	gSsdClass.mTimer.mfTimerFunc = Ssd_RepPlay;	
+	gSsdClass.mTimer.mfTimerFunc = Ssd_RepPlay;
 }
 
 

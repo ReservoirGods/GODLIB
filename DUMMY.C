@@ -36,7 +36,7 @@ U16	gDummyU16;
 ################################################################################### */
 
 /*-----------------------------------------------------------------------------------*
-	AMIXER_S.S	
+	AMIXER_S.S
 *-----------------------------------------------------------------------------------*/
 
 U8 *			gpAudioMixerSilence;
@@ -50,7 +50,7 @@ sAmixerSpl		gAudioMixerSamples[ 2 ];
 void			AudioMixer_Vbl( void ){}
 
 /*-----------------------------------------------------------------------------------*
-	AUDIO_S.S	
+	AUDIO_S.S
 *-----------------------------------------------------------------------------------*/
 
 U8				gAudioDmaPlayingFlag;
@@ -66,13 +66,13 @@ void			Audio_SoundChipOff( void ){}
 void			Audio_MicroWireWrite( const U16 aVal ) { gDummyU16 = aVal; }
 
 /*-----------------------------------------------------------------------------------*
-	CLOCK_S.S	
+	CLOCK_S.S
 *-----------------------------------------------------------------------------------*/
 
 void		Clock_TimeVbl( void )	{}
 
 /*-----------------------------------------------------------------------------------*
-	EXCEPT_S.S	
+	EXCEPT_S.S
 *-----------------------------------------------------------------------------------*/
 
 void			Except_Handler68000( void ){}
@@ -81,14 +81,14 @@ U32				gExcept_HandlersTable[ 64 ];
 void			__text( void ){}
 
 /*-----------------------------------------------------------------------------------*
-	FADE_S.S	
+	FADE_S.S
 *-----------------------------------------------------------------------------------*/
 
 void			Fade_Vbl( void ) {}
 /*U8				gFadeVblActiveFlag;*/
 
 /*-----------------------------------------------------------------------------------*
-	GEMDOS_S.S	
+	GEMDOS_S.S
 *-----------------------------------------------------------------------------------*/
 
 S32	GemDos_Call( const S16 aOp ){ (void)aOp; return(0); }
@@ -116,7 +116,7 @@ S32	GemDos_Call_WPPP( const S16 aOp, const S16 aW0, const void * ap0, const void
 S32	GemDos_Call_WWLL( const S16 aOp, const S16 aW0, const S16 aW1, const S32 aL0, const S32 aL1 ){ (void)aOp; (void)aW0; (void)aW1; (void)aL0; (void)aL1; return(0); }
 
 /*-----------------------------------------------------------------------------------*
-	GRF_4_S.S	
+	GRF_4_S.S
 *-----------------------------------------------------------------------------------*/
 /*
 void Graphic_4BP_Blit(         struct sGraphicCanvas * apCanvas,  sGraphicPos * apCoords,  sGraphicRect * apRect, void * apSrc, void * apDst ) { (void)apCanvas; (void)apCoords; (void)apRect; (void)apSrc; (void)apDst;}
@@ -156,7 +156,7 @@ void Graphic_4BP_DrawTri_Clip_BLT(      struct sGraphicCanvas * apCanvas,  sGrap
 void Graphic_4BP_DrawQuad_Clip_BLT(     struct sGraphicCanvas * apCanvas,  sGraphicPos * apCoords,   S16 aColour ){(void)apCanvas, (void)apCoords; (void)aColour;}
 
 /*-----------------------------------------------------------------------------------*
-	IKBD_S.S	
+	IKBD_S.S
 *-----------------------------------------------------------------------------------*/
 
 void			IKBD_Flush( void ){}
@@ -172,7 +172,7 @@ U8				IKBD_PopMidiByte( void ){return(0);}
 
 
 /*-----------------------------------------------------------------------------------*
-	MEMORY_S.S	
+	MEMORY_S.S
 *-----------------------------------------------------------------------------------*/
 
 void	Memory_ClearSimple_1( U32 aSize, void * apMemory )	{ (void)aSize; (void)apMemory; memset(apMemory,0,aSize); }
@@ -180,7 +180,7 @@ void	Memory_ClearSimple_16( U32 aSize, void * apMemory )	{ (void)aSize; (void)ap
 void	Memory_ClearMajor( U32 aSize, void * apMemory )	{ (void)aSize; (void)apMemory;memset(apMemory,0,aSize); }
 
 /*-----------------------------------------------------------------------------------*
-	MFP_S.S	
+	MFP_S.S
 *-----------------------------------------------------------------------------------*/
 
 typedef	struct
@@ -210,7 +210,7 @@ void			Mfp_HookEnableTimerC( void ){}
 void			Mfp_DisableSystemTimerC( void ){}
 
 /*-----------------------------------------------------------------------------------*
-	PACKER_S.S	
+	PACKER_S.S
 *-----------------------------------------------------------------------------------*/
 
 void			Packer_DepackIce( void * apData ){ (void)apData; }
@@ -219,7 +219,7 @@ void			Packer_DepackAuto5( void * apData ){ (void)apData; }
 void			Packer_DepackSpeed3( void * apData ){ (void)apData; }
 
 /*-----------------------------------------------------------------------------------*
-	PNKNOT_S.S	
+	PNKNOT_S.S
 *-----------------------------------------------------------------------------------*/
 
 sPinkNoteChannel	gPinkNoteChannel[ 3 ];
@@ -229,20 +229,20 @@ void			PinkNote_NotePlayChannelB( sPinkNoteChannel * apChannel ){ (void)apChanne
 void			PinkNote_NotePlayChannelC( sPinkNoteChannel * apChannel ){ (void)apChannel; }
 
 /*-----------------------------------------------------------------------------------*
-	PROFILES.S	
+	PROFILES.S
 *-----------------------------------------------------------------------------------*/
 
 void			Profiler_HBL( void ){}
 void			Profiler_VBL( void ){}
 
 /*-----------------------------------------------------------------------------------*
-	SCRGRABS.S	
+	SCRGRABS.S
 *-----------------------------------------------------------------------------------*/
 
 void			ScreenGrab_Vbl( void ){}
 
 /*-----------------------------------------------------------------------------------*
-	SND_S.S	
+	SND_S.S
 *-----------------------------------------------------------------------------------*/
 
 void			Snd_SetpPlayFunc( void (*aPlayFunc)(void) ){ (void)aPlayFunc; }
@@ -251,7 +251,7 @@ void			Snd_CallFunction( void (*aFunc)() ){ (void)aFunc; }
 void			Snd_Player( void ){}
 
 /*-----------------------------------------------------------------------------------*
-	SSD_S.S	
+	SSD_S.S
 *-----------------------------------------------------------------------------------*/
 
 void	Ssd_RepStart( void * apVoiceSet, void * apSong )	{	(void)apVoiceSet; (void)apSong;	}
@@ -259,7 +259,7 @@ void	Ssd_RepPlay( void )	{}
 void	Ssd_RepStop( void )	{}
 
 /*-----------------------------------------------------------------------------------*
-	SYSTEM_S.S	
+	SYSTEM_S.S
 *-----------------------------------------------------------------------------------*/
 
 typedef	struct
@@ -284,7 +284,7 @@ U32				System_GetEmuVers( void ){return(0);}
 sSystemEmuDesc *	System_GetpEmuDescLL( void )	{ return(0); }
 
 /*-----------------------------------------------------------------------------------*
-	VBL_S.S	
+	VBL_S.S
 *-----------------------------------------------------------------------------------*/
 
 
@@ -293,7 +293,7 @@ void			(*Vbl_GetHandler( void ) ) (){return( gfDummyVoid );}
 void	Vbl_DummyFunc( void )	{}
 
 /*-----------------------------------------------------------------------------------*
-	VIDEO_S.S	
+	VIDEO_S.S
 *-----------------------------------------------------------------------------------*/
 
 void			Video_SaveRegsST(     void * apBuffer ){ (void)apBuffer; }
@@ -318,7 +318,7 @@ void	Video_UpdateRegsTT( void ){}
 void	Video_UpdateRegsFalcon( void ){}
 
 /*-----------------------------------------------------------------------------------*
-	WIPE_S.S	
+	WIPE_S.S
 *-----------------------------------------------------------------------------------*/
 
 void	Wipe_In_Init( U16 aIndex, U16 * apGfx )	{ (void)aIndex; (void)apGfx; }
@@ -328,7 +328,7 @@ U16		Wipe_Update( U16 * apScreen )			{ (void)apScreen; return(0);	}
 U16		Wipe_IsFinished( void )					{	return(1);	}
 
 /*-----------------------------------------------------------------------------------*
-	XBIOS_S.S	
+	XBIOS_S.S
 *-----------------------------------------------------------------------------------*/
 
 S32	Xbios_Call( const S16 aOp ){ (void)aOp; return(0); }

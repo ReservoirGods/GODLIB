@@ -64,7 +64,7 @@ U32	Relocator_FED_IsType( void * apData,const U32 aSize,const U32 aID )
 	(void)apData;
 	(void)aSize;
 	(void)aID;
-	return( 1 );	
+	return( 1 );
 }
 
 
@@ -96,7 +96,7 @@ U32	Relocator_FED_DoDelocate( void * apData,const U32 aSize,const U32 aID )
 	(void)aID;
 
 /*	Fed_Delocate( (sFedHeader*)apData );*/
-	return( 1 );	
+	return( 1 );
 }
 
 
@@ -113,7 +113,7 @@ U32	Relocator_FED_DoInit( void * apData,const U32 aSize,const U32 aID )
 
 	Fed_Init( (sFedHeader*)apData );
 	Fed_Begin( (sFedHeader*)apData, "MAIN" );
-	return( 1 );	
+	return( 1 );
 }
 
 
@@ -128,8 +128,8 @@ U32	Relocator_FED_DoDeInit( void * apData,const U32 aSize,const U32 aID )
 	(void)aSize;
 	(void)aID;
 
-	Fed_DeInit( (sFedHeader*)apData );	
-	return( 1 );	
+	Fed_DeInit( (sFedHeader*)apData );
+	return( 1 );
 }
 
 

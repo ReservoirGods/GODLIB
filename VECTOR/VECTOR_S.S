@@ -2,7 +2,7 @@
 *
 * GodLib Vector Maths Library
 *
-* [c] 2001 Reservoir Gods 
+* [c] 2001 Reservoir Gods
 *
 **************************************************************************************
 
@@ -65,7 +65,7 @@ lNoShift:
 
 Vector_Add:
 
-	movem.w	(a0),d0-d2	
+	movem.w	(a0),d0-d2
 	add.w	sVector_X(a1),d0
 	add.w	sVector_Y(a1),d1
 	add.w	sVector_Z(a1),d2
@@ -82,7 +82,7 @@ Vector_Add:
 
 Vector_Sub:
 
-	movem.w	(a1),d0-d2	
+	movem.w	(a1),d0-d2
 	sub.w	sVector_X(a0),d0
 	sub.w	sVector_Y(a0),d1
 	sub.w	sVector_Z(a0),d2
@@ -131,7 +131,7 @@ Vector_Normal:
 	muls.w	d2,d2
 	add.l	d1,d0
 	add.l	d2,d0
-	
+
 	bsr		VecSqrt
 
 	moveq	#0,d1
@@ -171,7 +171,7 @@ Vector_Length:
 	muls.w	d2,d2
 	add.l	d1,d0
 	add.l	d2,d0
-	
+
 	bsr		VecSqrt
 
 	rts
@@ -191,7 +191,7 @@ Vector_SquaredLength:
 	muls.w	d2,d2
 	add.l	d1,d0
 	add.l	d2,d0
-	
+
 	rts
 
 
@@ -210,7 +210,7 @@ Vector_Dot:
 	add.l	d1,d0
 	add.l	d2,d0
 	swap	d0
-	
+
 	rts
 
 
@@ -251,7 +251,7 @@ Vector_Cross:
 	add.l	d1,d0
 	swap	d0
 	move.w	d0,(a2)+
-	
+
 	rts
 
 *------------------------------------------------------------------------------------*
@@ -265,7 +265,7 @@ VecSqrt:
 
 	cmp.l	#$40000000,d0
 	blt.s	.inLow
-	
+
 	move.l	#$8000,d1
 	sub.l	#$40000000,d0
 .inLow:

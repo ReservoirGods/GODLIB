@@ -224,7 +224,7 @@ void	Blitter_CopyBox( U16 * apSrc, U16 * apDst, U16 aSrcX, U16 aSrcY, U16 aDstX,
 
 		lpSrc++;
 		lpDst++;
-	}	
+	}
 
 	while( lpBlitter->Mode & dBLITTERMODE_BUSY_BIT );
 }
@@ -282,7 +282,7 @@ void	Blitter_DrawSprite( sBlitterSprite * apSprite, U16 * apScreen, S16 aX, S16 
 	lXcount   = (U16)((lX2 & 0xFFF0) - (aX & 0xFFF0));
 	lXcount >>= 4;
 	lXcount  += 1;
-	
+
 	while( lpBlitter->Mode & dBLITTERMODE_BUSY_BIT );
 
 	lpBlitter->CountX  = lXcount;
@@ -332,7 +332,7 @@ void	Blitter_DrawSprite( sBlitterSprite * apSprite, U16 * apScreen, S16 aX, S16 
 		lpBlitter->Mode   = dBLITTERMODE_BUSY_BIT;
 
 		lpDst2++;
-	}	
+	}
 
 	while( lpBlitter->Mode & dBLITTERMODE_BUSY_BIT );
 
@@ -358,7 +358,7 @@ void	Blitter_DrawSprite( sBlitterSprite * apSprite, U16 * apScreen, S16 aX, S16 
 
 		lpSrc++;
 		lpDst++;
-	}	
+	}
 
 }
 
@@ -408,7 +408,7 @@ void	Blitter_DrawOpaqueSprite( sBlitterSprite * apSprite, U16 * apScreen, S16 aX
 	lXcount   = (U16)((lX2 & 0xFFF0) - (aX & 0xFFF0));
 	lXcount >>= 4;
 	lXcount  += 1;
-	
+
 	while( lpBlitter->Mode & dBLITTERMODE_BUSY_BIT );
 
 	lpBlitter->CountX  = lXcount;
@@ -460,7 +460,7 @@ void	Blitter_DrawOpaqueSprite( sBlitterSprite * apSprite, U16 * apScreen, S16 aX
 
 		lpSrc++;
 		lpDst++;
-	}	
+	}
 }
 
 
@@ -510,7 +510,7 @@ void	Blitter_DrawColouredSprite( sBlitterSprite * apSprite, U16 * apScreen, S16 
 	lXcount   = (U16)((lX2 & 0xFFF0) - (aX & 0xFFF0));
 	lXcount >>= 4;
 	lXcount  += 1;
-	
+
 	while( lpBlitter->Mode & dBLITTERMODE_BUSY_BIT );
 
 	lpBlitter->CountX  = lXcount;
@@ -560,7 +560,7 @@ void	Blitter_DrawColouredSprite( sBlitterSprite * apSprite, U16 * apScreen, S16 
 		lpBlitter->Mode   = dBLITTERMODE_BUSY_BIT;
 
 		lpDst2++;
-	}	
+	}
 
 	while( lpBlitter->Mode & dBLITTERMODE_BUSY_BIT );
 
@@ -580,7 +580,7 @@ void	Blitter_DrawColouredSprite( sBlitterSprite * apSprite, U16 * apScreen, S16 
 			lpBlitter->Mode   = dBLITTERMODE_BUSY_BIT;
 		}
 		lpDst++;
-	}	
+	}
 
 }
 
@@ -611,7 +611,7 @@ void	Blitter_DrawBox( sBlitterBox * apBox, U16 * apScreen, U16 aX, U16 aY )
 	lXcount   = (U16)((lX2 & 0xFFF0) - (aX & 0xFFF0));
 	lXcount >>= 4;
 	lXcount  += 1;
-	
+
 	while( lpBlitter->Mode & dBLITTERMODE_BUSY_BIT );
 
 	lpBlitter->CountX  = lXcount;

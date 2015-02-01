@@ -2,7 +2,7 @@
 *
 * GodLib Exception Handler Library
 *
-* [c] 2001 Reservoir Gods 
+* [c] 2001 Reservoir Gods
 *
 **************************************************************************************
 
@@ -54,196 +54,196 @@ Except_Crash:
 
 
 Except_Handler00:
-	mException	0	
+	mException	0
 
 Except_Handler01:
-	mException	1	
+	mException	1
 
 Except_Handler02:
 	mException	2
 
 Except_Handler03:
-	mException	3	
+	mException	3
 
 Except_Handler04:
-	mException	4	
+	mException	4
 
 Except_Handler05:
-	mException	5	
+	mException	5
 
 Except_Handler06:
-	mException	6	
+	mException	6
 
 Except_Handler07:
-	mException	7	
+	mException	7
 
 Except_Handler08:
-	mException	8	
+	mException	8
 
 Except_Handler09:
-	mException	9	
+	mException	9
 
 Except_Handler10:
-	mException	10	
+	mException	10
 
 Except_Handler11:
-	mException	11	
+	mException	11
 
 Except_Handler12:
-	mException	12	
+	mException	12
 
 Except_Handler13:
-	mException	13	
+	mException	13
 
 Except_Handler14:
-	mException	14	
+	mException	14
 
 Except_Handler15:
-	mException	15	
+	mException	15
 
 Except_Handler16:
-	mException	16	
+	mException	16
 
 Except_Handler17:
-	mException	17	
+	mException	17
 
 Except_Handler18:
-	mException	18	
+	mException	18
 
 Except_Handler19:
-	mException	19	
+	mException	19
 
 Except_Handler20:
-	mException	20	
+	mException	20
 
 Except_Handler21:
-	mException	21	
+	mException	21
 
 Except_Handler22:
-	mException	22	
+	mException	22
 
 Except_Handler23:
-	mException	23	
+	mException	23
 
 Except_Handler24:
-	mException	24	
+	mException	24
 
 Except_Handler25:
-	mException	25	
+	mException	25
 
 Except_Handler26:
-	mException	26	
+	mException	26
 
 Except_Handler27:
-	mException	27	
+	mException	27
 
 Except_Handler28:
-	mException	28	
+	mException	28
 
 Except_Handler29:
-	mException	29	
+	mException	29
 
 Except_Handler30:
-	mException	30	
+	mException	30
 
 Except_Handler31:
-	mException	31	
+	mException	31
 
 Except_Handler32:
-	mException	32	
+	mException	32
 
 Except_Handler33:
-	mException	33	
+	mException	33
 
 Except_Handler34:
-	mException	34	
+	mException	34
 
 Except_Handler35:
-	mException	35	
+	mException	35
 
 Except_Handler36:
-	mException	36	
+	mException	36
 
 Except_Handler37:
-	mException	37	
+	mException	37
 
 Except_Handler38:
-	mException	38	
+	mException	38
 
 Except_Handler39:
-	mException	39	
+	mException	39
 
 Except_Handler40:
-	mException	40	
+	mException	40
 
 Except_Handler41:
-	mException	41	
+	mException	41
 
 Except_Handler42:
-	mException	42	
+	mException	42
 
 Except_Handler43:
-	mException	43	
+	mException	43
 
 Except_Handler44:
-	mException	44	
+	mException	44
 
 Except_Handler45:
-	mException	45	
+	mException	45
 
 Except_Handler46:
-	mException	46	
+	mException	46
 
 Except_Handler47:
-	mException	47	
+	mException	47
 
 Except_Handler48:
-	mException	48	
+	mException	48
 
 Except_Handler49:
-	mException	49	
+	mException	49
 
 Except_Handler50:
-	mException	50	
+	mException	50
 
 Except_Handler51:
-	mException	51	
+	mException	51
 
 Except_Handler52:
-	mException	52	
+	mException	52
 
 Except_Handler53:
-	mException	53	
+	mException	53
 
 Except_Handler54:
-	mException	54	
+	mException	54
 
 Except_Handler55:
-	mException	55	
+	mException	55
 
 Except_Handler56:
-	mException	56	
+	mException	56
 
 Except_Handler57:
-	mException	57	
+	mException	57
 
 Except_Handler58:
-	mException	58	
+	mException	58
 
 Except_Handler59:
-	mException	59	
+	mException	59
 
 Except_Handler60:
-	mException	60	
+	mException	60
 
 Except_Handler61:
-	mException	61	
+	mException	61
 
 Except_Handler62:
-	mException	62	
+	mException	62
 
 Except_Handler63:
-	mException	63	
+	mException	63
 
 
 *------------------------------------------------------------------------------------*
@@ -279,7 +279,7 @@ Except_Handler68000:
 
 	move.w	0(a7),gExceptInfo+sExceptInfo_SR
 	move.l	2(a7),gExceptInfo+sExceptInfo_PC
-	
+
 	lea		gExceptStack,a7
 
 	jmp	Except_Main
@@ -321,7 +321,7 @@ Except_Handler68030:
 	andi.w	#63,d0
 	move.w	d0,gExceptInfo+sExceptInfo_Type
 
-	
+
 	lea		gExceptStack,a7
 
 	jmp	Except_Main

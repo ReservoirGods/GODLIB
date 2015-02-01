@@ -35,7 +35,7 @@ typedef	struct
 	sTime		mStartTime;
 	sTime		mPauseTime;
 	sTime		mElapsedTime;
-	sTime		mCountDownStartTime;	
+	sTime		mCountDownStartTime;
 	sTime		mCountDownTime;
 	U32			mStartTicks;
 	U32			mPauseTicks;

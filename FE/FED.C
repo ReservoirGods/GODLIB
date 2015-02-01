@@ -75,7 +75,7 @@ void	Fed_SampleSelectPlay( void );
 
 #define	mFED_DELOC( _a )	{ (*(U32*)(&apHeader->_a) -= (U32)apHeader); Endian_FromBigU32( &apHeader->_a ); }
 #define	mFED_RELOC( _a )			{ Endian_FromBigU32( &apHeader->_a ); *(U32*)&apHeader->_a += (U32)apHeader;	}
-#define	mFED_LIST_RELOC( _a, _l )	if( apHeader->_a ) { Endian_FromBigU32( &apHeader->_a ); apHeader->_a = &apHeader->_l[ (U32)(apHeader->_a) - 1]; } 
+#define	mFED_LIST_RELOC( _a, _l )	if( apHeader->_a ) { Endian_FromBigU32( &apHeader->_a ); apHeader->_a = &apHeader->_l[ (U32)(apHeader->_a) - 1]; }
 
 void	Fed_Delocate( sFedHeader * apHeader )
 {
@@ -369,7 +369,7 @@ void	Fed_Relocate( sFedHeader * apHeader )
 	Endian_FromBigU16( &apHeader->mTextCount );
 	Endian_FromBigU16( &apHeader->mTransitionCount );
 	Endian_FromBigU16( &apHeader->mVarCount );
-	
+
 	for( i=0; i<apHeader->mAssetCount; i++ )
 	{
 		mFED_RELOC( mpAssets[ i ].mpFileName );
@@ -607,12 +607,12 @@ void Fed_Init(sFedHeader * apHeader)
 void	Fed_DeInit( sFedHeader * apHeader )
 {
 	U16	i;
-	
+
 	for( i=0; i<apHeader->mAssetCount; i++ )
 	{
 		AssetClient_UnRegister( apHeader->mpAssets[ i ].mpAsset );
 	}
-	
+
 	for( i=0; i<apHeader->mVarCount; i++ )
 	{
 		HashTree_VarUnRegister( gpFedHashTree, apHeader->mpVars[ i ].mpVar );
@@ -634,7 +634,7 @@ U8	Fed_Update( const sInput * apInput )
 	sFedCall *			lpCall;
 	sFedControl *		lpControl;
 	sFedControlList *	lpControlList;
-	
+
 	lExitFlag = 0;
 
 	if( gpFedPage )
@@ -870,7 +870,7 @@ void	Fed_ListMove( sFedList * apList,const S32 aDir )
 			} while( (lLockStatus.mLockedFlag || (!lLockStatus.mVisFlag)) && (lOld != lIndex) );
 			HashTree_VarWrite( apList->mpVar->mpVar, &lIndex );
 			Fed_SampleMovePlay();
-		} 
+		}
 	}
 }
 
@@ -887,7 +887,7 @@ void	Fed_SliderMove( sFedSlider * apSlider,const S32 aDir )
 	S32	lValMin,lValMax;
 	S32	lValAdd;
 	S32 *	lpData;
-	
+
 
 	lValMax = apSlider->mValueMax;
 	lValMin = apSlider->mValueMin;
@@ -932,7 +932,7 @@ void	Fed_SliderMove( sFedSlider * apSlider,const S32 aDir )
 
 sFedPage *	Fed_GetpActivePage( void )
 {
-	return( gpFedPage );	
+	return( gpFedPage );
 }
 
 
@@ -946,8 +946,8 @@ void	Fed_Begin( sFedHeader * apHeader,const char * apPageName )
 {
 	U16	i;
 	U32	lHash;
-	
-	lHash = HashTree_BuildHash( apPageName );	
+
+	lHash = HashTree_BuildHash( apPageName );
 
 	gpFedPage = &apHeader->mpPages[ 0 ];
 	for( i=0; i<apHeader->mPageCount; i++ )
@@ -1018,7 +1018,7 @@ void	Fed_SetIntro( void )
 			RenderFed_IntroInit( lpTrans );
 			gFedMode = eFED_MODE_INTRO;
 		}
-	}	
+	}
 }
 
 
@@ -1104,7 +1104,7 @@ void	Fed_LockEvaluate( sFedLock * apLock,sFedLockStatus * apRFL )
 				}
 			}
 		}
-	}	
+	}
 }
 
 
@@ -1127,7 +1127,7 @@ void	Fed_ControlListMove( sFedControlList * apList,const S16 aDir )
 
 	do
 	{
-		
+
 		lIndexNew = (S16)(lIndexNew + aDir);
 		if( lIndexNew >= (S16)apList->mControlCount )
 		{
@@ -1161,7 +1161,7 @@ void	Fed_ControlListMove( sFedControlList * apList,const S16 aDir )
 
 void	Fed_SetPage( const char * apPageName )
 {
-	U32	lHash;	
+	U32	lHash;
 	U16	i;
 
 	lHash = HashList_BuildHash( apPageName );
@@ -1204,7 +1204,7 @@ void	Fed_ForceRedraw( void )
 
 void Fed_SetpHashTree(sHashTree * apTree)
 {
-	gpFedHashTree = apTree;	
+	gpFedHashTree = apTree;
 }
 
 
@@ -1239,7 +1239,7 @@ void	Fed_SampleMovePlay( void )
 		}
 	}
 
-	AudioMixer_PlaySample( lpSpl, eAMIXER_PAN_CENTRE );	
+	AudioMixer_PlaySample( lpSpl, eAMIXER_PAN_CENTRE );
 }
 
 
@@ -1274,7 +1274,7 @@ void	Fed_SampleSelectPlay( void )
 		}
 	}
 
-	AudioMixer_PlaySample( lpSpl, eAMIXER_PAN_CENTRE );	
+	AudioMixer_PlaySample( lpSpl, eAMIXER_PAN_CENTRE );
 }
 
 

@@ -56,7 +56,7 @@ typedef struct	sAsmPairCounter
 #define	dINS_MOVEL_D6_A1_P	0x22C6
 #define	dINS_MOVEL_D7_A1_P	0x22C7
 
-#define	dINS_MOVEL_I_A1_P	0x22FC 
+#define	dINS_MOVEL_I_A1_P	0x22FC
 
 #define	dINS_MOVEW_A0_A1_P	0x32C8
 #define	dINS_MOVEW_A2_A1_P	0x32CA
@@ -75,7 +75,7 @@ typedef struct	sAsmPairCounter
 
 #define	dINS_MOVEW_I_A1_P	0x32FC
 
-#define	dINS_RTS			0x4E75                     
+#define	dINS_RTS			0x4E75
 
 
 /* ###################################################################################
@@ -180,7 +180,7 @@ void	AsmColourCounter_Add( sAsmColourCounter * apCounter,const U16 aColour )
 U32	AsmColourCounter_GetCount( sAsmColourCounter * apCounter )
 {
 	U32	lCount;
-	
+
 	lCount = 0;
 
 	while( apCounter->mCount )
@@ -203,7 +203,7 @@ int	AsmColourCounter_Compare( const void * apCounter0,const void * apCounter1 )
 	sAsmColourCounter *	lpCounter0;
 	sAsmColourCounter *	lpCounter1;
 	int					lRes;
-	
+
 	lpCounter0 = (sAsmColourCounter*)apCounter0;
 	lpCounter1 = (sAsmColourCounter*)apCounter1;
 
@@ -233,7 +233,7 @@ int	AsmColourCounter_Compare( const void * apCounter0,const void * apCounter1 )
 U32	AsmPairCounter_GetCount( sAsmPairCounter * apCounter )
 {
 	U32	lCount;
-	
+
 	lCount = 0;
 
 	while( apCounter->mCount )
@@ -241,7 +241,7 @@ U32	AsmPairCounter_GetCount( sAsmPairCounter * apCounter )
 		lCount++;
 		apCounter++;
 	}
-	return( lCount );	
+	return( lCount );
 }
 
 
@@ -276,7 +276,7 @@ int	AsmPairCounter_Compare( const void * apCounter0,const void * apCounter1 )
 	sAsmPairCounter *	lpCounter0;
 	sAsmPairCounter *	lpCounter1;
 	int					lRes;
-	
+
 	lpCounter0 = (sAsmPairCounter*)apCounter0;
 	lpCounter1 = (sAsmPairCounter*)apCounter1;
 
@@ -293,7 +293,7 @@ int	AsmPairCounter_Compare( const void * apCounter0,const void * apCounter1 )
 		lRes = 0;
 	}
 
-	return( lRes );	
+	return( lRes );
 }
 
 
@@ -339,7 +339,7 @@ U16 *	AsmSprite_SkipOutput( U16 * apCod,U16 aSkipCount )
 		Endian_WriteBigU16( apCod, lIns );
 		apCod++;
 		break;
-	}	
+	}
 
 	return( apCod );
 }
@@ -354,13 +354,13 @@ U16 *	AsmSprite_SkipOutput( U16 * apCod,U16 aSkipCount )
 U16	AsmSprite_GetWordIndex( const sAsmSprite * apSprite,const U16 aPixel )
 {
 	U16	lIndex;
-	
+
 	lIndex = 0;
 
 	while( (lIndex<eASPRITE_COLOUR_LIMIT) && (apSprite->mHeader.mColours[lIndex][1] != aPixel) )
 	{
 		lIndex++;
-	}	
+	}
 
 	return( lIndex );
 }
@@ -385,7 +385,7 @@ U16	AsmSprite_GetLongIndex( const sAsmSprite * apSprite,const U16 aPixel0,const 
 		lIndex++;
 	}
 
-	return( lIndex );	
+	return( lIndex );
 }
 
 
@@ -399,7 +399,7 @@ U16 *	AsmSprite_SingleOutput( U16 * apCod,const sAsmSprite * apSprite,U16 aPixel
 {
 	U16	lIns;
 	U16	lIndex;
-	
+
 
 	lIndex = AsmSprite_GetWordIndex( apSprite, aPixel );
 
@@ -650,7 +650,7 @@ sAsmSprite *	AsmSprite_Create( const U16 * apGfx,const sSpriteRect * apRect,cons
 			while( (lX<lSingleCount) && (lX<eASPRITE_COLOUR_LIMIT) )
 			{
 				lpSprite->mHeader.mColours[ lX ][1] = lpSingles[ lX ].mColour;
-				
+
 				lY = 0;
 
 				while( (lY<lPairCount) && (lpPairs->mColour1 == lpSingles[ lX ].mColour) )
@@ -743,7 +743,7 @@ sAsmSprite *	AsmSprite_Create( const U16 * apGfx,const sSpriteRect * apRect,cons
 
 void AsmSprite_Destroy(sAsmSprite * apSprite)
 {
-	mMEMFREE( apSprite );	
+	mMEMFREE( apSprite );
 }
 
 
@@ -756,7 +756,7 @@ void AsmSprite_Destroy(sAsmSprite * apSprite)
 U32 AsmSprite_GetSize(const sAsmSprite * apSprite)
 {
 	U32	lSize;
-	
+
 	lSize = 0;
 	if( apSprite )
 	{
@@ -811,7 +811,7 @@ void	AsmSprite_Relocate( sAsmSprite * apSprite )
 			Endian_FromBigU32( &apSprite->mfLines[ i ] );
 			*(U32*)&apSprite->mfLines[ i ] += (U32)apSprite;
 		}
-	}	
+	}
 }
 
 
@@ -850,7 +850,7 @@ sAsmSpriteBlock * AsmSpriteBlock_Create(const U16 aSpriteCount)
 
 void AsmSpriteBlock_Destroy(sAsmSpriteBlock * apBlock)
 {
-	mMEMFREE( apBlock );	
+	mMEMFREE( apBlock );
 }
 
 
@@ -864,7 +864,7 @@ U32	AsmSpriteBlock_GetSize( const sAsmSpriteBlock * apBlock )
 {
 	U32	lSize;
 	U16	i;
-	
+
 	lSize = 0;
 	if( apBlock )
 	{
@@ -973,7 +973,7 @@ void AsmSpriteBlock_Relocate(sAsmSpriteBlock * apBlock)
 			*(U32*)&apBlock->mpSprites[ i ] += (U32)apBlock;
 			AsmSprite_Relocate( apBlock->mpSprites[ i ] );
 		}
-	}	
+	}
 }
 
 
@@ -1004,7 +1004,7 @@ void	AsmSprite_DrawClip( const sAsmSprite * apSprite,U16 * apScreen,U32 aScreenW
 	lpRts = apSprite->mfLines[ aBotLine ];
 	lpRts--;
 	*lpRts = dINS_RTS;
-	AsmSprite_DrawLines( apSprite, apScreen, aScreenWidth, aTopLine );	
+	AsmSprite_DrawLines( apSprite, apScreen, aScreenWidth, aTopLine );
 	*lpRts = dINS_ADDL_D0_A1;
 }
 
@@ -1031,7 +1031,7 @@ void	AsmSprite_DrawLines( const sAsmSprite * apSprite,U16 * apScreen,U32 aScreen
 	lpCod = (U16*)apSprite->mfLines[aFirstLine];
 	lD0   = aScreenWidth;
 	lD0  -= apSprite->mHeader.mWidth;
-		
+
 
 	Endian_ReadBigU16( lpCod, lIns );
 	lpCod++;
@@ -1154,7 +1154,7 @@ void	AsmSprite_DrawLines( const sAsmSprite * apSprite,U16 * apScreen,U32 aScreen
 		Endian_ReadBigU16( lpCod, lIns );
 		lpCod++;
 	}
-	
+
 }
 
 

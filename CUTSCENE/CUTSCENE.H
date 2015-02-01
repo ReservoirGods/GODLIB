@@ -224,7 +224,7 @@ typedef	struct	sCutScene
 	sCutSprite *	mpSprites;
 	sCutText *		mpTexts;
 	sCutVar *		mpVars;
-	
+
 	U16				mAnimationCount;
 	U16				mAssetCount;
 	U16				mSampleCount;

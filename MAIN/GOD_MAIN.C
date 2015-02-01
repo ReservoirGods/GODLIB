@@ -70,7 +70,7 @@ S16	GodLib_Library_Main( S16 aArgc, char ** apArgv )
 	for( i=1; i<aArgc; i++ )
 	{
 		char * lpArg = apArgv[ i ];
-		while( (*lpArg>0) && (*lpArg <= ' ') ) 
+		while( (*lpArg>0) && (*lpArg <= ' ') )
 		{
 			lpArg++;
 		}
@@ -79,7 +79,7 @@ S16	GodLib_Library_Main( S16 aArgc, char ** apArgv )
 			lpArg++;
 			lCmd = *lpArg++;
 
-			while( (*lpArg>0) && (*lpArg != '=') ) 
+			while( (*lpArg>0) && (*lpArg != '=') )
 			{
 				lpArg++;
 			}
@@ -98,7 +98,7 @@ S16	GodLib_Library_Main( S16 aArgc, char ** apArgv )
 		else
 		{
 			/* default unspecified command argument is input */
-			while( (*lpArg>0) && (*lpArg <= ' ') ) 
+			while( (*lpArg>0) && (*lpArg <= ' ') )
 			{
 				lpArg++;
 			}

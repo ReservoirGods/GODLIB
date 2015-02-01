@@ -365,7 +365,7 @@ void	Except_InitScreen( void )
 	gpExceptScreen = (U16*)lScr0;
 	Except_ClearScreen();
 	Except_SetPal();
-	
+
 }
 
 

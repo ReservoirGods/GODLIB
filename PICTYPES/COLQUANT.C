@@ -260,7 +260,7 @@ sCanvasIC *		ColourQuantize_Popular(   sCanvas * apCanvas, const U16 aColourCoun
 
 	lpCanvasIC  = 0;
 	lpContainer = ColourQuantize_ContainerInit( lSize );
-	
+
 	if( lpContainer )
 	{
 		lpCanvasIC = CanvasIC_Create();
@@ -496,7 +496,7 @@ sCanvasIC *		ColourQuantize_MedianCut( sCanvas * apCanvas, const U16 aColourCoun
 				}
 			}
 		}
-		
+
 	}
 
 
@@ -531,7 +531,7 @@ sCanvasIC *		ColourQuantize_LKM(       sCanvas * apCanvas, const U16 aColourCoun
 
 	lpCanvasIC  = 0;
 	lpContainer = ColourQuantize_ContainerInit( lSize );
-	
+
 	if( lpContainer )
 	{
 		lpCanvasIC = CanvasIC_Create();
@@ -558,7 +558,7 @@ sCanvasIC *		ColourQuantize_LKM(       sCanvas * apCanvas, const U16 aColourCoun
 					lSize *= sizeof( uCanvasPixel );
 
 					lpPal = (uCanvasPixel*)mMEMCALLOC( lSize );
-					
+
 					if( lpPal )
 					{
 						for( i=0; i<aColourCount; i++ )
@@ -694,7 +694,7 @@ sCQContainer * ColourQuantize_ContainerInit( const U32 aCount )
 	lSize  = aCount;
 	lSize *= sizeof( sCQCounter );
 	lSize += sizeof( sCQHeader  );
-	
+
 	lpContainer = (sCQContainer*)mMEMCALLOC( lSize );
 
 	if( lpContainer )

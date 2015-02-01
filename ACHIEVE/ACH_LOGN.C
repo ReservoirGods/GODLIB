@@ -464,7 +464,7 @@ U8	Achieve_Login_Thread_Main( sThread * apPT )
 		gAchieveLoginClass.mpInfoBox->mPosTarget.mWidth = 0;
 		gAchieveLoginClass.mpInfoBox->mPosTarget.mHeight = 0;
 		gAchieveLoginClass.mMorphPos = 0;
-		
+
 	} while(gAchieveLoginClass.mDialogSelection != eACH_LOGIN_DIALOG_OK);
 
 	Achieve_SetUserInfo( gAchieveLoginClass.mpNameBox->mpTitle );
@@ -711,7 +711,7 @@ U8	Achieve_Login_Thread_Titles( sThread * apThread )
 
 	mTHREAD_WAIT_UNTIL( apThread, gAchieveLoginClass.mLinesActiveFlag );
 	mTHREAD_WAIT_UNTIL( apThread, Achieve_Gfx_Fade_IsFinished() );
-	
+
 	for( i=0; i<2; i++ )
 	{
 		sAchieveGfxQuad	lQuad;

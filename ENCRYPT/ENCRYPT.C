@@ -40,7 +40,7 @@ void	Encrypt_Scramble( void * apData,const U32 aSize,const U32 aKey )
 	U32		i;
 	U32		lIndex;
 	U8 *	lpDst;
-	
+
 	lpDst = (U8*)apData;
 
 	for( i=0; i<aSize; i++ )
@@ -62,14 +62,14 @@ void	Encrypt_DeScramble( void * apData,const U32 aSize,const U32 aKey )
 	U32		i;
 	U32		lIndex;
 	U8 *	lpDst;
-	
+
 	lpDst = (U8*)apData;
 
 	for( i=0; i<aSize; i++ )
 	{
 		lIndex = (i+aKey) & (dENCRYPT_DATA_LIMIT-1);
 		lpDst[ i ] ^= (gEncryptData[ lIndex ] ^ aKey);
-	}	
+	}
 }
 
 

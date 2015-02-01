@@ -95,7 +95,7 @@ void	Fade_DeInit( void )
 
 void	Fade_UpdateCurrentPal( void )
 {
-	Fade_SetPalDirect( gFade.mCurrentBasePal );		
+	Fade_SetPalDirect( gFade.mCurrentBasePal );
 }
 
 
@@ -107,7 +107,7 @@ void	Fade_UpdateCurrentPal( void )
 
 U8	Fade_IsVblFadeFinished( void )
 {
-	return( (U8)(0 == gFadeVblActiveFlag) );	
+	return( (U8)(0 == gFadeVblActiveFlag) );
 }
 
 
@@ -149,7 +149,7 @@ void	Fade_Main( U16 * apPal,U16 aFrames )
 	}
 
 	Video_SetNextPalST( apPal );
-	Vbl_WaitVbl();	
+	Vbl_WaitVbl();
 }
 
 
@@ -171,7 +171,7 @@ void	Fade_StartVblFade( U16 * apPal,const U16 aFrames )
 	gFade.mVblScale      = 0;
 	gFade.mVblAdd        = 0x1000000L;
 	gFade.mVblAdd       /= aFrames;
-	gFadeVblActiveFlag = 1;	
+	gFadeVblActiveFlag = 1;
 
 #ifdef	dGODLIB_PLATFORM_WIN
 	Video_SetNextPalST( apPal );
@@ -196,7 +196,7 @@ void	Fade_SetPalDirect( U16 * apPal )
 	Fade_SetCurrentBasePal( apPal );
 	Fade_BuildGammaCorrectedPal( apPal, &gFade.mVblTmpPal[ 0 ] );
 	Video_SetNextPalST( &gFade.mVblTmpPal[ 0 ] );
-	Vbl_WaitVbl();	
+	Vbl_WaitVbl();
 }
 
 

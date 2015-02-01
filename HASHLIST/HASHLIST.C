@@ -85,7 +85,7 @@ U32	HashList_BuildHash( const char * apString )
 		lHash &= ~lTemp;
 	}
 
-	return( lHash );	
+	return( lHash );
 }
 
 
@@ -98,7 +98,7 @@ U32	HashList_BuildHash( const char * apString )
 sHashListItem *	HashList_ItemFind( sHashList * apList,const U32 aID )
 {
 	sHashListItem *	lpItem;
-	
+
 	lpItem = apList->mpItems;
 	while( lpItem )
 	{
@@ -123,7 +123,7 @@ sHashListItem *	HashList_ItemRegister( sHashList * apList,const U32 aID )
 	sHashListItem *	lpItem;
 
 	lpItem = HashList_ItemFind( apList, aID );
-	
+
 	if( lpItem )
 	{
 		lpItem->mRefCount++;
@@ -136,7 +136,7 @@ sHashListItem *	HashList_ItemRegister( sHashList * apList,const U32 aID )
 			lpItem->mID       = aID;
 			lpItem->mpNext    = apList->mpItems;
 			lpItem->mRefCount = 1;
-			
+
 			apList->mpItems   = lpItem;
 			apList->mItemCount++;
 

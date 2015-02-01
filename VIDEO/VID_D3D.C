@@ -16,8 +16,8 @@
 #  DATA
 ################################################################################### */
 
-LPDIRECT3D9             g_pD3D       = NULL; 
-LPDIRECT3DDEVICE9       g_pd3dDevice = NULL; 
+LPDIRECT3D9             g_pD3D       = NULL;
+LPDIRECT3DDEVICE9       g_pd3dDevice = NULL;
 HWND					gVideoD3DHwnd;
 U32						gVideoD3DPal[ 16 ];
 U16						gVideoD3DColourMode = 0;
@@ -88,7 +88,7 @@ S32	VideoD3D_Init( void )
 	gVideoD3DTicks = GetTickCount();
 	Vbl_SetVideoFunc( VideoD3D_VblFunc );
 
-    return S_OK;	
+	return S_OK;
 }
 
 
@@ -110,7 +110,7 @@ void	VideoD3D_DeInit( void )
 	{
 		IDirect3D9_Release( g_pD3D );
 		g_pD3D = 0;
-	}	
+	}
 }
 
 
@@ -121,8 +121,8 @@ void	VideoD3D_DeInit( void )
 *-----------------------------------------------------------------------------------*/
 
 void	VideoD3D_SetWindowHandle( HWND aHwnd )
-{	
-	gVideoD3DHwnd = aHwnd;	
+{
+	gVideoD3DHwnd = aHwnd;
 }
 
 
@@ -133,7 +133,7 @@ void	VideoD3D_SetWindowHandle( HWND aHwnd )
 *-----------------------------------------------------------------------------------*/
 
 //#define	dVIDEOD3D_WINDOW_X	1280
-#define	dVIDEOD3D_WINDOW_X	320	
+#define	dVIDEOD3D_WINDOW_X	320
 #define	dVIDEOD3D_WINDOW_Y	128
 #define	dVIDEOD3D_BORDER_WIDTH	10
 #define	dVIDEOD3D_BORDER_HEIGHT	40
@@ -141,11 +141,11 @@ void	VideoD3D_SetWindowHandle( HWND aHwnd )
 void	VideoD3D_ResolutionUpdate( void )
 {
 	sVideoConfig	lConfig;
-	
+
 	VideoD3D_DeInit();
 	Video_GetConfig( &lConfig );
 
-	MoveWindow( gVideoD3DHwnd, 
+	MoveWindow( gVideoD3DHwnd,
 		dVIDEOD3D_WINDOW_X,
 		dVIDEOD3D_WINDOW_Y,
 		lConfig.mWidth + dVIDEOD3D_BORDER_WIDTH,
@@ -241,7 +241,7 @@ void	VideoD3D_DisplayScreen( const U16 * apScreen )
 	{
 		IDirect3D9_Release( lpSurface );
 	}
-	
+
 #endif
 }
 
@@ -315,7 +315,7 @@ void	VideoD3D_BuildPalST( const U16 * apPal )
 void	Video_GetPalST( U16 * apPal )
 {
 	U16	i;
-	
+
 	if( apPal )
 	{
 		for( i=0; i<16; i++ )
@@ -401,7 +401,7 @@ void VideoD3D_4BP_ToU8(const U8 * apSrc,U8 * apDst,const U16 aWidth,const U16 aH
 		}
 		lpSrc0 += aSrcPitch;
 		lpDst0 += aDstPitch;
-	}	
+	}
 }
 
 
@@ -480,7 +480,7 @@ void VideoD3D_4BP_ToU16(const U8 * apSrc,U16 * apDst,const U16 aWidth,const U16 
 		}
 		lpSrc0 += aSrcPitch;
 		lpDst0 += (aDstPitch>>1);
-	}		
+	}
 }
 
 
@@ -561,7 +561,7 @@ void VideoD3D_4BP_ToU24(const U8 * apSrc,U8 * apDst,const U16 aWidth,const U16 a
 		}
 		lpSrc0 += aSrcPitch;
 		lpDst0 += aDstPitch;
-	}	
+	}
 }
 
 
@@ -640,7 +640,7 @@ void VideoD3D_4BP_ToU32(const U8 * apSrc,U32 * apDst,const U16 aWidth,const U16 
 		}
 		lpSrc0 += aSrcPitch;
 		lpDst0 += (aDstPitch>>2);
-	}			
+	}
 }
 
 
@@ -686,7 +686,7 @@ void	VideoD3D_16BPP_Display( const U16 * apSrc,U8 * apDst,const U16 aWidth,const
 			lB = (U16)(lColour & 0x1F);
 			lR &= 0x1F;
 			lG &= 0x3F;
-			
+
 			switch( gVideoD3DColourMode )
 			{
 			case	D3DFMT_R8G8B8:
@@ -739,7 +739,7 @@ void	VideoD3D_16BPP_Display( const U16 * apSrc,U8 * apDst,const U16 aWidth,const
 		}
 		lpSrc0 += aSrcPitch >> 1;
 		lpDst0 += aDstPitch;
-	}		
+	}
 }
 
 
@@ -767,7 +767,7 @@ void	VideoD3D_VblFunc( void )
 
 	gVideoD3DTicks = GetTickCount();
 	Memory_Validate();
-}	
+}
 
 
 /* ################################################################################ */

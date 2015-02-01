@@ -91,7 +91,7 @@ U8				Canvas_CreateImage( sCanvas * apCanvas, U16 aWidth, U16 aHeight )
 		apCanvas->mHeight = 0;
 		return( 0 );
 	}
-	
+
 	apCanvas->mWidth  = aWidth;
 	apCanvas->mHeight = aHeight;
 
@@ -134,7 +134,7 @@ U8			Canvas_PaletteFromST( uCanvasPixel * apPal, U16 aColourCount, U16 * apPalet
 	{
 		CanvasPixel_FromST( &apPal[ i ], &apPalette[ i ] );
 	}
-	
+
 	return( 1 );
 }
 
@@ -153,7 +153,7 @@ U8			Canvas_PaletteToST(   uCanvasPixel * apPal, U16 aColourCount, U16 * apPalet
 	{
 		CanvasPixel_ToST( &apPal[ i ], &apPalette[ i ] );
 	}
-	
+
 	return( 1 );
 }
 
@@ -475,7 +475,6 @@ void		Canvas_ReduceColourDepth( sCanvas * apCanvas, U16 aColourCount )
 sCanvas *	Canvas_Load(   sCanvas * apCanvas, char * apFileName )
 {
 	sCanvas *	lpCanvas;
-	
 
 	return( lpCanvas );
 }

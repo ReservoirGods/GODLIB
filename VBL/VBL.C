@@ -82,7 +82,7 @@ void	Vbl_DeInit()
 
 U8		Vbl_AddCall( void (*apCall)(void) )
 {
-	if( gVbl.mCallCount >= dVBL_MAX_CALLS )	
+	if( gVbl.mCallCount >= dVBL_MAX_CALLS )
 	{
 		DebugLog_Printf0( "Vbl_AddCall() : error too many vbl queue functions\n" );
 		return( 0 );
@@ -194,7 +194,7 @@ void	Vbl_WaitVbls( const U16 aCount )
 
 void	Vbl_SetVideoFunc( void (* apFunc)() )
 {
-	gVbl.mfVideoFunc = apFunc;	
+	gVbl.mfVideoFunc = apFunc;
 }
 
 
@@ -207,7 +207,7 @@ void	Vbl_SetVideoFunc( void (* apFunc)() )
 void	Vbl_CallsProcess( void )
 {
 	U16	i;
-	
+
 	for( i=0; i<gVbl.mCallCount; i++ )
 	{
 		gVbl.mfCalls[ i ]();
@@ -258,7 +258,7 @@ void	Vbl_Handler( void )
 	if( gVbl.mfTimerBFunc )
 	{
 		gVbl.mfTimerBFunc();
-	}	
+	}
 	for( i=0; i<gVbl.mCallCount; i++ )
 	{
 		gVbl.mfCalls[ i ]();

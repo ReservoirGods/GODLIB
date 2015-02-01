@@ -32,7 +32,7 @@ typedef	struct sLinkFileFile
 } sLinkFileFile;
 
 
-typedef	struct sLinkFileFolder 
+typedef	struct sLinkFileFolder
 {
 	U16							mFileCount;
 	U16							mFolderCount;

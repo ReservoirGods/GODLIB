@@ -88,7 +88,7 @@ void	StringList_DeInit( sStringList * apList )
 
 U32	StringList_GetItemCount( sStringList * apList )
 {
-	return( apList->mCount );	
+	return( apList->mCount );
 }
 
 
@@ -203,7 +203,7 @@ void	StringList_StringsSerialise( sStringList * apList )
 			apList->mpMem = mMEMCALLOC( lSize );
 			StringList_StringsSerialiseTo( apList, (U8*)apList->mpMem );
 		}
-	}	
+	}
 }
 
 

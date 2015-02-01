@@ -12,7 +12,7 @@
 #  DEFINES
 ################################################################################### */
 
-#define	dMBK_HEADER_MAGIC	0x19861987 
+#define	dMBK_HEADER_MAGIC	0x19861987
 #define	dMBK_PAL_MAGIC		0x50414C54
 
 

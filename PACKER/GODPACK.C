@@ -109,7 +109,7 @@ U8	GodPack_BitStream_BitRead( sGodPackBitStream * apStream )
 	apStream->mByte >>= 1;
 
 	apStream->mByteBitsLeft++;
-	return( lBit );	
+	return( lBit );
 }
 
 
@@ -123,7 +123,7 @@ void	GodPack_BitStream_ByteWrite( sGodPackBitStream * apStream,const U8 aByte )
 {
 	U16	i;
 	U8	lByte;
-	
+
 	lByte = aByte;
 	for( i=0; i<8; i++ )
 	{
@@ -143,7 +143,7 @@ U8	GodPack_BitStream_ByteRead( sGodPackBitStream * apStream )
 {
 	U16	i;
 	U8	lByte;
-	
+
 	lByte = 0;
 	for( i=0; i<8; i++ )
 	{
@@ -151,7 +151,7 @@ U8	GodPack_BitStream_ByteRead( sGodPackBitStream * apStream )
 		lByte = (U8)(lByte + GodPack_BitStream_BitRead( apStream ));
 	}
 
-	return( lByte );	
+	return( lByte );
 }
 
 
@@ -165,13 +165,13 @@ void	GodPack_BitStream_WordWrite( sGodPackBitStream * apStream,const U16 aWord )
 {
 	U16	i;
 	U16	lWord;
-	
+
 	lWord = aWord;
 	for( i=0; i<16; i++ )
 	{
 		GodPack_BitStream_BitWrite( apStream, (U8)((lWord>>15) & 1) );
 		lWord <<= 1;
-	}	
+	}
 }
 
 
@@ -185,7 +185,7 @@ U16	GodPack_BitStream_WordRead( sGodPackBitStream * apStream )
 {
 	U16	i;
 	U16	lWord;
-	
+
 	lWord = 0;
 	for( i=0; i<16; i++ )
 	{
@@ -193,7 +193,7 @@ U16	GodPack_BitStream_WordRead( sGodPackBitStream * apStream )
 		lWord = (U16)(lWord + GodPack_BitStream_BitRead( apStream ));
 	}
 
-	return( lWord );		
+	return( lWord );
 }
 
 
@@ -207,14 +207,14 @@ void GodPack_BitStream_BitsWrite(sGodPackBitStream * apStream,const U32 aBits,co
 {
 	U16	i;
 	U32	lBits;
-	
+
 	lBits = (aBits << (32L-aBitCount));
 	for( i=0; i<aBitCount; i++ )
 	{
 		GodPack_BitStream_BitWrite( apStream, (U8)((lBits>>31L) & 1L) );
 		lBits <<= 1;
-	}	
-	
+	}
+
 }
 
 
@@ -228,7 +228,7 @@ U32 GodPack_BitStream_BitsRead(sGodPackBitStream * apStream,const U16 aBitCount)
 {
 	U16	i;
 	U32	lBits;
-	
+
 	lBits = 0;
 	for( i=0; i<aBitCount; i++ )
 	{
@@ -254,7 +254,7 @@ U32	GodPack_DePack( const void * apSrc,void * apDst )
 	U32					lLzSize;
 	U8 *				lpDst;
 	U8 *				lpStart;
-	
+
 
 	lSize = 0;
 

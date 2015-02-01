@@ -37,7 +37,7 @@
 #include	<IO.H>
 #include	<TIME.H>
 #include	<WINDOWS.H>
-#endif	
+#endif
 
 #define	mFILE_CHAR_IS_SLASH( _a )	(('\\'==(_a)) || ('/'==(_a)))
 
@@ -91,9 +91,9 @@ sFileHandle		File_Open( const char * apFname )
 {
 #ifdef	dGODLIB_PLATFORM_ATARI
 /*	change this because HATARI doesn't like opening files in readwrite mode
-	return( (sFileHandle)GemDos_Fopen( apFname, dGEMDOS_S_READWRITE ) );*/ 
+	return( (sFileHandle)GemDos_Fopen( apFname, dGEMDOS_S_READWRITE ) );*/
 	return( (sFileHandle)GemDos_Fopen( apFname, dGEMDOS_S_READ ) );
-#else	
+#else
 	sFileHandle	lHandle;
 	lHandle = (sFileHandle)fopen( apFname, "rb" );
 	if( !lHandle )
@@ -115,7 +115,7 @@ sFileHandle		File_Create( const char * apFname )
 {
 #ifdef	dGODLIB_PLATFORM_ATARI
 	return( (sFileHandle)GemDos_Fcreate( apFname, 0 ) );
-#else	
+#else
 	return( (sFileHandle)fopen( apFname, "wb" ) );
 #endif
 }
@@ -131,7 +131,7 @@ S32		File_Read( sFileHandle aHandle, U32 aBytes, void * apBuffer )
 {
 #ifdef	dGODLIB_PLATFORM_ATARI
 	return( GemDos_Fread( (S16)aHandle, aBytes, apBuffer ) );
-#else	
+#else
 	return( fread( apBuffer, 1, aBytes, (FILE*)aHandle ) );
 #endif
 }
@@ -147,7 +147,7 @@ S32		File_Write( sFileHandle aHandle, U32 aBytes, const void * apBuffer )
 {
 #ifdef	dGODLIB_PLATFORM_ATARI
 	return( GemDos_Fwrite( (S16)aHandle, aBytes, apBuffer ) );
-#else	
+#else
 	return( fwrite( apBuffer, 1, aBytes, (FILE*)aHandle ) );
 #endif
 }
@@ -163,7 +163,7 @@ S32		File_SeekFromStart( sFileHandle aHandle, S32 aOffset )
 {
 #ifdef	dGODLIB_PLATFORM_ATARI
 	return( GemDos_Fseek( aOffset, (S16)aHandle, SEEK_SET ) );
-#else	
+#else
 	return( fseek( (FILE*)aHandle, aOffset, SEEK_SET ) );
 #endif
 }
@@ -179,7 +179,7 @@ S32		File_SeekFromCurrent( sFileHandle aHandle, S32 aOffset )
 {
 #ifdef	dGODLIB_PLATFORM_ATARI
 	return( GemDos_Fseek( aOffset, (S16)aHandle, SEEK_CUR ) );
-#else	
+#else
 	return( fseek( (FILE*)aHandle, aOffset, SEEK_CUR ) );
 #endif
 }
@@ -195,7 +195,7 @@ S32		File_SeekFromEnd( sFileHandle aHandle, S32 aOffset )
 {
 #ifdef	dGODLIB_PLATFORM_ATARI
 	return( GemDos_Fseek( aOffset, (S16)aHandle, SEEK_END ) );
-#else	
+#else
 	return( fseek( (FILE*)aHandle, aOffset, SEEK_END ) );
 #endif
 }
@@ -484,7 +484,7 @@ S32		File_ReadNext()
 	_finddata_t	lFindData;
 
 	lRes = 0;
-	
+
 	do
 	{
 		lRes = _findnext( gFileFindHandle, &lFindData );
@@ -529,7 +529,7 @@ U8		File_Exists( const char * apFileName )
 
 	lpFile = fopen( apFileName, "r" );
 	if( lpFile )
-	{	
+	{
 		lRes = 1;
 		fclose( lpFile );
 	}
@@ -736,7 +736,7 @@ U8	File_LoadAt( const char * apFileName, void * apBuffer )
 
 void	File_UnLoad( void * apMem )
 {
-	mMEMFREE( apMem );	
+	mMEMFREE( apMem );
 }
 
 
@@ -862,7 +862,7 @@ void	File_FindDataToDTA( const _finddata_t * apFindData,sGemDosDTA * apDTA )
 		apDTA->mFileName[ i ] = apFindData->name[ i ];
 	}
 
-	
+
 	lpTime = localtime( &apFindData->time_write );
 	apDTA->mTime  = 0;
 	apDTA->mTime |= (lpTime->tm_sec>>1) & 31;
@@ -1051,7 +1051,7 @@ void	File_Identifier_Init( sFileIdentifier * apID )
 
 	for( i=0; i<eFILEIDENTIFIER_LIMIT; i++ )
 	{
-		apID->mpStrings[ i ] = (char*)mMEMCALLOC( apID->mMallocSizes[ i ] + 1 ); 
+		apID->mpStrings[ i ] = (char*)mMEMCALLOC( apID->mMallocSizes[ i ] + 1 );
 	}
 	String_StrCpy( apID->mpStrings[ eFILEIDENTIFIER_FILENAME ], "*.*" );
 	String_StrCpy( apID->mpStrings[ eFILEIDENTIFIER_MASK ], "*.*" );

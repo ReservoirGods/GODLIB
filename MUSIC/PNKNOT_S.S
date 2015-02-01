@@ -207,7 +207,7 @@ PinkNote_NotePlayChannelA:
 	move.b	d1,(a2)									;	set	EnvelopeType
 
 .noEnvA:
-	
+
 	move.b	oPinkNoteChannel_NoiseTone(a0),d0		;	read NoiseTone flags
 	andi.b	#%00001001,d0							;	ensure no naughty bits
 	move.b	#7,(a1)									;	select NoiseToneRegister
@@ -264,7 +264,7 @@ PinkNote_NotePlayChannelB:
 	move.b	d1,(a2)									;	set	EnvelopeType
 
 .noEnvB:
-	
+
 	move.b	oPinkNoteChannel_NoiseTone(a0),d0		;	read NoiseTone flags
 	add.b	d0,d0									;	shift into channel B
 	andi.b	#%00010010,d0							;	ensure no naughty bits
@@ -322,7 +322,7 @@ PinkNote_NotePlayChannelC:
 	move.b	d1,(a2)									;	set	EnvelopeType
 
 .noEnvC:
-	
+
 	move.b	oPinkNoteChannel_NoiseTone(a0),d0		;	read NoiseTone flags
 	lsl.b	#2,d0									;	shift into channel B
 	andi.b	#%00100100,d0							;	ensure no naughty bits
@@ -353,5 +353,5 @@ PinkNote_NotePlayChannelC:
 **************************************************************************************
 
 	ALIGN	4
-	
+
 gPinkNoteChannel:	ds.b	(oPinkNoteChannel_sizeof*3)

@@ -250,7 +250,7 @@ U8		AudioMixer_PlaySampleDirect( sAudioDmaSound * apSpl, const U8 aPan )
 
 	lpMix = (sAmixerSpl*)0;
 	lBest = 0x7FFFFFFFL;
-	
+
 	for( i=0; i<dAMIXER_CHANNEL_LIMIT; i++ )
 	{
 		if( !gAudioMixerSamples[ i ].mActiveFlag )

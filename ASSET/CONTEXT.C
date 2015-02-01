@@ -32,7 +32,7 @@ sContext *	Context_Create( const char * apName )
 {
 	sContext *	lpContext;
 	U32			i;
-	
+
 	lpContext = (sContext*)mMEMCALLOC( sizeof( sContext ) );
 
 	if( lpContext )
@@ -92,7 +92,7 @@ sAsset *	Context_AssetRegister( sContext * apContext,const char * apName )
 {
 	sAsset *	lpAsset;
 	U32			lHash;
-	
+
 	lHash   = Asset_BuildHash( apName );
 
 	GOD_LL_FIND( apContext->mpAssets, mpNext, mID, lHash, lpAsset );
@@ -142,7 +142,7 @@ void	Context_AssetUnRegister( sContext * apContext, sAsset * apAsset )
 
 void	ContextManager_Init( void )
 {
-	gpContexts = 0;	
+	gpContexts = 0;
 }
 
 
@@ -185,7 +185,7 @@ void	ContextManager_Update( void )
 	while( lpContext )
 	{
 		lpContext = lpContext->mpNext;
-	}	
+	}
 }
 
 
@@ -199,7 +199,7 @@ sContext *	ContextManager_ContextRegister( const char * apName )
 {
 	U32			lHash;
 	sContext *	lpContext;
-	
+
 	lHash = Asset_BuildHash( apName );
 
 	GOD_LL_FIND( gpContexts, mpNext, mID, lHash, lpContext );
@@ -249,7 +249,7 @@ void	ContextManager_ShowAll( fContextPrint aPrint )
 	sAsset *	lpAsset;
 	U32			i;
 	char		lString[ 128 ];
-	
+
 	lpContext = gpContexts;
 
 	while( lpContext )

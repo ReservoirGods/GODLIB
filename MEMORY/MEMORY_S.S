@@ -47,7 +47,7 @@ Memory_ClearMajor:
 
 	move.l	d2,d3
 	move.l	d2,d4
-	
+
 	move.l	d2,d5
 	move.l	d2,d6
 	move.l	d2,d7

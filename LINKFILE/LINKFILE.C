@@ -75,7 +75,7 @@ sLinkFile *	LinkFile_Init( char * apLinkFileName )
 	U32			lFatSize;
 
 /*	printf( "LinkFile_Init() : %s\n", apLinkFileName );*/
-	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "LinkFile_Init(): %s", apLinkFileName );	
+	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "LinkFile_Init(): %s", apLinkFileName );
 
 	lHandle = File_Open( apLinkFileName );
 	if( lHandle < 0 )
@@ -129,7 +129,7 @@ sLinkFile *	LinkFile_InitToRAM( char * apLinkFileName )
 	U32 *			lpBuffer;
 /*	S32				lOffset;*/
 
-	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "LinkFile_InitToRAM(): %s", apLinkFileName );	
+	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "LinkFile_InitToRAM(): %s", apLinkFileName );
 
 	lHandle    = File_Open( apLinkFileName );
 	lpLinkFile = 0;
@@ -204,7 +204,7 @@ sLinkFile *	LinkFile_InitToRAM( char * apLinkFileName )
 			LinkFile_Relocate( lpLinkFile );
 		}
 	}
-	
+
 	return( lpLinkFile );
 }
 
@@ -252,7 +252,7 @@ void *		LinkFile_FileLoad(     sLinkFile * apLinkFile, char * apFileName, const 
 	U32				lSize;
 	void *			lpMem;
 
-	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "LinkFile_FileLoad(): %s", apFileName );	
+	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "LinkFile_FileLoad(): %s", apFileName );
 
 	lpMem = 0;
 	if( !apLinkFile )
@@ -330,7 +330,7 @@ U8		LinkFile_FileLoadAt(   sLinkFile * apLinkFile, char * apFileName, void * apB
 	sLinkFileFile *	lpFile;
 
 /*	printf( "LinkFile_FileLoadAt() : %lX %s\n", apLinkFile, apFileName );*/
-	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "LinkFile_FileLoadAt(): %s", apFileName );	
+	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "LinkFile_FileLoadAt(): %s", apFileName );
 
 	if( !apLinkFile )
 	{
@@ -543,7 +543,7 @@ U8		LinkFile_FileCreate( sLinkFileFolder * apFolder, char * apFileName )
 	lpFiles[ apFolder->mFileCount ].mSize         = 0;
 	lpFiles[ apFolder->mFileCount ].mUnPackedSize = 0;
 	apFolder->mFileCount++;
-	
+
 	return( 1 );
 }
 
@@ -707,12 +707,12 @@ sLinkFileFile *	LinkFile_GetpFile( sLinkFile * apLinkFile, char * apFileName )
 	sLinkFileFolder *	lpFolder;
 	U16					i;
 
-	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "LinkFile_GetpFile(): %s", apFileName );	
+	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "LinkFile_GetpFile(): %s", apFileName );
 
 	lpFolder = apLinkFile->mpRoot;
 
 	i=0;
-	
+
 	lpFileName = apFileName;
 	while( (i<256) && (*lpFileName) )
 	{
@@ -752,7 +752,7 @@ sLinkFileFile *	LinkFile_GetpFile( sLinkFile * apLinkFile, char * apFileName )
 /*			DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "file: %s", lpFolder->mpFiles[ i ].mpFileName );*/
 			if( !String_StrCmpi( lString, lpFolder->mpFiles[ i ].mpFileName ) )
 			{
-				DebugChannel_Printf3( eDEBUGCHANNEL_ASSET, "file found %s off %ld size %ld", 
+				DebugChannel_Printf3( eDEBUGCHANNEL_ASSET, "file found %s off %ld size %ld",
 					lpFolder->mpFiles[ i ].mpFileName,
 					lpFolder->mpFiles[ i ].mOffset,
 					lpFolder->mpFiles[ i ].mSize );
@@ -809,7 +809,7 @@ U32	LinkFile_GetFileCount( sLinkFileFolder * apFolder )
 	{
 		lCount += LinkFile_GetFileCount( &apFolder->mpFolders[ i ] );
 	}
-	
+
 	return( lCount );
 }
 
@@ -855,7 +855,7 @@ U32	LinkFile_GetFolderCount( sLinkFileFolder * apFolder )
 	{
 		lCount += LinkFile_GetFolderCount( &apFolder->mpFolders[ i ] );
 	}
-	
+
 	return( lCount );
 }
 
@@ -878,13 +878,13 @@ sLinkFileFolder *	LinkFile_SerialiseFolders( sLinkFileFolder * apDstFolder, sLin
 
 	lpFolder->mpFolders  = apDstFolder;
 	apDstFolder         += lpFolder->mFolderCount;
-	
+
 	for( i=0; i<lpFolder->mFolderCount; i++ )
 	{
 		apDstFolder = LinkFile_SerialiseFolders( apDstFolder, &apSrcFolder->mpFolders[ i ] );
 	}
 
-	return( apDstFolder );	
+	return( apDstFolder );
 }
 
 
@@ -901,13 +901,13 @@ sLinkFileFile *	LinkFile_SerialiseFiles( sLinkFileFolder * apFolder, sLinkFileFi
 
 	apFolder->mpFiles = apFile;
 	apFile           += apFolder->mFileCount;
-	
+
 	for( i=0; i<apFolder->mFolderCount; i++ )
 	{
 		apFile = LinkFile_SerialiseFiles( &apFolder[ i ], apFile );
 	}
 
-	return( apFile );	
+	return( apFile );
 }
 
 
@@ -921,7 +921,7 @@ char *	LinkFile_StringCopy( char * apDst, char * apSrc )
 {
 
 	while( *apSrc )
-	{ 
+	{
 		*apDst++ = *apSrc++;
 	}
 	*apDst++ = 0;
@@ -954,7 +954,7 @@ char *	LinkFile_SerialiseStrings( sLinkFileFolder * apDstFolder, sLinkFileFolder
 		apMem = LinkFile_SerialiseStrings( &apDstFolder->mpFolders[ i ], &apSrcFolder->mpFolders[ i ], apMem );
 	}
 
-	return( apMem );	
+	return( apMem );
 }
 
 
@@ -1166,7 +1166,7 @@ void	LinkFile_Dump( sLinkFile * apLinkFile,char * apFileName,char * apSrcDirecto
 	LinkFile_Relocate( lpLinkFile );
 
 	LinkFile_SaveData( lpLinkFile->mpRoot, lHandle, apSrcDirectory );
-	
+
 	File_Close( lHandle );
 
 	mMEMFREE( lpLinkFile );
@@ -1183,7 +1183,7 @@ U32	LinkFile_GrabDirectory( char * apDst,char * apFileName )
 {
 	U32	aIndex;
 	U32	i;
-	
+
 	aIndex = 0;
 
 	while( apFileName[ aIndex ] )
@@ -1247,9 +1247,9 @@ void	LinkFile_BuildFromDirectory( char * apDirectoryName,char * apLinkFileName )
 			{
 				do
 				{
-					if( 
-						(lDta.mFileName[0] != '.') && 
-						(lDta.mLength) 
+					if(
+						(lDta.mFileName[0] != '.') &&
+						(lDta.mLength)
 						)
 					{
 						LinkFile_FileCreate( lpLinkFile->mpRoot, &lDta.mFileName[0] );
@@ -1291,11 +1291,11 @@ void	LinkFile_BuildFromFile( char * apFileName,char * apLinkFileName )
 	lpFile = (char*)File_Load( apFileName );
 	if( !lpFile )
 	{
-		return;		
+		return;
 	}
 
 
-	lIndex     = 0;	
+	lIndex     = 0;
 	while( (lIndex<lFileSize) && (lpFile[ lIndex ] != 10) && (lpFile[ lIndex ] != 13) )
 	{
 		lDirectory[ lIndex ] = lpFile[ lIndex ];
@@ -1311,7 +1311,7 @@ void	LinkFile_BuildFromFile( char * apFileName,char * apLinkFileName )
 	while( (lIndex<lFileSize) && ((lpFile[ lIndex ] == 10) || (lpFile[ lIndex ] == 13)) )
 	{
 		lIndex++;
-	}	
+	}
 
 
 	lpLinkFile = LinkFile_Create();

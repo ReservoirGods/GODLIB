@@ -31,7 +31,7 @@ enum
 
 
 typedef	struct sLineAFont
-{	
+{
 	S16						mID;
 	S16						mPointSize;
 	char					mName[ 32 ];

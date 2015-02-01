@@ -124,7 +124,7 @@ U32	GodPack_Rle_Encode( const void * apSrc,void * apDst,const U32 aSize )
 
 U32	GodPack_Rle_Decode( const void * apSrc,void * apDst,const U32 aSize )
 {
-	U8 *	lpSrc;	
+	U8 *	lpSrc;
 	U8 *	lpDst;
 	U8		lEsc;
 	U8		lValue;

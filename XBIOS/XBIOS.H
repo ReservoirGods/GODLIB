@@ -30,7 +30,7 @@ typedef	void	(*fXbios)( void );
 #define	dXBIOS_PLAY_ENABLE		1
 #define	dXBIOS_PLAY_REPEAT		2
 #define	dXBIOS_RECORD_ENABLE	4
-#define	dXBIOS_RECORD_REPEAT	8		
+#define	dXBIOS_RECORD_REPEAT	8
 #define	dXBIOS_SND_INQUIRE		-1
 
 #define	dXBIOS_CURS_HIDE		0
@@ -403,7 +403,7 @@ void			Xbios_EsetPalette( const U16 aStart, const U16 aCount, const U16 * apPal 
 S16				Xbios_EsetShift( const S16 aMode );
 S16				Xbios_EsetSmear( const S16 aMode );
 
-S16				Xbios_Flopfmt( const void * apBuffer, const U16 * apSke, const U16 aDev, const U16 aSpt, const U16 aTrack, const U16 aSide, const U16 aIntlv, const U32 aMagic, const U16 aVirgin ); 
+S16				Xbios_Flopfmt( const void * apBuffer, const U16 * apSke, const U16 aDev, const U16 aSpt, const U16 aTrack, const U16 aSide, const U16 aIntlv, const U32 aMagic, const U16 aVirgin );
 S16				Xbios_Floprate( const U16 aDev, const U16 aRate );
 S16				Xbios_Floprd( void * apBuffer, const U32 aReserved, const U16 aDev, const U16 aSector, const U16 aTrack, const U16 aSide, const U16 aCount );
 S16				Xbios_Flopver( const void * apBuffer, const U32 aReserved, const U16 aDev, const U16 aSector, const U16 aTrack, const U16 aSide, const U16 aCount );

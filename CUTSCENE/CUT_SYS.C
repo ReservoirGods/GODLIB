@@ -103,7 +103,7 @@ U16		CutSceneThread_IsWaiting( sCutSceneThread * apThread );
 
 void	CutScene_System_AppInit( void )
 {
-	Memory_Clear( sizeof(sCutSceneSysClass), &gCutSceneSysClass );	
+	Memory_Clear( sizeof(sCutSceneSysClass), &gCutSceneSysClass );
 }
 
 
@@ -115,7 +115,7 @@ void	CutScene_System_AppInit( void )
 
 void	CutScene_System_AppDeInit( void )
 {
-	
+
 }
 
 
@@ -141,7 +141,7 @@ U16	CutSceneThread_IsWaiting( sCutSceneThread * apThread )
 {
 	sCutSprite * lpSprite;
 	U16			lRes;
-	
+
 	lRes = 0;
 
 	switch( apThread->mWaitMode )
@@ -406,7 +406,7 @@ U32	CutSceneThread_Update( sCutSceneThread * apThread )
 			}
 		}
 	}
-	return( lRes );	
+	return( lRes );
 }
 
 
@@ -469,7 +469,7 @@ void	CutScene_System_ScriptInit( sCutScene * apCut,char * apScriptName )
 void CutScene_System_SpriteMoveUpdate(sCutSprite * apSprite)
 {
 	S32	lDiff;
-	
+
 	if( apSprite->mPos.w.w1 < apSprite->mDist )
 	{
 		apSprite->mPos.l += apSprite->mCurrentDef.mSpeed;
@@ -522,7 +522,7 @@ void CutScene_System_SpriteAnimUpdate(sCutSprite * apSprite)
 		{
 			apSprite->mAnimFrame.l -= lpAnim->mSpeed;
 		}
-	
+
 		if( apSprite->mAnimFrame.w.w1 < 0 )
 		{
 			if( lpAnim->mFlagPingPong )
@@ -578,7 +578,7 @@ void CutScene_System_SpriteMoveInit(sCutSprite * apSprite,S16 aTargetX,S16 aTarg
 	S32	lDistX;
 	S32	lDistY;
 
-	apSprite->mSrcX = apSprite->mCurrentDef.mX;	
+	apSprite->mSrcX = apSprite->mCurrentDef.mX;
 	apSprite->mSrcY = apSprite->mCurrentDef.mY;
 	apSprite->mDstX = aTargetX;
 	apSprite->mDstY = aTargetY;
@@ -590,7 +590,7 @@ void CutScene_System_SpriteMoveInit(sCutSprite * apSprite,S16 aTargetX,S16 aTarg
 	lDistY = lDistY * lDistY;
 
 	lDistX = lDistX + lDistY;
-	
+
 	lDistX = CutSceneSys_Sqrt( lDistX );
 
 	apSprite->mPos.l = 0;
@@ -610,18 +610,18 @@ S32 CutSceneSys_Sqrt(S32 aR)
 
 	lC = 0;
 
-   for( lB=0x10000000L; lB!=0; lB>>=2 ) 
-   {
-      lT   = lC + lB;
-      lC >>= 1L;
-      if( lT <= aR) 
-	  {
-         aR -= lT;
-         lC += lB;
-      }
-   }
+	for( lB=0x10000000L; lB!=0; lB>>=2 )
+	{
+		lT   = lC + lB;
+		lC >>= 1L;
+		if( lT <= aR)
+		{
+			aR -= lT;
+			lC += lB;
+		}
+	}
 
-   return( lC );
+	return( lC );
 }
 
 
@@ -644,7 +644,7 @@ void	CutScene_System_Render( void )
 	sGraphicRect		lRect;
 	U16					lLogicIndex;
 	U16					i;
-	
+
 
 	lpCut   = gCutSceneSysClass.mpScene;
 	if( lpCut )
@@ -831,7 +831,7 @@ void	CutScene_System_Render( void )
 
 void	CutScene_System_SetpHashTree( sHashTree * apTree )
 {
-	gCutSceneSysClass.mpTree = apTree;	
+	gCutSceneSysClass.mpTree = apTree;
 }
 
 
@@ -856,7 +856,7 @@ sHashTree *	CutScene_System_GetpHashTree( void )
 U8	CutScene_System_IsScriptFinished( void )
 {
 	U8	lRes;
-	
+
 	lRes = 0;
 
 	if( !gCutSceneSysClass.mThread.mStackIndex )

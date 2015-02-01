@@ -84,7 +84,7 @@ void	Video_SDL_Init( void )
 
 void	Video_SDL_DeInit( void )
 {
-	
+
 }
 
 
@@ -108,20 +108,20 @@ void	Video_SDL_DisplayScreen( const U16 * apScreen )
 
 /*	Vbl_CallsProcess();*/
 
-    if ( SDL_MUSTLOCK(gVideoSdlClass.mpScreen) ) 
+	if ( SDL_MUSTLOCK(gVideoSdlClass.mpScreen) )
 	{
-        if ( SDL_LockSurface(gVideoSdlClass.mpScreen) < 0 ) 
+		if ( SDL_LockSurface(gVideoSdlClass.mpScreen) < 0 )
 		{
-            return;
-        }
-    }
+			return;
+		}
+	}
 
 	Video_GetConfig( &lConfig );
 
 	switch( Video_GetMode() )
 	{
 	case	eVIDEO_MODE_4PLANE:
-		switch (gVideoSdlClass.mpScreen->format->BytesPerPixel) 
+		switch (gVideoSdlClass.mpScreen->format->BytesPerPixel)
 		{
 		case 1:
 			Video_Image_4BP_ToU8(
@@ -134,7 +134,7 @@ void	Video_SDL_DisplayScreen( const U16 * apScreen )
 				gVideoSdlClass.mPalConvST );
 			break;
 
-		case 2: 
+		case 2:
 			Video_Image_4BP_ToU16(
 				(U8*)apScreen,
 				(U16*)gVideoSdlClass.mpScreen->pixels,
@@ -145,7 +145,7 @@ void	Video_SDL_DisplayScreen( const U16 * apScreen )
 				gVideoSdlClass.mPalConvST );
 			break;
 
-		case 3: 
+		case 3:
 			Video_Image_4BP_ToU24(
 				(U8*)apScreen,
 				(U8*)gVideoSdlClass.mpScreen->pixels,
@@ -156,7 +156,7 @@ void	Video_SDL_DisplayScreen( const U16 * apScreen )
 				gVideoSdlClass.mPalConvST );
 			break;
 
-		case 4: 
+		case 4:
 			Video_Image_4BP_ToU32(
 				(U8*)apScreen,
 				(U32*)gVideoSdlClass.mpScreen->pixels,
@@ -178,11 +178,11 @@ void	Video_SDL_DisplayScreen( const U16 * apScreen )
 			gVideoSdlClass.mpScreen->pitch );
 		break;
 	}
-	
-    if ( SDL_MUSTLOCK(gVideoSdlClass.mpScreen) ) 
+
+	if ( SDL_MUSTLOCK(gVideoSdlClass.mpScreen) )
 	{
-        SDL_UnlockSurface(gVideoSdlClass.mpScreen);
-    }
+		SDL_UnlockSurface(gVideoSdlClass.mpScreen);
+	}
 
 	SDL_UpdateRect( gVideoSdlClass.mpScreen, 0, 0, 0, 0);
 }
@@ -219,7 +219,7 @@ void	Video_SetPalST( const U16 * apPal )
 		lB <<= 4;
 
 		gVideoSdlClass.mPalConvST[ i ] = SDL_MapRGB( gVideoSdlClass.mpScreen->format, (U8)lR, (U8)lG, (U8)lB );
-	}	
+	}
 }
 
 
@@ -232,14 +232,14 @@ void	Video_SetPalST( const U16 * apPal )
 void	Video_GetPalST( U16 * apPal )
 {
 	U16	i;
-	
+
 	if( apPal )
 	{
 		for( i=0; i<16; i++ )
 		{
 			apPal[ i ] = gVideoSdlClass.mPalOriginalST[ i ];
 		}
-	}	
+	}
 }
 
 
@@ -251,7 +251,7 @@ void	Video_GetPalST( U16 * apPal )
 
 void	Video_SDL_SetPalFalcon( const U16 * apPal )
 {
-	(void)apPal;	
+	(void)apPal;
 }
 
 
@@ -298,14 +298,14 @@ void	VideoD3D_16BPP_Display( const U16 * apSrc,U8 * apDst,const U16 aWidth,const
 			lB = (U16)(lColour & 0x1F);
 			lR &= 0x1F;
 			lG &= 0x3F;
-			
+
 
 			lR <<= 3;
 			lG <<= 2;
 			lB <<= 3;
 			lPixel = SDL_MapRGB( gVideoSdlClass.mpScreen->format, (U8)lR, (U8)lG, (U8)lB );
 
-			switch (gVideoSdlClass.mpScreen->format->BytesPerPixel) 
+			switch (gVideoSdlClass.mpScreen->format->BytesPerPixel)
 			{
 			case 1:
 				*lpDst1++ = (U8)lPixel;
@@ -324,13 +324,13 @@ void	VideoD3D_16BPP_Display( const U16 * apSrc,U8 * apDst,const U16 aWidth,const
 			case 4:
 				*(U32*)lpDst1 = lPixel;
 				lpDst1       += 4;
-				break;				
+				break;
 			}
 		}
 		lpSrc0 += aSrcPitch >> 1;
 		lpDst0 += aDstPitch;
-	}		
-	
+	}
+
 }
 
 U32	gVideoSDLVBLTicks = 20;
