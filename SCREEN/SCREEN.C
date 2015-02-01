@@ -133,6 +133,8 @@ void	Screen_Init( const U16 aWidth,const U16 aHeight,const U16 aBitDepth, const 
 
 
 	DebugChannel_Printf1( eDEBUGCHANNEL_GODLIB, "Screen_Init() base %lx", lBase );
+
+	Screen_Update();
 }
 
 

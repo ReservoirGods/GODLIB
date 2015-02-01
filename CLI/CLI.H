@@ -70,7 +70,7 @@ U16 *			Cli_GetpPal( void );
 #define			Cli_CmdDeInit( apCommandString )
 #define			Cli_PrintLine( apTxt )
 
-#define			Cli_GrabNumber( apTxt )
+#define			Cli_GrabNumber( apTxt )	0
 #define			Cli_GetpSavedPal()
 #define			Cli_GetpPal()
 

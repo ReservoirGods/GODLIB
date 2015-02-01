@@ -827,25 +827,29 @@ void		Cli_DrawHistory( void )
 {
 	S16	lLineIndex;
 	S16	lLineY;
+	U16 * lpPhysic;
 
-
-	lLineIndex = gCli.mDisplayLineIndex;
-
-	for( lLineY = dCLI_DISPLAYLINES_LIMIT-2; lLineY >=0; lLineY-- )
+	lpPhysic = Video_GetpPhysic();
+	if( lpPhysic )
 	{
-		lLineIndex--;
-		if( lLineIndex < 0 )
+		lLineIndex = gCli.mDisplayLineIndex;
+
+		for( lLineY = dCLI_DISPLAYLINES_LIMIT-2; lLineY >=0; lLineY-- )
 		{
-			if( gCli.mDisplayLoopedFlag )
+			lLineIndex--;
+			if( lLineIndex < 0 )
 			{
-				lLineIndex = dCLI_LINES_LIMIT-1;
+				if( gCli.mDisplayLoopedFlag )
+				{
+					lLineIndex = dCLI_LINES_LIMIT-1;
+				}
+				else
+				{
+					return;
+				}
 			}
-			else
-			{
-				return;
-			}
+			Font8x8_Print( &gCli.mDisplayLine[ lLineIndex ][ 0 ], lpPhysic, 0, (U16)(lLineY*8) );
 		}
-		Font8x8_Print( &gCli.mDisplayLine[ lLineIndex ][ 0 ], Video_GetpPhysic(), 0, (U16)(lLineY*8) );
 	}
 }
 
@@ -982,9 +986,12 @@ void			Cli_ClearScreen( U16 * apScreen )
 {
 	U16	i;
 
-	for( i=0; i<(32000/2); i++ )
+	if( apScreen )
 	{
-		*apScreen++ = 0;
+		for( i=0; i<(32000/2); i++ )
+		{
+			*apScreen++ = 0;
+		}
 	}
 }
 
@@ -999,9 +1006,12 @@ void			Cli_CopyScreen( U16 * apSrc, U16 * apDst )
 {
 	U16	i;
 
-	for( i=0; i<(32000/2); i++ )
+	if( apSrc && apDst )
 	{
-		*apDst++ = *apSrc++;
+		for( i=0; i<(32000/2); i++ )
+		{
+			*apDst++ = *apSrc++;
+		}
 	}
 }
 
