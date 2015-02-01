@@ -4,7 +4,9 @@
 
 #include	"GOD_MAIN.H"
 
+#ifdef	dGODLIB_DEBUGCHANNELS
 #include	<GODLIB/DEBUG/DBGCHAN.H>
+#endif
 #include	<GODLIB/IKBD/IKBD_DI.H>
 #include	<GODLIB/KERNEL/KERNEL.H>
 #include	<GODLIB/VIDEO/VID_D3D.H>
@@ -202,12 +204,14 @@ S16	main( S16 argc,char * argv[] )
 
 void	GodLib_DebugChannels_Init( void )
 {
+#ifdef dGODLIB_DEBUGCHANNELS
 	DebugChannel_AppInit();
 	DebugChannel_Activate( eDEBUGCHANNEL_ASSET,  (U16)(~eDEBUGCHANNEL_DEST_SCREEN) );
 	DebugChannel_Activate( eDEBUGCHANNEL_GAME,   (U16)(~eDEBUGCHANNEL_DEST_SCREEN) );
 	DebugChannel_Activate( eDEBUGCHANNEL_GODLIB, (U16)(~eDEBUGCHANNEL_DEST_SCREEN) );
 	DebugChannel_Activate( eDEBUGCHANNEL_MEMORY, (U16)(~eDEBUGCHANNEL_DEST_SCREEN) );
 	DebugChannel_Activate( eDEBUGCHANNEL_USER,   (U16)(~eDEBUGCHANNEL_DEST_SCREEN) );
+#endif
 }
 
 
@@ -219,7 +223,9 @@ void	GodLib_DebugChannels_Init( void )
 
 void	GodLib_DebugChannels_DeInit( void )
 {
+#ifdef dGODLIB_DEBUGCHANNELS
 	DebugChannel_AppDeInit();
+#endif
 }
 
 
