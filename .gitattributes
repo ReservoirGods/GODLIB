@@ -1,4 +1,4 @@
-*.C text eol=crlf
+*.C eol=crlf
 *.H text eol=crlf
 *.S text eol=crlf
 *.sln text eol=crlf
