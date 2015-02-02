@@ -97,25 +97,25 @@ U32	GodPack_Bwt_BlockDecode( const void * apSrc,void * apDest,const U32 aSize )
 
 	if( lSize )
 	{
-        for ( i=0 ; i<256 ; i++ )
+		for ( i=0 ; i<256 ; i++ )
 		{
-            lCounts[ i ] = 0;
+			lCounts[ i ] = 0;
 		}
 
-        for ( i=0 ; i<lSize ; i++ )
+		for ( i=0 ; i<lSize ; i++ )
 		{
 			lCounts[ lpSrc[i] ]++;
 		}
 
 		lSum = 0;
-        for ( i=0 ; i<256 ; i++ )
+		for ( i=0 ; i<256 ; i++ )
 		{
 			lTotals[ i ]  = lSum;
 			lSum          = (U16)(lSum + lCounts[ i ]);
 			lCounts[ i ]  = 0;
 		}
 
-        for ( i=0 ; i<lSize ; i++ )
+		for ( i=0 ; i<lSize ; i++ )
 		{
 			lIndex  = lpSrc[i];
 			lBwtOff = lCounts[lIndex] + lTotals[lIndex];

@@ -210,23 +210,23 @@ Wipe_Render_STE:
 	add.w	d1,a2
 
 	move.w  #80,x_cnt.w     ;These values are set here because
-    move.w  #2,s_x_inc.w    ;they need not be changed as long as
-    move.w  #2,s_y_inc.w    ;the effect takes place.
-    move.w  #2,d_x_inc.w
-    move.w  #2,d_y_inc.w
-    clr.b   skew.w       	;Don't shift anything
-    move.b  #3,hop.w        ;Halftone mode :) source and halftone
-    move.b  #3,op.w         ;0=erase, 3=show - source
-    move.l  #-1,end_1.w	;no endmasks needed
-    move.w  #-1,end_3.w
+	move.w  #2,s_x_inc.w    ;they need not be changed as long as
+	move.w  #2,s_y_inc.w    ;the effect takes place.
+	move.w  #2,d_x_inc.w
+	move.w  #2,d_y_inc.w
+	clr.b   skew.w       	;Don't shift anything
+	move.b  #3,hop.w        ;Halftone mode :) source and halftone
+	move.b  #3,op.w         ;0=erase, 3=show - source
+	move.l  #-1,end_1.w	;no endmasks needed
+	move.w  #-1,end_3.w
 
-    movem.l (A2)+,D0-D7	;load & store our halftones
-    movem.l D0-D7,halftone.w
+	movem.l (A2)+,D0-D7	;load & store our halftones
+	movem.l D0-D7,halftone.w
 
-    move.l  A0,s_hw.w       ;Source address
-    move.l  A1,d_hw.w       ;Dest address
-    move.w  #200,y_cnt.w    ;Copy everything in 1 go
-    move.b  #192,blit.w     ;Blit it
+	move.l  A0,s_hw.w       ;Source address
+	move.l  A1,d_hw.w       ;Dest address
+	move.w  #200,y_cnt.w    ;Copy everything in 1 go
+	move.b  #192,blit.w     ;Blit it
 
 
 	movem.l	(a7)+,a2/d3-d7

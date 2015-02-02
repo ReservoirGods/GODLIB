@@ -640,7 +640,7 @@ sGuiData *	GuiParse_Text( const char * apText,const U32 aSize )
 	GuiParse_InfoInit( &lInfo );
 
 	lpBuilder             = Tokeniser_Init( apText, aSize, &lInfo );
-  	lpData                = ( (sGuiData*)Tokeniser_Serialise( lpBuilder ) );
+	lpData                = ( (sGuiData*)Tokeniser_Serialise( lpBuilder ) );
 	Tokeniser_DeInit( lpBuilder );
 	return( lpData );
 }

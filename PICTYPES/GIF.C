@@ -308,7 +308,7 @@ U32	Gif_Encode( sCanvasIC * apCanvas, U8 * apData )
 
 U32	Gif_Decode( sCanvasIC * apCanvas,U8 * apData,const U16 aCodeSize )
 {
-    S16		lClearCode;
+	S16		lClearCode;
 	S16		lEOI;
 	S16		lBaseCodeSize;
 	S16		lNext;
@@ -424,7 +424,7 @@ U32	Gif_Decode( sCanvasIC * apCanvas,U8 * apData,const U16 aCodeSize )
 
 		mMEMFREE( lpTable );
 	}
-    return( 1 );
+	return( 1 );
 }
 
 

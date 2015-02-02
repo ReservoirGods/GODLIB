@@ -407,12 +407,12 @@ void	IKBD_DI_Flush( void )
 
 void	IKBD_DI_KbdUpdate( void )
 {
-    DIDEVICEOBJECTDATA	lData[ dIKBDDI_KBDBUFFER_LIMIT ];
-    DWORD				lElementCount;
-    DWORD				i;
+	DIDEVICEOBJECTDATA	lData[ dIKBDDI_KBDBUFFER_LIMIT ];
+	DWORD				lElementCount;
+	DWORD				i;
 	U16					lIndex;
 	U16					lPos;
-    HRESULT				lRes;
+	HRESULT				lRes;
 
 	if( gpIkbdDIKeyboard )
 	{

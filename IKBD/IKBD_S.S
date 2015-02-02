@@ -242,7 +242,7 @@ IKBD_FlushGemdos:
 IKBD_SendCmd:
 
 .wait:
-   	btst    #1,$fffffc00.w			; kbd ready to receive data?
+	btst    #1,$fffffc00.w			; kbd ready to receive data?
 	beq.s   .wait					; not yet
 	move.b  d0,$fffffc02.w			; send cmd to kbd
 
@@ -1100,10 +1100,10 @@ IKBD_ReadPadMatrixB:
 	rts
 
 
-teamtaptab:     DC.B $EE,$DD,$BB,$77  ;first 4 bytes are the same for non-teamtap controller
-                DC.B $00,$11,$22,$33
-                DC.B $44,$55,$66,$88
-                DC.B $99,$AA,$CC,$FF
+teamtaptab:		DC.B $EE,$DD,$BB,$77  ;first 4 bytes are the same for non-teamtap controller
+				DC.B $00,$11,$22,$33
+				DC.B $44,$55,$66,$88
+				DC.B $99,$AA,$CC,$FF
 noteamtap:
 
 

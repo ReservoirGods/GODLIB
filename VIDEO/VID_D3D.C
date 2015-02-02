@@ -50,37 +50,37 @@ void	VideoD3D_BuildPalST( const U16 * apPal );
 
 S32	VideoD3D_Init( void )
 {
-    D3DDISPLAYMODE			d3ddm;
-    D3DPRESENT_PARAMETERS	d3dpp;
+	D3DDISPLAYMODE			d3ddm;
+	D3DPRESENT_PARAMETERS	d3dpp;
 
-    if( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
-        return E_FAIL;
+	if( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
+		return E_FAIL;
 
-    // Get the current desktop display mode, so we can set up a back
-    // buffer of the same format
-    if( FAILED( IDirect3D9_GetAdapterDisplayMode( g_pD3D, D3DADAPTER_DEFAULT, &d3ddm ) ) )
-        return E_FAIL;
+	// Get the current desktop display mode, so we can set up a back
+	// buffer of the same format
+	if( FAILED( IDirect3D9_GetAdapterDisplayMode( g_pD3D, D3DADAPTER_DEFAULT, &d3ddm ) ) )
+		return E_FAIL;
 
-    ZeroMemory( &d3dpp, sizeof(d3dpp) );
-    d3dpp.Windowed               = TRUE;
-    d3dpp.SwapEffect             = D3DSWAPEFFECT_DISCARD;
-    d3dpp.BackBufferFormat       = d3ddm.Format;
-    d3dpp.EnableAutoDepthStencil = TRUE;
-    d3dpp.AutoDepthStencilFormat = D3DFMT_D16_LOCKABLE;
+	ZeroMemory( &d3dpp, sizeof(d3dpp) );
+	d3dpp.Windowed               = TRUE;
+	d3dpp.SwapEffect             = D3DSWAPEFFECT_DISCARD;
+	d3dpp.BackBufferFormat       = d3ddm.Format;
+	d3dpp.EnableAutoDepthStencil = TRUE;
+	d3dpp.AutoDepthStencilFormat = D3DFMT_D16_LOCKABLE;
 	d3dpp.Flags                  = D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
 
 	gVideoD3DColourMode = (U16)d3ddm.Format;
 
-    if( FAILED( IDirect3D9_CreateDevice( g_pD3D, D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, gVideoD3DHwnd,
-                                      D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-                                      &d3dpp, &g_pd3dDevice ) ) )
-    {
-        return E_FAIL;
-    }
+	if( FAILED( IDirect3D9_CreateDevice( g_pD3D, D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, gVideoD3DHwnd,
+									  D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+									  &d3dpp, &g_pd3dDevice ) ) )
+	{
+		return E_FAIL;
+	}
 
-    IDirect3DDevice9_SetRenderState( g_pd3dDevice, D3DRS_CULLMODE, D3DCULL_NONE );
-    IDirect3DDevice9_SetRenderState( g_pd3dDevice, D3DRS_LIGHTING, FALSE );
-    IDirect3DDevice9_SetRenderState( g_pd3dDevice, D3DRS_ZENABLE, FALSE );
+	IDirect3DDevice9_SetRenderState( g_pd3dDevice, D3DRS_CULLMODE, D3DCULL_NONE );
+	IDirect3DDevice9_SetRenderState( g_pd3dDevice, D3DRS_LIGHTING, FALSE );
+	IDirect3DDevice9_SetRenderState( g_pd3dDevice, D3DRS_ZENABLE, FALSE );
 
 	ShowWindow( gVideoD3DHwnd, SW_SHOWDEFAULT );
 	UpdateWindow( gVideoD3DHwnd );
@@ -100,13 +100,13 @@ S32	VideoD3D_Init( void )
 
 void	VideoD3D_DeInit( void )
 {
-    if( g_pd3dDevice != NULL )
+	if( g_pd3dDevice != NULL )
 	{
 		IDirect3DDevice9_Release( g_pd3dDevice );
 		g_pd3dDevice = 0;
 	}
 
-    if( g_pD3D != NULL )
+	if( g_pD3D != NULL )
 	{
 		IDirect3D9_Release( g_pD3D );
 		g_pD3D = 0;
@@ -181,9 +181,9 @@ void	VideoD3D_DisplayScreen( const U16 * apScreen )
 	}
 
 
-    // Clear the backbuffer and the zbuffer
-    IDirect3DDevice9_Clear( g_pd3dDevice, 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER,
-                         D3DCOLOR_XRGB(0,0,0), 1.0f, 0 );
+	// Clear the backbuffer and the zbuffer
+	IDirect3DDevice9_Clear( g_pd3dDevice, 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER,
+						 D3DCOLOR_XRGB(0,0,0), 1.0f, 0 );
 
 	IDirect3DDevice9_GetBackBuffer( g_pd3dDevice, 0, 0, D3DBACKBUFFER_TYPE_MONO, &lpSurface );
 	IDirect3DSurface9_GetDesc( lpSurface, &lDesc );
@@ -233,9 +233,9 @@ void	VideoD3D_DisplayScreen( const U16 * apScreen )
 	}
 
 
-    // Present the backbuffer contents to the display
+	// Present the backbuffer contents to the display
 	IDirect3DSurface9_UnlockRect( lpSurface );
-    IDirect3DDevice9_Present( g_pd3dDevice, NULL, NULL, NULL, NULL );
+	IDirect3DDevice9_Present( g_pd3dDevice, NULL, NULL, NULL, NULL );
 
 	if( lpSurface )
 	{

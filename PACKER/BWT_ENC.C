@@ -66,7 +66,7 @@ U32 GodPack_Bwt_Encode(const void * apSrc,void * apDst,const U32 aSize)
 		Memory_Copy( gBwtBlockSize, &lpSrc[ lOffset ],  gpBwtBlockData );
 		Memory_Copy( gBwtBlockSize, &lpSrc[ lOffset ], &gpBwtBlockData[ gBwtBlockSize ] );
 
-        qsort( gpBwtIndices, gBwtBlockSize, sizeof(U16), GodPack_Bwt_Compare );
+		qsort( gpBwtIndices, gBwtBlockSize, sizeof(U16), GodPack_Bwt_Compare );
 
 		i = 0;
 		while( (i<gBwtBlockSize) && (gpBwtIndices[i] !=1) )
