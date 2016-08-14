@@ -13,7 +13,7 @@
 ################################################################################### */
 
 #include	"FADE.H"
-
+#include	"../ASSERT/ASSERT.H"
 
 /* ###################################################################################
 #  STRUCTS
@@ -84,6 +84,67 @@ U16	gFadeWhitePal[ 16 ] =
 
 U16	gFadeGamma = 16;
 
+/*
+	Build a table of preclaculated fades for each 4 bit ST colour.
+	Maximum 16 steps in table.
+	This will save us a multiple in LERP
+	A + ( (B-A) * pos ) becomes  A + table[(B-A)][pos]
+
+*/
+
+#define mGODLIB_FADE_DIV	15
+#define	mGODLIB_FADE_ENTRIES( amValue ) \
+	{ (amValue*0)/mGODLIB_FADE_DIV, (amValue*1)/mGODLIB_FADE_DIV, (amValue*2)/mGODLIB_FADE_DIV, (amValue*3)/mGODLIB_FADE_DIV,		\
+	(amValue*4)/mGODLIB_FADE_DIV, (amValue*5)/mGODLIB_FADE_DIV, (amValue*6)/mGODLIB_FADE_DIV, (amValue*7)/mGODLIB_FADE_DIV,			\
+	(amValue*8)/mGODLIB_FADE_DIV, (amValue*9)/mGODLIB_FADE_DIV, (amValue*10)/mGODLIB_FADE_DIV, (amValue*11)/mGODLIB_FADE_DIV,		\
+	(amValue*12)/mGODLIB_FADE_DIV, (amValue*13)/mGODLIB_FADE_DIV, (amValue*14)/mGODLIB_FADE_DIV, (amValue*15)/mGODLIB_FADE_DIV }
+
+
+S16 gFadeScaledValues[ 31 ][ 16 ] =
+{
+	mGODLIB_FADE_ENTRIES(-15),
+	mGODLIB_FADE_ENTRIES(-14),
+	mGODLIB_FADE_ENTRIES(-13),
+	mGODLIB_FADE_ENTRIES(-12),
+	mGODLIB_FADE_ENTRIES(-11),
+	mGODLIB_FADE_ENTRIES(-10),
+	mGODLIB_FADE_ENTRIES(-9),
+	mGODLIB_FADE_ENTRIES(-8),
+	mGODLIB_FADE_ENTRIES(-7),
+	mGODLIB_FADE_ENTRIES(-6),
+	mGODLIB_FADE_ENTRIES(-5),
+	mGODLIB_FADE_ENTRIES(-4),
+	mGODLIB_FADE_ENTRIES(-3),
+	mGODLIB_FADE_ENTRIES(-2),
+	mGODLIB_FADE_ENTRIES(-1),
+
+	mGODLIB_FADE_ENTRIES(0),
+
+	mGODLIB_FADE_ENTRIES(1),
+	mGODLIB_FADE_ENTRIES(2),
+	mGODLIB_FADE_ENTRIES(3),
+	mGODLIB_FADE_ENTRIES(4),
+	mGODLIB_FADE_ENTRIES(5),
+	mGODLIB_FADE_ENTRIES(6),
+	mGODLIB_FADE_ENTRIES(7),
+	mGODLIB_FADE_ENTRIES(8),
+	mGODLIB_FADE_ENTRIES(9),
+	mGODLIB_FADE_ENTRIES(10),
+	mGODLIB_FADE_ENTRIES(11),
+	mGODLIB_FADE_ENTRIES(12),
+	mGODLIB_FADE_ENTRIES(13),
+	mGODLIB_FADE_ENTRIES(14),
+	mGODLIB_FADE_ENTRIES(15),
+};
+
+/*
+	Let's save a multiply by gamma by pre gamma correcting ST palette
+*/
+
+S16	gFadeGammaCorrectedTable[ 16 ] =
+{
+	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+};
 
 /* ###################################################################################
 #  PROTOTYPES
@@ -109,11 +170,20 @@ void	Fade_PalST( U16 * apDest, U16 * apSrc, U16 * apTarget, U16 aColourCount, U1
 	S16	lR0,lG0,lB0;
 	S16	lDiffR,lDiffG,lDiffB;
 
+	U16 lPos = aPos >> 4;
+	if( lPos > 0xF )
+	{
+		lPos = 0xF;
+	}
+
 	for( i=0; i<aColourCount; i++ )
 	{
-		lDiffR  = (S16)(( apTarget[ i ] >> 8) & 7);
-		lDiffG  = (S16)(( apTarget[ i ] >> 4) & 7);
-		lDiffB  = (S16)(( apTarget[ i ]     ) & 7);
+		Endian_ReadBigU16( &apTarget[ i ], lDiffB );
+		lDiffB = gFadeGammaCorrectedTable[ lDiffB ];
+
+		lDiffR  = (S16)(( lDiffB >> 8) & 7);
+		lDiffG  = (S16)(( lDiffB >> 4) & 7);
+		lDiffB  = (S16)(( lDiffB     ) & 7);
 
 		lR0     = (S16)(( apSrc[ i ] >> 8) & 7);
 		lG0     = (S16)(( apSrc[ i ] >> 4) & 7);
@@ -123,6 +193,10 @@ void	Fade_PalST( U16 * apDest, U16 * apSrc, U16 * apTarget, U16 aColourCount, U1
 		lDiffG = (S16)(lDiffG-lG0);
 		lDiffB = (S16)(lDiffB-lB0);
 
+		lDiffR = gFadeScaledValues[ lDiffR + 15 ][ lPos ];
+		lDiffG = gFadeScaledValues[ lDiffG + 15 ][ lPos ];
+		lDiffB = gFadeScaledValues[ lDiffB + 15 ][ lPos ];
+/*
 		lDiffR = (S16)(lDiffR*aPos);
 		lDiffG = (S16)(lDiffG*aPos);
 		lDiffB = (S16)(lDiffB*aPos);
@@ -130,11 +204,12 @@ void	Fade_PalST( U16 * apDest, U16 * apSrc, U16 * apTarget, U16 aColourCount, U1
 		lDiffR >>= 8;
 		lDiffG >>= 8;
 		lDiffB >>= 8;
-
+*/
 		lR0 = (S16)(lR0+lDiffR);
 		lG0 = (S16)(lG0+lDiffG);
 		lB0 = (S16)(lB0+lDiffB);
 
+/*
 		lR0 = (S16)(lR0*gFadeGamma);
 		lG0 = (S16)(lG0*gFadeGamma);
 		lB0 = (S16)(lB0*gFadeGamma);
@@ -167,7 +242,7 @@ void	Fade_PalST( U16 * apDest, U16 * apSrc, U16 * apTarget, U16 aColourCount, U1
 		{
 			lB0 = 0x7;
 		}
-
+*/
 		lR0 <<= 8;
 		lG0 <<= 4;
 
@@ -190,9 +265,18 @@ void	Fade_PalSTE( U16 * apDest, U16 * apSrc, U16 * apTarget, U16 aColourCount, U
 	S16	lR0,lG0,lB0;
 	S16	lDiffR,lDiffG,lDiffB;
 
+
+	U16 lPos = aPos >> 4;
+	if( lPos > 0xF )
+	{
+		lPos = 0xF;
+	}
+
 	for( i=0; i<aColourCount; i++ )
 	{
 		Endian_ReadBigU16( &apTarget[ i ], lDiffB );
+
+		lDiffB = gFadeGammaCorrectedTable[ lDiffB ];
 
 		lDiffR  = (S16)(( lDiffB >> 8) & 0xF);
 		lDiffG  = (S16)(( lDiffB >> 4) & 0xF);
@@ -224,6 +308,12 @@ void	Fade_PalSTE( U16 * apDest, U16 * apSrc, U16 * apTarget, U16 aColourCount, U
 		lDiffG = (S16)(lDiffG - lG0);
 		lDiffB = (S16)(lDiffB - lB0);
 
+
+		lDiffR = gFadeScaledValues[ lDiffR + 15 ][ lPos ];
+		lDiffG = gFadeScaledValues[ lDiffG + 15 ][ lPos ];
+		lDiffB = gFadeScaledValues[ lDiffB + 15 ][ lPos ];
+
+/*
 		lDiffR = (S16)(lDiffR*aPos);
 		lDiffG = (S16)(lDiffG*aPos);
 		lDiffB = (S16)(lDiffB*aPos);
@@ -231,11 +321,13 @@ void	Fade_PalSTE( U16 * apDest, U16 * apSrc, U16 * apTarget, U16 aColourCount, U
 		lDiffR >>= 8;
 		lDiffG >>= 8;
 		lDiffB >>= 8;
+*/
 
 		lR0 = (S16)(lR0 + lDiffR);
 		lG0 = (S16)(lG0 + lDiffG);
 		lB0 = (S16)(lB0 + lDiffB);
 
+/*
 		lR0 = (S16)(lR0 * gFadeGamma);
 		lG0 = (S16)(lG0 * gFadeGamma);
 		lB0 = (S16)(lB0 * gFadeGamma);
@@ -268,7 +360,7 @@ void	Fade_PalSTE( U16 * apDest, U16 * apSrc, U16 * apTarget, U16 aColourCount, U
 		{
 			lB0 = 0xF;
 		}
-
+*/
 
 		lR0  = gFadeTableToSTE[ lR0 ];
 		lG0  = gFadeTableToSTE[ lG0 ];
@@ -372,7 +464,21 @@ U16 *	Fade_GetpWhitePal( void )
 
 void	Fade_SetGamma( const U16 aGamma )
 {
+	U16 i;
+	U16	lValue;
+
 	gFadeGamma = aGamma;
+
+	for( i=0; i<16; i++ )
+	{
+		lValue = i * aGamma;
+		lValue >>= 4;
+		if( lValue > 0xF )
+		{
+			lValue = 0xF;
+		}
+		gFadeGammaCorrectedTable[ i ] = lValue;
+	}
 }
 
 
