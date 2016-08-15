@@ -196,6 +196,10 @@ U32	CutSceneThread_Update( sCutSceneThread * apThread )
 	sCutSprite *	lpSprite;
 	sCutVar *		lpVar;
 
+	if( 0 == gCutSceneSysClass.mpScene )
+	{
+		return( 0 );
+	}
 
 	lRes  = 0;
 	lDone = 0;
@@ -418,6 +422,7 @@ U32	CutSceneThread_Update( sCutSceneThread * apThread )
 
 void	CutScene_System_ScriptInit( sCutScene * apCut,char * apScriptName )
 {
+	
 	U16	i;
 
 	if( apCut )

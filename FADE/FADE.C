@@ -276,11 +276,15 @@ void	Fade_PalSTE( U16 * apDest, U16 * apSrc, U16 * apTarget, U16 aColourCount, U
 	{
 		Endian_ReadBigU16( &apTarget[ i ], lDiffB );
 
-		lDiffB = gFadeGammaCorrectedTable[ lDiffB ];
 
 		lDiffR  = (S16)(( lDiffB >> 8) & 0xF);
 		lDiffG  = (S16)(( lDiffB >> 4) & 0xF);
 		lDiffB  = (S16)(( lDiffB     ) & 0xF);
+
+		lDiffR = gFadeGammaCorrectedTable[ lDiffR ];
+		lDiffG = gFadeGammaCorrectedTable[ lDiffG ];
+		lDiffB = gFadeGammaCorrectedTable[ lDiffB ];
+
 
 		Endian_ReadBigU16( &apSrc[ i ], lB0 );
 
