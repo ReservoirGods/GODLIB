@@ -127,6 +127,7 @@ sLinkFile *	LinkFile_InitToRAM( char * apLinkFileName )
 	sFileHandle		lHandle;
 	S32				lSize;
 	U32 *			lpBuffer;
+	U8 *			lpLoadBuffer;
 /*	S32				lOffset;*/
 
 	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "LinkFile_InitToRAM(): %s", apLinkFileName );
@@ -155,7 +156,9 @@ sLinkFile *	LinkFile_InitToRAM( char * apLinkFileName )
 			gLinkFileLoadingSize    = lSize;
 			gLinkFileLoadingFlag    = 1;
 
-			File_LoadAt( apLinkFileName, lpLinkFile );
+			lpLoadBuffer = (U8*)lpLinkFile;
+/*			lpLoadBuffer += Packer_GetLoadOffset( &lPackHead );*/
+			File_LoadAt( apLinkFileName, lpLoadBuffer );
 
 			gLinkFileLoadingFlag    = 0;
 		}
@@ -191,6 +194,7 @@ sLinkFile *	LinkFile_InitToRAM( char * apLinkFileName )
 			}
 
 			lpLinkFile = (sLinkFile*)lpBuffer;
+			lpLoadBuffer = (U8*)lpLinkFile;
 		}
 
 		if( !lpLinkFile )

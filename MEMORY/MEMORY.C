@@ -516,7 +516,7 @@ void	Memory_Clear( U32 aSize, void * apMem )
 * CREATION : 11.04.99 PNK
 *-----------------------------------------------------------------------------------*/
 
-void	Memory_Copy( U32 aSize, const void * apSrc, void * apDst )
+void	Memory_Copy_Internal( U32 aSize, const void * apSrc, void * apDst )
 {
 	U8 *	lpSrc;
 	U8 *	lpDst;

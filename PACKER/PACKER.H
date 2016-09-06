@@ -45,6 +45,7 @@ typedef struct sPackerHeader
 U8		Packer_IsPacked( sPackerHeader * apHeader );
 ePacker	Packer_GetType( sPackerHeader * apHeader );
 U32		Packer_GetDepackSize( sPackerHeader * apHeader );
+U32		Packer_GetLoadOffset( sPackerHeader * apHeader );
 void	Packer_Depack( void * apData );
 
 extern void	Packer_DepackAtomic( void * apData );

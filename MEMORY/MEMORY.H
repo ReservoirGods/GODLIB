@@ -45,7 +45,28 @@ S32		Memory_ScreenRelease( void * apMem );
 S32		_Memory_Release( void * apMem );
 
 void	Memory_Clear( U32 aSize, void * apMem );
-void	Memory_Copy(  U32 aSize, const void * apSrc, void * apDst );
+void	Memory_Copy_Internal(  U32 aSize, const void * apSrc, void * apDst );
+
+#define Memory_Copy( aSize, apSrc, apDst )						\
+		if( (apSrc) && (apDst) )								\
+		{														\
+			if( 1 == (aSize) )									\
+			{													\
+				*(U8*)(apDst) = *(U8*)(apSrc);					\
+			}													\
+			else if( (2 == (aSize)) && 0==(((U32)(apSrc) | (U32)(apDst))&1) )				\
+			{													\
+				*(U16*)(apDst) = *(U16*)(apSrc);				\
+			}													\
+			else if( (4 == (aSize)) && 0==(((U32)(apSrc) | (U32)(apDst))&3) )				\
+			{													\
+				*(U32*)(apDst) = *(U32*)(apSrc);				\
+			}													\
+			else												\
+			{													\
+				Memory_Copy_Internal( aSize, apSrc, apDst );	\
+			}													\
+		}
 
 U32		Memory_GetAllocCount( void );
 U32		Memory_GetAllocatedSize( void );

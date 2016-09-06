@@ -158,5 +158,29 @@ void	Packer_Depack( void * apData )
 	}
 }
 
+/*
+	Let's  avoid memory copying by loading to end of memory buffer for packed data
+*/
+
+U32		Packer_GetLoadOffset( sPackerHeader * apHeader )
+{
+	U32 lOffset = 0;
+	U32 lSizePacked,lSizeUnPacked;
+	sGodPackHeader * lpGP = (sGodPackHeader*)apHeader;
+
+	switch( Packer_GetType((sPackerHeader*)apHeader) )
+	{
+	case ePACKER_GODPACK:
+		Endian_ReadBigU32( &lpGP->mUnPackedSize, lSizePacked );
+		Endian_ReadBigU32( &lpGP->mPackedSize, lSizeUnPacked );
+
+		lOffset = lSizePacked - lSizeUnPacked;
+		break;
+	default:
+		break;
+	}
+	return( lOffset );
+}
+
 
 /* ################################################################################ */
