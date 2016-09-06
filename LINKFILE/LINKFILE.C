@@ -157,7 +157,7 @@ sLinkFile *	LinkFile_InitToRAM( char * apLinkFileName )
 			gLinkFileLoadingFlag    = 1;
 
 			lpLoadBuffer = (U8*)lpLinkFile;
-/*			lpLoadBuffer += Packer_GetLoadOffset( &lPackHead );*/
+			lpLoadBuffer += Packer_GetLoadOffset( &lPackHead );
 			File_LoadAt( apLinkFileName, lpLoadBuffer );
 
 			gLinkFileLoadingFlag    = 0;
@@ -203,7 +203,7 @@ sLinkFile *	LinkFile_InitToRAM( char * apLinkFileName )
 		}
 		else
 		{
-			Packer_Depack( lpLinkFile );
+			Packer_Depack( lpLoadBuffer, lpLinkFile );
 			lpLinkFile->mInRamFlag = 1;
 			LinkFile_Relocate( lpLinkFile );
 		}
@@ -314,7 +314,7 @@ void *		LinkFile_FileLoad(     sLinkFile * apLinkFile, char * apFileName, const 
 
 			if( aDepackFlag )
 			{
-				Packer_Depack( lpMem );
+				Packer_Depack( lpMem, lpMem );
 			}
 		}
 	}
@@ -363,7 +363,7 @@ U8		LinkFile_FileLoadAt(   sLinkFile * apLinkFile, char * apFileName, void * apB
 
 	if( aDepackFlag )
 	{
-		Packer_Depack( apBuffer );
+		Packer_Depack( apBuffer, apBuffer );
 	}
 
 	return( 1 );

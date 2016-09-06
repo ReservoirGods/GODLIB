@@ -256,29 +256,43 @@ U32	GodPack_DePack( const void * apSrc,void * apDst )
 	U8 *				lpStartLz;
 	U8 *				lpStartRle;
 
+/*	U32 lSize2;*/
 
 	lSize = 0;
 
 	if( apSrc && apDst )
 	{
 		lpHeader = (sGodPackHeader*)apSrc;
-		Endian_ReadBigU32( &lpHeader->mUnPackedSize, lSize );
-		Endian_ReadBigU32( &lpHeader->mPackedSize, lPakSize );
-		Endian_ReadBigU32( &lpHeader->mStageSize, lLzSize );
+		Endian_ReadBigU32_Unaligned( &lpHeader->mUnPackedSize, lSize );
+		Endian_ReadBigU32_Unaligned( &lpHeader->mPackedSize, lPakSize );
+		Endian_ReadBigU32_Unaligned( &lpHeader->mStageSize, lLzSize );
+
+
+/*		Endian_ReadBigU32_Unaligned( &lpHeader->mUnPackedSize, lSize2 );*/
 
 		lpDst    = (U8*)apDst;
-		lpStartLz  = (U8*)apDst;
-		lpStartLz += lSize + dGODPACK_OVERFLOW;
-		lpStartLz -= lPakSize;
+		lpStartLz  = (U8*)apSrc;
+
+		if( apSrc == apDst )
+		{
+			lpStartLz += lSize + dGODPACK_OVERFLOW;
+			lpStartLz -= lPakSize;
+
+			if( (U8*)&lpHeader[1] != lpStartLz )
+			{
+				Memory_Copy( lPakSize, &lpHeader[1], lpStartLz );
+			}
+		}
+		else
+		{
+			lpStartLz += sizeof(sGodPackHeader);
+		}
 
 		lpStartRle  = (U8*)apDst;
 		lpStartRle += lSize;
 		lpStartRle -= lLzSize;
 
-		if( (U8*)&lpHeader[1] != lpStartLz )
-		{
-			Memory_Copy( lPakSize, &lpHeader[1], lpStartLz );
-		}
+
 #ifndef	dGODLIB_PLATFORM_ATARI
 		GodPack_Lz77b_Decode( lpStartLz, lpStartRle, lLzSize );
 #else
@@ -356,6 +370,22 @@ U32	GodPack_DePack_Old( const void * apSrc,void * apDst )
 
 
 	return( lSize );
+}
+
+
+U32	GodPack_GetLoadOffset( sGodPackHeader * apHeader )
+{
+	U32 lOffset;
+	U32 lSizeUnPacked;
+	U32 lSizePacked;
+
+	Endian_ReadBigU32( &apHeader->mUnPackedSize, lSizeUnPacked );
+	Endian_ReadBigU32( &apHeader->mPackedSize, lSizePacked );
+
+	lOffset = lSizeUnPacked + dGODPACK_OVERFLOW - lSizePacked - sizeof(sGodPackHeader);
+/*	lOffset &= ~3;*/
+
+	return( lOffset );
 }
 
 

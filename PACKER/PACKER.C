@@ -52,7 +52,7 @@ ePacker	Packer_GetType( sPackerHeader * apHeader )
 {
 	U32	lName;
 
-	Endian_ReadBigU32( &apHeader->m0, lName );
+	Endian_ReadBigU32_Unaligned( &apHeader->m0, lName );
 
 	if( !apHeader )
 	{
@@ -97,23 +97,23 @@ U32		Packer_GetDepackSize( sPackerHeader * apHeader )
 	switch( Packer_GetType(apHeader) )
 	{
 	case ePACKER_ICE:
-		Endian_ReadBigU32( &apHeader->m2, lSize );
+		Endian_ReadBigU32_Unaligned( &apHeader->m2, lSize );
 		break;
 
 	case ePACKER_ATOMIC:
-		Endian_ReadBigU32( &apHeader->m1, lSize );
+		Endian_ReadBigU32_Unaligned( &apHeader->m1, lSize );
 		break;
 
 	case	ePACKER_AUTO5:
-		Endian_ReadBigU32( &apHeader->m2, lSize );
+		Endian_ReadBigU32_Unaligned( &apHeader->m2, lSize );
 		break;
 
 	case	ePACKER_SPEED3:
-		Endian_ReadBigU32( &apHeader->m3, lSize );
+		Endian_ReadBigU32_Unaligned( &apHeader->m3, lSize );
 		break;
 
 	case	ePACKER_GODPACK:
-		Endian_ReadBigU32( &apHeader->m3, lSize );
+		Endian_ReadBigU32_Unaligned( &apHeader->m3, lSize );
 		break;
 
 	default:
@@ -129,34 +129,52 @@ U32		Packer_GetDepackSize( sPackerHeader * apHeader )
 * CREATION : 09.01.99 PNK
 *-----------------------------------------------------------------------------------*/
 
-void	Packer_Depack( void * apData )
+void	Packer_Depack( void * apSrc, void * apDst )
 {
-	switch( Packer_GetType((sPackerHeader*)apData) )
+	switch( Packer_GetType((sPackerHeader*)apSrc) )
 	{
 	case ePACKER_ICE:
-		Packer_DepackIce( apData );
+		Packer_DepackIce( apSrc );
 		break;
 
 	case ePACKER_ATOMIC:
-		Packer_DepackAtomic( apData );
+		Packer_DepackAtomic( apSrc );
 		break;
 
 	case ePACKER_AUTO5:
-		Packer_DepackAuto5( apData );
+		Packer_DepackAuto5( apSrc );
 		break;
 
 	case ePACKER_SPEED3:
-		Packer_DepackSpeed3( apData );
+		Packer_DepackSpeed3( apSrc );
 		break;
 
 	case ePACKER_GODPACK:
-		GodPack_DePack( apData, apData );
+		GodPack_DePack( apSrc, apDst );
 		break;
 
 	default:
 		break;
 	}
 }
+
+U32		Packer_GetHeaderSize( sPackerHeader * apHeader )
+{
+	U32 lSize = 0;
+
+	switch( Packer_GetType(apHeader) )
+	{
+	case ePACKER_GODPACK:
+		lSize = sizeof(sGodPackHeader);
+		break;
+
+	default:
+		break;
+	}
+
+	return( lSize );
+}
+
 
 /*
 	Let's  avoid memory copying by loading to end of memory buffer for packed data
@@ -165,16 +183,11 @@ void	Packer_Depack( void * apData )
 U32		Packer_GetLoadOffset( sPackerHeader * apHeader )
 {
 	U32 lOffset = 0;
-	U32 lSizePacked,lSizeUnPacked;
-	sGodPackHeader * lpGP = (sGodPackHeader*)apHeader;
 
-	switch( Packer_GetType((sPackerHeader*)apHeader) )
+	switch( Packer_GetType(apHeader) )
 	{
 	case ePACKER_GODPACK:
-		Endian_ReadBigU32( &lpGP->mUnPackedSize, lSizePacked );
-		Endian_ReadBigU32( &lpGP->mPackedSize, lSizeUnPacked );
-
-		lOffset = lSizePacked - lSizeUnPacked;
+		lOffset = GodPack_GetLoadOffset( (sGodPackHeader*)apHeader );
 		break;
 	default:
 		break;

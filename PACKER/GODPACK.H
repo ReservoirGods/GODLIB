@@ -121,6 +121,8 @@ typedef	struct	sGodPackAriTables
 sGodPackHeader *	GodPack_Pack( const void * apSrc, const U32 aSrcSize );
 U32					GodPack_DePack( const void * apSrc, void * apDst );
 
+U32 GodPack_GetLoadOffset( sGodPackHeader * apHeader );
+
 void	GodPack_BitStream_Init( sGodPackBitStream * apStream, void * apMem, const U32 aSize );
 void	GodPack_BitStream_DeInit( sGodPackBitStream * apStream );
 void	GodPack_BitStream_BitWrite( sGodPackBitStream * apStream, const U8 aBit );
