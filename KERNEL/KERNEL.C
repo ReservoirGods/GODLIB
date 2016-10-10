@@ -606,14 +606,17 @@ void	Kernel_Input_Update( void )
 
 void	Kernel_MonitorInputsUpdate( void )
 {
-	U16	i,j;
-	U8	lBits;
+	U16 i;
+	sInput * lpInput;
 
 	gKernelClass.mMonitoredUpdateCount++;
+	lpInput = &gKernelClass.mMonitoredInputs[ 0 ];
 	for( i=0; i<eINPUTTYPE_LIMIT; i++ )
 	{
+#if 0	/* old input detector */
+		U16	i,j;
+		U8	lBits;
 		Input_Update( &gKernelClass.mMonitoredInputs[ i ] );
-
 		lBits = 0;
 		for( j=0; j<eINPUTKEY_LIMIT; j++ )
 		{
@@ -623,6 +626,11 @@ void	Kernel_MonitorInputsUpdate( void )
 		{
 			gKernelClass.mMonitoredCounts[ i ]++;
 		}
+#else
+		Input_Update( &gKernelClass.mMonitoredInputs[ i ] );
+		gKernelClass.mMonitoredCounts[ i ] += lpInput->mMovedFlag;
+		lpInput++;
+#endif
 	}
 }
 

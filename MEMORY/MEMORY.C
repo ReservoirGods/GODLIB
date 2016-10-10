@@ -492,6 +492,8 @@ S32		_Memory_Release( void * apMem )
 * CREATION : 11.09.99 PNK
 *-----------------------------------------------------------------------------------*/
 
+#ifndef dGODLIB_PLATFORM_ATARI
+
 void	Memory_Clear( U32 aSize, void * apMem )
 {
 	U8	*	lpMem;
@@ -507,6 +509,7 @@ void	Memory_Clear( U32 aSize, void * apMem )
 	}
 }
 
+#endif
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : Memory_Copy( U32 aSize, void * apSrc, void * apDst )

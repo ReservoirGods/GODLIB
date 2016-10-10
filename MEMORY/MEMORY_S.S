@@ -6,15 +6,21 @@
 *	[c] 2002 Reservoir Gods
 **************************************************************************************
 
-	xdef	Memory_ClearSimple_1
 	export	Memory_ClearSimple_16
 	export	Memory_ClearMajor
+	export	Memory_Clear
 
 **************************************************************************************
 ;	EXPORTS / IMPORTS
 **************************************************************************************
 
-Memory_ClearSimple_1:
+Memory_Clear:
+	cmp.l	#64,d0
+	bgt		Memory_ClearMajor_1
+
+	cmp.l	#16,d0
+	bgt		Memory_ClearSimple_16_1
+
 
 	bra.s	.first
 .loop:
@@ -26,8 +32,9 @@ Memory_ClearSimple_1:
 
 Memory_ClearMajor:
 	tst.l	d0
-	beq		.noClear
-
+	bne.s	Memory_ClearMajor_1
+	rts
+Memory_ClearMajor_1:
 	moveq	#0,d2
 	add.l	d0,a0
 
@@ -40,7 +47,7 @@ Memory_ClearMajor:
 
 
 	move.l	d0,d1
-	lsr.l	#6,d1
+	lsr.l	#5,d1
 	beq		.nobiggie
 
 	movem.l	d3-d7/a2,-(a7)
@@ -60,9 +67,11 @@ Memory_ClearMajor:
 .first:
 	dbra	d1,.loop
 
+	moveq	#31,d1
+	and.l	d1,d0
+
 	movem.l	(a7)+,d3-d7/a2
 
-	andi.w	#63,d0
 .nobiggie:
 
 	move.l	d0,d1
@@ -87,8 +96,10 @@ Memory_ClearMajor:
 
 Memory_ClearSimple_16:
 	tst.l	d0
-	beq		.noClear
+	bne.s	Memory_ClearSimple_16_1
+	rts
 
+Memory_ClearSimple_16_1:
 	moveq	#0,d1
 
 	move.l	a0,d2
