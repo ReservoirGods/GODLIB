@@ -2658,7 +2658,7 @@ sGuiWindow * Gui_GetpWindowFromName(const char * apName)
 
 void GuiButton_Select(sGuiButton * apButton)
 {
-	if( apButton );
+	if( apButton )
 	{
 		apButton->mInfo.mFlags     |= eGUIINFO_FLAG_SELECTED;
 		apButton->mInfo.mRedrawFlag = 2;

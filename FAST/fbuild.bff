@@ -1,0 +1,5 @@
+.GodLibDir=".."
+.FastBuildDir = "C:\SOURCE\CWMON\EXTERNAL\FASTBUILD\Windows-x64-v0.86"
+
+
+#include "lib.bff"

@@ -1659,6 +1659,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						PreprocessorDefinitions=""
+						ShowIncludes="true"
 					/>
 				</FileConfiguration>
 			</File>

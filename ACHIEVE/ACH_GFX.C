@@ -138,8 +138,8 @@ void	Achieve_Gfx_DeInit( void )
 
 void	Achieve_Gfx_Update( void * apPhysic, void * apLogic )
 {
-	gAchieveGfxClass.mpPhysic = apPhysic;
-	gAchieveGfxClass.mpLogic  = apLogic;
+	gAchieveGfxClass.mpPhysic = (U16*)apPhysic;
+	gAchieveGfxClass.mpLogic  = (U16*)apLogic;
 
 	AchieveGfx_Fade_Update();
 	Achieve_Gfx_Beam_Thread( &gAchieveGfxClass.mBeamThread );

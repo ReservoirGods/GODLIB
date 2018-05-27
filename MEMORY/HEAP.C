@@ -15,6 +15,13 @@
 #define	dHEAP_HEADER_SIZE	3L
 #define	dHEAP_PREV_BIT		1L
 #define	dHEAP_FASTBIN_SIZE	64L
+#define	dHEAP_BIN_LIMIT		128L
+#define	dHEAP_FASTBIN_LIMIT		128L
+
+#define dHEAP_LARGE_SIZE	(1024*128)
+#define mHEAP_GET_SMALLBIN_INDEX( a )	0	
+#define mHEAP_GET_LARGEBIN_INDEX( a )	0	
+
 
 #define	mHEAP_GET_FASTBIN_INDEX( aSize ) \
 	( aSize >> 3L )
@@ -34,32 +41,33 @@
 #define	mHEAP_CHUNK_GET_SIZE( apChunk ) \
 	( ((apChunk)->mSize) & (~dHEAP_PREV_BIT) )
 
-#define	mHEAP_UNLINK( apChunk )					\
-	apChunk->mpPrev->mpNext = apChunk->mpNext;	\	
+#define	mHEAP_CHUNK_UNLINK( apChunk )					\
+	apChunk->mpPrev->mpNext = apChunk->mpNext;	\
 	apChunk->mpNext->mpPrev = apChunk->mpPrev;
 
 #define	mHEAP_CHUNK_SET_FOOT( apChunk ,aSize )	\
-	( (sHeapChunk*)( ((U8*)(apChunk)) + (aSize) )->mPrevSize = (aSize) )
+	( (sHeapChunk*)( ((U8*)(apChunk)) + (aSize) ))->mPrevSize = (aSize)
 
 
 /* ###################################################################################
 #  PROTOTYPES
 ################################################################################### */
 
-struct	sHeapChunk
+typedef struct	sHeapChunk
 {
 	U32		mPrevSize;
-	U32		mSize
+	U32		mSize;
 	struct	sHeapChunk *	mpPrev;
 	struct	sHeapChunk *	mpNext;
-};
+} sHeapChunk;
 
-struct	sHeap
+typedef struct	sHeap
 {
 	U32				mLockedFlag;
 	U32				mSize;
 
 	void *			mpBase;
+	void *			mpLastRemainder;
 
 	sHeapChunk *	mpBins[ dHEAP_BIN_LIMIT ];
 	sHeapChunk *	mpFastBins[ dHEAP_FASTBIN_LIMIT ];
@@ -67,7 +75,7 @@ struct	sHeap
 	sHeapChunk *	mpLastChunk;
 	sHeapChunk *	mpTopChunk;
 	sHeapChunk *	mpUnsortedChunks;
-};
+}sHeap;
 
 void	Heap_FastBinsMerge( sHeap * apHeap );
 
@@ -85,20 +93,21 @@ U32	Heap_Init( sHeap * apHeap,const U32 aSize )
 {
 	U32	i;
 
-	mSize           = aSize;	
-	mLockedFlag     = 0;
-	mpBase          = Memory_Alloc( aSize );
-	mpLastRemainder = 0;
+	apHeap->mSize           = aSize;	
+	apHeap->mLockedFlag     = 0;
+	apHeap->mpBase          = Memory_Alloc( aSize );
+	apHeap->mpLastRemainder = 0;
 
-	for( i=0; i<dHEAP_BIN_LIMIT )
+	for( i=0; i<dHEAP_BIN_LIMIT; i++ )
 	{
-		mpBins[ i ] = 0;
+		apHeap->mpBins[ i ] = 0;
 	}
 
-	for( i=0; i<dHEAP_BIN_LIMIT )
+	for( i=0; i<dHEAP_BIN_LIMIT; i++ )
 	{
-		mpFastBins[ i ] = 0;
+		apHeap->mpFastBins[ i ] = 0;
 	}
+	return( 0 );
 }
 
 
@@ -110,7 +119,8 @@ U32	Heap_Init( sHeap * apHeap,const U32 aSize )
 
 U32	Heap_DeInit( sHeap * apHeap )
 {
-	Memory_Free( mpBase );
+	mMEMFREE( apHeap->mpBase );
+	return( 0 );
 }
 
 
@@ -122,7 +132,8 @@ U32	Heap_DeInit( sHeap * apHeap )
 
 U32	Heap_Reset( sHeap * apHeap )
 {
-	
+	(void)	apHeap;
+	return( 0 );
 }
 
 
@@ -141,28 +152,28 @@ void *	Heap_Alloc( sHeap * apHeap,const U32 aSize )
 	
 	lSize = (aSize + sizeof(sHeapChunk) + dHEAP_ALIGN_SIZE) & (~dHEAP_ALIGN_SIZE);
 
-	if( allocatedstuff )
+/*	if( allocatedstuff )*/
 	{
 		if( lSize <= dHEAP_FASTBIN_SIZE )
 		{
 			lIndex  = mHEAP_GET_FASTBIN_INDEX( lSize );
-			lpChunk = mpFastBins[ lIndex ];
+			lpChunk = apHeap->mpFastBins[ lIndex ];
 			if( lpChunk )
 			{
-				mpFastBins[ lIndex ] = lpChunk->mpNext;
+				apHeap->mpFastBins[ lIndex ] = lpChunk->mpNext;
 				return( mHEAP_CHUNK2MEM( lpChunk ) );
 			}
 		}
 		if( lSize < dHEAP_LARGE_SIZE )
 		{
 			lIndex  = mHEAP_GET_SMALLBIN_INDEX( lSize );
-			lpChunk = mpBins[ lIndex ];
+			lpChunk = apHeap->mpBins[ lIndex ];
 			if( lpChunk )
 			{
-				mpBins[ lIndex ] = lpChunk->mpPrev;
-				if( mpBins[ lIndex ] )
+				apHeap->mpBins[ lIndex ] = lpChunk->mpPrev;
+				if( apHeap->mpBins[ lIndex ] )
 				{
-					mpBins[ lIndex ]->mpNext = lpChunk->mpNext;
+					apHeap->mpBins[ lIndex ]->mpNext = lpChunk->mpNext;
 				}
 				return( mHEAP_CHUNK2MEM( lpChunk ) );
 			}
@@ -174,6 +185,9 @@ void *	Heap_Alloc( sHeap * apHeap,const U32 aSize )
 		}
 	}
 
+	lpMem = 0;
+
+	return( lpMem );
 }
 
 
@@ -187,7 +201,7 @@ void	Heap_Free( sHeap * apHeap,void * apMem )
 {
 	U32				lSize;
 	sHeapChunk *	lpChunk;
-
+	(void)apHeap;
 	if( apMem )
 	{
 		lpChunk = mHEAP_MEM2CHUNK( apMem );
@@ -231,14 +245,14 @@ void	Heap_FastBinsMerge( sHeap * apHeap )
 			if( mHEAP_PREV_ACTIVE( lpChunk ) )
 			{
 				lSize  += lpChunk->mPrevSize;
-				lpChunk = mHEAP_pCHUNK_BUILD( lpChunk, -lpChunk->mPrevSize );
+				lpChunk = mHEAP_pCHUNK_BUILD( lpChunk, 0-lpChunk->mPrevSize );
 				mHEAP_CHUNK_UNLINK( lpChunk );
 			}
 
 			if( lpChunkAfter == apHeap->mpTopChunk )
 			{
 				lSize              += lAfterSize;
-				lpChunk->mSize      = lSize | mHEAP_PREV_BIT;
+				lpChunk->mSize      = lSize | dHEAP_PREV_BIT;
 				apHeap->mpTopChunk  = lpChunk;
 			}
 			else
@@ -256,9 +270,9 @@ void	Heap_FastBinsMerge( sHeap * apHeap )
 				apHeap->mpUnsortedChunks->mpNext = lpChunk;
 				lpChunk->mpPrev                  = apHeap->mpUnsortedChunks;
 				lpChunk->mpNext                  = lpChunkAfter;
-				lpChunk->mSize                   = lSize | mHEAP_PREV_BIT;
+				lpChunk->mSize                   = lSize | dHEAP_PREV_BIT;
 
-				lpChunk->mSize      = lSize | mHEAP_PREV_BIT;
+				lpChunk->mSize      = lSize | dHEAP_PREV_BIT;
 				mHEAP_CHUNK_SET_FOOT( lpChunk, lSize );
 			}
 

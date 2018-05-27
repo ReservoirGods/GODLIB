@@ -163,7 +163,7 @@ void			Cli_Init( void )
 	gCli.mTabIndex          = 0;
 	gCli.mTabbingFlag       = 0;
 
-	gCli.mpCliSavedScreen = mMEMALLOC( 32000L );
+	gCli.mpCliSavedScreen = (U16*)mMEMALLOC( 32000L );
 	gCli.mInitialisedFlag = 1;
 }
 
@@ -285,7 +285,7 @@ void	Cli_FileProcess( char * apFileName )
 	if( File_Exists(apFileName) )
 	{
 		lFileSize  = File_GetSize( apFileName );
-		lpFileText = File_Load( apFileName );
+		lpFileText = (char *)File_Load( apFileName );
 
 		lDataFlag = 0;
 		lOffset   = 0;
@@ -348,8 +348,8 @@ void	Cli_Main()
 	if( gCli.mInitialisedFlag )
 	{
 		Video_GetConfig( &lVideoConfig );
-		Cli_CopyScreen(  Video_GetpPhysic(), gCli.mpCliSavedScreen );
-		Cli_ClearScreen( Video_GetpPhysic() );
+		Cli_CopyScreen(  (U16*)Video_GetpPhysic(), gCli.mpCliSavedScreen );
+		Cli_ClearScreen( (U16*)Video_GetpPhysic() );
 		Video_GetPalST( &gCli.mSavedPal[ 0 ] );
 
 		Video_SetResolution( 320, 200, eVIDEO_MODE_4PLANE, 320 );
@@ -357,7 +357,7 @@ void	Cli_Main()
 
 		lExitFlag = 0;
 
-		Cli_ClearScreen( Video_GetpPhysic() );
+		Cli_ClearScreen( (U16*)Video_GetpPhysic() );
 		Cli_InitCurrentLine();
 		Cli_DrawCli();
 
@@ -442,8 +442,8 @@ void	Cli_Main()
 		IKBD_ClearLastKeyPress();
 
 		Video_SetConfig( &lVideoConfig );
-		Video_SetPalST( &gCli.mSavedPal[ 0 ] );
-		Cli_CopyScreen( gCli.mpCliSavedScreen, Video_GetpPhysic() );
+		Video_SetPalST( (U16*)&gCli.mSavedPal[ 0 ] );
+		Cli_CopyScreen( gCli.mpCliSavedScreen, (U16*)Video_GetpPhysic() );
 	}
 }
 
@@ -793,7 +793,7 @@ void		Cli_StringCopy( char * apDst, const char * apSrc )
 
 void		Cli_DrawCli()
 {
-	Cli_ClearScreen( Video_GetpPhysic() );
+	Cli_ClearScreen( (U16*)Video_GetpPhysic() );
 	Cli_DrawHistory();
 	Cli_DrawCurrentLine();
 }
@@ -829,7 +829,7 @@ void		Cli_DrawHistory( void )
 	S16	lLineY;
 	U16 * lpPhysic;
 
-	lpPhysic = Video_GetpPhysic();
+	lpPhysic = (U16*)Video_GetpPhysic();
 	if( lpPhysic )
 	{
 		lLineIndex = gCli.mDisplayLineIndex;
@@ -867,9 +867,9 @@ void		Cli_DrawCurrentLine( void )
 
 	lY = (dCLI_DISPLAYLINES_LIMIT-1)*8;
 
-	Cli_DrawBox( Video_GetpPhysic(), 0, lY, 320, 8 );
+	Cli_DrawBox( (U16*)Video_GetpPhysic(), 0, lY, 320, 8 );
 	sprintf( lString, ">%s*", &gCli.mCurrentLine[0] );
-	Font8x8_Print( lString, Video_GetpPhysic(), 0, lY );
+	Font8x8_Print( lString, (U16*)Video_GetpPhysic(), 0, lY );
 }
 
 

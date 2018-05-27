@@ -758,8 +758,10 @@ void	HashTree_Tokenise( sHashTreeTokeniser * apToken,const char * apString )
 
 	if( lDstIndex )
 	{
-		if( lSrcString[ lDstIndex-1 ] == '\\' );
-		lSrcString[ lDstIndex-1 ] = 0;
+		if( lSrcString[ lDstIndex-1 ] == '\\' )
+		{
+			lSrcString[ lDstIndex-1 ] = 0;
+		}
 	}
 	lSrcString[ lDstIndex ] =0;
 

@@ -174,7 +174,7 @@ void	Kernel_Init( sKernelTask * apTasks,const U16 aTaskCount,sPackage * apPackag
 	{
 		gKernelClass.mInputType = eKERNEL_INPUT_SAVING;
 		gKernelClass.mInputBufferSize = 1024L * 64L;
-		gKernelClass.mpInputBuffer = mMEMCALLOC( gKernelClass.mInputBufferSize );
+		gKernelClass.mpInputBuffer = (U8*)mMEMCALLOC( gKernelClass.mInputBufferSize );
 	}
 #endif
 }
@@ -857,7 +857,7 @@ void	Kernel_InputBufferLoad( const char * apFileName )
 		gKernelClass.mInputBufferSize = File_GetSize( apFileName );
 		if( gKernelClass.mInputBufferSize )
 		{
-			gKernelClass.mpInputBuffer = mMEMCALLOC( gKernelClass.mInputBufferSize );
+			gKernelClass.mpInputBuffer = (U8*)mMEMCALLOC( gKernelClass.mInputBufferSize );
 			File_LoadAt( apFileName, gKernelClass.mpInputBuffer );
 			gKernelClass.mInputType = eKERNEL_INPUT_LOADING;
 		}

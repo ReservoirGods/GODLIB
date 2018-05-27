@@ -298,7 +298,7 @@ U8	Video_SetResolution( const U16 aWidth,const U16 aHeight,const U16 aMode,const
 	}
 	gVideoPalSplitter.mPalSizeBytes = 16*2;
 	gVideoPalSplitter.mpPalBase = mMEMCALLOC( gVideoPalSplitter.mPalSizeBytes * aHeight );
-	gVideoPalSplitter.mppLines  = mMEMCALLOC( 4 * aHeight );
+	gVideoPalSplitter.mppLines  = (void**)mMEMCALLOC( 4 * aHeight );
 	Video_PalSplitResetST();
 #endif
 
@@ -693,7 +693,7 @@ void	Video_SetPhysic( const void * apPhysic )
 	gVideo.mpPhysic          = (void *)apPhysic;
 	gVideo.mUpdatePhysicFlag = 0;
 #if defined (dGODLIB_SYSTEM_D3D)
-	VideoD3D_DisplayScreen( apPhysic );
+	VideoD3D_DisplayScreen( (U16*)apPhysic );
 #elif defined( dGODLIB_SYSTEM_SDL)
 	Video_SDL_DisplayScreen( (U16*)apPhysic );
 #endif

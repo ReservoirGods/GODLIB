@@ -1,0 +1,45 @@
+{
+	"build_systems":
+	[
+		{
+			"name": "GODLIB-FASTBUILD",
+			
+			"selector": "source.c++",
+			"shell": true,
+			"working_dir": "${project_path}",
+
+			 "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
+
+			"linux":
+			{
+				 "cmd":
+				 [
+					"./CODE_BUILD.SH ARCHITECTURE=X86 CONFIGURATION=DEBUG GFXAPI=CON all",
+				 ],
+			},
+			"osx":
+			{
+				 "cmd":
+				 [
+					"./CODE_BUILD.SH ARCHITECTURE=X86 CONFIGURATION=DEBUG GFXAPI=CON all",
+				 ],
+			},
+			"windows":
+			{
+				 "cmd":
+				 [
+					"fbuild.exe",
+					"godlib-x86-Debug",
+				 ],
+				"file_regex": "^[ \\t]*(.*)\\((\\d+)\\): error .*\\d+:(.*)\\[[^\\]]*].*$",
+			},
+		},
+	],
+
+	"folders":
+	[
+		{
+			"path": "C:\\ATARI_HD\\SOURCE\\GITHUB\\GODLIB"
+		}
+	]
+}

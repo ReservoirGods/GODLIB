@@ -198,7 +198,7 @@ void	Achieve_Compiler_Compile( const char * apSrcFileName, const char * apDstFil
 	char *	lpSrc;
 
 	(void)apDstFileName;
-	lpSrc = File_Load( apSrcFileName );
+	lpSrc = (char*)File_Load( apSrcFileName );
 
 	if( lpSrc )
 	{
@@ -217,7 +217,7 @@ void	Achieve_Compiler_Compile( const char * apSrcFileName, const char * apDstFil
 
 			if( gAchieveCompiler.mScoreTableCount )
 			{
-				gAchieveCompiler.mpScoreTableEntryCounts = mMEMCALLOC( 4 * gAchieveCompiler.mScoreTableCount );
+				gAchieveCompiler.mpScoreTableEntryCounts = (U32*)mMEMCALLOC( 4 * gAchieveCompiler.mScoreTableCount );
 			}
 			gAchieveCompiler.mScoreTableIndex = 0;
 
@@ -234,8 +234,8 @@ void	Achieve_Compiler_Compile( const char * apSrcFileName, const char * apDstFil
 					}
 				}
 
-				gAchieveCompiler.mScoreTableDef.mpValues = mMEMCALLOC( 4 * lEntryCount );
-				gAchieveCompiler.mScoreTableDef.mpNames  = mMEMCALLOC( sizeof(sAchieveUserName) * lEntryCount );
+				gAchieveCompiler.mScoreTableDef.mpValues = (S32*)mMEMCALLOC( 4 * lEntryCount );
+				gAchieveCompiler.mScoreTableDef.mpNames  = (sAchieveUserName*)mMEMCALLOC( sizeof(sAchieveUserName) * lEntryCount );
 			}
 
 

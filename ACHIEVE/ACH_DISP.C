@@ -159,8 +159,8 @@ void	Achieve_Display_ScoreTable_DeInit( void )
 
 U16	Achieve_Display_ScoreTable_Update( void * apPhysic, void * apLogic, const U8 aPacket, const U8 aKey )
 {
-	gAchieveDisplayClass.mpPhysic = apPhysic;
-	gAchieveDisplayClass.mpLogic  = apLogic;
+	gAchieveDisplayClass.mpPhysic = (U16*)apPhysic;
+	gAchieveDisplayClass.mpLogic  = (U16*)apLogic;
 
 	Achieve_Gfx_Update( apPhysic, apLogic );
 	Achieve_Input_Update( aPacket, aKey );
@@ -342,8 +342,8 @@ void	Achieve_Display_Stats_DeInit( void )
 
 U16	Achieve_Display_Stats_Update( void * apPhysic, void * apLogic, const U8 aPacket, const U8 aKey )
 {
-	gAchieveDisplayClass.mpPhysic = apPhysic;
-	gAchieveDisplayClass.mpLogic  = apLogic;
+	gAchieveDisplayClass.mpPhysic = (U16*)apPhysic;
+	gAchieveDisplayClass.mpLogic  = (U16*)apLogic;
 
 	Achieve_Gfx_Update( apPhysic, apLogic );
 	Achieve_Input_Update( aPacket, aKey );
@@ -508,8 +508,8 @@ void	Achieve_Display_Tasks_DeInit( void )
 
 U16	Achieve_Display_Tasks_Update( void * apPhysic, void * apLogic, const U8 aPacket, const U8 aKey )
 {
-	gAchieveDisplayClass.mpPhysic = apPhysic;
-	gAchieveDisplayClass.mpLogic  = apLogic;
+	gAchieveDisplayClass.mpPhysic = (U16*)apPhysic;
+	gAchieveDisplayClass.mpLogic  = (U16*)apLogic;
 
 	Achieve_Gfx_Update( apPhysic, apLogic );
 	Achieve_Input_Update( aPacket, aKey );
@@ -666,8 +666,8 @@ void	Achieve_Display_Unlocked_DeInit( void )
 
 U16	Achieve_Display_Unlocked_Update( void * apPhysic, void * apLogic, const U8 aPacket, const U8 aKey )
 {
-	gAchieveDisplayClass.mpPhysic = apPhysic;
-	gAchieveDisplayClass.mpLogic  = apLogic;
+	gAchieveDisplayClass.mpPhysic = (U16*)apPhysic;
+	gAchieveDisplayClass.mpLogic  = (U16*)apLogic;
 
 	Achieve_Gfx_Update( apPhysic, apLogic );
 	Achieve_Input_Update( aPacket, aKey );

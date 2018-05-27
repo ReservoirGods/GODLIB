@@ -12,13 +12,13 @@
 #  PROTOTYPES
 ################################################################################### */
 
-U32		Heap_Init( sHeap * apHeap, const U32 aSize );
-U32		Heap_DeInit( sHeap * apHeap );
+U32		Heap_Init( struct sHeap * apHeap, const U32 aSize );
+U32		Heap_DeInit( struct sHeap * apHeap );
 
-U32		Heap_Reset( sHeap * apHeap );
+U32		Heap_Reset( struct sHeap * apHeap );
 
-void *	Heap_Alloc( sHeap * apHeap, const U32 aSize );
-void	Heap_Free( sHeap * apHeap, void * apMem );
+void *	Heap_Alloc( struct sHeap * apHeap, const U32 aSize );
+void	Heap_Free( struct sHeap * apHeap, void * apMem );
 
 
 /* ################################################################################ */

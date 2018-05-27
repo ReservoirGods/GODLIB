@@ -143,7 +143,7 @@ void	Achieve_Create( const U16 aScoreTableCount, const U16 aStatCount, const U16
 	gAchieveMainClass.mBufferOffset = 0;
 	gAchieveMainClass.mDataSizeCurrent = 0;
 	gAchieveMainClass.mStringSizeCurrent = 0;
-	gAchieveMainClass.mpBufferBase = apBuffer;
+	gAchieveMainClass.mpBufferBase = (U8*)apBuffer;
 
 	lpH = (sAchieveHeader*)Achieve_DataAdd( sizeof(sAchieveHeader) );
 	gAchieveMainClass.mpHeader = lpH;
@@ -466,8 +466,8 @@ void	Achieve_ScoreTable_SetScoreTableDef( const U16 aTableIndex, const sAchieveS
 	lpDst->mpTableName    = Achieve_StringAdd( apScoreTableDef->mpTableName );
 	lpDst->mSortDirection = apScoreTableDef->mSortDirection;
 	lpDst->mType          = apScoreTableDef->mType;
-	lpDst->mpValues       = Achieve_DataAdd( apScoreTableDef->mEntryCount * 4 );
-	lpDst->mpNames        = Achieve_DataAdd( apScoreTableDef->mEntryCount * sizeof(sAchieveUserName) );
+	lpDst->mpValues       = (S32*)Achieve_DataAdd( apScoreTableDef->mEntryCount * 4 );
+	lpDst->mpNames        = (sAchieveUserName*)Achieve_DataAdd( apScoreTableDef->mEntryCount * sizeof(sAchieveUserName) );
 
 
 	for( i=0; i<apScoreTableDef->mEntryCount; i++ )
@@ -735,7 +735,7 @@ U8	Achieve_Load( const char * apFileName, void * apBuffer, const U32 aBufferSize
 	lSize = File_GetSize( apFileName );
 
 	gAchieveMainClass.mBufferSize = aBufferSize;
-	gAchieveMainClass.mpBufferBase = apBuffer;
+	gAchieveMainClass.mpBufferBase = (U8*)apBuffer;
 
 	if( lSize > 0 )
 	{
@@ -1641,7 +1641,7 @@ void	Achieve_UserCreate( const char * apName )
 	{
 		sAchieveUser *	lpUserOld;
 
-		lpUser = Achieve_DataAdd( sizeof(sAchieveUser) );
+		lpUser = (sAchieveUser*)Achieve_DataAdd( sizeof(sAchieveUser) );
 		lpUser->mpUserNext = 0;
 
 		lpUserOld = &gAchieveMainClass.mpHeader->mUserInfo;
@@ -1656,13 +1656,13 @@ void	Achieve_UserCreate( const char * apName )
 		lpUser = &gAchieveMainClass.mpHeader->mUserInfo;
 	}
 	Achieve_StrCpy( lpUser->mUserName.mName, apName, 16 );
-	lpUser->mpScoreTableValues = Achieve_DataAdd( sizeof(sAchieveScoreTableValues) * gAchieveMainClass.mpHeader->mGameInfo.mScoreTableCount );
+	lpUser->mpScoreTableValues = (sAchieveScoreTableValues*)Achieve_DataAdd( sizeof(sAchieveScoreTableValues) * gAchieveMainClass.mpHeader->mGameInfo.mScoreTableCount );
 	for( i=0; i<gAchieveMainClass.mpHeader->mGameInfo.mScoreTableCount; i++ )
 	{
-		lpUser->mpScoreTableValues[ i ].mpValues = Achieve_DataAdd( sizeof(U32) * gAchieveMainClass.mpHeader->mGameInfo.mpScoreTableDefs[ i ].mEntryCount );
+		lpUser->mpScoreTableValues[ i ].mpValues = (U32*)Achieve_DataAdd( sizeof(U32) * gAchieveMainClass.mpHeader->mGameInfo.mpScoreTableDefs[ i ].mEntryCount );
 	}
-	lpUser->mpStatValues       = Achieve_DataAdd( sizeof(U32) * gAchieveMainClass.mpHeader->mGameInfo.mStatCount );
-	lpUser->mpTaskValues       = Achieve_DataAdd( (gAchieveMainClass.mpHeader->mGameInfo.mTaskCount + 7) >> 3 );
+	lpUser->mpStatValues       = (U32*)Achieve_DataAdd( sizeof(U32) * gAchieveMainClass.mpHeader->mGameInfo.mStatCount );
+	lpUser->mpTaskValues       = (U8*)Achieve_DataAdd( (gAchieveMainClass.mpHeader->mGameInfo.mTaskCount + 7) >> 3 );
 
 	gAchieveMainClass.mpHeader->mUserCount++;
 	Achieve_SetUser( gAchieveMainClass.mpHeader->mUserCount-1 );
