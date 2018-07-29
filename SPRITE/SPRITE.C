@@ -306,11 +306,9 @@ sSprite	*	Sprite_CreatePreShifted( sSprite * apSprite, const U16 aShiftAmount )
 	U32			lGfxSize;
 	U32			lMskSize;
 	U32			lXwords;
-	U16			lWidth;
 	U16			i,y,x;
 
 	lXwords   = ((apSprite->mWidth+31)>>4);
-	lWidth    = (U16)(lXwords << 4);
 
 	lGfxSize  = (lXwords<<1);
 	lGfxSize *= apSprite->mGfxPlaneCount;

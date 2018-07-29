@@ -213,7 +213,9 @@ void	Screen_Update( void )
 	{
 		Vbl_WaitVbl();
 		lVbls = Vbl_GetCounter() - gScreenClass.mLastVbl;
-	} while( lVbls < (S32)gScreenClass.mFrameRate );
+	}
+	while( lVbls < (S32)gScreenClass.mFrameRate );
+
 
 #ifdef	dGODLIB_PLATFORM_ATARI
 	if( lResFlag )

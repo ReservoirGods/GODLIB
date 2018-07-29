@@ -68,6 +68,7 @@ S32	VideoD3D_Init( void )
 	d3dpp.EnableAutoDepthStencil = TRUE;
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D16_LOCKABLE;
 	d3dpp.Flags                  = D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
+	d3dpp.PresentationInterval   = D3DPRESENT_DONOTWAIT;
 
 	gVideoD3DColourMode = (U16)d3ddm.Format;
 
@@ -179,7 +180,6 @@ void	VideoD3D_DisplayScreen( const U16 * apScreen )
 		TranslateMessage( &msg );
 		DispatchMessage( &msg );
 	}
-
 
 	// Clear the backbuffer and the zbuffer
 	IDirect3DDevice9_Clear( g_pd3dDevice, 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER,
@@ -753,6 +753,8 @@ DWORD	gVideoD3DVBLTicks = 20;
 
 void	VideoD3D_VblFunc( void )
 {
+	return;
+/*
 	DWORD				lTicks;
 
 	do
@@ -767,6 +769,7 @@ void	VideoD3D_VblFunc( void )
 
 	gVideoD3DTicks = GetTickCount();
 	Memory_Validate();
+*/
 }
 
 

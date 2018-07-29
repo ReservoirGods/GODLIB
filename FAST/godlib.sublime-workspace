@@ -42,7 +42,7 @@
 			"file": "lib.bff",
 			"settings":
 			{
-				"buffer_size": 5198,
+				"buffer_size": 4854,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -446,15 +446,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5198,
+						"buffer_size": 4854,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3578,
-								3578
+								2108,
+								2108
 							]
 						],
 						"settings":
