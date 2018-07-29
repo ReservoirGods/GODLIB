@@ -68,6 +68,9 @@ U32				Sprite_GetGfxSize( sSprite * apSprite );
 void			Sprite_Delocate( sSprite * apSprite );
 void			Sprite_Relocate( sSprite * apSprite );
 
+U16 *			Sprite_MaskCreate( U16 * apGfx, U16 aWidth, U16 aHeight, U16 aGfxPlaneCount, U16 aMskPlaneCount, const U8 aOpaqueFlag );
+void			Sprite_MaskDestroy( U16 * apMsk );
+
 sSpriteBlock *	Sprite_BlockClone( sSpriteBlock * apSrc );
 sSpriteBlock *	Sprite_BlockCreate( U16 aSpriteCount );
 void			Sprite_BlockDestroy( sSpriteBlock * apBlock );

@@ -94,6 +94,80 @@ void	Sprite_DeInit( void )
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : Sprite_Create( U16 * apGfx, U16 * apMsk, U16 aWidth, U16 aHeight, U16 aGfxPlaneCount, U16 aMskPlaneCount )
+* ACTION   : creates a mask for a sprite
+* CREATION : 29.07.18 PNK
+*-----------------------------------------------------------------------------------*/
+
+U16 *	Sprite_MaskCreate( U16 * apGfx, U16 aWidth, U16 aHeight, U16 aGfxPlaneCount, U16 aMskPlaneCount, const U8 aOpaqueFlag )
+{
+	U16		lXwords;
+	U16 * 	lpMsk;
+
+	lXwords   = ((aWidth+15)>>4);
+
+	lpMsk = (U16*)mMEMCALLOC( 160 * aHeight );
+
+	if( !aOpaqueFlag && lpMsk )
+	{
+		U16 lMask;
+		U16 * lpDst;
+
+		lpDst = lpMsk;
+		while( aHeight-- )
+		{
+			U16 lPlanes;
+			U16 * lpSrc;
+			U16 * lpDst2;
+			U16 lWidth;
+
+			lpDst2 = lpDst;
+			lWidth = lXwords;
+
+			while( lWidth-- )
+			{
+				lMask  = 0;
+				lpSrc = apGfx;
+
+				lPlanes = aGfxPlaneCount;
+				while( lPlanes-- )
+				{
+					lMask |= *lpSrc++;
+				}
+				lMask  = ~lMask;
+
+				lPlanes = aMskPlaneCount;
+				while( lPlanes-- )
+				{
+					*lpDst2++ = lMask;
+				}
+			}
+			lpDst += 80;
+			apGfx += 80;
+		}
+	}
+
+	return( lpMsk );
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Sprite_Create( U16 * apGfx, U16 * apMsk, U16 aWidth, U16 aHeight, U16 aGfxPlaneCount, U16 aMskPlaneCount )
+* ACTION   : destroys a sprite maskl
+* CREATION : 29.07.18 PNK
+*-----------------------------------------------------------------------------------*/
+
+void			Sprite_MaskDestroy( U16 * apMsk )
+{
+	if( apMsk )
+	{
+		mMEMFREE( apMsk );
+	}
+
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Sprite_Create( U16 * apGfx, U16 * apMsk, U16 aWidth, U16 aHeight, U16 aGfxPlaneCount, U16 aMskPlaneCount )
 * ACTION   : creates a sprite
 * CREATION : 17.02.01 PNK
 *-----------------------------------------------------------------------------------*/
