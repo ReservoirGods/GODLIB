@@ -56,6 +56,8 @@ typedef	struct sSpriteRect
 #  PROTOTYPES
 ################################################################################### */
 
+void			Sprite_Init( void );
+void			Sprite_DeInit( void );
 
 sSprite *		Sprite_Create( U16 * apGfx, U16 * apMsk, U16 aWidth, U16 aHeight, U16 aGfxPlaneCount, U16 aMskPlaneCount, const U8 aOpaqueFlag );
 sSprite	*		Sprite_CreatePreShifted( sSprite * apSprite, const U16 aShiftAmount );
