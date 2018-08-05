@@ -2793,7 +2793,7 @@ Graphic_4BP_DrawPixel_Go:
 * ACTION:   draws a sprite with clipping
 * CREATION: 01.02.02 PNK
 *------------------------------------------------------------------------------------*
-fuck:
+
 Graphic_4BP_DrawSprite_Clip:
 	movem.l	d3-d7/a2-a6,-(a7)
 
