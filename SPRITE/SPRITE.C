@@ -123,10 +123,10 @@ U16 *	Sprite_MaskCreate( U16 * apGfx, U16 aWidth, U16 aHeight, U16 aGfxPlaneCoun
 			lpDst2 = lpDst;
 			lWidth = lXwords;
 
+			lpSrc = apGfx;
 			while( lWidth-- )
 			{
 				lMask  = 0;
-				lpSrc = apGfx;
 
 				lPlanes = aGfxPlaneCount;
 				while( lPlanes-- )
