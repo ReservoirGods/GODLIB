@@ -95,6 +95,8 @@ void			(*Bios_Setexec( const U16 aNum, void (* apNewVec)(void) ))(void);
 
 S32				Bios_Tickcal( void );
 
+void			Bios_PipeConsole( void * apBuffer, U32 aBufferSize );
+void			Bios_UnPipeConsole( void );
 
 /* ################################################################################ */
 
