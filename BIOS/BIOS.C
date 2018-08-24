@@ -10,13 +10,24 @@
 
 #ifndef	dGODLIB_PLATFORM_ATARI
 
-void			Bios_PipeConsole( S32 aFileHandle )
+void			Bios_PipeConsole( void * apBuffer, U32 aBufferSize )
 {
-	(void)aFileHandle;
+	(void)apBuffer;
+	(void)aBufferSize;
 }
 
 void			Bios_UnPipeConsole( void )
 {
+}
+
+U32		Bios_GetPipeOffset( void )
+{
+	return(0);
+}
+
+void		Bios_ClearPipeOffset( void )
+{
+
 }
 
 #endif

@@ -5,7 +5,7 @@
 #  INCLUDES
 ################################################################################### */
 
-#include	<GODLIB/BASE/BASE.H>
+#include	<GODLIB\BASE\BASE.H>
 
 
 /* ###################################################################################
@@ -97,6 +97,9 @@ S32				Bios_Tickcal( void );
 
 void			Bios_PipeConsole( void * apBuffer, U32 aBufferSize );
 void			Bios_UnPipeConsole( void );
+
+U32				Bios_GetPipeOffset( void );
+void			Bios_ClearPipeOffset( void );
 
 /* ################################################################################ */
 

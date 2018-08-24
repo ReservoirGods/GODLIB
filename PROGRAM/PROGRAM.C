@@ -200,6 +200,7 @@ void				Program_UnLoad( sBasePage * apHeader )
 void				Program_Execute( sBasePage * apPage, const char * apCmdLine )
 {
 	int i;
+	if( !apPage ) return;
 	if( apCmdLine )
 	{
 		for( i=0; (i<127) && apCmdLine[i]; apPage->mCommandLine[i+1] = apCmdLine[i], i++ );

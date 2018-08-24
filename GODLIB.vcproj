@@ -575,6 +575,10 @@
 			Name="BIOS"
 			>
 			<File
+				RelativePath=".\BIOS\BIOS.C"
+				>
+			</File>
+			<File
 				RelativePath="BIOS\BIOS.H"
 				>
 			</File>
