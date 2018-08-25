@@ -59,7 +59,7 @@ sBasePage_sizeof:			ds.b	1
 **************************************************************************************
 
 *------------------------------------------------------------------------------------*
-* FUNCTION : Program_Execute_Internal( sProgramHeader * apProg, char * apCmdLine )
+* FUNCTION : Program_Execute_Internal( sBasePage * apPage, char * apCmdLine )
 * ACTION   : starts a program
 * CREATION : 12.08.18 PNK
 *------------------------------------------------------------------------------------*

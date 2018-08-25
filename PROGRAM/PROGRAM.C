@@ -28,7 +28,7 @@ sBasePage	gBasePageWin;
 void * _BasPag = &gBasePageWin;
 #endif
 
-void	Program_Execute_Internal( const sProgramHeader * apHeader, const char * apCmdLine );
+void	Program_Execute_Internal( const sBasePage * apHeader, const char * apCmdLine );
 
 
 /* ###################################################################################
@@ -158,16 +158,13 @@ sBasePage *	Program_Load( const char * apFileName )
 			{			
 				U32		lTextSize;
 				U32		lDataSize;
-				U32		lBssSize;
 
 				sBasePage * lpParent = (sBasePage*)_BasPag;
 				sBasePage * lpPage = (sBasePage *)lpData;
 				Program_Relocate( lpHead );
 
-
 				Endian_ReadBigU32( &lHeader.mTextSize, lTextSize );
 				Endian_ReadBigU32( &lHeader.mDataSize, lDataSize );
-				Endian_ReadBigU32( &lHeader.mBSSSize, lBssSize );
 
 				lpPage->mpLowTPA = lpPage;
 				lpPage->mpHiTPA = lpParent->mpHiTPA;
