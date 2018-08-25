@@ -66,24 +66,24 @@ sBasePage_sizeof:			ds.b	1
 Program_Execute_Internal:
 	movem.l	d0-a6,-(a7)
 	
-	move.l	a7,Program_Execute_Return+2
+	move.l	a7,Program_Execute_Return+2		; save SP
 	
-	move.l	a0,a6
+	move.l	a0,a6							; save ptr to program header
 
-	bsr		Program_TrapInit
+	bsr		Program_TrapInit				; install new GEMDOS handler
 
-	move.l	a6,-(a7)
-	clr.l	-(a7)
+	move.l	a6,-(a7)						; basepage pointer on stack
+	clr.l	-(a7)							; clear stack
 
-	move.l	sBasePage_mpData(a6),a4
-	move.l	sBasePage_mpBSS(a6),a5
+	move.l	sBasePage_mpData(a6),a4			; ptr to DATA segment
+	move.l	sBasePage_mpBSS(a6),a5			; ptr to BSS segment
 
-	; set up heap for linear allocator at 4 byte aligned address after BSS segment
-	move.l	a5,d0
-	add.l	sBasePage_mBSSLength(a6),d0
-	addq.l	#3,d0
-	and.b	#$FC,d0
-	move.l	d0,gProgram_MallocAdr
+	
+	move.l	a5,d0							; start of BSS
+	add.l	sBasePage_mBSSLength(a6),d0		; end of BSS segment
+	addq.l	#3,d0							; for alignment
+	and.b	#$FC,d0							; 4 byte align
+	move.l	d0,gProgram_MallocAdr			; store initial malloc address
 
 	moveq	#0,d0
 	move.l	d0,d1
@@ -97,40 +97,62 @@ Program_Execute_Internal:
 	move.l	d0,a0
 	move.l	d0,a1
 	move.l	d0,a2
-	move.l	d0,a3
+	move.l	d0,a3							; clear registers
 
-	lea		sBasePage_sizeof(a6),a6
+	lea		sBasePage_sizeof(a6),a6			; program starts at end of basepage
 	jmp		(a6)
 Program_Execute_Return:
-	move.l	#$12345678,a7
+	move.l	#$12345678,a7					; restore old SP
 
-	bsr		Program_TrapDeInit
+	bsr		Program_TrapDeInit				; reinstall old GEMDOS handler
 
-	movem.l	(a7)+,d0-a6
+	movem.l	(a7)+,d0-a6						; restore registers
 	rts
 
 Program_Supexec:
-	move.w	#$26,-(a7)
-	trap	#14
-	addq.l	#6,a7
+	move.w	#$26,-(a7)				; superexec()
+	trap	#14						; call XBIOS
+	addq.l	#6,a7					; fix stack
 	rts
 
 Program_TrapInit:
-	move.w	SR,Program_pterm+2
-	pea	Program_TrapInitX
-	bra	Program_Supexec
+	move.w	SR,Program_pterm+2		; original status register
+	pea	Program_TrapInitX			; routine to execute in supervisor mode
+	bra	Program_Supexec				; execute it
 
 Program_TrapInitX:
-	move.l	$84.w,Program_OldTrap1+2
-	move.l	#Program_Trap1,$84.w
+
+	move.l	$5A0,d0					; cookie jar
+	tst.l	d0						; valid pointer?
+	beq.s	.install				; no, must be oldschool ST
+	move.l	d0,a0					; ptr to first cookie
+.nextCookie:
+	move.l	(a0),d0					; read cookie key
+	beq.s	.install				; if zero we are at end of jar
+	cmp.l	#$5F435055,d0			; does key == _CPU ?
+	beq.s	.gotCPU					; yep
+	addq.l	#8,a0					; move to next cookie
+	bra.s	.nextCookie				; loop over all cookies
+.gotCPU:
+	move.l	4(a0),d0				; read _CPU value
+	cmp.l	#20,d0					; is it at least a 68020?
+	blt.s	.install				; no, stack frame is just 6 bytes
+	move.w	#8,Program_StackOff+2	; extend stack frame offset
+.install:
+
+	move.l	$84.w,Program_OldTrap1+2	; old GEMDOS handler
+	move.l	#Program_Trap1,$84.w		; install new handler
 	rts
 
 Program_TrapDeInit:
-	pea	Program_TrapDeInitX
-	bra	Program_Supexec
+	pea	Program_TrapDeInitX			; routine to execute in supervisor mode
+	bra	Program_Supexec				; execute it
 
 Program_TrapDeInitX:
-	move.l	Program_OldTrap1+2,$84.w
+	move.l	Program_OldTrap1+2,d0	; original GEMDOS handler
+	beq.s	.nope					; bail if nullptr
+	move.l	d0,$84.w				; reinstall old handler
+.nope:
 	rts
 
 *------------------------------------------------------------------------------------*
@@ -143,7 +165,13 @@ Program_TrapDeInitX:
 *------------------------------------------------------------------------------------*
 
 Program_Trap1:
-	move.l	USP,a0
+	move.w	(a7),d0					; saved status register
+Program_StackOff:
+	lea		6(a7),a0				; skip exception stack frame, get to trap arguments
+	btst	#13,d0					; was trap called from supervisor mode?
+	bne.s	.super					; yes, use ssp
+	move.l	USP,a0					; no, use user mode stack pointer
+.super:
 	cmp.w	#$48,(a0)
 	beq		Program_malloc
 	cmp.w	#$4A,(a0)
@@ -154,6 +182,8 @@ Program_Trap1:
 	beq		Program_pterm
 Program_OldTrap1:	
 	jmp		$12345678
+
+
 Program_mshrink:
 	clr.l	d0
 	rte
