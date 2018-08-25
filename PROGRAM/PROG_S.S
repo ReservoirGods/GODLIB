@@ -12,6 +12,7 @@
 
 	export	Program_Execute_Internal
 
+	export	Prg_brk
 
 **************************************************************************************
 ;	STRUCTS
@@ -62,7 +63,7 @@ sBasePage_sizeof:			ds.b	1
 * ACTION   : starts a program
 * CREATION : 12.08.18 PNK
 *------------------------------------------------------------------------------------*
-
+Prg_brk:
 Program_Execute_Internal:
 	movem.l	d0-a6,-(a7)
 	
@@ -112,16 +113,28 @@ Program_Execute_Return:
 Program_Supexec:
 	move.w	#$26,-(a7)				; superexec()
 	trap	#14						; call XBIOS
+Program_Supexec_Ret:
 	addq.l	#6,a7					; fix stack
 	rts
 
 Program_TrapInit:
-	move.w	SR,Program_pterm+2		; original status register
 	pea	Program_TrapInitX			; routine to execute in supervisor mode
 	bra	Program_Supexec				; execute it
 
 Program_TrapInitX:
-
+	move.l	$4a2.w,d0					; ptr to bios register save block
+	beq.s	.noSaveBIOS					; null so skip
+	move.l	d0,a0						; get bios save block as ptr
+	moveq	#63,d0						; loop over max 128 bytes
+.chkLoop:	
+	cmp.l	#Program_Supexec_Ret,(a0)	; have we found supexec return address? (instruction after trap call)
+	beq.s	.gotRet						; yep!
+	addq.l	#2,a0						; nope, move to next word to compare
+	dbra	d0,.chkLoop					; constained loop to avoid checking all memory
+	bra.s	.noSaveBIOS					; it wasn't here
+.gotRet:
+	move.w	4(a0),Program_pterm+2		; original status register for restoration after pterm
+.noSaveBIOS:
 	move.l	$5A0,d0					; cookie jar
 	tst.l	d0						; valid pointer?
 	beq.s	.install				; no, must be oldschool ST
@@ -217,7 +230,7 @@ Program_malloc:
 *------------------------------------------------------------------------------------*
 
 Program_pterm:
-	move.w	#$1234,(a7)
+	move.w	#$2300,(a7)
 	move.l	#Program_Execute_Return,2(a7)
 	rte
 
