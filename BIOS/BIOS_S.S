@@ -235,75 +235,100 @@ Bios_Setexec:
 *------------------------------------------------------------------------------------*
 brake:
 Bios_PipeConsole:
-	move.l	a0,gBios_Buffer
-	move.l	d0,gBios_BufferSize
-	clr.l	gBios_BufferOff
-	pea		Bios_PipeConsoleX
-	bra		Bios_Supexec
+	move.l	a0,gBios_Buffer			; store buffer ptr
+	move.l	d0,gBios_BufferSize		; store buffer size
+	clr.l	gBios_BufferOff			; start at beginning of redirection buffer
+	pea		Bios_PipeConsoleX		; routine to execute in supervisor mode
+	bra		Bios_Supexec			; execute
 
 Bios_PipeConsoleX:
-	lea		Bios_Trap13,a0
-	cmp.l	$b4.w,a0
-	beq.s	.nope
-	move.l	$B4.w,Bios_Trap13End-4
-	move.l	#Bios_Trap13,$B4.w
+	lea		Bios_Trap13,a0			; our bios handler
+	cmp.l	$b4.w,a0				; already installed?
+	beq.s	.nope					; don't install again
+
+	move.l	$5A0,d0					; cookie jar
+	tst.l	d0						; valid pointer?
+	beq.s	.install				; no, must be oldschool ST
+	move.l	d0,a0					; ptr to first cookie
+.nextCookie:
+	move.l	(a0),d0					; read cookie key
+	beq.s	.install				; if zero we are at end of jar
+	cmp.l	#$5F435055,d0			; does key == _CPU ?
+	beq.s	.gotCPU					; yep
+	addq.l	#8,a0					; move to next cookie
+	bra.s	.nextCookie				; loop over all cookies
+.gotCPU:
+	move.l	4(a0),d0				; read _CPU value
+	cmp.l	#20,d0					; is it at least a 68020?
+	blt.s	.install				; no, stack frame is just 6 bytes
+	move.w	#8,Bios_StackOffset+2	; extend stack frame offset
+.install:
+	move.l	$B4.w,Bios_Trap13End-4	; save old bios handler
+	move.l	#Bios_Trap13,$B4.w		; install our handler
 .nope:
 	rts
 
+
+*------------------------------------------------------------------------------------*
+* FUNCTION : Bios_UnPipeConsole()
+* ACTION   : un-installs the bios redirection and uses original bios trap handler
+* CREATION : 21.08.18 PNK
+*------------------------------------------------------------------------------------*
+
 Bios_UnPipeConsole:
-	pea		Bios_TrapDeInitX
-	bra		Bios_Supexec
+	pea		Bios_TrapDeInitX		; routine to execute in supervisor mode
+	bra		Bios_Supexec			; execute
 
 Bios_TrapDeInitX:
-	move.l	Bios_Trap13End-4,d0
-	cmp.l	#$12345678,d0
-	beq.s	.nope
-	move.l	d0,$B4.w
+	move.l	Bios_Trap13End-4,d0		; old bios handler
+	beq.s	.nope					; if nullptr don't install
+	move.l	d0,$B4.w				; install old bios handler
 .nope:
-	clr.l	gBios_BufferOff
+	clr.l	gBios_BufferOff			; clear buffer offset
 	rts
 
 
 Bios_Trap13:
-	tas		gBios_Mutex
-	bne		.noReentry
+	tas		gBios_Mutex				; we don't want this handler to be rentrant
+	bne		Bios_T13_noReentry		; skip handler if already in it
 
-	move.w	(a7),d0
-	lea		6(a7),a0
-	btst	#13,d0
-	bne.s	.super
-	move.l	USP,a0
+	move.w	(a7),d0					; saved status register
+Bios_StackOffset:
+	lea		6(a7),a0				; skip exception stack frame, get to trap arguments
+	btst	#13,d0					; was trap called from supervisor mode?
+	bne.s	.super					; yes, use ssp
+	move.l	USP,a0					; no, use user mode stack pointer
 .super:
-	cmp.w	#$3,(a0)
-	bne.s	.oldTrap13
-	cmp.w	#2,2(a0)
-	bne.s	.oldTrap13
+	cmp.w	#$3,(a0)				; is this bconout() call?
+	bne.s	.oldTrap13				; nope
+	cmp.w	#2,2(a0)				; is the screen the output?
+	bne.s	.oldTrap13				; nope
 
-	move.l	gBios_Buffer,a1
-	move.l	gBios_BufferOff,d0
-	cmp.l	gBios_BufferSize,d0
-	bge.s	.oldTrap13
-	move.b	5(a0),(a1,d0.l)
-	addq.l	#1,d0
-	move.l	d0,gBios_BufferOff
+	move.l	gBios_Buffer,a1			; get our buffer
+	move.l	gBios_BufferOff,d0		; get buffer offset
+	cmp.l	gBios_BufferSize,d0		; have we overflowed?
+	bge.s	.oldTrap13				; yes, don't try to write more
+	move.b	5(a0),(a1,d0.l)			; store bconout character in buffer
+	addq.l	#1,d0					; increase buffer offset
+	move.l	d0,gBios_BufferOff		; store buffer offest
 .oldTrap13:
-	clr.b	gBios_Mutex
-.noReentry:
-	jmp		$12345678
+	clr.b	gBios_Mutex				; clear rentrancy control
+Bios_T13_noReentry:
+	jmp		$12345678				; jump back to original bios handler
 Bios_Trap13End:
 
 Bios_Supexec:
-	move.w	#$26,-(a7)
-	trap	#14
-	addq.l	#6,a7
+	move.w	#$26,-(a7)				; xbios supexec
+	trap	#14						; call xbios
+	addq.l	#6,a7					; fix stack
 	rts
 	
 Bios_GetPipeOffset:
-	move.l	gBios_BufferOff,d0
+	move.l	gBios_BufferOff,d0		; return buffer offset
 	rts
 
 Bios_ClearPipeOffset:
-	clr.l	gBios_BufferOff
+	clr.l	gBios_BufferOff			; clear buffer offset
 	rts
 
 gBios_Buffer:			dc.l	0
