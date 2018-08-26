@@ -155,30 +155,8 @@ sBasePage *	Program_Load( const char * apFileName )
 			Memory_Copy( sizeof(sProgramHeader), &lHeader, lpHead);
 			lLen = File_Read( lHandle, lFileSize, &lpHead[1] );
 			if( lFileSize == lLen )
-			{			
-				U32		lTextSize;
-				U32		lDataSize;
-
-				sBasePage * lpParent = (sBasePage*)_BasPag;
-				sBasePage * lpPage = (sBasePage *)lpData;
-				Program_Relocate( lpHead );
-
-				Endian_ReadBigU32( &lHeader.mTextSize, lTextSize );
-				Endian_ReadBigU32( &lHeader.mDataSize, lDataSize );
-
-				lpPage->mpLowTPA = lpPage;
-				lpPage->mpHiTPA = lpParent->mpHiTPA;
-				lpPage->mpText = (U8*)&lpPage[1];
-				lpPage->mTextLength = lTextSize;
-				lpPage->mpData = ((U8*)lpPage->mpText) + lTextSize;
-				lpPage->mDataLength = lDataSize;
-				lpPage->mpBSS = ((U8*)lpPage->mpData) + lDataSize;
-				lpPage->mBSSLength = lBSSSize;
-				lpPage->mpParentBasepage = lpParent;
-				lpPage->mpDTA = &lpPage->mReserved1;
-				lpPage->mpEnvironment = lpParent->mpEnvironment;
-				lpPage->mCommandLine[0] = 0;
-				lpPage->mCommandLine[1] = 0;
+			{
+				Program_Init( (sBasePage*)lpData );
 			}
 		}
 	}
@@ -186,6 +164,38 @@ sBasePage *	Program_Load( const char * apFileName )
 	File_Close(lHandle);
 
 	return( (sBasePage*)lpData );
+}
+
+
+void		Program_Init( sBasePage * apPage )
+{
+	U32		lTextSize;
+	U32		lDataSize;
+	U32		lBSSSize;
+	U8 *	lpData = (U8*)apPage;
+
+	sBasePage * lpParent = (sBasePage*)_BasPag;
+	sProgramHeader * lpHead = (sProgramHeader *)&lpData[ sizeof(sBasePage) - sizeof(sProgramHeader)];
+
+	Endian_ReadBigU32( &lpHead->mTextSize, lTextSize );
+	Endian_ReadBigU32( &lpHead->mDataSize, lDataSize );
+	Endian_ReadBigU32( &lpHead->mBSSSize, lBSSSize );
+
+	Program_Relocate( lpHead );
+
+	apPage->mpLowTPA = apPage;
+	apPage->mpHiTPA = lpParent->mpHiTPA;
+	apPage->mpText = (U8*)&apPage[1];
+	apPage->mTextLength = lTextSize;
+	apPage->mpData = ((U8*)apPage->mpText) + lTextSize;
+	apPage->mDataLength = lDataSize;
+	apPage->mpBSS = ((U8*)apPage->mpData) + lDataSize;
+	apPage->mBSSLength = lBSSSize;
+	apPage->mpParentBasepage = lpParent;
+	apPage->mpDTA = &apPage->mReserved1;
+	apPage->mpEnvironment = lpParent->mpEnvironment;
+	apPage->mCommandLine[0] = 0;
+	apPage->mCommandLine[1] = 0;
 }
 
 

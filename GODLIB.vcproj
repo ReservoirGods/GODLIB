@@ -3916,10 +3916,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath=".\GODLIB.MAK"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

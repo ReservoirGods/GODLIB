@@ -378,6 +378,40 @@ void	String_Update2( sString * apString,const char * apChars0,const char * apCha
 
 
 /*-----------------------------------------------------------------------------------*
+* FUNCTION : String_StrAppend( char * apDst, const char * apAdd )
+* ACTION   : Appends apAdd to apDst
+* CREATION : 26.08.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void		String_StrAppend( char * apDst, const char * apAdd )
+{
+	if( apDst && apAdd )
+	{
+		while( *apDst ) apDst++;
+		while( *apAdd ) *apDst++ = *apAdd++;
+		*apDst++ =0;
+	}
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : String_StrAppend2( char * apDst, const char * apAdd0, const char * apAdd1 )
+* ACTION   : Appends apAdd to apDst
+* CREATION : 26.08.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void		String_StrAppend2( char * apDst, const char * apAdd0, const char * apAdd1 )
+{
+	if( apDst && apAdd0 && apAdd1 )
+	{
+		while( *apDst ) apDst++;
+		while( *apAdd0 ) *apDst++ = *apAdd0++;
+		while( *apAdd1 ) *apDst++ = *apAdd1++;
+		*apDst++ =0;
+	}
+}
+
+/*-----------------------------------------------------------------------------------*
 * FUNCTION : String_StrLen( const char * apString )
 * ACTION   : String_StrLen
 * CREATION : 18.02.2004 PNK

@@ -38,12 +38,14 @@ void		String_Prepend(  sString * apString, const char * apChars );
 void		String_Update( sString * apString, const char * apChars );
 void		String_Update2( sString * apString, const char * apChars0, const char * apChars1 );
 
-U32			String_StrLen( const char * apString );
+void		String_StrAppend( char * apDst, const char * apAdd );
+void		String_StrAppend2( char * apDst, const char * apAdd0, const char * apAdd1 );
 void		String_StrCpy( char * apDst, const char * apSrc );
 void		String_StrCpy2( char * apDst, const char * apSrc, const U32 aDstLen );
 void		String_StrCat( char * apDst, const char * apSrc0, const char * apSrc1 );
 U8			String_StrCmp( const char * apStr0, const char * apStr1 );
 U8			String_StrCmpi( const char * apStr0, const char * apStr1 );
+U32			String_StrLen( const char * apString );
 S32			String_ToValue( const char * apString );
 
 
