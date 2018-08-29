@@ -3891,6 +3891,14 @@
 				RelativePath="STRING\STRLIST.H"
 				>
 			</File>
+			<File
+				RelativePath=".\STRING\STRPATH.C"
+				>
+			</File>
+			<File
+				RelativePath=".\STRING\STRPATH.H"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="MAKEFILE"
