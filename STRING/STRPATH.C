@@ -114,12 +114,13 @@ void		StringPath_Combine( sStringPath * apPath, const char * apDir, const char *
 {
 	U16 i;
 
-	for( i=0; i<sizeof(sStringPath)-1 && apDir[i]; apPath->mChars[i++] = *apDir++ );
+	for( i=0; i<sizeof(sStringPath)-1 && *apDir; apPath->mChars[i++] = *apDir++ );
 	if( i && i<sizeof(sStringPath)-1 && '\\' !=apPath->mChars[i-1] && '/' != apPath->mChars[i-1])
 	{
 		apPath->mChars[i++] = '\\';
 	}
-	for( i=0; i<sizeof(sStringPath)-1 && apFileName[i]; apPath->mChars[i++] = *apFileName++ );
+	for( ; i<sizeof(sStringPath)-1 && apFileName; apPath->mChars[i++] = *apFileName++ );
+	apPath->mChars[i]=0;
 }
 
 
@@ -131,12 +132,13 @@ void		StringPath_Combine2( sStringPath * apPath, const char * apDir0, const char
 	{
 		apPath->mChars[i++] = '\\';
 	}
-	for( i=0; i<sizeof(sStringPath)-1 && apDir1[i]; apPath->mChars[i++] = *apDir1++ );
+	for( ; i<sizeof(sStringPath)-1 && apDir1[i]; apPath->mChars[i++] = *apDir1++ );
 	if( i && i<sizeof(sStringPath)-1 && '\\' !=apPath->mChars[i-1] && '/' != apPath->mChars[i-1])
 	{
 		apPath->mChars[i++] = '\\';
 	}
-	for( i=0; i<sizeof(sStringPath)-1 && apFileName[i]; apPath->mChars[i++] = *apFileName++ );
+	for( ; i<sizeof(sStringPath)-1 && apFileName[i]; apPath->mChars[i++] = *apFileName++ );
+	apPath->mChars[ i ] =0;
 }
 
 

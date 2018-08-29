@@ -15,7 +15,7 @@
 #include	"BASE.H"
 
 #include	<STRING.H>
-#include "../STRING/STRING.H"
+#include	"../STRING/STRING.H"
 
 /* ###################################################################################
 #  CODE
