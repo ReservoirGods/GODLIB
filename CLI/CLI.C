@@ -52,7 +52,8 @@ typedef	struct sCli
 	U16			mDisplayLoopedFlag;
 	U16			mHistoryLoopedFlag;
 	S16			mCommandCount;
-	U16			mInitialisedFlag;
+	U8			mInitialisedFlag;
+	U8			mExitRequestFlag;
 	U16 *		mpCliSavedScreen;
 	U16			mSavedPal[ 16 ];
 	U16			mPal[ 16 ];
@@ -162,6 +163,7 @@ void			Cli_Init( void )
 	gCli.mCommandCount      = 0;
 	gCli.mTabIndex          = 0;
 	gCli.mTabbingFlag       = 0;
+	gCli.mExitRequestFlag   = 0;
 
 	gCli.mpCliSavedScreen = (U16*)mMEMALLOC( 32000L );
 	gCli.mInitialisedFlag = 1;
@@ -347,6 +349,8 @@ void	Cli_Main()
 
 	if( gCli.mInitialisedFlag )
 	{
+		gCli.mExitRequestFlag = 0;
+
 		Video_GetConfig( &lVideoConfig );
 		Cli_CopyScreen(  (U16*)Video_GetpPhysic(), gCli.mpCliSavedScreen );
 		Cli_ClearScreen( (U16*)Video_GetpPhysic() );
@@ -369,15 +373,10 @@ void	Cli_Main()
 
 		IKBD_ClearKeyPressedFlag();
 
-		while( !lExitFlag )
+		while( !gCli.mExitRequestFlag )
 		{
 			Video_SetPhysic( Video_GetpPhysic() );
 			IKBD_Update();
-
-/*			while( !IKBD_GetKeyPressedFlag() )
-			{
-				IKBD_Update();
-			}*/
 
 			if( IKBD_GetKeyPressedFlag() )
 			{
@@ -387,7 +386,7 @@ void	Cli_Main()
 			switch( lChar )
 			{
 			case	eIKBDSCAN_ESC:
-				lExitFlag = 1;
+				gCli.mExitRequestFlag = 1;
 				break;
 			case	eIKBDSCAN_NUMPADENTER:
 			case	eIKBDSCAN_RETURN:
@@ -445,6 +444,18 @@ void	Cli_Main()
 		Video_SetPalST( (U16*)&gCli.mSavedPal[ 0 ] );
 		Cli_CopyScreen( gCli.mpCliSavedScreen, (U16*)Video_GetpPhysic() );
 	}
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Cli_Main_ExitRequest()
+* ACTION   : requests to exit the Cli_Main() loop
+* CREATION : 29.08.18 PNK
+*-----------------------------------------------------------------------------------*/
+
+void			Cli_Main_ExitRequest( void )
+{
+	gCli.mExitRequestFlag = 1;
 }
 
 

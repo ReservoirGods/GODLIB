@@ -28,6 +28,7 @@ void			Cli_Init( void );
 void			Cli_DeInit( void );
 void			Cli_Update( void );
 void			Cli_Main( void );
+void			Cli_Main_ExitRequest( void );
 
 void			Cli_FileProcess( char * apFileName );
 
