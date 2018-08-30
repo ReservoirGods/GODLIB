@@ -343,7 +343,6 @@ void	Cli_Update( void )
 
 void	Cli_Main()
 {
-	U8				lExitFlag;
 	U8				lChar;
 	sVideoConfig	lVideoConfig;
 
@@ -358,8 +357,6 @@ void	Cli_Main()
 
 		Video_SetResolution( 320, 200, eVIDEO_MODE_4PLANE, 320 );
 		Video_SetPalST( &gCli.mPal[ 0 ] );
-
-		lExitFlag = 0;
 
 		Cli_ClearScreen( (U16*)Video_GetpPhysic() );
 		Cli_InitCurrentLine();
