@@ -1,16 +1,12 @@
-.CwmExternalDir="C:\SOURCE\CWMON\EXTERNAL"
-.CppCompilerDir="$CwmExternalDir$\VISUAL_STUDIO\9.0\VC"
-
 .Configurations = { 'Debug', 'Release', 'Profile' }
-
 
 #include "pc.bff"
 
-.ProjectName='godlib'
+.CppCompilerDir="$VC9Path$\VC"
 
 Settings
 {
-    .Environment    = { "PATH=$VC9Path$\Common7\IDE\;$VC9Path$\VC\bin\",
+    .Environment    = { "PATH=$CppCompilerDir$\..\Common7\IDE\;$CppCompilerDir$\bin\",
                         "TMP=C:\Windows\Temp",
                         "SystemRoot=C:\Windows" }
 }
@@ -23,7 +19,7 @@ ForEach( .ArchitectureCompilerConfig in .ArchitectureCompilerConfigList )
 	{
 		.BaseIncludePaths   = ' /I"$GodLibDir$/.."'
 		                    + ' /I"$CppCompilerDir$/Include"'
-		                    + ' /I"$CwmExternalDir$/DIRECTX/June_2010/Include"'
+                            + ' /I"$DirectXPath$\Include"'
 		.CompilerOptions    + .BaseIncludePaths
 
 
@@ -75,13 +71,13 @@ Alias( '$ProjectName$-Release' ) { .Targets={ '$ProjectName$-MSVC9-x86-Release',
     .ProjectFiles           = { '.\fbuild.bff' }
     .ProjectBasePath            = '.\'
 
-    .LocalDebuggerCommand='^$(SolutionDir)\PRG\^$(ProjectName)-MSVC9-^$(Configuration).exe'
-	.LocalDebuggerWorkingDirectory='^$(SolutionDir)\PRG'
+    .LocalDebuggerCommand='$ExePath$'
+	.LocalDebuggerWorkingDirectory='$ExeWorkingDir$'
 
     .GenerateProjectsCommands =
     [
-		.ProjectBuildCommand = 'cd ^$(ProjectDir) &amp; "$FastBuildDir$\fbuild" -ide -dist -cache ^$(ProjectName)-MSVC9-^$(Configuration)'
-		.ProjectRebuildCommand = 'cd ^$(ProjectDir) &amp; "$FastBuildDir$\fbuild" -ide -dist -cache ^$(ProjectName)-MSVC9-^$(Configuration) -clean'
+		.ProjectBuildCommand = 'cd ^$(ProjectDir) &amp; "$FastBuildDir$\fbuild" -ide -dist -cache ^$(ProjectName)-exe-MSVC9-^$(Configuration)'
+		.ProjectRebuildCommand = 'cd ^$(ProjectDir) &amp; "$FastBuildDir$\fbuild" -ide -dist -cache ^$(ProjectName)-exe-MSVC9-^$(Configuration) -clean'
     ]
 
     .ProjectX86Debug        = [ Using( .ProjectX86Debug )       Using( .GenerateProjectsCommands ) ]

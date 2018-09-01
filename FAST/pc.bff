@@ -1,26 +1,28 @@
-.ExternalPath = "C:\SOURCE\CWMON\EXTERNAL"
-.WindowsSDK6BasePath = "$ExternalPath$\MicrosoftSDKs\Windows\v6.0A"
-.WindowsSDK7BasePath = "$ExternalPath$\MicrosoftSDKs\Windows\v7.0A"
+.ExternalPath = "C:\Program Files (x86)"
+.DirectXPath="C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)"
+.WindowsSDK6BasePath = "C:\Program Files\Microsoft SDKs\Windows\v6.0A"
+.WindowsSDK7BasePath = "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A"
 
 //------------------------------------------------------------------------------
 // Compilers
 //------------------------------------------------------------------------------
 
-.VC9Path = '$ExternalPath$\VISUAL_STUDIO\9.0'
-.VC10Path = '$ExternalPath$\VISUAL_STUDIO\10.0'
+.VC9Path = 'C:\Program Files (x86)\Microsoft Visual Studio 9.0'
+.VC10Path = 'C:\Program Files (x86)\Microsoft Visual Studio 10.0'
 
 Compiler( 'Compiler-PC-x86-MSVC9' )
 {
 	.VSBasePath	= '$VC9Path$'
 	.Root		= '$VC9Path$\VC\bin'
+	.Root2		= '$VC9Path$\Common7\IDE'
 	.Executable	= '$Root$\cl.exe'
 	.ExtraFiles = { '$Root$\c1.dll'
 					'$Root$\c1xx.dll',
 					'$Root$\c2.dll',
-					'$Root$\msobj80.dll'
-					'$Root$\mspdb80.dll'
-					'$Root$\mspdbsrv.exe'
-					'$Root$\mspdbcore.dll'
+					'$Root2$\msobj80.dll'
+					'$Root2$\mspdb80.dll'
+					'$Root2$\mspdbsrv.exe'
+					'$Root2$\mspdbcore.dll'
 					'$Root$\1033\clui.dll'
 					'$VSBasePath$\VC\redist\x86\Microsoft.VC90.CRT\msvcp90.dll'
 					'$VSBasePath$\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll'
@@ -52,16 +54,17 @@ Compiler( 'Compiler-PC-x86-MSVC10' )
 {
 	.VSBasePath	= '$VC10Path$'
 	.Root		= '$VC10Path$\VC\bin'
+	.Root2		= '$VC10Path$\Common7\IDE'
 	.Executable	= '$Root$\cl.exe'
 	.ExtraFiles = { '$Root$\c1.dll'
 					'$Root$\c1ast.dll',
 					'$Root$\c1xx.dll',
 					'$Root$\c1xxast.dll',
 					'$Root$\c2.dll',
-					'$Root$\msobj100.dll'
-					'$Root$\mspdb100.dll'
-					'$Root$\mspdbsrv.exe'
-					'$Root$\mspdbcore.dll'
+					'$Root2$\msobj100.dll'
+					'$Root2$\mspdb100.dll'
+					'$Root2$\mspdbsrv.exe'
+					'$Root2$\mspdbcore.dll'
 					'$Root$\mspft80.dll'
 					'$Root$\1033\clui.dll'
 					'$VSBasePath$\VC\redist\x86\Microsoft.VC100.CRT\msvcp100.dll'
@@ -188,6 +191,7 @@ Compiler( 'Compiler-PC-x86-Clang' )
 //							+ ' /I"$WindowsSDKBasePath$/include/um"'
 //							+ ' /I"$WindowsSDKBasePath$/include/shared"'
 							+ ' /I"$WindowsSDK6BasePath$/include"'
+//							+ ' /I"$WindowsSDK7BasePath$\include"'
 	.CompilerOptions		+ .BaseIncludePaths
 	.PCHOptions				+ .BaseIncludePaths
 
@@ -203,14 +207,14 @@ Compiler( 'Compiler-PC-x86-Clang' )
 						//+ ' /arch:SSE2'						
 	.LinkerX86			= ' /MACHINE:X86'
 						+ ' /LIBPATH:"$WindowsLibPaths$"'
-						+ ' /LIBPATH:"$ExternalPath$\DIRECTX\June_2010\Lib\x86"'
+						+ ' /LIBPATH:"$DirectXPath$\Lib\x86"'
 	.PlatformX86		= 'x86'
 
 	.CompilerX64		= ' /D "WIN64"'
 	.PCHX64				= ' /D "WIN64"'
 	.LinkerX64			= ' /MACHINE:X64'
 						+ ' /LIBPATH:"$WindowsLibPaths$/x64"'
-						+ ' /LIBPATH:"$ExternalPath$\DIRECTX\June_2010\Lib\x64"'
+						+ ' /LIBPATH:"$DirectXPath$\Lib\x64"'
 	.PlatformX64		= 'x64'
 
 ]
@@ -220,11 +224,11 @@ Compiler( 'Compiler-PC-x86-Clang' )
 .x64BaseConfig = [ Using( .MSVCBaseConfig ) .ArchitectureName='x64' .MSVCPath='x64' .LinkerOptions + .LinkerX64 .CompilerOptions + .CompilerX64 ]
 
 
-.MSVC9x86Config = [ Using( .x86BaseConfig )  .CompilerName='MSVC9'  .ToolsBasePath='$VC9Path$\VC\bin' .Compiler='Compiler-PC-x86-MSVC9'  .LinkerOptions + ' /LIBPATH:$VC9Path$\VC\lib'       ];
-.MSVC9x64Config = [ Using( .x64BaseConfig )  .CompilerName='MSVC9'  .ToolsBasePath='$VC9Path$\VC\bin' .Compiler='Compiler-PC-x64-MSVC9'  .LinkerOptions + ' /LIBPATH:$VC9Path$\VC\lib\amd64' ];
+.MSVC9x86Config = [ Using( .x86BaseConfig )  .CompilerName='MSVC9'  .ToolsBasePath='$VC9Path$\VC\bin' .Compiler='Compiler-PC-x86-MSVC9'  .LinkerOptions + ' /LIBPATH:"$VC9Path$\VC\lib"'       ];
+.MSVC9x64Config = [ Using( .x64BaseConfig )  .CompilerName='MSVC9'  .ToolsBasePath='$VC9Path$\VC\bin' .Compiler='Compiler-PC-x64-MSVC9'  .LinkerOptions + ' /LIBPATH:"$VC9Path$\VC\lib\amd64"' ];
 
-.MSVC10x86Config = [ Using( .x86BaseConfig )  .CompilerName='MSVC10'  .ToolsBasePath='$VC10Path$\VC\bin' .Compiler='Compiler-PC-x86-MSVC10'  .LinkerOptions + ' /LIBPATH:$VC10Path$\VC\lib'       ];
-.MSVC10x64Config = [ Using( .x64BaseConfig )  .CompilerName='MSVC10'  .ToolsBasePath='$VC10Path$\VC\bin' .Compiler='Compiler-PC-x64-MSVC10'  .LinkerOptions + ' /LIBPATH:$VC10Path$\VC\lib\amd64 '];
+.MSVC10x86Config = [ Using( .x86BaseConfig )  .CompilerName='MSVC10'  .ToolsBasePath='$VC10Path$\VC\bin' .Compiler='Compiler-PC-x86-MSVC10'  .LinkerOptions + ' /LIBPATH:"$VC10Path$\VC\lib"'       ];
+.MSVC10x64Config = [ Using( .x64BaseConfig )  .CompilerName='MSVC10'  .ToolsBasePath='$VC10Path$\VC\bin' .Compiler='Compiler-PC-x64-MSVC10'  .LinkerOptions + ' /LIBPATH:"$VC10Path$\VC\lib\amd64"' ];
 
 
 .MSVC9x86DebugConfig  = [ Using( .MSVC9x86Config )  .ConfigName='Debug'   .CompilerOptions + .CompilerDebug   .PCHOptions + .CompilerDebug   .LibrarianOptions + .LibrarianDebug   .LinkerOptions + .LinkerDebug ]
