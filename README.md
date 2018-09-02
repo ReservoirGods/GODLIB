@@ -1,2 +1,2 @@
 # GODLIB
-Library for creating Atari software
+Library for creating Atari ST software
