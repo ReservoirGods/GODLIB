@@ -1,49 +1,19 @@
 .Configurations = { 'Debug', 'Release', 'Profile' }
 
-#include "pc.bff"
 
-.CppCompilerDir="$VC9Path$\VC"
+;Print( "project name is $ProjectName$")
 
-Settings
-{
-    .Environment    = { "PATH=$CppCompilerDir$\..\Common7\IDE\;$CppCompilerDir$\bin\",
-                        "TMP=C:\Windows\Temp",
-                        "SystemRoot=C:\Windows" }
-}
+;Alias( '$ProjectName$-x86-Debug'   ) { .Targets={ '$ProjectName$-MSVC9-x86-Debug' } }
 
-ForEach( .ArchitectureCompilerConfig in .ArchitectureCompilerConfigList )
-{
-	Using( .ArchitectureCompilerConfig )
-	.Uid='$CompilerName$-$ArchitectureName$-$ConfigName$'
-	Library( '$ProjectName$-$Uid$' )
-	{
-		.BaseIncludePaths   = ' /I"$GodLibDir$/.."'
-		                    + ' /I"$CppCompilerDir$/Include"'
-                            + ' /I"$DirectXPath$\Include"'
-		.CompilerOptions    + .BaseIncludePaths
-
-
-		.CompilerInputPath = '$GodLibDir$'
-		.CompilerInputPattern ='*.C'
-		.CompilerOutputPath= 'Out\$Uid$\'
-		.LibrarianOutput   = 'Out\godlib-$Uid$.lib'
-
-		.Librarian 	= '$ToolsBasePath$\lib.exe'
-		.Linker 	= '$ToolsBasePath$\link.exe'	
-	}	
-}
-
-Alias( '$ProjectName$-x86-Debug'   ) { .Targets={ '$ProjectName$-MSVC9-x86-Debug' } }
-
-Alias( '$ProjectName$-Debug'   ) { .Targets={ '$ProjectName$-MSVC9-x86-Debug',   '$ProjectName$-MSVC9-x64-Debug'   } }
-Alias( '$ProjectName$-Profile' ) { .Targets={ '$ProjectName$-MSVC9-x86-Profile', '$ProjectName$-MSVC9-x64-Profile' } }
-Alias( '$ProjectName$-Release' ) { .Targets={ '$ProjectName$-MSVC9-x86-Release', '$ProjectName$-MSVC9-x64-Release' } }
+;Alias( '$ProjectName$-Debug'   ) { .Targets={ '$ProjectName$-MSVC9-x86-Debug',   '$ProjectName$-MSVC9-x64-Debug'   } }
+;Alias( '$ProjectName$-Profile' ) { .Targets={ '$ProjectName$-MSVC9-x86-Profile', '$ProjectName$-MSVC9-x64-Profile' } }
+;Alias( '$ProjectName$-Release' ) { .Targets={ '$ProjectName$-MSVC9-x86-Release', '$ProjectName$-MSVC9-x64-Release' } }
 
 
 .ProjectCommon =
 [
-    .ProjectBuildCommand        = 'cd ^$(ProjectDir) &amp; "$FastBuildDir$\fbuild" -vs -dist -monitor -fastcancel -cache ^$(ProjectName)-^$(Configuration)'
-    .ProjectRebuildCommand      = 'cd ^$(ProjectDir) &amp; "$FastBuildDir$\fbuild" -vs -dist -monitor -fastcancel -cache -clean ^$(ProjectName)-^$(Configuration)'
+    .ProjectBuildCommand        = 'cd ^$(ProjectDir) &amp; "$FastBuildDir$\fbuild" -vs -dist -monitor -fastcancel -cache ^$(ProjectName)-exe-MSVC9-^$(Configuration)'
+    .ProjectRebuildCommand      = 'cd ^$(ProjectDir) &amp; "$FastBuildDir$\fbuild" -vs -dist -monitor -fastcancel -cache -clean ^$(ProjectName)-MSVC9-^$(Configuration)'
     .OutputDirectory            = '^$(ProjectDir)\Out'
     .IntermediateDirectory      = '^$(ProjectDir)\Int'
     .BuildLogFile               = '^$(ProjectDir)\Log\^$(ProjectName)-^$(Configuration).log'
@@ -61,43 +31,16 @@ Alias( '$ProjectName$-Release' ) { .Targets={ '$ProjectName$-MSVC9-x86-Release',
 .ProjectX86ClangProfile = [ Using( .ProjectCommon ) .Config = 'x86Clang-Profile' ]
 .ProjectX86ClangRelease = [ Using( .ProjectCommon ) .Config = 'x86Clang-Release' ]
 
-.ProjectConfigs = { .ProjectX86Debug, .ProjectX86Profile, .ProjectX86Release,
-                    .ProjectX64Debug, .ProjectX64Profile, .ProjectX64Release,
-                    .ProjectX86ClangDebug, .ProjectX86ClangProfile, .ProjectX86ClangRelease }
+.ProjectConfigs = { .ProjectX86Debug, .ProjectX86Profile, .ProjectX86Release }
+;                   .ProjectX64Debug, .ProjectX64Profile, .ProjectX64Release,
+;                   .ProjectX86ClangDebug, .ProjectX86ClangProfile, .ProjectX86ClangRelease }
 
 .VCXProjectCommon =
 [
-    .ProjectOutput              = '$ProjectName$.vcxproj'
     .ProjectFiles           = { '.\fbuild.bff' }
     .ProjectBasePath            = '.\'
 
     .LocalDebuggerCommand='$ExePath$'
 	.LocalDebuggerWorkingDirectory='$ExeWorkingDir$'
-
-    .GenerateProjectsCommands =
-    [
-		.ProjectBuildCommand = 'cd ^$(ProjectDir) &amp; "$FastBuildDir$\fbuild" -ide -dist -cache ^$(ProjectName)-exe-MSVC9-^$(Configuration)'
-		.ProjectRebuildCommand = 'cd ^$(ProjectDir) &amp; "$FastBuildDir$\fbuild" -ide -dist -cache ^$(ProjectName)-exe-MSVC9-^$(Configuration) -clean'
-    ]
-
-    .ProjectX86Debug        = [ Using( .ProjectX86Debug )       Using( .GenerateProjectsCommands ) ]
-    .ProjectX86Profile      = [ Using( .ProjectX86Profile )     Using( .GenerateProjectsCommands ) ]
-    .ProjectX86Release      = [ Using( .ProjectX86Release )     Using( .GenerateProjectsCommands ) ]
-    .ProjectX64Debug        = [ Using( .ProjectX64Debug )       Using( .GenerateProjectsCommands ) ]
-    .ProjectX64Profile      = [ Using( .ProjectX64Profile )     Using( .GenerateProjectsCommands ) ]
-    .ProjectX64Release      = [ Using( .ProjectX64Release )     Using( .GenerateProjectsCommands ) ]
-    .ProjectX86ClangDebug   = [ Using( .ProjectX86ClangDebug )  Using( .GenerateProjectsCommands ) ]
-
-    .ProjectConfigs = { .ProjectX86Debug, .ProjectX86Profile, .ProjectX86Release,
-                        .ProjectX64Debug, .ProjectX64Profile, .ProjectX64Release,
-                        .ProjectX86ClangDebug, .ProjectX86ClangProfile, .ProjectX86ClangRelease }
 ]
 
-VCXProject( 'godlibvcx' )
-{
-	Using( .VCXProjectCommon )
-
-	.ProjectBasePath = '$GodLibDir$'
-	.ProjectInputPaths = '$GodLibDir$'
-	.ProjectOutput 	= '$GodLibDir$/FAST/godlib.vcxproj'
-}

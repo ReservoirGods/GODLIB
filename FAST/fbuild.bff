@@ -4,4 +4,6 @@
 .GodLibDir=".."
 .ProjectName='godlib'
 
+#include "pc.bff"
 #include "lib.bff"
+#include "godlib.bff"

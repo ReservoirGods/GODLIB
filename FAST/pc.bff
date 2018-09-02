@@ -10,6 +10,15 @@
 .VC9Path = 'C:\Program Files (x86)\Microsoft Visual Studio 9.0'
 .VC10Path = 'C:\Program Files (x86)\Microsoft Visual Studio 10.0'
 
+.CppCompilerDir="$VC9Path$\VC"
+
+Settings
+{
+    .Environment    = { "PATH=$CppCompilerDir$\..\Common7\IDE\;$CppCompilerDir$\bin\",
+                        "TMP=C:\Windows\Temp",
+                        "SystemRoot=C:\Windows" }
+}
+
 Compiler( 'Compiler-PC-x86-MSVC9' )
 {
 	.VSBasePath	= '$VC9Path$'

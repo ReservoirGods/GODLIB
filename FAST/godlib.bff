@@ -1,0 +1,34 @@
+ForEach( .ArchitectureCompilerConfig in .ArchitectureCompilerConfigList )
+{
+    Using( .ArchitectureCompilerConfig )
+    .Uid='$CompilerName$-$ArchitectureName$-$ConfigName$'
+    Print( "library godlib-$Uid$")
+    Library( 'godlib-$Uid$' )
+    {
+        .BaseIncludePaths   = ' /I"$GodLibDir$/.."'
+                            + ' /I"$CppCompilerDir$/Include"'
+                            + ' /I"$DirectXPath$\Include"'
+        .CompilerOptions    + .BaseIncludePaths
+
+
+        .CompilerInputPath = '$GodLibDir$'
+        .CompilerInputPattern ='*.C'
+        .CompilerInputPathRecurse = true
+        .CompilerOutputPath= 'Out\$Uid$\'
+        .LibrarianOutput   = 'Out\godlib-$Uid$.lib'
+
+        .Librarian  = '$ToolsBasePath$\lib.exe'
+        .Linker     = '$ToolsBasePath$\link.exe'    
+    }   
+}
+
+VCXProject( 'godlib_vcx' )
+{
+;	Using( .VCXProjectCommon )
+
+    .ProjectBasePath = '$GodLibDir$'
+    .ProjectInputPaths = '$GodLibDir$'
+	.ProjectOutput 	= '$GodLibDir$\FAST\godlib.vcxproj'
+;    Print( 'godlib projectbasepath $ProjectBasePath$')
+    Print( 'godlib dir $GodLibDir$')
+}
