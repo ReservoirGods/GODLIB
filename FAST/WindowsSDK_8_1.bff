@@ -9,7 +9,7 @@
 
 // Defines
 //------------------------------------------------------------------------------
-.WindowsSDK_8_1_Defines     = '''
+.WindowsSDK_8_1_Defines     = ''
 
 
 // Architectural Settings

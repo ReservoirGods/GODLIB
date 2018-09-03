@@ -54,7 +54,7 @@ Compiler( 'Compiler-VS2013-x64' )
 [
     .VSIncludePaths                 = ' -I"$VS2013_BasePath$/VC/include/"'
                                     + ' /arch:SSE2'
-                                    + ' /Zc:inline'         // Remove unreferenced COMDATs at compile time (VS2013.2+)
+//                                    + ' /Zc:inline'         // Remove unreferenced COMDATs at compile time (VS2013.2+)
                                     + ' /Zc:strictStrings'  // Require const only usage of string literals (VS2013+)
 
     .VSLibPaths                     = ' /LIBPATH:"$VS2013_BasePath$/VC/lib"'
@@ -78,7 +78,7 @@ Compiler( 'Compiler-VS2013-x64' )
 .ToolChain_VS2013_Windows_X64 =
 [
     .VSIncludePaths                 = ' -I"$VS2013_BasePath$/VC/include/"'
-                                    + ' /Zc:inline'         // Remove unreferenced COMDATs at compile time (VS2013.2+)
+//                                    + ' /Zc:inline'         // Remove unreferenced COMDATs at compile time (VS2013.2+)
                                     + ' /Zc:strictStrings'  // Require const only usage of string literals (VS2013+)
 
     .VSLibPaths                     = ' /LIBPATH:"$VS2013_BasePath$/VC/lib/amd64"'
