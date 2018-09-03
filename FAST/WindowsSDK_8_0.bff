@@ -29,7 +29,7 @@
     .CompilerOptionsPCH             = .CommonCompilerOptions
     .CompilerOptionsDeoptimized     = .CommonCompilerOptions
 
-    .LinkerOptions                  = ' /LIBPATH:"$WindowsSDK_8_0_BasePath$/lib/winv6.3/um/x86"'
+    .LinkerOptions                  = ' /LIBPATH:"$WindowsSDK_8_0_BasePath$/lib/win8/um/x86"'
                                     + ' /MACHINE:X86'
                                     + ' /LARGEADDRESSAWARE'
 ]

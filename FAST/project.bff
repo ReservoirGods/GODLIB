@@ -1,7 +1,7 @@
 .ProjectCommon =
 [
     .ProjectBuildCommand        = 'cd ^$(SolutionDir) &amp; "$FastBuildDir$\fbuild" -vs -dist -monitor -fastcancel -cache ^$(ProjectName)-exe-^$(Configuration)'
-    .ProjectRebuildCommand      = 'cd ^$(SolutionDir) &amp; "$FastBuildDir$\fbuild" -vs -dist -monitor -fastcancel -cache -clean ^$(ProjectName)-$VS_Name$-^$(Configuration)'
+    .ProjectRebuildCommand      = 'cd ^$(SolutionDir) &amp; "$FastBuildDir$\fbuild" -vs -dist -monitor -fastcancel -cache -clean ^$(ProjectName)-exe-^$(Configuration)'
     .OutputDirectory            = '^$(ProjectDir)\Out'
     .IntermediateDirectory      = '^$(ProjectDir)\Int'
     .BuildLogFile               = '^$(ProjectDir)\Log\^$(ProjectName)-$VS_Name$-^$(Configuration).log'
