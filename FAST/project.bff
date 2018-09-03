@@ -9,34 +9,33 @@
     .PlatformToolset			= '$VS_PlatformToolset$'
 ]
 
-.ProjectX86Debug        = [ Using( .ProjectCommon ) .Config = 'x86-Debug' ]
-.ProjectX86Profile      = [ Using( .ProjectCommon ) .Config = 'x86-Profile' ]
-.ProjectX86Release      = [ Using( .ProjectCommon ) .Config = 'x86-Release' ]
-.ProjectX86ClangDebug   = [ Using( .ProjectCommon ) .Config = 'x86Clang-Debug' ]
-.ProjectX86ClangProfile = [ Using( .ProjectCommon ) .Config = 'x86Clang-Profile' ]
-.ProjectX86ClangRelease = [ Using( .ProjectCommon ) .Config = 'x86Clang-Release' ]
+.ProjectCommonConfig_X86Debug        = [ Using( .ProjectCommon ) .Config = 'x86-Debug' ]
+.ProjectCommonConfig_X86Profile      = [ Using( .ProjectCommon ) .Config = 'x86-Profile' ]
+.ProjectCommonConfig_X86Release      = [ Using( .ProjectCommon ) .Config = 'x86-Release' ]
+.ProjectCommonConfig_X86ClangDebug   = [ Using( .ProjectCommon ) .Config = 'x86Clang-Debug' ]
+.ProjectCommonConfig_X86ClangProfile = [ Using( .ProjectCommon ) .Config = 'x86Clang-Profile' ]
+.ProjectCommonConfig_X86ClangRelease = [ Using( .ProjectCommon ) .Config = 'x86Clang-Release' ]
 
-.ProjectX64Debug        = [ Using( .ProjectCommon ) .Config = 'x64-Debug' ]
-.ProjectX64Profile      = [ Using( .ProjectCommon ) .Config = 'x64-Profile' ]
-.ProjectX64Release      = [ Using( .ProjectCommon ) .Config = 'x64-Release' ]
-.ProjectX64ClangDebug   = [ Using( .ProjectCommon ) .Config = 'x64Clang-Debug' ]
-.ProjectX64ClangProfile = [ Using( .ProjectCommon ) .Config = 'x64Clang-Profile' ]
-.ProjectX64ClangRelease = [ Using( .ProjectCommon ) .Config = 'x64Clang-Release' ]
+.ProjectCommonConfig_X64Debug        = [ Using( .ProjectCommon ) .Config = 'x64-Debug' ]
+.ProjectCommonConfig_X64Profile      = [ Using( .ProjectCommon ) .Config = 'x64-Profile' ]
+.ProjectCommonConfig_X64Release      = [ Using( .ProjectCommon ) .Config = 'x64-Release' ]
+.ProjectCommonConfig_X64ClangDebug   = [ Using( .ProjectCommon ) .Config = 'x64Clang-Debug' ]
+.ProjectCommonConfig_X64ClangProfile = [ Using( .ProjectCommon ) .Config = 'x64Clang-Profile' ]
+.ProjectCommonConfig_X64ClangRelease = [ Using( .ProjectCommon ) .Config = 'x64Clang-Release' ]
 
 .ProjectConfigs_VS_X86 = { 
-                    .ProjectX86Debug, .ProjectX86Profile, .ProjectX86Release,
+                    .ProjectCommonConfig_X86Debug, .ProjectCommonConfig_X86Profile, .ProjectCommonConfig_X86Release,
                     }
 
 .ProjectConfigs_X86 = { 
-                    .ProjectX86Debug, .ProjectX86Profile, .ProjectX86Release,
-                    .ProjectX86ClangDebug, .ProjectX86ClangProfile, .ProjectX86ClangRelease,
+                    .ProjectCommonConfig_X86Debug,		.ProjectCommonConfig_X86Profile,		.ProjectCommonConfig_X86Release,
+                    .ProjectCommonConfig_X86ClangDebug,	.ProjectCommonConfig_X86ClangProfile,	.ProjectCommonConfig_X86ClangRelease,
                     }
 
 .ProjectConfigs_All = { 
-                    .ProjectX86Debug, .ProjectX86Profile, .ProjectX86Release,
-                    .ProjectX86ClangDebug, .ProjectX86ClangProfile, .ProjectX86ClangRelease,
-                    .ProjectX64Debug, .ProjectX64Profile, .ProjectX64Release,
-                    .ProjectX64ClangDebug, .ProjectX64ClangProfile, .ProjectX64ClangRelease 
+                    .ProjectCommonConfig_X86Debug, 			.ProjectCommonConfig_X86Profile, 		.ProjectCommonConfig_X86Release,
+                    .ProjectCommonConfig_X86ClangDebug, 	.ProjectCommonConfig_X86ClangProfile, 	.ProjectCommonConfig_X86ClangRelease,
+                    .ProjectCommonConfig_X64Debug, 			.ProjectCommonConfig_X64Profile, 		.ProjectCommonConfig_X64Release,
+                    .ProjectCommonConfig_X64ClangDebug, 	.ProjectCommonConfig_X64ClangProfile, 	.ProjectCommonConfig_X64ClangRelease 
                     }
 
-.ProjVar = "hello world"
