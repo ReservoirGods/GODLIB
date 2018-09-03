@@ -64,6 +64,7 @@ U16 *			Cli_GetpPal( void );
 #define			Cli_DeInit()
 #define			Cli_Update()
 #define			Cli_Main()
+#define			Cli_Main_ExitRequest()
 
 #define			Cli_FileProcess( _a )
 

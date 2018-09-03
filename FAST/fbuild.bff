@@ -1,9 +1,0 @@
-.ExePath="^$(SolutionDir)\PRG\^$(ProjectName)-MSVC9-^$(Configuration).exe"
-.ExeWorkingDir="^$(SolutionDir)\PRG"
-.FastBuildDir = "..\TOOLS.RG\FASTBUILD\Windows-x64-v0.86"
-.GodLibDir=".."
-.ProjectName='godlib'
-
-#include "pc.bff"
-#include "lib.bff"
-#include "godlib.bff"
