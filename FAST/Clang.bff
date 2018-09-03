@@ -1,0 +1,27 @@
+.ClangBasePath      = '../External/SDK/ClangForWindows/5.0.1'
+
+//------------------------------------------------------------------------------
+// Clang
+//------------------------------------------------------------------------------
+Compiler( 'Compiler-x64Clang' )
+{
+    .Root       = '$ClangBasePath$'
+    .Executable = '$Root$\bin\clang++.exe'
+    .ExtraFiles = {
+                    '$Root$\bin\msvcp140.dll'
+                    '$Root$\bin\vcruntime140.dll'
+                  }
+}
+Compiler( 'Compiler-x64-Linux' )
+{
+    .Executable     = '/usr/bin/gcc'
+    .ExtraFiles     = {
+                        '/usr/bin/as'
+                        '/usr/lib/gcc/x86_64-linux-gnu/4.9/cc1'
+                        '/usr/lib/gcc/x86_64-linux-gnu/4.9/cc1plus'
+                      }
+}
+Compiler( 'Compiler-x64Clang-LinuxOSX' )
+{
+    .Executable = '/usr/bin/clang++'
+}

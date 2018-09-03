@@ -1,0 +1,62 @@
+// Windows 7.0A SDK
+//------------------------------------------------------------------------------
+
+
+// Root Paths
+//------------------------------------------------------------------------------
+.WindowsSDK_7_0A_BasePath   = 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A'
+
+
+// Defines
+//------------------------------------------------------------------------------
+.WindowsSDK_7_0A_Defines    = ''
+
+
+// Architectural Settings
+//------------------------------------------------------------------------------
+
+.WindowsSDK_7_0A_X86 =
+[
+    .WindowsSDK_IncludePaths        = ' -I"$WindowsSDK_7_0A_BasePath$/include"'
+
+
+
+    .CommonCompilerOptions          = .WindowsSDK_IncludePaths
+                                    + .WindowsSDK_7_0A_Defines
+
+    .CompilerOptions                = .CommonCompilerOptions
+    .CompilerOptionsC               = .CommonCompilerOptions
+    .CompilerOptionsPCH             = .CommonCompilerOptions
+    .CompilerOptionsDeoptimized     = .CommonCompilerOptions
+
+    .LinkerOptions                  = ' /LIBPATH:"$WindowsSDK_7_0A_BasePath$/lib"'
+                                    + ' /MACHINE:X86'
+                                    + ' /LARGEADDRESSAWARE'
+]
+
+.WindowsSDK_7_0A_X64 =
+[
+    .WindowsSDK_IncludePaths        = ' -I"$WindowsSDK_7_0A_BasePath$/include"'
+
+
+
+    .CommonCompilerOptions          = .WindowsSDK_IncludePaths
+                                    + .WindowsSDK_7_0A_Defines
+                                    + ' -DWIN64'
+
+    .CompilerOptions                = .CommonCompilerOptions
+    .CompilerOptionsC               = .CommonCompilerOptions
+    .CompilerOptionsPCH             = .CommonCompilerOptions
+    .CompilerOptionsDeoptimized     = .CommonCompilerOptions
+
+    .LinkerOptions                  = ' /LIBPATH:"$WindowsSDK_7_0A_BasePath$/lib/x64"'
+                                    + ' /MACHINE:X64'
+]
+
+Compiler( 'ResourceCompiler-WindowsSDK_7_0A' )
+{
+    .Executable                 = '$WindowsSDK_7_0A_BasePath$/Bin/x86/RC.exe'
+    .CompilerFamily             = 'custom'
+}
+
+//------------------------------------------------------------------------------
