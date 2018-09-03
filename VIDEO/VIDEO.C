@@ -471,7 +471,7 @@ U8	Video_SetMode( const U16 aWidth, const U16 aHeight, const U16 aMode, const U1
 				*(U8 *)0xFFFF8260L = 0;
 				System_GetpEmuDesc()->mColourDepth = 2;
 				System_GetpEmuDesc()->mResolution  = 2;
-				*(U8 *)0xFFFF820FL = aCanvasWidth-aWidth;
+				*(U8 *)0xFFFF820FL = (U8)(aCanvasWidth-aWidth);
 				lRes = 1;
 			}
 			break;

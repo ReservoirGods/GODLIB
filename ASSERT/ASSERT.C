@@ -31,7 +31,7 @@ void	Assert_Display( const char * apString )
 {
 /*	MessageBox( NULL, apString, "ASSERT", MB_ABORTRETRYIGNORE ); */
 	Kernel_InputBufferSave();
-	OutputDebugStr( apString );
+	OutputDebugString( apString );
 	__asm int 3;
 }
 #endif

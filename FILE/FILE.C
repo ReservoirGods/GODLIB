@@ -37,6 +37,7 @@
 #include	<IO.H>
 #include	<TIME.H>
 #include	<WINDOWS.H>
+#include <Commdlg.h>
 #endif
 
 #define	mFILE_CHAR_IS_SLASH( _a )	(('\\'==(_a)) || ('/'==(_a)))

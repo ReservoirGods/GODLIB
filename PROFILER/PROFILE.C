@@ -42,6 +42,7 @@ void	Profile_Init( sProfile * apProfile )
 
 void	Profile_CliPrint( sProfile * apProfile,const char * apName )
 {
+	(void)apName;
 	if( apProfile )
 	{
 		if( apProfile->mHitCount )
@@ -49,7 +50,8 @@ void	Profile_CliPrint( sProfile * apProfile,const char * apName )
 			apProfile->mAverage = apProfile->mTotal / apProfile->mHitCount;
 		}
 		Cli_PrintfLine5( "%s %ld %ld %ld %ld", apName, apProfile->mCurrent, apProfile->mAverage, apProfile->mHiTide, apProfile->mHiTideTag );
-	}}
+	}
+}
 
 U32		Profile_GetCPUCycleCount( void )
 {

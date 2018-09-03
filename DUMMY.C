@@ -16,6 +16,7 @@
 #include	<GODLIB/VBL/VBL.H>
 #include	<GODLIB/XBIOS/XBIOS.H>
 
+#include <string.h>
 
 /* ###################################################################################
 #  PROTOTYPES
