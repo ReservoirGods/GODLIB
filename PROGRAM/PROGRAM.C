@@ -22,11 +22,13 @@
 ################################################################################### */
 
 #if defined(dGODLIB_PLATFORM_ATARI)
-extern void * _BasPag;
+extern sBasePage * _BasPag;
 #else
 sBasePage	gBasePageWin;
-void * _BasPag = &gBasePageWin;
+sBasePage * _BasPag = &gBasePageWin;
 #endif
+
+U8	gProgramArgvSpace[ 1024 ];
 
 void	Program_Execute_Internal( const sBasePage * apHeader, const char * apCmdLine );
 
@@ -204,15 +206,34 @@ void				Program_UnLoad( sBasePage * apHeader )
 	mMEMFREE( apHeader );
 }
 
-void				Program_Execute( sBasePage * apPage, const char * apCmdLine )
+void				Program_Execute( sBasePage * apPage, const char * apCmdLine, const char * apParentApplicationName )
 {
 	int i;
 	if( !apPage ) return;
 	if( apCmdLine )
 	{
-		for( i=0; (i<127) && apCmdLine[i]; apPage->mCommandLine[i+1] = apCmdLine[i], i++ );
+		for( i=0; (i<125) && apCmdLine[i]; apPage->mCommandLine[i+1] = apCmdLine[i], i++ );
 		apPage->mCommandLine[i+1]=0;
 		apPage->mCommandLine[0]=(U8)i;
+		if( (i==125) && apCmdLine[i-1] )
+		{
+			const char * lpARGV="ARGV=";
+			U16 a = 0;
+			if( _BasPag && _BasPag->mpEnvironment )
+			{
+				for( a = 0; _BasPag->mpEnvironment[ a ] && a < sizeof( gProgramArgvSpace ) - 1; gProgramArgvSpace[a++] = _BasPag->mpEnvironment[ a ] );
+			}
+			gProgramArgvSpace[ a++ ] = 0;
+			for( i=0; lpARGV[i] && a<sizeof(gProgramArgvSpace)-1; gProgramArgvSpace[ a++ ] = lpARGV[ i++] );
+			gProgramArgvSpace[ a++ ] =0;
+			for( i=0; apParentApplicationName[i] && a<sizeof(gProgramArgvSpace)-1; gProgramArgvSpace[ a++ ] = apParentApplicationName[ i++ ] );
+			gProgramArgvSpace[ a++ ] =0;
+			for( i=0; apCmdLine[i] && a<sizeof(gProgramArgvSpace)-2; gProgramArgvSpace[ a++ ] = ' ' == apCmdLine[ i ] ? 0 : apCmdLine [ i ], i++ );
+			gProgramArgvSpace[ a++ ] =0;
+			gProgramArgvSpace[ a++ ] =0;
+			apPage->mpEnvironment = (char*)&gProgramArgvSpace[0];
+			apPage->mCommandLine[ 0 ] = 127;
+		}
 	}
 
 	Memory_Clear( apPage->mBSSLength, apPage->mpBSS );
@@ -222,5 +243,6 @@ void				Program_Execute( sBasePage * apPage, const char * apCmdLine )
 	(void)apCmdLine;
 #endif
 }
+
 
 /* ################################################################################ */

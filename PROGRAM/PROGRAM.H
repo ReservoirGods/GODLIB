@@ -88,7 +88,11 @@ U8				Program_IsValid( const sProgramHeader * apHeader );
 sBasePage *		Program_Load( const char * apFileName );
 void			Program_Init( sBasePage * apPage );
 void			Program_UnLoad( sBasePage * apPage );
-void			Program_Execute( sBasePage * apPage, const char * apCmdLine );
+void			Program_Execute( sBasePage * apPage, const char * apCmdLine, const char * apParentApplicationName );
+
+const char *	Program_ArgvCreate( const char * apCmdLine );
+void			Program_ArgvDestroy( const char * apArgv );
+
 
 /* ################################################################################ */
 

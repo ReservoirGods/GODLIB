@@ -130,8 +130,9 @@
                             + ' /fp:fast'
                             + ' /Fo"%2"'
                             + ' /I"./"'
+                            + ' /Zp1'
                             + .WindowsSDK_Defines
-                            
+
     .CompilerOptionsC       = .CompilerOptions
     .LibrarianOptions       = '/NODEFAULTLIB /WX /NOLOGO /OUT:"%2" "%1"'
     .LinkerOptions          = '/NODEFAULTLIB /WX /NOLOGO /INCREMENTAL:NO /OUT:"%2" "%1" /DEBUG'
