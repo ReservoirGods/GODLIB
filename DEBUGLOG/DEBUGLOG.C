@@ -180,8 +180,8 @@ void	DebugLog_DeInit()
 void	DebugLog_AddString( const char * apString )
 {
 #ifdef	dGODLIB_PLATFORM_WIN
-	OutputDebugStr( apString );
-	OutputDebugStr( "\n" );
+	OutputDebugString( apString );
+	OutputDebugString( "\n" );
 #endif
 	printf( apString );
 	printf( "\n" );
