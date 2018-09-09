@@ -114,7 +114,12 @@ void	ScreenGrab_SetDirectory( const char * apDirectory )
 {
 	if( apDirectory )
 	{
-		strcpy( gScreenGrabDirectory, apDirectory );
+		U16 i;
+		for (i = 0; (i < 255) && apDirectory[i]; i++)
+		{
+			gScreenGrabDirectory[i] = apDirectory[i];
+		}
+		gScreenGrabDirectory[i] = 0;
 	}
 }
 
