@@ -10,8 +10,8 @@
 {							 						\
 	if( _apItem )									\
 	{												\
-		_apItem->_apNext = _apHead;					\
-		_apHead          = _apItem;					\
+		(_apItem)->_apNext	 = _apHead;				\
+		_apHead				 = _apItem;				\
 	}												\
 }
 
@@ -30,30 +30,31 @@
 	}														\
 															\
 	*lppLast = apItem;										\
+	(apItem)->mpNext = 0;									\
 }
 
 #define	GOD_LL_REMOVE( aType, aHead, apNext, aItem )	\
-{													\
-	aType *		lpItem;								\
-	aType **	lppLast;							\
-													\
-	if( aHead && aItem )							\
-	{												\
-		lppLast = &aHead;							\
-		lpItem  = *lppLast;							\
-													\
-		while( (lpItem) && (lpItem!=aItem) )		\
-		{											\
-			lppLast = &lpItem->apNext;				\
-			lpItem =  *lppLast;						\
-		}											\
-													\
-		if( lpItem )								\
-		{											\
-			*lppLast = lpItem->apNext;				\
-			lpItem->apNext = 0;						\
-		}											\
-	}												\
+{														\
+	aType *		lpItem;									\
+	aType **	lppLast;								\
+														\
+	if( aHead && aItem )								\
+	{													\
+		lppLast = &aHead;								\
+		lpItem  = *lppLast;								\
+														\
+		while( (lpItem) && (lpItem!=aItem) )			\
+		{												\
+			lppLast = &lpItem->apNext;					\
+			lpItem =  *lppLast;							\
+		}												\
+														\
+		if( lpItem )									\
+		{												\
+			*lppLast = (lpItem)->apNext;				\
+			lpItem->apNext = 0;							\
+		}												\
+	}													\
 }
 
 #define	GOD_LL_FIND( aHead, apNext, aField, aValue, aRes )	\

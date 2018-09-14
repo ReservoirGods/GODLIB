@@ -103,5 +103,34 @@ U32			Random_Get( void )
 	return( gRandomSeed.l );
 }
 
+U32	gSeedBase = 0;
+
+void		RandomSeed_Init( sRandomSeed * apSeed )
+{
+	apSeed->mSeed = gSeedBase;
+	gSeedBase += 31771;
+}
+void		RandomSeed_Update( sRandomSeed * apSeed )
+{
+	apSeed->mSeed *= 69069L;
+	apSeed->mSeed += 41;
+}
+
+U16			RandomSeed_GetClamped( sRandomSeed * apSeed, U16 aMax )
+{
+	U32 lRes = aMax;
+
+	apSeed->mSeed *= 69069L;
+	apSeed->mSeed += 41;
+
+	lRes *= ( apSeed->mSeed & 0xFFFF );
+	if( lRes & 0x8000 )
+		lRes += 0x8000;
+
+	lRes >>= 16;
+
+	return (U16)lRes;
+}
+
 
 /* ################################################################################ */
