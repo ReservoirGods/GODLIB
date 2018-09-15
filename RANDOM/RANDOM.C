@@ -132,5 +132,14 @@ U16			RandomSeed_GetClamped( sRandomSeed * apSeed, U16 aMax )
 	return (U16)lRes;
 }
 
+U32			RandomSeed_GetClamped32( sRandomSeed * apSeed )
+{
+	apSeed->mSeed *= 69069L;
+	apSeed->mSeed += 41;
+
+
+	return apSeed->mSeed;
+}
+
 
 /* ################################################################################ */

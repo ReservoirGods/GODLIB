@@ -28,6 +28,7 @@ U32			Random_Get( void );
 void		RandomSeed_Init( sRandomSeed * apSeed );
 void		RandomSeed_Update( sRandomSeed * apSeed );
 U16			RandomSeed_GetClamped( sRandomSeed * apSeed, U16 aMax );
+U32			RandomSeed_GetClamped32( sRandomSeed * apSeed );
 
 /* ################################################################################ */
 
