@@ -103,8 +103,8 @@ sCanvas *		Tga_ToCanvas( sTga * apTga )
 
 	lpImageDepack = 0;
 
-	lWidth  = EndianSwap_U16( apTga->mHeader.mWidth  );
-	lHeight = EndianSwap_U16( apTga->mHeader.mHeight );
+	Endian_ReadLittleU16( (U16*)apTga->mHeader.mWidth, lWidth );
+	Endian_ReadLittleU16( (U16*)apTga->mHeader.mHeight, lHeight );
 
 	if( !Canvas_CreateImage( lpCanvas, lWidth, lHeight ) )
 	{
@@ -122,18 +122,20 @@ sCanvas *		Tga_ToCanvas( sTga * apTga )
 
 	if( apTga->mHeader.mColourMapType )
 	{
+		U16 lColourMapCount;
+		Endian_ReadLittleU16( (U16*)apTga->mHeader.mColourMapCount, lColourMapCount );
 		lColourMapSize  = (apTga->mHeader.mColourMapBitDepth+7)>>3;
-		lColourMapSize *= EndianSwap_U16( apTga->mHeader.mColourMapCount );
+		lColourMapSize *= lColourMapCount;
 		lpImage        += lColourMapSize;
 
-		lpPal = (uCanvasPixel*)mMEMCALLOC( EndianSwap_U16( apTga->mHeader.mColourMapCount ) * sizeof(uCanvasPixel) );
+		lpPal = (uCanvasPixel*)mMEMCALLOC( lColourMapCount * sizeof(uCanvasPixel) );
 		if( !lpPal )
 		{
 			return( 0 );
 		}
 
-		lStartX = EndianSwap_U16( apTga->mHeader.mColourMapFirstIndex );
-		lEndX   = EndianSwap_U16( apTga->mHeader.mColourMapCount );
+		Endian_ReadLittleU16( (U16*)apTga->mHeader.mColourMapFirstIndex, lStartX );
+		Endian_ReadLittleU16( (U16*)apTga->mHeader.mColourMapCount, lEndX );
 
 		switch( apTga->mHeader.mColourMapBitDepth )
 		{
@@ -253,7 +255,7 @@ sCanvas *		Tga_ToCanvas( sTga * apTga )
 			{
 				for( x=lStartX; x!=lEndX; x=(S16)(x+lStepX) )
 				{
-					lIndex = EndianSwap_U16( lpImage );
+					Endian_ReadLittleU16( (U16*)lpImage, lIndex );
 					lpImage += 2;
 					Canvas_SetPixel( lpCanvas, x, y, lpPal[ lIndex ].l );
 				}
@@ -265,7 +267,13 @@ sCanvas *		Tga_ToCanvas( sTga * apTga )
 			{
 				for( x=lStartX; x!=lEndX; x=(S16)(x+lStepX) )
 				{
-					lIndex = EndianSwap_U24( lpImage );
+/*					lIndex = EndianSwap_U24( lpImage ); */
+					lIndex = lpImage[ 2 ];
+					lIndex <<= 8;
+					lIndex |= lpImage[ 1 ];
+					lIndex <<= 8;
+					lIndex |= lpImage[ 0 ];
+
 					lpImage += 3;
 					Canvas_SetPixel( lpCanvas, x, y, lpPal[ lIndex ].l );
 				}
@@ -277,7 +285,7 @@ sCanvas *		Tga_ToCanvas( sTga * apTga )
 			{
 				for( x=lStartX; x!=lEndX; x=(S16)(x+lStepX) )
 				{
-					lIndex = EndianSwap_U32( lpImage );
+					Endian_ReadLittleU32( (U32*)lpImage, lIndex );
 					lpImage += 4;
 					Canvas_SetPixel( lpCanvas, x, y, lpPal[ lIndex ].l );
 				}

@@ -323,13 +323,16 @@ U32		sTagValue_GetID(    const U32 aValue, const sTagValue * apTagValues, const 
 void	Endian_Twiddle_U16( U8 * apU16 );
 void	Endian_Twiddle_U32( U8 * apU32 );
 
+/*
+Deprecate this endian swap interface
 
-S16		EndianSwap_S16( U8 * apS16 );
-U16		EndianSwap_U16( U8 * apU16 );
-S32		EndianSwap_S24( U8 * apS24 );
-U32		EndianSwap_U24( U8 * apU24 );
-S32		EndianSwap_S32( U8 * apS32 );
-U32		EndianSwap_U32( U8 * apU16 );
+S16		EndianSwap_S16( const S16 * apS16 );
+U16		EndianSwap_U16( const U16 * apU16 );
+S32		EndianSwap_S24( const U8 * apS24 );
+U32		EndianSwap_U24( const U8 * apU24 );
+S32		EndianSwap_S32( const S32 * apS32 );
+U32		EndianSwap_U32( const U32 * apU32 );
+*/
 
 S32		AsciiToS32( const char * apTxt );
 

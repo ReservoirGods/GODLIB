@@ -189,48 +189,50 @@ U32		sTagValue_GetID( const U32 aValue, const sTagValue * apTagValues, const U32
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION    : EndianSwap_S16( U8 * apS16 )
+* FUNCTION    : EndianSwap_S16( const U8 * apS16 )
 * DESCRIPTION : swaps endianess of S16 pointed to by apS16
 * AUTHOR      : 27.12.00 PNK
 *-----------------------------------------------------------------------------------*/
 
-S16		EndianSwap_S16( U8 * apS16 )
+S16		EndianSwap_S16( const S16 * apS16 )
 {
 	S16	lWord;
+	U8 * lpS16 = (U8*)apS16;
 
-	lWord   = apS16[ 1 ];
+	lWord   = lpS16[ 1 ];
 	lWord <<= 8;
-	lWord  |= (apS16[ 0 ] & 0xFF);
+	lWord  |= (lpS16[ 0 ] & 0xFF);
 
 	return( lWord );
 }
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION    : EndianSwap_U16( U8 * apU16 )
+* FUNCTION    : EndianSwap_U16( const U8 * apU16 )
 * DESCRIPTION : swaps endianess of S16 pointed to by apS16
 * AUTHOR      : 27.12.00 PNK
 *-----------------------------------------------------------------------------------*/
 
-U16		EndianSwap_U16( U8 * apU16 )
+U16		EndianSwap_U16( const U16 * apU16 )
 {
 	U16	lWord;
+	U8 * lpU16 = (U8*)apU16;
 
-	lWord   = apU16[ 1 ];
+	lWord   = lpU16[ 1 ];
 	lWord <<= 8;
-	lWord  |= (apU16[ 0 ] & 0xFF);
+	lWord  |= (lpU16[ 0 ] & 0xFF);
 
 	return( lWord );
 }
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION    : EndianSwap_S32( U8 * apS24 )
+* FUNCTION    : EndianSwap_S32( const U8 * apS24 )
 * DESCRIPTION : swaps endianess of S24 pointed to by apS24
 * AUTHOR      : 27.12.00 PNK
 *-----------------------------------------------------------------------------------*/
 
-S32		EndianSwap_S24( U8 * apS24 )
+S32		EndianSwap_S24( const U8 * apS24 )
 {
 	S32	lLong;
 
@@ -246,12 +248,12 @@ S32		EndianSwap_S24( U8 * apS24 )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION    : EndianSwap_S32( U8 * apU24 )
+* FUNCTION    : EndianSwap_S32( const U8 * apU24 )
 * DESCRIPTION : swaps endianess of U24 pointed to by apU24
 * AUTHOR      : 27.12.00 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32		EndianSwap_U24( U8 * apU24 )
+U32		EndianSwap_U24( const U8 * apU24 )
 {
 	U32	lLong;
 
@@ -266,44 +268,46 @@ U32		EndianSwap_U24( U8 * apU24 )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION    : EndianSwap_S32( U8 * apS32 )
+* FUNCTION    : EndianSwap_S32( const U8 * apS32 )
 * DESCRIPTION : swaps endianess of S16 pointed to by apS16
 * AUTHOR      : 27.12.00 PNK
 *-----------------------------------------------------------------------------------*/
 
-S32		EndianSwap_S32( U8 * apS32 )
+S32		EndianSwap_S32( const S32 * apS32 )
 {
 	S32	lLong;
+	U8 * lpS32 = (U8*)apS32;
 
-	lLong   = apS32[ 3 ];
+	lLong   = lpS32[ 3 ];
 	lLong <<= 8;
-	lLong   = (apS32[ 2 ] & 0xFF);
+	lLong   = (lpS32[ 2 ] & 0xFF);
 	lLong <<= 8;
-	lLong   = (apS32[ 1 ] & 0xFF);
+	lLong   = (lpS32[ 1 ] & 0xFF);
 	lLong <<= 8;
-	lLong  |= (apS32[ 0 ] & 0xFF);
+	lLong  |= (lpS32[ 0 ] & 0xFF);
 
 	return( lLong );
 }
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION    : EndianSwap_U32( U8 * apU16 )
+* FUNCTION    : EndianSwap_U32( const U8 * apU16 )
 * DESCRIPTION : swaps endianess of S16 pointed to by apS16
 * AUTHOR      : 27.12.00 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32		EndianSwap_U32( U8 * apU16 )
+U32		EndianSwap_U32( const U32 * apU16 )
 {
 	U32	lLong;
+	U8 * lpU16 = (U8*)apU16;
 
-	lLong   = apU16[ 0 ];
+	lLong   = lpU16[ 0 ];
 	lLong <<= 8;
-	lLong  |= (apU16[ 1 ] & 0xFF);
+	lLong  |= (lpU16[ 1 ] & 0xFF);
 	lLong <<= 8;
-	lLong  |= (apU16[ 2 ] & 0xFF);
+	lLong  |= (lpU16[ 2 ] & 0xFF);
 	lLong <<= 8;
-	lLong  |= (apU16[ 3 ] & 0xFF);
+	lLong  |= (lpU16[ 3 ] & 0xFF);
 
 	return( lLong );
 }
@@ -320,6 +324,7 @@ S32	AsciiToS32( const char * apTxt )
 	S32	lVal;
 	S32	lSign;
 	U8	lMode;
+	U16 i;
 
 	while( *apTxt == ' ' )
 	{
@@ -347,6 +352,15 @@ S32	AsciiToS32( const char * apTxt )
 		lMode = 1;
 		apTxt += 2;
 	}
+	
+	for( i=0; apTxt[i]; i++ )
+	{
+		if( ( apTxt[ i ] < '0' ) || ( apTxt[ i ] > '9' ) )
+		{
+			lMode = 1;
+			break;
+		}
+	}
 
 	lVal = 0;
 	if( lMode )
@@ -357,7 +371,8 @@ S32	AsciiToS32( const char * apTxt )
 			||	( (*apTxt >= 'A') && (*apTxt <= 'F') )
 			)
 		{
-			lVal *= 16L;
+			/* lVal *= 16L;*/
+			lVal <<= 4;
 			if( (*apTxt >= '0') && (*apTxt <= '9') )
 			{
 				lVal += *apTxt - '0';

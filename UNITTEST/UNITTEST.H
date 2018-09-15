@@ -39,8 +39,8 @@ extern sUnitTestContext  gUnitTestContext;
 #define	GOD_UNIT_TEST_INVOKE( _aName )		{ void UnitTest##_aName( void); { UnitTest##_aName(); } }
 #define GOD_UNIT_TEST_RAND( _aNum )			RandomSeed_GetClamped( &gUnitTestContext.mSeed, _aNum )
 
-#define	GOD_UNIT_TEST_EXPECT( _aValue, _aMsg ) { if( !( _aValue ) ) { printf( " %s\n", _aMsg ); gUnitTestContext.mErrorCount++; } }
-#define	GOD_UNIT_TEST_ASSERT( _aValue, _aMsg ) { if( !( _aValue ) ) { printf( " %s\n", _aMsg ); gUnitTestContext.mErrorCount++; return; } }
+#define	GOD_UNIT_TEST_EXPECT( _aValue, _aMsg ) { if( !( _aValue ) ) { printf( " %s @ %s (%d)\n", _aMsg, __FILE__, __LINE__ ); gUnitTestContext.mErrorCount++; } }
+#define	GOD_UNIT_TEST_ASSERT( _aValue, _aMsg ) { if( !( _aValue ) ) { printf( " %s @ %s (%d)\n", _aMsg, __FILE__, __LINE__ ); gUnitTestContext.mErrorCount++; return; } }
 
 /* ################################################################################ */
 
