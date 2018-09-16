@@ -105,6 +105,9 @@ Settings
                                     + ' -O0'
 ]
 
+.ProjectOptions_X86 = .ProjectOptions_Base
+.ProjectOptions_X64 = .ProjectOptions_Base
+
 
 // X86
 //------------------------------------------------------------------------------
@@ -115,6 +118,7 @@ Settings
 ]
 .X86BaseConfig              + .WindowsSDK_X86
                             + .ToolChain_VS_Windows_X86
+                            + .ProjectOptions_X86
 .X86DebugConfig             = .X86BaseConfig
                             + .Debug_Config
                             + .VS_Debug_Optimizations
@@ -134,6 +138,7 @@ Settings
 ]
 .X64BaseConfig              + .WindowsSDK_X64
                             + .ToolChain_VS_Windows_X64
+                            + .ProjectOptions_X64
 .X64DebugConfig             = .X64BaseConfig
                             + .Debug_Config
                             + .VS_Debug_Optimizations

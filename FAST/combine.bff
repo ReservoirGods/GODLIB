@@ -1,0 +1,108 @@
+.ExeConfigs   = { .X86DebugConfig, .X86ProfileConfig, .X86ReleaseConfig }
+
+ForEach( .Config in .ExeConfigs )
+{
+    Using( .Config )
+
+    .OutputBase + '\$Platform$-$Config$'
+
+    ObjectList( '$ProjectName$-obj-$Platform$-$Config$' )
+    {
+        .BaseIncludePaths       = ' /I"$GodRoot$"'
+        .CompilerOptions        + .BaseIncludePaths
+        .CompilerInputPath      = '..'
+        .CompilerInputPattern   ='*.C'
+        .CompilerOutputPath     = 'Out\$ProjectName$-obj-$Platform$-$Config$\'
+    }
+
+    Library( 'godlib-$Platform$-$Config$' )
+    {
+        .BaseIncludePaths          = ' /I"$GodRoot$"'
+                                   + ' /I"$DirectXPath$\Include"'
+        .CompilerOptions           + .BaseIncludePaths
+
+        .CompilerInputPath         = '$GodLibDir$'
+        .CompilerInputPattern      ='*.C'
+        .CompilerInputPathRecurse  = true
+        .CompilerOutputPath        = 'Out\godlib-$Platform$-$Config$\'
+        .LibrarianOutput           = 'Out\godlib-$Platform$-$Config$.lib'
+    }   
+
+
+    Executable( '$ProjectName$-Exe-$Platform$-$Config$' )
+    {
+
+        .Libraries      = { '$ProjectName$-obj-$Platform$-$Config$', 'godlib-$Platform$-$Config$' }
+
+        .LinkerOutput   = '../$ProjectName$-$Platform$-$Config$$ExeExtension$'
+        .LinkerOptions  + ' kernel32.lib'
+//                            + ' Ws2_32.lib'
+                        + ' User32.lib'
+//                            + .CRTLibs_Static
+                        + ' d3dx9d.lib d3d9.lib d3dxof.lib dxguid.lib dinput8.lib'
+                        + ' winmm.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib'
+                        + ' gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib'
+                        + ' /LIBPATH:"$DirectXPath$\Lib\x86"'
+    }
+}
+
+
+//--------------------------------------------------------------------------
+// Aliases
+//--------------------------------------------------------------------------
+
+Alias( '$ProjectName$-Debug' )           { .Targets = { '$ProjectName$-exe-X86-Debug' } }
+Alias( '$ProjectName$-Profile' )         { .Targets = { '$ProjectName$-exe-X86-Profile' } }
+Alias( '$ProjectName$-Release' )         { .Targets = { '$ProjectName$-exe-X86-Release' } }
+
+
+
+
+//--------------------------------------------------------------------------
+// Visual Studio Project Generation
+//--------------------------------------------------------------------------
+
+VCXProject( '$ProjectName$_vcx' )
+{
+    Using( .ProjectCommon )
+
+    .ProjectBasePath    = '..'
+    .ProjectInputPaths  = '..'
+    .ProjectOutput      = '$ProjectName$.vcxproj'
+    .ProjectFiles       = { '..\..\sample.bff', '..\*.PRJ' }
+
+    .ProjectFileTypes = { .CFileType, .BffFileType, .PrjFileType }
+
+    .LocalDebuggerCommand           ='^$(SolutionDir)\..\^$(ProjectName)-^$(Configuration).exe'
+    .LocalDebuggerWorkingDirectory  ='^$(SolutionDir)..'
+
+    #include "configs.bff"
+}
+
+
+VCXProject( 'godlib_vcx' )
+{
+    Using( .ProjectCommon )
+
+    .ProjectBasePath    = '$GodLibDir$'
+    .ProjectInputPaths  = '$GodLibDir$'
+    .ProjectOutput      = '$GodLibDir$\FAST\godlib.vcxproj'
+
+    #include "configs.bff"
+}    
+
+
+VSSolution( 'sln' )
+{
+	.SolutionBuildProject  = '$ProjectName$_vcx'
+	.SolutionOutput        = '$ProjectName$.sln'
+	.SolutionProjects      = { 'godlib_vcx', '$ProjectName$_vcx' }
+	.SolutionConfigs       = .ProjectConfigs_VS_X86
+
+	.Deps =
+	[
+	  .Projects      = { '$ProjectName$_vcx', 'godlib_vcx' } 
+	  .Dependencies  = { '$ProjectName$_vcx' }
+	]
+	.SolutionDependencies = { .Deps }
+}

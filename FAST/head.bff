@@ -1,0 +1,63 @@
+//------------------------------------------------------------------------------
+//	Default Visual studio version
+//------------------------------------------------------------------------------
+
+.VS_Name="VS_2015"
+
+//------------------------------------------------------------------------------
+//	Default Paths
+//------------------------------------------------------------------------------
+
+.ProjectDir='$_WORKING_DIR_$\..'
+.ExePath="^$(SolutionDir)\..\^$(ProjectName)-MSVC9-x86-^$(Configuration).exe"
+.ExeWorkingDir="^$(SolutionDir)\..\PRG"
+.FastBuildDir = "..\..\..\TOOLS.RG\FASTBUILD\Windows-x64-v0.96-RG"
+.GodLibDir="$ProjectDir$\..\..\GODLIB"
+.GodRoot="..\..\.."
+.DirectXPath="C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)"
+
+//------------------------------------------------------------------------------
+//	Visual Studio + Windows SDK
+//------------------------------------------------------------------------------
+
+#include    "VisualStudio.bff"
+
+//------------------------------------------------------------------------------
+//	Some File types for VC Projects
+//------------------------------------------------------------------------------
+
+.CFileType = 
+[
+  .FileType = "CppForm"
+  .Pattern = "*\\*.C"
+]
+
+.BffFileType = 
+[
+  .FileType = "CppForm"
+  .Pattern = "*\\*.bff"
+]
+
+.PrjFileType = 
+[
+  .FileType = "CppForm"
+  .Pattern = "..\\*.PRJ"
+]
+
+//------------------------------------------------------------------------------
+//	Default Project Settigns (can be overridden)
+//------------------------------------------------------------------------------
+
+.ProjectOptions_Win_Base =
+[
+	.CompilerOptions = ''
+	.LinkerOptions = ' /SUBSYSTEM:WINDOWS'
+]
+
+.ProjectOptions_Con_Base =
+[
+	.CompilerOptions = ''
+	.LinkerOptions = ' /SUBSYSTEM:CONSOLE'
+]
+
+
