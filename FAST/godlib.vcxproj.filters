@@ -949,18 +949,6 @@
     </CustomBuild>
     <CustomBuild Include="VisualStudio.bff">
     </CustomBuild>
-    <CustomBuild Include="VS2008.bff">
-    </CustomBuild>
-    <CustomBuild Include="VS2010.bff">
-    </CustomBuild>
-    <CustomBuild Include="VS2012.bff">
-    </CustomBuild>
-    <CustomBuild Include="VS2013.bff">
-    </CustomBuild>
-    <CustomBuild Include="VS2015.bff">
-    </CustomBuild>
-    <CustomBuild Include="VS2017.bff">
-    </CustomBuild>
     <CustomBuild Include="VS_2008.bff">
     </CustomBuild>
     <CustomBuild Include="VS_2010.bff">
@@ -974,18 +962,6 @@
     <CustomBuild Include="VS_2017.bff">
     </CustomBuild>
     <CustomBuild Include="WindowsSDK.bff">
-    </CustomBuild>
-    <CustomBuild Include="WindowsSDK_10.bff">
-    </CustomBuild>
-    <CustomBuild Include="WindowsSDK_6_0A.bff">
-    </CustomBuild>
-    <CustomBuild Include="WindowsSDK_7_0A.bff">
-    </CustomBuild>
-    <CustomBuild Include="WindowsSDK_7_1A.bff">
-    </CustomBuild>
-    <CustomBuild Include="WindowsSDK_8_0.bff">
-    </CustomBuild>
-    <CustomBuild Include="WindowsSDK_8_1.bff">
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

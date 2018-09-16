@@ -334,12 +334,6 @@
     <CustomBuild Include="OSX.bff" />
     <CustomBuild Include="project.bff" />
     <CustomBuild Include="VisualStudio.bff" />
-    <CustomBuild Include="VS2008.bff" />
-    <CustomBuild Include="VS2010.bff" />
-    <CustomBuild Include="VS2012.bff" />
-    <CustomBuild Include="VS2013.bff" />
-    <CustomBuild Include="VS2015.bff" />
-    <CustomBuild Include="VS2017.bff" />
     <CustomBuild Include="VS_2008.bff" />
     <CustomBuild Include="VS_2010.bff" />
     <CustomBuild Include="VS_2012.bff" />
@@ -347,12 +341,6 @@
     <CustomBuild Include="VS_2015.bff" />
     <CustomBuild Include="VS_2017.bff" />
     <CustomBuild Include="WindowsSDK.bff" />
-    <CustomBuild Include="WindowsSDK_10.bff" />
-    <CustomBuild Include="WindowsSDK_6_0A.bff" />
-    <CustomBuild Include="WindowsSDK_7_0A.bff" />
-    <CustomBuild Include="WindowsSDK_7_1A.bff" />
-    <CustomBuild Include="WindowsSDK_8_0.bff" />
-    <CustomBuild Include="WindowsSDK_8_1.bff" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>
