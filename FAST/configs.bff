@@ -1,0 +1,21 @@
+.ProjectConfigTarget_X86Debug        = [ Using( .ProjectCommonConfig_X86Debug )           .Target = '$ProjectName$-exe-X86-Debug' ]
+.ProjectConfigTarget_X86Profile      = [ Using( .ProjectCommonConfig_X86Profile )         .Target = '$ProjectName$-exe-X86-Profile' ]
+.ProjectConfigTarget_X86Release      = [ Using( .ProjectCommonConfig_X86Release )         .Target = '$ProjectName$-exe-X86-Release' ]
+.ProjectConfigTarget_X86ClangDebug   = [ Using( .ProjectCommonConfig_X86ClangDebug )      .Target = '$ProjectName$-X86Clang-Debug' ]
+.ProjectConfigTarget_X86ClangProfile = [ Using( .ProjectCommonConfig_X86ClangProfile )    .Target = '$ProjectName$-X86Clang-Profile' ]
+.ProjectConfigTarget_X86ClangRelease = [ Using( .ProjectCommonConfig_X86ClangRelease )    .Target = '$ProjectName$-X86Clang-Release' ]
+
+.ProjectConfigTarget_X64Debug        = [ Using( .ProjectCommonConfig_X64Debug )           .Target = '$ProjectName$-X64-Debug' ]
+.ProjectConfigTarget_X64Profile      = [ Using( .ProjectCommonConfig_X64Profile )         .Target = '$ProjectName$-X64-Profile' ]
+.ProjectConfigTarget_X64Release      = [ Using( .ProjectCommonConfig_X64Release )         .Target = '$ProjectName$-X64-Release' ]
+.ProjectConfigTarget_X64ClangDebug   = [ Using( .ProjectCommonConfig_X64ClangDebug )      .Target = '$ProjectName$-X64Clang-Debug' ]
+.ProjectConfigTarget_X64ClangProfile = [ Using( .ProjectCommonConfig_X64ClangProfile )    .Target = '$ProjectName$-X64Clang-Profile' ]
+.ProjectConfigTarget_X64ClangRelease = [ Using( .ProjectCommonConfig_X64ClangRelease )    .Target = '$ProjectName$-X64Clang-Release' ]
+
+.ProjectConfigs = { 
+                    .ProjectConfigTarget_X86Debug,      .ProjectConfigTarget_X86Profile,        .ProjectConfigTarget_X86Release,
+//                    .ProjectConfigTarget_X86ClangDebug, .ProjectConfigTarget_X86ClangProfile,   .ProjectConfigTarget_X86ClangRelease,
+//                    .ProjectConfigTarget_X64Debug,      .ProjectConfigTarget_X64Profile,        .ProjectConfigTarget_X64Release,
+//                    .ProjectConfigTarget_X64ClangDebug, .ProjectConfigTarget_X64ClangProfile,   .ProjectConfigTarget_X64ClangRelease 
+                    }
+                    

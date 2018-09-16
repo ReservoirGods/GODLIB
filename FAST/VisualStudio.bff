@@ -1,72 +1,34 @@
+//------------------------------------------------------------------------------
 // VisualStudio
 //------------------------------------------------------------------------------
 
-#if USING_VS2008
-    #include "VS2008.bff"
-    .MSC_VER                            = .VS2008_MSC_VER
-    .ToolsBasePath                      = '$VS_2008_PATH$/VC/bin'
-    .ToolChain_VS_Windows_X86           = .ToolChain_VS2008_Windows_X86
-    .ToolChain_VS_Windows_X64           = .ToolChain_VS2008_Windows_X64
-    .VS_Name                            = .VS_2008_Name
-    .VS_PATH                            = .VS_2008_PATH
-    .VS_PlatformToolset                 = .VS_2008_PlatformToolset
-#endif
 
-#if USING_VS2010
-    #include "VS2010.bff"
-    .MSC_VER                            = .VS2010_MSC_VER
-    .ToolsBasePath                      = '$VS_2010_PATH$/VC/bin'
-    .ToolChain_VS_Windows_X86           = .ToolChain_VS2010_Windows_X86
-    .ToolChain_VS_Windows_X64           = .ToolChain_VS2010_Windows_X64
-    .VS_Name                            = .VS_2010_Name
-    .VS_PATH                            = .VS_2010_PATH
-    .VS_PlatformToolset                 = .VS_2010_PlatformToolset
-#endif
+//------------------------------------------------------------------------------
+//  VARIABLES
+//------------------------------------------------------------------------------
 
-#if USING_VS2012
-    #include "VS2012.bff"
-    .MSC_VER                            = .VS2012_MSC_VER
-    .ToolsBasePath                      = '$VS_2012_PATH$/VC/bin'
-    .ToolChain_VS_Windows_X86           = .ToolChain_VS2012_Windows_X86
-    .ToolChain_VS_Windows_X64           = .ToolChain_VS2012_Windows_X64
-    .VS_Name                            = .VS_2012_Name
-    .VS_PATH                            = .VS_2012_PATH
-    .VS_PlatformToolset                 = .VS_2012_PlatformToolset
-#endif
+#include "$VS_Name$.bff"
+#include "WindowsSDK.bff"
 
-#if USING_VS2013
-    #include "VS2013.bff"
-    .MSC_VER                            = .VS2013_MSC_VER
-    .ToolsBasePath                      = '$VS_2013_PATH$/VC/bin'
-    .ToolChain_VS_Windows_X86           = .ToolChain_VS2013_Windows_X86
-    .ToolChain_VS_Windows_X64           = .ToolChain_VS2013_Windows_X64
-    .VS_Name                            = .VS_2013_Name
-    .VS_PATH                            = .VS_2013_PATH
-    .VS_PlatformToolset                 = .VS_2013_PlatformToolset
-#endif
+.ToolChain_VS_Windows_X86 =
+[
+    Using( .'$VS_Name$_X86_Options' )
 
-#if USING_VS2015
-    #include "VS2015.bff"
-    .MSC_VER                            = .VS2015_MSC_VER
-    .ToolsBasePath                      = '$VS_2015_PATH$/VC/bin'
-    .ToolChain_VS_Windows_X86           = .ToolChain_VS2015_Windows_X86
-    .ToolChain_VS_Windows_X64           = .ToolChain_VS2015_Windows_X64
-    .VS_Name                            = .VS_2015_Name
-    .VS_PATH                            = .VS_2015_PATH
-    .VS_PlatformToolset                 = .VS_2015_PlatformToolset
-#endif
+    .Compiler                       = '$VS_Name$-Compiler-x86'
+    .CompilerOptionsC               = .CompilerOptions
+    .CompilerOptionsPCH             = .CompilerOptions
+    .CompilerOptionsDeoptimized     = .CompilerOptions
+]
 
-#if USING_VS2017
-    #include "VS2017.bff"
-    .MSC_VER                            = .VS2017_MSC_VER
-    .ToolsBasePath                      = '$VS_2017_PATH$/VC/bin'
-    .ToolChain_VS_Windows_X86           = .ToolChain_VS2017_Windows_X86
-    .ToolChain_VS_Windows_X64           = .ToolChain_VS2017_Windows_X64
-    .VS_Name                            = .VS_2017_Name
-    .VS_PATH                            = .VS_2017_PATH
-    .VS_PlatformToolset                 = .VS_2017_PlatformToolset
-#endif
+.ToolChain_VS_Windows_X64 =
+[
+    Using( .'$VS_Name$_X86_Options' )
 
+    .Compiler                       = '$VS_Name$-Compiler-x64'
+    .CompilerOptionsC               = .CompilerOptions
+    .CompilerOptionsPCH             = .CompilerOptions
+    .CompilerOptionsDeoptimized     = .CompilerOptions
+]
 
 //------------------------------------------------------------------------------
 // Optimizations (MSVC)
@@ -78,15 +40,6 @@
     .CompilerOptions                = ' /MTd /Od /RTC1 /GS /Oy- /GR-'
     .CompilerOptionsC               = .CompilerOptions
     .CompilerOptionsPCH             = .CompilerOptions
-    #if !USING_VS2013
-        #if !USING_VS2012
-            #if !USING_VS2010
-                #if !USING_VS2008
-                    .LinkerOptions                  = ' /DEBUG:FASTLINK' // VS2015 and later only
-                #endif
-            #endif
-        #endif
-    #endif
 ]
 
 .VS_Profile_Optimizations =
@@ -117,6 +70,7 @@
                             + ' /we4263' // 'function' : member function does not override any base class virtual member function
                             + ' /we4265' // 'class': class has virtual functions, but destructor is not virtual
                             + ' /we4296' // 'operator': expression is always false
+                            + ' /wd4505' // unreferenced local function has been removed
                             + ' /we4555' // expression has no effect; expected expression with side-effect
                             + ' /we4619' // #pragma warning : there is no warning number 'number'
                             + ' /we4640' // 'instance' : construction of local static object is not thread-safe
@@ -131,11 +85,13 @@
                             + ' /Fo"%2"'
                             + ' /I"./"'
                             + ' /Zp1'
+                            + ' /EHsc'
                             + .WindowsSDK_Defines
 
     .CompilerOptionsC       = .CompilerOptions
     .LibrarianOptions       = '/NODEFAULTLIB /WX /NOLOGO /OUT:"%2" "%1"'
-    .LinkerOptions          = '/NODEFAULTLIB /WX /NOLOGO /INCREMENTAL:NO /OUT:"%2" "%1" /DEBUG'
+//    .LinkerOptions          = '/NODEFAULTLIB /WX /NOLOGO /INCREMENTAL:NO /OUT:"%2" "%1" /DEBUG'
+    .LinkerOptions          = '/WX /NOLOGO /INCREMENTAL:NO /OUT:"%2" "%1" /DEBUG'
 
     .LibExtension           = '.lib'
     .ExeExtension           = '.exe'

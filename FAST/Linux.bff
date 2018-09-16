@@ -1,0 +1,81 @@
+// Linux
+//------------------------------------------------------------------------------
+.LinuxBaseConfig =
+[
+    .Librarian              = '/usr/bin/ar'
+
+    .BaseCompilerOptions    = ''
+
+                            // Compatibility with older glibc (must be first!)
+                            + ' -include Core/Env/glibc_compat.h'
+
+                            + ' -o "%2" "%1" -c -g'
+                            + ' -I./'
+                            + ' -D__LINUX__'
+                            + ' -Wall -Werror -Wfatal-errors'   // warnings as errors
+                            + ' -Wextra'
+                            + ' -m64'                           // x86-64
+
+    .CompilerOptionsC       = '-x c '
+                            + .BaseCompilerOptions
+    .CompilerOptions        = '-std=c++11 '                     // allow C++11 features
+                            + .BaseCompilerOptions
+
+                            // Disabled warnings
+                            + ' -Wno-invalid-offsetof' // we get the offset of members in non-POD types
+
+                            // Additional warnings
+                            + ' -Wshadow'
+
+    .LinkerOptions          = '"%1" -o "%2"'
+
+    .LibrarianOptions       = 'rcs "%2" "%1"'
+
+    .LibExtension           = '.a'
+    .ExeExtension           = ''
+
+    .UseExceptions          = ' -fexceptions'
+]
+.X64BaseConfig_Linux =
+[
+    Using( .LinuxBaseConfig )
+    .Platform               = 'x64Linux'
+    .Compiler               = 'Compiler-x64-Linux'
+    .Linker                 = '/usr/bin/g++'
+]
+.X64DebugConfig_Linux       = .X64BaseConfig_Linux
+                            + .Debug_Config
+                            + .Debug_Optimizations
+.X64ReleaseConfig_Linux     = .X64BaseConfig_Linux
+                            + .Release_Config
+                            + .Release_Optimizations
+.X64ProfileConfig_Linux     = .X64BaseConfig_Linux
+                            + .Profile_Config
+                            + .Profile_Optimizations
+.X64ASanConfig_Linux        = .X64BaseConfig_Linux
+                            + .ASan_Config
+                            + .Release_Optimizations
+.X64ClangBaseConfig_Linux =
+[
+    Using( .LinuxBaseConfig )
+    .Platform               = 'x64ClangLinux'
+    .Compiler               = 'Compiler-x64Clang-LinuxOSX'
+    .Linker                 = '/usr/bin/clang++'
+]
+.X64ClangDebugConfig_Linux  = .X64ClangBaseConfig_Linux
+                            + .Debug_Config
+                            + .Debug_Optimizations
+.X64ClangReleaseConfig_Linux = .X64ClangBaseConfig_Linux
+                            + .Release_Config
+                            + .Release_Optimizations
+.X64ClangProfileConfig_Linux = .X64ClangBaseConfig_Linux
+                            + .Profile_Config
+                            + .Profile_Optimizations
+.X64ClangASanConfig_Linux   = .X64ClangBaseConfig_Linux
+                            + .ASan_Config
+                            + .Fuzzer_Config
+                            + .Release_Optimizations
+.X64ClangMSanConfig_Linux   = .X64ClangBaseConfig_Linux
+                            + .MSan_Config
+                            + .Fuzzer_Config
+                            + .Release_Optimizations

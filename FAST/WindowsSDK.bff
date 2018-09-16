@@ -1,0 +1,153 @@
+//------------------------------------------------------------------------------
+// Windows SDKs
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+//  Windows SDK 10
+//------------------------------------------------------------------------------
+
+.WindowsSDK_10_Settings =
+[
+    .WinSDK_BasePath            = 'C:\Program Files (x86)\Windows Kits\10'
+    .WinSDK_SubPath             = '10.0.17134.0'
+    .WinSDK_X86_CompilerOptions = ' "-I$WinSDK_BasePath$/Include/$WinSDK_SubPath$/ucrt"'
+                                + ' "-I$WinSDK_BasePath$/Include/$WinSDK_SubPath$/um"'
+                                + ' "-I$WinSDK_BasePath$/Include/$WinSDK_SubPath$/shared"'
+    .WinSDK_X64_CompilerOptions = .WinSDK_X86_CompilerOptions
+    .WinSDK_X86_LinkerOptions   = ' /LIBPATH:"$WinSDK_BasePath$/Lib/$WinSDK_SubPath$/um/x86"'
+                                + ' /LIBPATH:"$WinSDK_BasePath$/Lib/$WinSDK_SubPath$/ucrt/x86"'
+    .WinSDK_X64_LinkerOptions   = ' /LIBPATH:"$WinSDK_BasePath$/Lib/$WinSDK_SubPath$/um/x64"'
+                                + ' /LIBPATH:"$WinSDK_BasePath$/Lib/$WinSDK_SubPath$/ucrt/x64"'
+    .WinSDK_ResourceCompiler    = '$WinSDK_BasePath$/Bin/x86/RC.exe'
+]
+    
+
+//------------------------------------------------------------------------------
+//  Windows SDK 8.1
+//------------------------------------------------------------------------------
+
+
+.WindowsSDK_8_1_Settings =
+[
+    .WinSDK_BasePath            = 'C:\Program Files (x86)\Windows Kits\8.1'
+    .WinSDK_X86_CompilerOptions = ' -I"$WinSDK_BasePath$/include/um"'
+                                + ' -I"$WinSDK_BasePath$/include/shared"'
+    .WinSDK_X64_CompilerOptions = .WinSDK_X86_CompilerOptions
+    .WinSDK_X86_LinkerOptions   = ' /LIBPATH:"$WinSDK_BasePath$/lib/winv6.3/um/x86"'
+    .WinSDK_X64_LinkerOptions   = ' /LIBPATH:"$WinSDK_BasePath$/lib/winv6.3/um/x64"'
+    .WinSDK_ResourceCompiler    = '$WinSDK_BasePath$/Bin/x86/RC.exe'
+]
+
+
+//------------------------------------------------------------------------------
+//  Windows SDK 8.0
+//------------------------------------------------------------------------------
+
+.WindowsSDK_8_0_Settings =
+[
+    .WinSDK_BasePath            = 'C:\Program Files (x86)\Windows Kits\8.0'
+    .WinSDK_X86_CompilerOptions = ' -I"$WinSDK_BasePath$/include/um"'
+                                + ' -I"$WinSDK_BasePath$/include/shared"'
+    .WinSDK_X64_CompilerOptions = .WinSDK_X86_CompilerOptions
+    .WinSDK_X86_LinkerOptions   = ' /LIBPATH:"$WinSDK_BasePath$/lib/win8/um/x86"'
+    .WinSDK_X64_LinkerOptions   = ' /LIBPATH:"$WinSDK_BasePath$/lib/win8/um/x64"'
+    .WinSDK_ResourceCompiler    = '$WinSDK_BasePath$/Bin/x86/RC.exe'
+]
+
+
+//------------------------------------------------------------------------------
+//  Windows SDK 7.1A
+//------------------------------------------------------------------------------
+
+.WindowsSDK_7_1A_Settings =
+[
+    .WinSDK_BasePath            = 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A'
+    .WinSDK_X86_CompilerOptions = ' -I"$WinSDK_BasePath$/include"'
+    .WinSDK_X64_CompilerOptions = .WinSDK_X86_CompilerOptions
+    .WinSDK_X86_LinkerOptions   = ' /LIBPATH:"$WinSDK_BasePath$\lib"'
+    .WinSDK_X64_LinkerOptions   = ' /LIBPATH:"$WinSDK_BasePath$\lib\x64"'
+    .WinSDK_ResourceCompiler    = '$WinSDK_BasePath$/Bin/x86/RC.exe'
+]
+
+
+//------------------------------------------------------------------------------
+//  Windows SDK 7.0A
+//------------------------------------------------------------------------------
+
+.WindowsSDK_7_0A_Settings =
+[
+    .WinSDK_BasePath            = 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A'
+    .WinSDK_X86_CompilerOptions = ' -I"$WinSDK_BasePath$/include"'
+    .WinSDK_X64_CompilerOptions = .WinSDK_X86_CompilerOptions
+    .WinSDK_X86_LinkerOptions   = ' /LIBPATH:"$WinSDK_BasePath$\lib"'
+    .WinSDK_X64_LinkerOptions   = ' /LIBPATH:"$WinSDK_BasePath$\lib\x64"'
+    .WinSDK_ResourceCompiler    = '$WinSDK_BasePath$/Bin/x86/RC.exe'
+]
+
+
+//------------------------------------------------------------------------------
+//  Windows SDK 6.0A
+//------------------------------------------------------------------------------
+
+.WindowsSDK_6_0A_Settings =
+[
+    .WinSDK_BasePath            = 'C:\Program Files\Microsoft SDKs\Windows\v6.0A'
+    .WinSDK_X86_CompilerOptions = ' -I"$WinSDK_BasePath$/include"'
+    .WinSDK_X64_CompilerOptions = .WinSDK_X86_CompilerOptions
+    .WinSDK_X86_LinkerOptions   = ' /LIBPATH:"$WinSDK_BasePath$\lib"'
+    .WinSDK_X64_LinkerOptions   = ' /LIBPATH:"$WinSDK_BasePath$\lib\x64"'
+    .WinSDK_ResourceCompiler    = '$WinSDK_BasePath$/Bin/x86/RC.exe'
+]
+
+
+
+//------------------------------------------------------------------------------
+//  Setup configs for X86 and X64 Windows
+//------------------------------------------------------------------------------
+
+.WindowsSDK_Prefix = "WindowsSDK_$WindowsSDK_Version$"
+
+
+.WindowsSDK_Defines = ' -DWIN32_LEAN_AND_MEAN'
+                    + ' -DWIN32'
+                    + ' -D_WIN32'
+                    + ' -D__WINDOWS__'
+                    + ' -D_CRT_SECURE_NO_WARNINGS'            // don't warn about unsafe functions - TODO:C Fix warnings and remove
+                    + ' -D_WINSOCK_DEPRECATED_NO_WARNINGS'    // don't warn about deprecated winsock functions - TODO:C Update API use
+
+
+Using( ."$WindowsSDK_Prefix$_Settings" )                            // bring specified windows SDK into scope
+
+.WindowsSDK_X86 =
+[
+    .CommonCompilerOptions          = .WinSDK_X86_CompilerOptions
+                                    + .WindowsSDK_Defines
+
+    .CompilerOptions                = .CommonCompilerOptions
+    .CompilerOptionsC               = .CommonCompilerOptions
+    .CompilerOptionsPCH             = .CommonCompilerOptions
+    .CompilerOptionsDeoptimized     = .CommonCompilerOptions
+
+    .LinkerOptions                  = .WinSDK_X86_LinkerOptions
+                                    + ' /MACHINE:X86'
+                                    + ' /LARGEADDRESSAWARE'
+]
+
+
+.WindowsSDK_X64 =
+[
+    .CommonCompilerOptions          = .WinSDK_X64_CompilerOptions
+                                    + .WindowsSDK_Defines
+                                    + ' -DWIN64'
+
+    .CompilerOptions                = .CommonCompilerOptions
+    .CompilerOptionsC               = .CommonCompilerOptions
+    .CompilerOptionsPCH             = .CommonCompilerOptions
+    .CompilerOptionsDeoptimized     = .CommonCompilerOptions
+
+    .LinkerOptions                  = .WinSDK_X64_LinkerOptions
+                                    + ' /MACHINE:X64'
+]
+
+Alias( 'ResourceCompiler' ) { .Targets = "$WinSDK_ResourceCompiler$" }

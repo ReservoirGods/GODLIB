@@ -45,6 +45,7 @@ Compiler( 'Compiler-VS2008-x64' )
 .ToolChain_VS2008_Windows_X86 =
 [
     .VSIncludePaths                 = ' -I"$VS2008_BasePath$/VC/include/"'
+                                    + ' -I"$VS2008_BasePath$/VC/atlmfc/include"'
                                     + ' /arch:SSE2'
     .VSLibPaths                     = ' /LIBPATH:"$VS2008_BasePath$/VC/lib"'
 
@@ -85,7 +86,7 @@ Compiler( 'Compiler-VS2008-x64' )
 
 // PATH environment variable
 //------------------------------------------------------------------------------
-.VS_2008_PATH                       = '$VS2008_BasePath$/Common7/IDE/;$VS2008_BasePath$/VC/bin/'
+.VS_2008_PATH                       = '$VS2008_BasePath$/Common7/IDE/;$VS2008_BasePath$/VC/atlmfc/include'
 
 // Platform Toolset for Project Generation
 //------------------------------------------------------------------------------

@@ -1,0 +1,46 @@
+// OSX
+//------------------------------------------------------------------------------
+.OSXBaseConfig =
+[
+    .Compiler               = 'Compiler-x64Clang-LinuxOSX'
+    .Librarian              = '/usr/bin/ar'
+    .Linker                 = '/usr/bin/g++'
+
+    .CompilerOptions        = '-x c++ -o "%2" "%1" -c -g'
+                            + ' -I./'
+                            + ' -D__APPLE__'
+                            + ' -D__OSX__'
+                            + ' -Wall -Werror -Wfatal-errors'       // warnings as errors
+                            + ' -Wextra'
+                            + ' -Wno-#pragma-messages'
+                            + ' -m64'                       // x86-64
+
+                            // Fires on our new/delete operator (Clang bug?)
+                            + ' -Wno-implicit-exception-spec-mismatch' // function previously declared with an explicit exception specification redeclared with an implicit exception specification [-Wimplicit-exception-spec-mismatch]
+    .CompilerOptionsC       = .CompilerOptions
+    .CompilerOptions        + ' -std=c++11'                 // allow C++11 features
+
+    .CompilerOutputExtension= '.o'
+    .LinkerOptions          = '"%1" -o "%2" -g'
+
+    .LibrarianOptions       = 'rcs "%2" "%1"'
+
+    .LibExtension           = '.a'
+    .ExeExtension           = ''
+
+    .UseExceptions          = ' -fexceptions'
+]
+.X64BaseConfig_OSX =
+[
+    Using( .OSXBaseConfig )
+    .Platform               = 'x64OSX'
+]
+.X64DebugConfig_OSX         = .X64BaseConfig_OSX
+                            + .Debug_Config
+                            + .Debug_Optimizations
+.X64ReleaseConfig_OSX       = .X64BaseConfig_OSX
+                            + .Release_Config
+                            + .Release_Optimizations
+.X64ProfileConfig_OSX       = .X64BaseConfig_OSX
+                            + .Profile_Config
+                            + .Profile_Optimizations

@@ -25,3 +25,76 @@ Compiler( 'Compiler-x64Clang-LinuxOSX' )
 {
     .Executable = '/usr/bin/clang++'
 }
+
+//------------------------------------------------------------------------------
+.X64ClangBaseConfig =
+[
+    Using( .ToolChain_VS_Windows_X64 )
+
+    // Override compiler & librarian with Clang toolchain
+    .ToolsBasePath          = '$ClangBasePath$'
+    .Compiler               = 'Compiler-x64Clang'
+    .Librarian              = '$ToolsBasePath$\bin\llvm-ar.exe'
+
+    .BaseCompilerOptions    = '-o"%2" "%1" -c -g'
+                            + ' -Wall -Werror -Wfatal-errors'   // warnings as errors
+                            + ' -Wextra'                        // additional warnings
+
+                            // includes
+                            + ' -I"./"'
+                            + .VS_IncludePaths
+
+                            // x64
+                            + ' -m64'
+
+                            // MS compatibility
+                            + ' -fms-compatibility'
+                            + ' -fms-extensions'
+                            + ' -fmsc-version=$VS_MSC_VER$'
+                            + ' -Xclang -flto-visibility-public-std' // LTO visibility matches MSVC behaviour
+
+                            // as of v5.0.1, these warnings fire inside system headers
+                            + ' -Wno-#pragma-messages'          // warning : %s [-W#pragma-messages]
+                            + ' -Wno-unknown-pragmas'           // unknown pragma ignored [-Wunknown-pragmas]
+                            + ' -Wno-ignored-attributes'        // __declspec attribute 'restrict' is not supported [-Werror,-Wignored-attributes]
+                            + ' -Wno-expansion-to-defined'      // macro expansion producing 'defined' has undefined behavior [-Wexpansion-to-defined]
+                            + ' -Wno-nonportable-include-path'  // non-portable path to file '"%s"'; specified path differs in case from file name on disk [-Wnonportable-include-path]
+                            + ' -Wno-ignored-pragma-intrinsic'  // _bittest' is not a recognized builtin; consider including <intrin.h> to access non-builtin intrinsics [-Wignored-pragma-intrinsic]
+                            + ' -Wno-int-to-void-pointer-cast'  // cast to 'void *' from smaller integer type 'unsigned long' [-Wint-to-void-pointer-cast]
+                            #if USING_VS2013
+                                + ' -Wno-implicit-exception-spec-mismatch'
+                            #endif
+
+                            // Extra warnings
+                            + ' -Wshadow'
+
+                            + ' -fno-rtti'
+
+    .CompilerOptionsC       = '-x c '
+                            + .BaseCompilerOptions
+                            - ' /arch:SSE2'
+    .CompilerOptions        = '-std=c++11 '                     // allow C++11 features
+                            + .BaseCompilerOptions
+                            - ' /arch:SSE2'
+
+    .LibrarianOptions       = 'rc "%2" "%1"' // NOTE: output must come first
+    .LinkerOptions          = '/NODEFAULTLIB /WX /NOLOGO /INCREMENTAL:NO /OUT:"%2" "%1" /DEBUG'
+                            + .VS_LinkerPaths
+
+    .LibExtension           = '.a'
+    .ExeExtension           = '.exe'
+
+    .Platform               = 'x64Clang'
+
+    .UseExceptions          = ' -fexceptions'
+]
+.X64ClangBaseConfig         + .WindowsSDK_X64
+.X64ClangDebugConfig        = .X64ClangBaseConfig
+                            + .Debug_Config
+                            + .Debug_Optimizations
+.X64ClangReleaseConfig      = .X64ClangBaseConfig
+                            + .Release_Config
+                            + .Release_Optimizations
+.X64ClangProfileConfig      = .X64ClangBaseConfig
+                            + .Profile_Config
+                            + .Profile_Optimizations

@@ -1,0 +1,104 @@
+// Visual Studio 2012
+//------------------------------------------------------------------------------
+.VS_2012_BasePath = 'C:\Program Files (x86)\Microsoft Visual Studio 11.0'
+
+// X86 Compiler
+//------------------------------------------------------------------------------
+Compiler( 'VS_2012-Compiler-x86' )
+{
+    .Root       = '$VS_2012_BasePath$/VC/bin'
+    .Executable = '$Root$/cl.exe'
+    .ExtraFiles = 
+    { 
+        '$Root$/c1.dll'
+        '$Root$/c1ast.dll',
+        '$Root$/c1xx.dll',
+        '$Root$/c1xxast.dll',
+        '$Root$/c2.dll',
+        '$Root$/mspft110.dll'
+        '$Root$/1033\clui.dll'
+        '$Root$/..\..\Common7\IDE\msobj110.dll'
+        '$Root$/..\..\Common7\IDE\mspdb110.dll'
+        '$Root$/..\..\Common7\IDE\mspdbsrv.exe'
+        '$Root$/..\..\Common7\IDE\mspdbcore.dll'
+        '$VS_2012_BasePath$/VC/redist/x86/Microsoft.VC110.CRT/msvcp110.dll'
+        '$VS_2012_BasePath$/VC/redist/x86/Microsoft.VC110.CRT/msvcr110.dll'
+        '$VS_2012_BasePath$/VC/redist/x86/Microsoft.VC110.CRT/vccorlib110.dll'
+    }
+}
+
+// X64 Compiler
+//------------------------------------------------------------------------------
+Compiler( 'VS_2012-Compiler-x64' )
+{
+    .Root       = '$VS_2012_BasePath$\VC\bin'
+    .Executable = '$Root$\x86_amd64\cl.exe'
+    .ExtraFiles = 
+    { 
+        '$Root$\x86_amd64\c1.dll'
+        '$Root$\x86_amd64\c1ast.dll',
+        '$Root$\x86_amd64\c1xx.dll',
+        '$Root$\x86_amd64\c1xxast.dll',
+        '$Root$\x86_amd64\c2.dll',
+        '$Root$\x86_amd64\1033\clui.dll'
+        '$Root$\msobj110.dll'
+        '$Root$\mspdb110.dll'
+        '$Root$\mspdbsrv.exe'
+        '$Root$\mspdbcore.dll'
+        '$Root$\mspft110.dll'
+        '$VS_2012_BasePath$/VC/redist/x86/Microsoft.VC110.CRT/msvcp110.dll'
+        '$VS_2012_BasePath$/VC/redist/x86/Microsoft.VC110.CRT/msvcr110.dll'
+        '$VS_2012_BasePath$/VC/redist/x86/Microsoft.VC110.CRT/vccorlib110.dll'
+    }
+}
+
+.VS_2012_Base_Options =
+[
+    .VS_MSC_VER             = "1700"
+    .VS_BasePath            = .VS_2012_BasePath
+
+    .VS_CRT_Static          = ' libcmt.lib'             // native static CRT (opt:/MT def:_MT)
+    .VS_CRT_Static_Debug    = ' libcmtd.lib'            // native static CRT (opt:/MT def:_MT, _DEBUG)
+    .VS_CRT_DLL             = ' msvcrt.lib'             // native DLL CRT    (opt:/MD def:_MT,_DLL)
+    .VS_CRT_DLL_Debug       = ' msvcrtd.lib'            // native DLL CRT    (opt:/MD def:_MT,_DLL, _DEBUG)
+
+    .VS_IncludePaths        =' -I"$VS_2012_BasePath$/VC/include/"'
+
+    .CompilerOptions        = ' $VS_IncludePaths$'
+]
+
+
+.VS_2012_X86_Options =
+[
+    Using( .VS_2012_Base_Options )
+
+    .Compiler           = 'VS_2012-Compiler-x86'
+    .CompilerOptions    + ' /arch:SSE2'
+    .VS_LinkerPaths     = ' /LIBPATH:"$VS_2012_BasePath$/VC/lib"'
+    .LinkerOptions      = .VS_LinkerPaths
+
+    .Librarian          = '$VS_2012_BasePath$/VC/bin/lib.exe'
+    .Linker             = '$VS_2012_BasePath$/VC/bin/link.exe'
+]
+
+
+.VS_2012_X64_Options =
+[
+    Using( .VS_2012_Base_Options )
+
+    .Compiler           = 'VS_2012-Compiler-x64'
+
+    .VS_LinkerPaths     = ' /LIBPATH:"$VS_2012_BasePath$/VC/lib/amd64"'
+    .LinkerOptions      = .VS_LinkerPaths
+
+    .Librarian          = '$VS_2012_BasePath$/VC/bin/amd64/lib.exe'
+    .Linker             = '$VS_2012_BasePath$/VC/bin/amd64/link.exe'
+]
+
+
+.VS_PATH            = '$VS_2012_BasePath$/Common7/IDE/;$VS_2012_BasePath$/VC/bin/'
+.VS_PlatformToolset = "v110"
+.VS_Name            = "VS_2012"
+
+//.WindowsSDK_Version = "7_1A"
+.WindowsSDK_Version = "6_0A"
