@@ -430,7 +430,7 @@ void	GuiFS_OnFileWindow( sHashTreeVarClient  * apClient )
 
 	lpEvent  = (sGuiEvent*)apClient->mpVar->mpData;
 	lpWindow = (sGuiWindow*)lpEvent->mpInfo;
-	DebugLog_Printf1( "GuiFS_OnFileWindow() %lx", lpWindow );
+	DebugLog_Printf1( "GuiFS_OnFileWindow() %p", lpWindow );
 	if( lpWindow )
 	{
 		DebugLog_Printf1( "window name: %s", lpWindow->mInfo.mpName );

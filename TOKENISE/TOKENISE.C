@@ -2394,7 +2394,7 @@ void	StringList_Validate( void )
 		lpString = lpItem->mpString;
 		if( (!lpString->mpChars) || ((U32)lpString->mpChars > 0xFF0000L) )
 		{
-			DebugLog_Printf1( "StringList validate error %lx", lpString->mpChars );
+			DebugLog_Printf1( "StringList validate error %p", lpString->mpChars );
 		}
 		lpItem   = lpItem->mpNext;
 	}

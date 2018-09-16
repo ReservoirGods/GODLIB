@@ -480,7 +480,7 @@ S32		_Memory_Release( void * apMem )
 	}
 	else
 	{
-		DebugChannel_Printf1( eDEBUGCHANNEL_MEMORY, "Memory_Release() : failed %lX\n", apMem );
+		DebugChannel_Printf1( eDEBUGCHANNEL_MEMORY, "Memory_Release() : failed %p\n", apMem );
 		return( -1 );
 	}
 }

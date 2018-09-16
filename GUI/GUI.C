@@ -255,7 +255,7 @@ U8	Gui_Update( void )
 			if( lpData->mpFocusControl )
 			{
 				lpData->mpFocusControl->mEvent.mEvent = eGUIEVENT_BUTTON_UPDATE;
-				DebugLog_Printf2( "Gui textline WRITEBACK %lx %d", &lpData->mpFocusControl->mEvent, lpData->mpFocusControl->mEvent.mEvent );
+				DebugLog_Printf2( "Gui textline WRITEBACK %p %d", &lpData->mpFocusControl->mEvent, lpData->mpFocusControl->mEvent.mEvent );
 				HashTree_VarWrite( lpData->mpFocusControl->mpEventVar, &lpData->mpFocusControl->mEvent );
 			}
 		case	eGUI_TEXTLINE_CANCEL:
@@ -463,7 +463,7 @@ sGuiWindow *	Gui_GetpWindow( sGuiClass * apData )
 {
 	sGuiWindow *	lpWindow;
 
-	DebugLog_Printf2( "Gui_GetpWindow() %lx stackpos %d", apData, apData->mWindowStackPos );
+	DebugLog_Printf2( "Gui_GetpWindow() %p stackpos %d", apData, apData->mWindowStackPos );
 
 	lpWindow = 0;
 
@@ -488,7 +488,7 @@ void	GuiWindow_EventOpen( sGuiWindow * apWindow )
 
 	if( apWindow )
 	{
-		DebugLog_Printf2( "Window %lx mEvent.mpInfo %lx", apWindow, apWindow->mInfo.mEvent.mpInfo );
+		DebugLog_Printf2( "Window %p mEvent.mpInfo %p", apWindow, apWindow->mInfo.mEvent.mpInfo );
 		apWindow->mInfo.mEvent.mEvent = eGUIEVENT_WINDOW_OPEN;
 		HashTree_VarWrite( apWindow->mInfo.mpEventVar, &apWindow->mInfo.mEvent );
 		for( i=0; i<apWindow->mControlCount; i++ )
@@ -585,7 +585,7 @@ void			Gui_WindowOpen( sGuiClass * apData, sGuiWindow * apWindow )
 	lRect.mHeight = apData->mScreen.mHeight;
 	GuiWindow_SetWorldPos( apWindow, &lRect, 0 );
 
-	DebugLog_Printf2( "Gui_WindowOpen() %lx stackpos %d", apWindow, apData->mWindowStackPos );
+	DebugLog_Printf2( "Gui_WindowOpen() %p stackpos %d", apWindow, apData->mWindowStackPos );
 }
 
 
@@ -866,7 +866,7 @@ void	GuiSlider_SetWorldPos( sGuiSlider * apSlider,const sGuiRect * apParentRect,
 
 void	GuiWindow_SetWorldPos( sGuiWindow * apWindow,const sGuiRect * apParentRect, const sGuiRect * apScroll )
 {
-	DebugLog_Printf1( "GuiWindow_SetWorldPos() %lx", apWindow );
+	DebugLog_Printf1( "GuiWindow_SetWorldPos() %p", apWindow );
 
 	if( apWindow )
 	{
@@ -933,7 +933,7 @@ void	Gui_SetWorldPos( sGuiClass * apData )
 {
 	sGuiRect	lRect;
 
-	DebugLog_Printf1( "Gui_SetWorldPos() %lx", apData );
+	DebugLog_Printf1( "Gui_SetWorldPos() %p", apData );
 	if( apData )
 	{
 		lRect.mX = 0;
@@ -1316,7 +1316,7 @@ void	Gui_IkbdUpdate( sGuiIKBD * apIKBD )
 
 void	GuiInfo_FocusUpdate( sGuiInfo * apInfo,sGuiClass * apData )
 {
-	DebugLog_Printf1( "GuiInfo_FocusUpdate() %lx", apInfo );
+	DebugLog_Printf1( "GuiInfo_FocusUpdate() %p", apInfo );
 	if( (apInfo) && (apData) )
 	{
 		switch( apInfo->mType )
@@ -1344,7 +1344,7 @@ void	GuiInfo_FocusUpdate( sGuiInfo * apInfo,sGuiClass * apData )
 
 void	GuiInfo_DeFocusUpdate( sGuiInfo * apInfo,sGuiClass * apData )
 {
-	DebugLog_Printf1( "GuiInfo_DeFocusUpdate() %lx", apInfo );
+	DebugLog_Printf1( "GuiInfo_DeFocusUpdate() %p", apInfo );
 	if( (apInfo) && (apData) )
 	{
 		switch( apInfo->mType )
@@ -1409,7 +1409,7 @@ void	GuiSlider_FocusUpdate( sGuiSlider * apSlider,sGuiClass * apData )
 
 void	GuiWindow_FocusUpdate( sGuiWindow * apWindow,sGuiClass * apData )
 {
-	DebugLog_Printf1( "GuiWindow_FocusUpdate() %lx", apWindow );
+	DebugLog_Printf1( "GuiWindow_FocusUpdate() %p", apWindow );
 	(void)apWindow;
 	(void)apData;
 }
@@ -1423,7 +1423,7 @@ void	GuiWindow_FocusUpdate( sGuiWindow * apWindow,sGuiClass * apData )
 
 void	GuiWindow_DeFocusUpdate( sGuiWindow * apWindow,sGuiClass * apData )
 {
-	DebugLog_Printf1( "GuiWindow_DeFocusUpdate() %lx", apWindow );
+	DebugLog_Printf1( "GuiWindow_DeFocusUpdate() %p", apWindow );
 	(void)apWindow;
 	(void)apData;
 }
@@ -1530,7 +1530,7 @@ void	GuiSlider_Update( sGuiSlider * apSlider,const U8 aUpdateFromPosFlag )
 	S32	lPos;
 	U8	lHflag;
 
-	DebugLog_Printf1( "GuiSlider_Update() %lx", apSlider );
+	DebugLog_Printf1( "GuiSlider_Update() %p", apSlider );
 
 	if( apSlider )
 	{
@@ -2054,7 +2054,7 @@ void	GuiButton_FocusUpdate( sGuiButton * apButton,sGuiClass * apData )
 	sGuiMouse	lMouse;
 	U16			i;
 
-	DebugLog_Printf1( "GuiButton_FocusUpdate() %lx", apButton );
+	DebugLog_Printf1( "GuiButton_FocusUpdate() %p", apButton );
 
 	lMouse.mButtonLeft  = apData->mMouseCursor.mButtonLeft;
 	lMouse.mButtonRight = apData->mMouseCursor.mButtonRight;
@@ -2223,7 +2223,7 @@ void	GuiButton_FocusUpdate( sGuiButton * apButton,sGuiClass * apData )
 
 void	GuiButton_DeFocusUpdate( sGuiButton * apButton,sGuiClass * apData )
 {
-	DebugLog_Printf1( "GuiButton_DeFocusUpdate() %lx", apButton );
+	DebugLog_Printf1( "GuiButton_DeFocusUpdate() %p", apButton );
 	(void)apData;
 
 	if( apButton->mButtonType == eGUI_BUTTON_CUSTOM )
@@ -2255,7 +2255,7 @@ void	GuiButton_HeldUpdate( sGuiButton * apButton,sGuiClass * apData )
 {
 	sGuiMouse	lMouse;
 
-	DebugLog_Printf1( "GuiButton_HeldUpdate() %lx", apButton );
+	DebugLog_Printf1( "GuiButton_HeldUpdate() %p", apButton );
 
 	if( apButton && apData )
 	{
@@ -2355,7 +2355,7 @@ void	GuiAction_Update( sGuiAction * apAction,sGuiMouse * apMouse,sGuiClass * apD
 					lMax = apAction->mpValue->mMax;
 				}
 
-				DebugLog_Printf3( "MIN: %ld MAX: %ld var %ld", lMin, lMax, apAction->mpValue->mpVar );
+				DebugLog_Printf3( "MIN: %ld MAX: %ld var %p", lMin, lMax, apAction->mpValue->mpVar );
 				if( apAction->mpValue->mpVar )
 				{
 					lVal = GuiVar_ReadS32( apAction->mpValue->mpVar );

@@ -140,7 +140,7 @@ sRelocater *	RelocaterManager_Find( sAsset * apAsset )
 	{
 		if( lpReloc->mExtID == apAsset->mExtID )
 		{
-			DebugLog_Printf3( "RelocaterManager_Find(): %lX %lX %lX", lpReloc, lpReloc->mExtID, apAsset->mExtID );
+			DebugLog_Printf3( "RelocaterManager_Find(): %p %lX %lX", lpReloc, lpReloc->mExtID, apAsset->mExtID );
 			if( lpReloc->IsType( apAsset->mpData, apAsset->mSize, apAsset->mID ) )
 			{
 				return( lpReloc );

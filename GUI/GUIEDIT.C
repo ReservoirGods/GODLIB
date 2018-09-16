@@ -24,7 +24,7 @@ U8	GuiTextLine_Init( sGuiTextLine * apLine,sHashTreeVar * apVar )
 	U8			lRes;
 	sString *	lpString;
 
-	DebugLog_Printf2( "GuiTextLineInit() apLine:%lx apVar:%lx", apLine, apVar );
+	DebugLog_Printf2( "GuiTextLineInit() apLine:%p apVar:%p", apLine, apVar );
 
 	lRes = 0;
 	if( apLine && apVar )
