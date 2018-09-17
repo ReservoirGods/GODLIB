@@ -167,6 +167,7 @@ void	HashList_ItemUnRegister( sHashList * apList,const U32 aID )
 
 	while( lpItem )
 	{
+		sHashListItem *	lpItemNext = lpItem->mpNext;
 		if( lpItem->mID == aID )
 		{
 			lpItem->mRefCount--;
@@ -189,7 +190,7 @@ void	HashList_ItemUnRegister( sHashList * apList,const U32 aID )
 			}
 		}
 		lpItemLast = lpItem;
-		lpItem     = lpItem->mpNext;
+		lpItem     = lpItemNext;
 	}
 }
 

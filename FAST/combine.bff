@@ -69,9 +69,9 @@ VCXProject( '$ProjectName$_vcx' )
     .ProjectBasePath    = '..'
     .ProjectInputPaths  = '..'
     .ProjectOutput      = '$ProjectName$.vcxproj'
-    .ProjectFiles       = { '..\..\sample.bff', '..\*.PRJ' }
+    .ProjectFiles       = { '..\*.PRJ' }
 
-    .ProjectFileTypes = { .CFileType, .BffFileType, .PrjFileType }
+    .ProjectFileTypes = { .CFileType, .BatFileType, .BffFileType, .PrjFileType }
 
     .LocalDebuggerCommand           ='^$(SolutionDir)\..\^$(ProjectName)-^$(Configuration).exe'
     .LocalDebuggerWorkingDirectory  ='^$(SolutionDir)..'
@@ -87,6 +87,8 @@ VCXProject( 'godlib_vcx' )
     .ProjectBasePath    = '$GodLibDir$'
     .ProjectInputPaths  = '$GodLibDir$'
     .ProjectOutput      = '$GodLibDir$\FAST\godlib.vcxproj'
+
+    .ProjectFileTypes = { .CFileType, .BatFileType, .BffFileType, .PrjFileType }
 
     #include "configs.bff"
 }    

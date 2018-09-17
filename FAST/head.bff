@@ -32,6 +32,12 @@
   .Pattern = "*\\*.C"
 ]
 
+.BatFileType = 
+[
+  .FileType = "CppForm"
+  .Pattern = "*\\*.bat"
+]
+
 .BffFileType = 
 [
   .FileType = "CppForm"
@@ -41,7 +47,7 @@
 .PrjFileType = 
 [
   .FileType = "CppForm"
-  .Pattern = "..\\*.PRJ"
+  .Pattern = "*\\*.PRJ"
 ]
 
 //------------------------------------------------------------------------------
