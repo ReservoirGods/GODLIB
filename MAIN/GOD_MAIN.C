@@ -98,11 +98,13 @@ S16	GodLib_Library_Main( S16 aArgc, char ** apArgv )
 		else
 		{
 			/* default unspecified command argument is input */
+/*
 			while( (*lpArg>0) && (*lpArg <= ' ') )
 			{
 				lpArg++;
 			}
 			Kernel_RequestInputLoad( lpArg );
+*/
 		}
 	}
 	GodLib_Game_Main( (S16)__argc, __argv);
