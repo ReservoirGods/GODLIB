@@ -837,5 +837,12 @@ void	Memory_ShowCurrentRecords( void )
 #endif
 }
 
+U8		Memory_IsEqual( const void * apMem0, const void * apMem1, U32 aSizeBytes )
+{
+	const U8 * lpM0 = (const U8*)apMem0;
+	const U8 * lpM1 = (const U8*)apMem1;
+	for( ;aSizeBytes && ( *lpM0++ == *lpM1++ ); aSizeBytes-- );
+	return( 0 == aSizeBytes );
+}
 
 /* ################################################################################ */

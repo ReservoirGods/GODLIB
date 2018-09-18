@@ -36,3 +36,6 @@
 *.ilk
 *.idb
 *.pbd
+
+# FastBuild database
+*.fdb

@@ -78,6 +78,8 @@ U32		Memory_GetFailedSize( void );
 U32		Memory_GetSize( void );
 U8		Memory_Validate( void );
 
+U8		Memory_IsEqual( const void * apMem0, const void * apMem1, U32 aSizeBytes );
+
 void *	Memory_DbgScreenCalloc( const U32 aSize, const char * apFile, const U32 aLine );
 void *	Memory_DbgAlloc( const U32 aSize, const char * apFile, const U32 aLine );
 void *	Memory_DbgCalloc( const U32 aSize, const char * apFile, const U32 aLine );
