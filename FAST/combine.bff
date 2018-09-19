@@ -74,7 +74,7 @@ VCXProject( '$ProjectName$_vcx' )
     .ProjectFileTypes = { .CFileType, .BatFileType, .BffFileType, .PrjFileType }
 
     .LocalDebuggerCommand           ='^$(SolutionDir)\..\^$(ProjectName)-^$(Configuration).exe'
-    .LocalDebuggerWorkingDirectory  ='^$(SolutionDir)..'
+    .LocalDebuggerWorkingDirectory  ='^$(SolutionDir)..\PRG'
 
     #include "configs.bff"
 }
