@@ -496,7 +496,6 @@ U8	Achieve_Login_Thread_Main( sThread * apPT )
 
 U8	Achieve_Login_Thread_Boxes( sThread * apThread )
 {
-	U8	lDrawnFlag = 0;
 	U16	i;
 
 	/* clear old boxes */
@@ -545,7 +544,6 @@ U8	Achieve_Login_Thread_Boxes( sThread * apThread )
 			Achieve_Gfx_Box_Render( &lpBox->mDrawnCoords[ gAchieveLoginClass.mScreenIndex ], 1, &gAchieveLoginClipBoxes );
 
 			lpBox->mRedrawFlag--;
-			lDrawnFlag = 1;
 
 			if( gAchieveLoginClass.mCursorEnabledFlag && (gAchieveLoginClass.mMorphPos >= 0x100) )
 			{

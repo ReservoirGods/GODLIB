@@ -920,7 +920,8 @@ S32 CutSceneParse_ArgFix(sCutScene * apScene,U16 aArgType,char * apString)
 		if( apString )
 		{
 			lFloat = (FP32)atof( apString );
-			Memory_Copy( 4, &lFloat, &lRes );
+/*			Memory_Copy( 4, &lFloat, &lRes );*/
+			lRes =*( S32* )&lFloat;
 		}
 #endif
 		break;
