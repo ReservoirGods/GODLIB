@@ -520,6 +520,8 @@ U8 String_StrCmp(const char * apStr0,const char * apStr1)
 				return( 1 );
 			}
 		}
+		if( *apStr0 != *apStr1 )
+			return 1;
 	}
 	else if( apStr0 || apStr1 )
 	{

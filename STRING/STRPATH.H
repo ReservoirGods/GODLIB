@@ -36,6 +36,15 @@ void			StringPath_Append( sStringPath * apPath, const char * apFile );
 void			StringPath_Combine( sStringPath * apPath, const char * apDir, const char * apFileName );
 void			StringPath_Combine2( sStringPath * apPath, const char * apDir0, const char * apDir1, const char * apFileName );
 
+char			StringPath_GetDrive( const sStringPath * apPath );
+U16				StringPath_IsAbsolute( const sStringPath * apPath );
+
+void			StringPath_GetDirectory( sStringPath * apDst, const sStringPath * apSrc  );
+void			StringPath_GetFolder( sStringPath * apDst, const sStringPath * apSrc );
+
+void			StringPath_Compact( sStringPath * apDst, const sStringPath * apSrc );
+
+#define			StringPath_IsSeperator( _aChar )	( ('\\' ==(_aChar)) || ('/'==(_aChar)) )
 
 /* ################################################################################ */
 

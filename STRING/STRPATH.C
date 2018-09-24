@@ -141,6 +141,78 @@ void		StringPath_Combine2( sStringPath * apPath, const char * apDir0, const char
 	apPath->mChars[ i ] =0;
 }
 
+char	StringPath_GetDrive( const sStringPath * apPath )
+{
+	char lRes = 0;
+	if( ':' == apPath->mChars[ 1 ] )
+		lRes = apPath->mChars[ 0 ];
+	return lRes;
+}
 
+U16			StringPath_IsAbsolute( const sStringPath * apPath )
+{
+	return( 0 != StringPath_GetDrive( apPath ) );
+}
+
+void			StringPath_GetDirectory( sStringPath * apDst, const sStringPath * apSrc )
+{
+	U16 i;
+	U16 d = 0;
+
+	for( i = 0; i < sizeof(sStringPath) && apSrc->mChars[ i ]; i++ )
+	{
+		apDst->mChars[ i ] = apSrc->mChars[ i ];
+		if( StringPath_IsSeperator( apSrc->mChars[ i ] ) )
+			d = i;
+	}
+	apDst->mChars[ d ] = 0;
+
+}
+void			StringPath_GetFolder( sStringPath * apDst, const sStringPath * apSrc )
+{
+	U16 i = 0;
+	U16 a = 0;
+	U16 b = 0;
+	for( i = 0; i < sizeof( sStringPath ) && apSrc->mChars[ i ]; i++ )
+	{
+		if( StringPath_IsSeperator( apSrc->mChars[i] ) )
+		{
+			a = b;
+			b = i;
+		}
+	}
+	if( StringPath_IsSeperator( apSrc->mChars[a] ) )
+		a++;
+
+	if( 2 == b && ':' == apSrc->mChars[ 1 ] )
+	{
+		apDst->mChars[ 0 ] = 0;
+	}
+	else
+	{
+		for( i = 0; a < b; )
+			apDst->mChars[ i++ ] = apSrc->mChars[ a++ ];
+		apDst->mChars[ i ] = 0;
+	}
+}
+
+void			StringPath_Compact( sStringPath * apDst, const sStringPath * apSrc )
+{
+	U16	i,j=0;
+	for( i = 0; i<sizeof(sStringPath) && apSrc->mChars[ i ];  )
+	{
+		apDst->mChars[ j++ ] = apSrc->mChars[ i++ ];
+		if( (j > 2) && ('.' == apDst->mChars[ j - 1 ]) && ('.' == apDst->mChars[ j - 2 ]) )
+		{
+			for( j -= 3; j && !StringPath_IsSeperator( apDst->mChars[ j-1 ] ); j-- );
+			if( j )
+				j--;
+		}
+	}
+	if( j && StringPath_IsSeperator( apDst->mChars[ j - 1 ] ) )
+		j--;
+
+	apDst->mChars[ j ] = 0;
+}
 
 /* ################################################################################ */
