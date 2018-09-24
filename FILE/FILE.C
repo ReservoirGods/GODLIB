@@ -377,6 +377,11 @@ void	File_SetDTA( sGemDosDTA * apDTA )
 	GemDos_Fsetdta( apDTA );
 }
 
+sGemDosDTA* File_GetDTA( void )
+{
+	return( GemDos_Fgetdta() );
+}
+
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : File_ReadFirst( const char * apFspec, U16 aAttribs )

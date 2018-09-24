@@ -15,6 +15,8 @@
 S32		Drive_CreateDirectory( char * apDirName );
 S32		Drive_DeleteDirectory( char * apDirName );
 
+U8		Drive_DirectoryExists( char * apDirName );
+
 S32		Drive_GetFree(  U16 aDrive );
 
 U16		Drive_GetDrive( void );

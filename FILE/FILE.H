@@ -65,6 +65,7 @@ S32			File_SetDateTime( sFileHandle aHandle, sGemDosDateTime * apDateTime );
 
 U32			File_GetTime( const char * apFname );
 
+sGemDosDTA* File_GetDTA( void );
 void		File_SetDTA( sGemDosDTA * apDTA );
 
 S32			File_ReadFirst( const char * apFspec, U16 aAttribs );

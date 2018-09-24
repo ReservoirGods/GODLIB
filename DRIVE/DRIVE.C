@@ -17,6 +17,7 @@
 #include	"DRIVE.H"
 
 #include	<GODLIB/GEMDOS/GEMDOS.H>
+#include	<GODLIB/FILE/FILE.H>
 
 #ifdef	dGODLIB_PLATFORM_WIN
 #include	"DIRECT.H"
@@ -54,6 +55,10 @@ S32		Drive_DeleteDirectory( char * apDirName )
 	return( GemDos_Ddelete( apDirName ) );
 }
 
+U8		Drive_DirectoryExists( char * apDirName )
+{
+	return( 0 == File_ReadFirst( apDirName, dGEMDOS_FA_DIR ) );
+}
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : Drive_GetFree( U16 aDrive )

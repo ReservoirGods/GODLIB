@@ -30,8 +30,8 @@
 ################################################################################### */
 
 #define	dDEBUGLOG_TO_FILE	0
-#define	dDEBUGLOG_TO_STEEM	0
-#define	dDEBUGLOG_TO_SCREEN	1
+#define	dDEBUGLOG_TO_STEEM	1
+#define	dDEBUGLOG_TO_SCREEN	0
 
 
 /* ###################################################################################
@@ -139,6 +139,8 @@ void	DebugLog_AddString( const char * apString )
 	(void)apString;
 #ifdef	dGODLIB_PLATFORM_ATARI
 	*(U32*)0xFFFFC1F0L = (U32)apString;
+#else
+	printf( apString );
 #endif
 }
 

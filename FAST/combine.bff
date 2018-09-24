@@ -69,7 +69,7 @@ VCXProject( '$ProjectName$_vcx' )
     .ProjectBasePath    = '..'
     .ProjectInputPaths  = '..'
     .ProjectOutput      = '$ProjectName$.vcxproj'
-    .ProjectFiles       = { '..\*.PRJ' }
+    .ProjectFiles       = { '..\*.PRJ', '..\*.TBS' }
 
     .ProjectFileTypes = { .CFileType, .BatFileType, .BffFileType, .PrjFileType }
 
