@@ -34,34 +34,35 @@
 * CREATION : 11.09.99 PNK
 *-----------------------------------------------------------------------------------*/
 
-S32		Drive_CreateDirectory( char * apDirName )
+S32		Drive_CreateDirectory( const char * apDirName )
 {
 	U16 i;
 	S32 lRes = 0;
+	char * lpDirName = (char*)apDirName;
 
-	for( i = 0; apDirName[ i ]; i++ )
+	for( i = 0; lpDirName[ i ]; i++ )
 	{
-		char lOld = apDirName[ i ];
+		char lOld = lpDirName[ i ];
 		if( '/' == lOld || '\\' == lOld )
 		{
-			apDirName[ i ] = 0;
-			if( !Drive_DirectoryExists( apDirName ) )
+			lpDirName[ i ] = 0;
+			if( !Drive_DirectoryExists( lpDirName ) )
 			{
 #ifdef	dGODLIB_PLATFORM_ATARI
-				lRes = GemDos_Dcreate( apDirName );
+				lRes = GemDos_Dcreate( lpDirName );
 #else
-				lRes = CreateDirectory( apDirName, 0 );
+				lRes = CreateDirectory( lpDirName, 0 );
 #endif
 			}
-			apDirName[ i ] = lOld;
+			lpDirName[ i ] = lOld;
 		}
 	}
-	if( !Drive_DirectoryExists( apDirName ) )
+	if( !Drive_DirectoryExists( lpDirName ) )
 	{
 #ifdef	dGODLIB_PLATFORM_ATARI
-		lRes = GemDos_Dcreate( apDirName );
+		lRes = GemDos_Dcreate( lpDirName );
 #else
-		lRes = CreateDirectory( apDirName, 0 );
+		lRes = CreateDirectory( lpDirName, 0 );
 #endif
 	}
 	return ( lRes );
@@ -75,12 +76,12 @@ S32		Drive_CreateDirectory( char * apDirName )
 * CREATION : 11.09.99 PNK
 *-----------------------------------------------------------------------------------*/
 
-S32		Drive_DeleteDirectory( char * apDirName )
+S32		Drive_DeleteDirectory( const char * apDirName )
 {
 	return( GemDos_Ddelete( apDirName ) );
 }
 
-U8		Drive_DirectoryExists( char * apDirName )
+U8		Drive_DirectoryExists( const char * apDirName )
 {
 	return( 0 == File_ReadFirst( apDirName, dGEMDOS_FA_DIR ) );
 }

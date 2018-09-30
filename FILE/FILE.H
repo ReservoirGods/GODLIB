@@ -44,6 +44,9 @@ typedef struct sFileIdentifier
 #  PROTOTYPES
 ################################################################################### */
 
+void		File_Init( void );
+void		File_DeInit( void );
+
 sFileHandle	File_Open(   const char * apFname);
 sFileHandle	File_Create( const char * apFname);
 S32			File_Read(  sFileHandle aHandle, U32 aBytes, void * apBuffer );

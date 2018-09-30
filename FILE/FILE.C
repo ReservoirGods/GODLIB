@@ -48,6 +48,7 @@
 ################################################################################### */
 
 sGemDosDTA *	gpFileDTA = 0;
+sGemDosDTA		gFileDTA;
 S32				gFileFindHandle;
 U16				gFileFindAttribs;
 
@@ -76,10 +77,20 @@ void	File_StatToDTA( const struct stat * apStat, sGemDosDTA * apDTA, const char 
 void	File_FileIdentifier_SetString( sFileIdentifier * apID, const U16 aIndex, const char * apString );
 extern	U16	File_FileSelectorAES( const char * apTitle, const char * apPath, const char * apFile );
 
+void	File_EnsureDirectoriesCreated( const char * apFileName );
 
 /* ###################################################################################
 #  CODE
 ################################################################################### */
+
+void		File_Init( void )
+{
+	File_SetDTA( &gFileDTA );
+}
+
+void		File_DeInit( void )
+{
+}
 
 
 /*-----------------------------------------------------------------------------------*
@@ -756,6 +767,8 @@ void	File_UnLoad( void * apMem )
 
 U8	File_Save( const char * apFileName, const void * apBuffer, U32 aBytes )
 {
+	File_EnsureDirectoriesCreated( apFileName );
+
 #ifdef	dGODLIB_PLATFORM_ATARI
 	sFileHandle	lHandle;
 
@@ -1289,6 +1302,26 @@ char *	File_Identifier_ToFullName( sFileIdentifier * apID )
 	}
 
 	return( lpFullName );
+}
+
+void	File_EnsureDirectoriesCreated( const char * apFileName )
+{
+	char * lpSep = 0;
+	char lOld = 0;
+	U16 i;
+
+	for( i = 0; apFileName[ i ]; i++ )
+	{
+		if( '/' == apFileName[ i ] || '\\' == apFileName[ i ] )
+			lpSep = (char*)&apFileName[ i ];
+	}
+	if( lpSep )
+	{
+		lOld = *lpSep;
+		*lpSep = 0;
+		Drive_CreateDirectory( apFileName );
+		*lpSep = lOld;
+	}
 }
 
 

@@ -804,6 +804,8 @@ void					Sprite_BlockDelocate( sSpriteBlock * apBlock )
 		Endian_FromBigU32( &apBlock->mpSprite[ i ] );
 	}
 	Endian_FromBigU16( &apBlock->mHeader.mSpriteCount );
+	Endian_FromBigU16( &apBlock->mHeader.mVersion );
+	Endian_FromBigU32( &apBlock->mHeader.mID );
 }
 
 
@@ -822,6 +824,8 @@ void					Sprite_BlockRelocate( sSpriteBlock * apBlock )
 		return;
 	}
 
+	Endian_FromBigU32( &apBlock->mHeader.mID );
+	Endian_FromBigU16( &apBlock->mHeader.mVersion );
 	Endian_FromBigU16( &apBlock->mHeader.mSpriteCount );
 	for( i=0; i<apBlock->mHeader.mSpriteCount; i++ )
 	{
