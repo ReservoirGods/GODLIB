@@ -767,12 +767,12 @@ void	File_UnLoad( void * apMem )
 
 U8	File_Save( const char * apFileName, const void * apBuffer, U32 aBytes )
 {
-	File_EnsureDirectoriesCreated( apFileName );
 
 #ifdef	dGODLIB_PLATFORM_ATARI
 	sFileHandle	lHandle;
 
 
+	File_EnsureDirectoriesCreated( apFileName );
 	lHandle = File_Create( apFileName );
 	if( lHandle <= 0 )
 	{
@@ -786,6 +786,7 @@ U8	File_Save( const char * apFileName, const void * apBuffer, U32 aBytes )
 #else
 	FILE *	lpFile;
 
+	File_EnsureDirectoriesCreated( apFileName );
 	lpFile = fopen( apFileName, "wb" );
 	if( !lpFile )
 	{
