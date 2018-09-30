@@ -36,11 +36,36 @@
 
 S32		Drive_CreateDirectory( char * apDirName )
 {
+	U16 i;
+	S32 lRes = 0;
+
+	for( i = 0; apDirName[ i ]; i++ )
+	{
+		char lOld = apDirName[ i ];
+		if( '/' == lOld || '\\' == lOld )
+		{
+			apDirName[ i ] = 0;
+			if( !Drive_DirectoryExists( apDirName ) )
+			{
 #ifdef	dGODLIB_PLATFORM_ATARI
-	return( GemDos_Dcreate( apDirName ) );
+				lRes = GemDos_Dcreate( apDirName );
 #else
-	return( GemDos_Dcreate( apDirName ) );
+				lRes = CreateDirectory( apDirName, 0 );
 #endif
+			}
+			apDirName[ i ] = lOld;
+		}
+	}
+	if( !Drive_DirectoryExists( apDirName ) )
+	{
+#ifdef	dGODLIB_PLATFORM_ATARI
+		lRes = GemDos_Dcreate( apDirName );
+#else
+		lRes = CreateDirectory( apDirName, 0 );
+#endif
+	}
+	return ( lRes );
+
 }
 
 
