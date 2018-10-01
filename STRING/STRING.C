@@ -16,6 +16,12 @@ void	String_SetCharCount( sString * apString, U32 aCount )
 	apString->mCharCountAndDynamicFlag = aCount;
 }
 
+void	String_Alloc(sString * apString, U32 aCount )
+{
+	apString->mpChars = (char*)mMEMCALLOC( aCount + 1 );
+	apString->mCharCountAndDynamicFlag = aCount | eString_DynamicAllocFlag;
+}
+
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : String_Init( const char * apChars )
 * ACTION   : String_Init
@@ -26,8 +32,7 @@ void	String_Init( sString * apString, const char * apChars )
 {
 	if( apChars )
 	{
-		String_SetCharCount( apString, String_StrLen( apChars ) );
-		apString->mpChars    = (char*)mMEMCALLOC( String_GetLength( apString ) + 1 );
+		String_Alloc(apString, String_StrLen(apChars));
 		String_StrCpy( apString->mpChars, apChars );
 	}
 	else
@@ -49,8 +54,7 @@ void	String_Create2( sString * apString, const char * apChars0,const char * apCh
 	if( apChars0 && apChars1 )
 	{
 		U32 lCount = String_StrLen( apChars0 ) + String_StrLen( apChars1 );
-		String_SetCharCount( apString, lCount );
-		apString->mpChars    = (char*)mMEMCALLOC( String_GetCharCount( apString ) + 1 );
+		String_Alloc(apString, lCount);
 		String_StrCat( apString->mpChars, apChars0, apChars1 );
 	}
 	else
@@ -71,8 +75,31 @@ void	String_DeInit( sString * apString )
 {
 	if( apString->mpChars )
 	{
-		mMEMFREE( apString->mpChars );
+		if (apString->mCharCountAndDynamicFlag & eString_DynamicAllocFlag)
+		{
+			mMEMFREE(apString->mpChars);
+		}
 		apString->mpChars = 0;
+	}
+	apString->mCharCountAndDynamicFlag = 0;
+}
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : String_Prepend( sString * apString,const char * apChars )
+* ACTION   : String_Prepend
+* CREATION : 18.02.2004 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	String_Prepend(sString * apString, const char * apChars)
+{
+	if (apString && apChars)
+	{
+		U32 lCount = String_GetCharCount(apString) + String_StrLen(apChars);
+		char * lpDst = (char*)mMEMCALLOC(lCount + 1);
+		String_StrCat(lpDst, apChars, apString->mpChars );
+		String_DeInit(apString);
+		apString->mpChars = lpDst;
+		apString->mCharCountAndDynamicFlag = lCount | eString_DynamicAllocFlag;
 	}
 }
 
@@ -85,16 +112,14 @@ void	String_DeInit( sString * apString )
 
 void	String_Append( sString * apString,const char * apChars )
 {
-	char *	lpChars;
-
 	if( apString && apChars )
 	{
 		U32 lCount = String_GetCharCount( apString ) + String_StrLen( apChars );
-		lpChars               = apString->mpChars;
-		String_SetCharCount( apString, lCount );
-		apString->mpChars     = (char*)mMEMCALLOC( String_GetCharCount(apString) + 1 );
-		String_StrCat( apString->mpChars, lpChars, apChars );
-		mMEMFREE( lpChars );
+		char * lpDst = (char*)mMEMCALLOC(lCount+1);
+		String_StrCat( lpDst, apString->mpChars, apChars );
+		String_DeInit(apString);
+		apString->mpChars = lpDst;
+		apString->mCharCountAndDynamicFlag = lCount | eString_DynamicAllocFlag;
 	}
 }
 
@@ -107,26 +132,19 @@ void	String_Append( sString * apString,const char * apChars )
 
 void	String_Cat( sString * apDst,const sString * apSrc0,const sString * apSrc1 )
 {
-	char *	lpSrc0;
-	char *	lpSrc1;
-	char *	lpDst;
-	U32		lSize;
-
 	if( apDst && apSrc0 && apSrc1 )
 	{
-		lpSrc0 = apSrc0->mpChars;
-		lpSrc1 = apSrc1->mpChars;
+		const char * lpSrc0 = apSrc0->mpChars;
+		const char * lpSrc1 = apSrc1->mpChars;
 		if( lpSrc0 && lpSrc1 )
 		{
-			lpDst  = apDst->mpChars;
-			lSize  = String_GetCharCount( apSrc0 ) + String_GetCharCount( apSrc1 );
-			String_SetCharCount( apDst, lSize );
-			apDst->mpChars    = (char*)mMEMCALLOC( String_GetCharCount( apDst )+1 );
-			String_StrCat( apDst->mpChars, lpSrc0, lpSrc1 );
-			if( lpDst )
-			{
-				mMEMFREE( lpDst );
-			}
+			U32		lCount = String_GetCharCount(apSrc0) + String_GetCharCount(apSrc1);
+			char *	lpDst;
+			lpDst = mMEMCALLOC(lCount + 1);
+			String_StrCat(lpDst, lpSrc0, lpSrc1);
+			String_DeInit(apDst);
+			apDst->mpChars = lpDst;
+			apDst->mCharCountAndDynamicFlag = lCount | eString_DynamicAllocFlag;
 		}
 	}
 }
@@ -249,46 +267,26 @@ void	String_Copy( sString * apDst,const sString * apSrc )
 	if( apDst && apSrc )
 	{
 		U32 lCount = String_GetCharCount( apSrc );
-		if( apDst->mpChars )
-		{
-			mMEMFREE( apDst->mpChars );
-		}
-		apDst->mpChars    = (char*)mMEMCALLOC( lCount + 1 );
-		String_SetCharCount( apDst, lCount );
-		String_StrCpy( apDst->mpChars, apSrc->mpChars );
+		const char * lpSrc = apSrc->mpChars;
+		char * lpDst = (char*)mMEMCALLOC(lCount + 1);
+		String_StrCpy( lpDst, lpSrc );
+
+		String_DeInit(apDst);
+		apDst->mpChars = lpDst;
+		apDst->mCharCountAndDynamicFlag = lCount | eString_DynamicAllocFlag;
 	}
 }
 
 
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : String_Prepend( sString * apString,const char * apChars )
-* ACTION   : String_Prepend
-* CREATION : 18.02.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	String_Prepend( sString * apString,const char * apChars )
-{
-	char *	lpChars;
-
-	if( apString && apChars )
-	{
-		U32 lCount = String_GetCharCount( apString ) + String_StrLen( apChars );
-		lpChars               = apString->mpChars;
-		String_SetCharCount( apString, lCount );
-		apString->mpChars     = (char*)mMEMCALLOC( lCount + 1 );
-		String_StrCat( apString->mpChars, apChars, lpChars );
-		mMEMFREE( lpChars );
-	}
-}
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : String_Update( sString * apString,const char * apChars )
-* ACTION   : String_Update
+* FUNCTION : String_Set( sString * apString,const char * apChars )
+* ACTION   : String_Set
 * CREATION : 18.02.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-void	String_Update( sString * apString,const char * apChars )
+void	String_Set( sString * apString,const char * apChars )
 {
 	char *	lpChars;
 	U32		lCount;
@@ -317,12 +315,12 @@ void	String_Update( sString * apString,const char * apChars )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : String_Update2( sString * apString,const char * apChars,const char * apChars )
-* ACTION   : String_Update2
+* FUNCTION : String_Set2( sString * apString,const char * apChars,const char * apChars )
+* ACTION   : String_Set2
 * CREATION : 06.03.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-void	String_Update2( sString * apString,const char * apChars0,const char * apChars1 )
+void	String_Set2( sString * apString,const char * apChars0,const char * apChars1 )
 {
 	char *	lpChars;
 	U32		lCount;

@@ -152,11 +152,11 @@ void	Tokeniser_Parse( const char * apText,const U32 aSize,const sTokeniserHandle
 							(!String_StrCmpi( lArgs.mpStrings[2], "name" )) &&
 							(!String_StrCmpi( lArgs.mpStrings[3], "=")) )
 						{
-							String_Update( &gTokeniserNameSpace,  lArgs.mpStrings[4] );
+							String_Set( &gTokeniserNameSpace,  lArgs.mpStrings[4] );
 						}
 						else
 						{
-							String_Update( &gTokeniserNameSpace,  "" );
+							String_Set( &gTokeniserNameSpace,  "" );
 						}
 					}
 					else
@@ -165,11 +165,11 @@ void	Tokeniser_Parse( const char * apText,const U32 aSize,const sTokeniserHandle
 							(!String_StrCmpi( lArgs.mpStrings[2], "name" )) &&
 							(!String_StrCmpi( lArgs.mpStrings[3], "=")) )
 						{
-							String_Update2( &lName, gTokeniserNameSpace.mpChars, lArgs.mpStrings[4] );
+							String_Set2( &lName, gTokeniserNameSpace.mpChars, lArgs.mpStrings[4] );
 						}
 						else
 						{
-							String_Update2( &lName, gTokeniserNameSpace.mpChars, "none" );
+							String_Set2( &lName, gTokeniserNameSpace.mpChars, "none" );
 						}
 						lTokeniser.mpHandler = Tokeniser_GetHandler( &lTokeniser, lArgs.mpStrings[1] );
 						if( (lTokeniser.mpHandler) && (lTokeniser.mpHandler->mpOnChunkInit) )
@@ -1188,10 +1188,10 @@ void	Tokeniser_Pass1_Init( const char * apTitle,const U16 aIndex,const char * ap
 	(void)aIndex;
 
 
-	String_Update( &gpTokeniserBuilder->mChunkName, apName );
-	String_Update( &gpTokeniserBuilder->mChunkTitle, apTitle );
+	String_Set( &gpTokeniserBuilder->mChunkName, apName );
+	String_Set( &gpTokeniserBuilder->mChunkTitle, apTitle );
 /*
-	String_Update( gpTokeniserBuilder->mpChunkTitleName, apTitle );
+	String_Set( gpTokeniserBuilder->mpChunkTitleName, apTitle );
 	String_Append( gpTokeniserBuilder->mpChunkTitleName, "::" );
 	String_Append( gpTokeniserBuilder->mpChunkTitleName, apName );
 */
@@ -1258,10 +1258,10 @@ void	Tokeniser_Pass2_Init( const char * apTitle,const U16 aIndex,const char * ap
 	(void)aIndex;
 
 
-	String_Update( &gpTokeniserBuilder->mChunkName, apName );
-	String_Update( &gpTokeniserBuilder->mChunkTitle, apTitle );
+	String_Set( &gpTokeniserBuilder->mChunkName, apName );
+	String_Set( &gpTokeniserBuilder->mChunkTitle, apTitle );
 
-/*	String_Update( gpTokeniserBuilder->mpChunkTitleName, apTitle );
+/*	String_Set( gpTokeniserBuilder->mpChunkTitleName, apTitle );
 	String_Append( gpTokeniserBuilder->mpChunkTitleName, "::" );
 	String_Append( gpTokeniserBuilder->mpChunkTitleName, apName );
 */
@@ -1402,10 +1402,10 @@ void Tokeniser_Pass3_Init(const char * apTitle,const U16 aIndex,const char * apN
 	(void)aIndex;
 
 
-	String_Update( &gpTokeniserBuilder->mChunkName, apName );
-	String_Update( &gpTokeniserBuilder->mChunkTitle, apTitle );
+	String_Set( &gpTokeniserBuilder->mChunkName, apName );
+	String_Set( &gpTokeniserBuilder->mChunkTitle, apTitle );
 
-/*	String_Update( gpTokeniserBuilder->mpChunkTitleName, apTitle );
+/*	String_Set( gpTokeniserBuilder->mpChunkTitleName, apTitle );
 	String_Append( gpTokeniserBuilder->mpChunkTitleName, "::" );
 	String_Append( gpTokeniserBuilder->mpChunkTitleName, apName );
 */

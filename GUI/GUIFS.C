@@ -553,7 +553,7 @@ void	GuiFS_OnFolderBack( sHashTreeVarClient  * apClient )
 						i--;
 					}
 					lString.mpChars[ i ] = 0;
-					String_Update( lpFilePath, lString.mpChars );
+					String_Set( lpFilePath, lString.mpChars );
 					String_DeInit( &lString );
 
 					HashTree_VarWrite( lpVar, &lpFilePath );
@@ -609,7 +609,7 @@ void	GuiFS_OnFile( sHashTreeVarClient  * apClient )
 		{
 			DebugLog_Printf0( "GuiFS_OnFile()" );
 			lpButton = (sGuiButton*)lpEvent->mpInfo;
-			String_Update( &gGuiFS.mStrings[ eGUIFS_STRING_FILENAME ], lpButton->mString.mpTitle );
+			String_Set( &gGuiFS.mStrings[ eGUIFS_STRING_FILENAME ], lpButton->mString.mpTitle );
 
 
 			lpVar = gGuiFS.mpVars[ eGUIFS_VAR_FILENAME ];
@@ -720,11 +720,11 @@ void	GuiFS_Open( sGuiFSInfo * apInfo )
 		lpEvent = (sGuiEvent*)lpVar->mpData;
 		if( lpEvent )
 		{
-			String_Update( &gGuiFS.mStrings[ eGUIFS_STRING_DRIVE    ], apInfo->mDrive.mpChars    );
-			String_Update( &gGuiFS.mStrings[ eGUIFS_STRING_FILEMASK ], apInfo->mFileMask.mpChars );
-			String_Update( &gGuiFS.mStrings[ eGUIFS_STRING_FILENAME ], apInfo->mFileName.mpChars );
-			String_Update( &gGuiFS.mStrings[ eGUIFS_STRING_FILEPATH ], apInfo->mFilePath.mpChars );
-			String_Update( &gGuiFS.mStrings[ eGUIFS_STRING_TITLE    ], apInfo->mTitle.mpChars );
+			String_Set( &gGuiFS.mStrings[ eGUIFS_STRING_DRIVE    ], apInfo->mDrive.mpChars    );
+			String_Set( &gGuiFS.mStrings[ eGUIFS_STRING_FILEMASK ], apInfo->mFileMask.mpChars );
+			String_Set( &gGuiFS.mStrings[ eGUIFS_STRING_FILENAME ], apInfo->mFileName.mpChars );
+			String_Set( &gGuiFS.mStrings[ eGUIFS_STRING_FILEPATH ], apInfo->mFilePath.mpChars );
+			String_Set( &gGuiFS.mStrings[ eGUIFS_STRING_TITLE    ], apInfo->mTitle.mpChars );
 
 			lpWindow = (sGuiWindow*)lpEvent->mpInfo;
 			lEvent.mEvent = eGUIEVENT_WINDOW_OPEN;
@@ -756,10 +756,10 @@ void	GuiFS_OnOK( sHashTreeVarClient  * apClient )
 			if( lpInfo )
 			{
 				lpInfo->mButton    = eGUIFS_BUTTON_OK;
-				String_Update( &lpInfo->mDrive,    gGuiFS.mStrings[ eGUIFS_STRING_DRIVE    ].mpChars );
-				String_Update( &lpInfo->mFileMask, gGuiFS.mStrings[ eGUIFS_STRING_FILEMASK ].mpChars );
-				String_Update( &lpInfo->mFileName, gGuiFS.mStrings[ eGUIFS_STRING_FILENAME ].mpChars );
-				String_Update( &lpInfo->mFilePath, gGuiFS.mStrings[ eGUIFS_STRING_FILEPATH ].mpChars );
+				String_Set( &lpInfo->mDrive,    gGuiFS.mStrings[ eGUIFS_STRING_DRIVE    ].mpChars );
+				String_Set( &lpInfo->mFileMask, gGuiFS.mStrings[ eGUIFS_STRING_FILEMASK ].mpChars );
+				String_Set( &lpInfo->mFileName, gGuiFS.mStrings[ eGUIFS_STRING_FILENAME ].mpChars );
+				String_Set( &lpInfo->mFilePath, gGuiFS.mStrings[ eGUIFS_STRING_FILEPATH ].mpChars );
 				lpInfo->mpCB( lpInfo );
 			}
 		}
