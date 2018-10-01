@@ -23,7 +23,13 @@ typedef	struct	sString
 #  PROTOTYPES
 ################################################################################### */
 
+/*
+This should really only be used for parsing.
+Look at using inplace fixed strings
+*/
+
 #define		String_GetLength( aString )	((aString)->mCharCountAndDynamicFlag)
+#define		String_GetCharCount( aString )	String_GetLength( aString )
 
 void		String_Create( sString * apString, const char * apChars );
 void		String_Create2( sString * apString, const char * apChars0, const char * apChars1 );
@@ -33,18 +39,22 @@ void		String_Append( sString * apString, const char * apChars );
 void		String_Cat( sString * apDst, const sString * apSrc0, const sString * apSrc1 );
 void		String_CharInsert( sString * apString, const U16 aIndex, const U8 aChar );
 void		String_CharRemove( sString * apString, const U16 aIndex );
-sString *	String_Clone( const sString * apString );
 void		String_Copy( sString * apDst, const sString * apSrc );
-U32			String_GetCharCount( const sString * apString );
+/*U32			String_GetCharCount( const sString * apString );*/
 void		String_Prepend(  sString * apString, const char * apChars );
 void		String_Update( sString * apString, const char * apChars );
 void		String_Update2( sString * apString, const char * apChars0, const char * apChars1 );
+
+/*
+This API is unsafe. Let's deprecate.
+*/
 
 void		String_StrAppend( char * apDst, const char * apAdd );
 void		String_StrAppend2( char * apDst, const char * apAdd0, const char * apAdd1 );
 void		String_StrCpy( char * apDst, const char * apSrc );
 void		String_StrCpy2( char * apDst, const char * apSrc, const U32 aDstLen );
 void		String_StrCat( char * apDst, const char * apSrc0, const char * apSrc1 );
+
 U8			String_StrCmp( const char * apStr0, const char * apStr1 );
 U8			String_StrCmpi( const char * apStr0, const char * apStr1 );
 U32			String_StrLen( const char * apString );

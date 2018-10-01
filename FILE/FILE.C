@@ -21,6 +21,7 @@
 #include	<GODLIB/GEMDOS/GEMDOS.H>
 #include	<GODLIB/MEMORY/MEMORY.H>
 #include	<GODLIB/STRING/STRING.H>
+#include	<GODLIB/STRING/STRPATH.H>
 
 #ifdef dGODLIB_COMPILER_GCC
 #include	<dirent.h>

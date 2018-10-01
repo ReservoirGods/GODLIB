@@ -261,28 +261,6 @@ void	String_Copy( sString * apDst,const sString * apSrc )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : String_GetCharCount( const sString * apString )
-* ACTION   : String_GetCharCount
-* CREATION : 18.02.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-U32	String_GetCharCount( const sString * apString )
-{
-	U32	lCount;
-
-	if( apString )
-	{
-		lCount = String_GetLength( apString );
-	}
-	else
-	{
-		lCount = 0;
-	}
-	return( lCount );
-}
-
-
-/*-----------------------------------------------------------------------------------*
 * FUNCTION : String_Prepend( sString * apString,const char * apChars )
 * ACTION   : String_Prepend
 * CREATION : 18.02.2004 PNK
