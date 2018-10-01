@@ -26,14 +26,17 @@ typedef	struct	sString
 /*
 This should really only be used for parsing.
 Look at using inplace fixed strings
+
+	INIT - initialise data structure
+
 */
 
 #define		String_GetLength( aString )	((aString)->mCharCountAndDynamicFlag)
 #define		String_GetCharCount( aString )	String_GetLength( aString )
 
-void		String_Create( sString * apString, const char * apChars );
+void		String_Init( sString * apString, const char * apChars );
 void		String_Create2( sString * apString, const char * apChars0, const char * apChars1 );
-void		String_Destroy( sString * apString );
+void		String_DeInit( sString * apString );
 
 void		String_Append( sString * apString, const char * apChars );
 void		String_Cat( sString * apDst, const sString * apSrc0, const sString * apSrc1 );
@@ -54,6 +57,10 @@ void		String_StrAppend2( char * apDst, const char * apAdd0, const char * apAdd1 
 void		String_StrCpy( char * apDst, const char * apSrc );
 void		String_StrCpy2( char * apDst, const char * apSrc, const U32 aDstLen );
 void		String_StrCat( char * apDst, const char * apSrc0, const char * apSrc1 );
+
+/*
+Const utitility functions acting on immutable data
+*/
 
 U8			String_StrCmp( const char * apStr0, const char * apStr1 );
 U8			String_StrCmpi( const char * apStr0, const char * apStr1 );

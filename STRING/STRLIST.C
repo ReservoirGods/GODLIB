@@ -62,7 +62,7 @@ void	StringList_DeInit( sStringList * apList )
 				{
 					lpString->mpChars = 0;
 				}
-				String_Destroy( lpString );
+				String_DeInit( lpString );
 				mMEMFREE( lpItem );
 			}
 			lpItem     = lpItemNext;
@@ -136,7 +136,7 @@ sStringListItem *	StringList_ItemCreate( sStringList * apList,const char * apCha
 		sString * lpString = mMEMCALLOC( sizeof( sString ) );
 		if( lpString )
 		{
-			String_Create( lpString, apChars );
+			String_Init( lpString, apChars );
 			lpItem = (sStringListItem*)mMEMCALLOC( sizeof( sStringListItem ) );
 			lpItem->mpNext = apList->mpItems;
 			lpItem->mpString = lpString;
@@ -173,7 +173,7 @@ void	StringList_ItemDestroy( sStringList * apList, sStringListItem * apItem )
 			{
 				lpItem->mpString->mpChars = 0;
 			}
-			String_Destroy( lpItem->mpString );
+			String_DeInit( lpItem->mpString );
 			mMEMFREE( lpItem->mpString );
 			mMEMFREE( lpItem );
 			apList->mCount--;

@@ -132,8 +132,8 @@ void	Tokeniser_Parse( const char * apText,const U32 aSize,const sTokeniserHandle
 	lTokeniser.mpHandler     = 0;
 	lTokeniser.mMode         = eTOKENISER_MODE_FINDCHUNK;
 	lTokeniser.mHandlerCount = aHandlerCount;
-	String_Create( &gTokeniserNameSpace,  "" );
-	String_Create( &lName, "NAME" );
+	String_Init( &gTokeniserNameSpace,  "" );
+	String_Init( &lName, "NAME" );
 
 	while( lTokeniser.mOffset < lTokeniser.mTextSize )
 	{
@@ -244,8 +244,8 @@ void	Tokeniser_Parse( const char * apText,const U32 aSize,const sTokeniserHandle
 		}
 	}
 
-	String_Destroy( &lName );
-	String_Destroy( &gTokeniserNameSpace );
+	String_DeInit( &lName );
+	String_DeInit( &gTokeniserNameSpace );
 }
 
 
@@ -864,9 +864,9 @@ sTokeniserBuilder *	Tokeniser_Init( const char * apText, const U32 aSize, sToken
 	gpTokeniserBuilder->mpText = apText;
 	gpTokeniserBuilder->mpInfo = apInfo;
 
-	String_Create( &gpTokeniserBuilder->mChunkName, "none" );
-	String_Create( &gpTokeniserBuilder->mChunkTitle, "none" );
-/*	gpTokeniserBuilder->mpChunkTitleName = String_Create( "none" );
+	String_Init( &gpTokeniserBuilder->mChunkName, "none" );
+	String_Init( &gpTokeniserBuilder->mChunkTitle, "none" );
+/*	gpTokeniserBuilder->mpChunkTitleName = String_Init( "none" );
 */
 	StringList_Init( &gpTokeniserBuilder->mStringList );
 
@@ -948,9 +948,9 @@ sTokeniserBuilder *	Tokeniser_Init( const char * apText, const U32 aSize, sToken
 
 	Tokeniser_Parse( apText, aSize, &gTokenesierPass3, 1 );
 
-	String_Destroy( &gpTokeniserBuilder->mChunkName );
-	String_Destroy( &gpTokeniserBuilder->mChunkTitle );
-/*	String_Destroy( gpTokeniserBuilder->mpChunkTitleName );*/
+	String_DeInit( &gpTokeniserBuilder->mChunkName );
+	String_DeInit( &gpTokeniserBuilder->mChunkTitle );
+/*	String_DeInit( gpTokeniserBuilder->mpChunkTitleName );*/
 
 	return( gpTokeniserBuilder );
 }
@@ -1208,13 +1208,13 @@ void	Tokeniser_Pass1_Init( const char * apTitle,const U16 aIndex,const char * ap
 		if( gpTokeniserBuilder->mpInfo->mOnWarning )
 		{
 			sString lString;
-			String_Create( &lString, "WARNING: Unknown chunk" );
+			String_Init( &lString, "WARNING: Unknown chunk" );
 			String_Cat( &lString, &lString, &gpTokeniserBuilder->mChunkTitle );
 			String_Append( &lString, "::" );
 			String_Cat( &lString, &lString, &gpTokeniserBuilder->mChunkName );
 /*			gpTokeniserBuilder->mpInfo->mOnWarning( "Chunk Not Found" );*/
 			gpTokeniserBuilder->mpInfo->mOnWarning( lString.mpChars );
-			String_Destroy( &lString );
+			String_DeInit( &lString );
 		}
 	}
 }
@@ -1481,14 +1481,14 @@ void Tokeniser_Pass3_Var(sTokeniserArgs * apArgs)
 			if( gpTokeniserBuilder->mpInfo->mOnWarning )
 			{
 				sString lString;
-				String_Create( &lString, "WARNING: couldn't find var " );
+				String_Init( &lString, "WARNING: couldn't find var " );
 				String_Append( &lString, apArgs->mpStrings[ 0 ] );
 				String_Append( &lString, " in chunk " );
 				String_Append( &lString, gpTokeniserBuilder->mChunkTitle.mpChars );
 				String_Append( &lString, "::" );
 				String_Append( &lString, gpTokeniserBuilder->mChunkName.mpChars );
 				gpTokeniserBuilder->mpInfo->mOnWarning( lString.mpChars );
-				String_Destroy( &lString );
+				String_DeInit( &lString );
 			}
 		}
 	}
@@ -1583,7 +1583,7 @@ void	Tokeniser_GrabData( const sTokeniserStructMember * apMember, const sTokenis
 			}
 
 		}
-		String_Destroy( &lRefName );
+		String_DeInit( &lRefName );
 		break;
 
 	case	eTOKENISER_TYPE_CHARMAP:

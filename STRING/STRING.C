@@ -17,12 +17,12 @@ void	String_SetCharCount( sString * apString, U32 aCount )
 }
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : String_Create( const char * apChars )
-* ACTION   : String_Create
+* FUNCTION : String_Init( const char * apChars )
+* ACTION   : String_Init
 * CREATION : 18.02.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-void	String_Create( sString * apString, const char * apChars )
+void	String_Init( sString * apString, const char * apChars )
 {
 	if( apChars )
 	{
@@ -32,7 +32,7 @@ void	String_Create( sString * apString, const char * apChars )
 	}
 	else
 	{
-		String_SetCharCount( apString, 0 );
+		apString->mCharCountAndDynamicFlag = 0;
 		apString->mpChars    = 0;
 	}
 }
@@ -62,12 +62,12 @@ void	String_Create2( sString * apString, const char * apChars0,const char * apCh
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : String_Destroy( sString * apString )
-* ACTION   : String_Destroy
+* FUNCTION : String_DeInit( sString * apString )
+* ACTION   : String_DeInit
 * CREATION : 18.02.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-void	String_Destroy( sString * apString )
+void	String_DeInit( sString * apString )
 {
 	if( apString->mpChars )
 	{
@@ -231,7 +231,7 @@ sString *	String_Clone( const sString * apString )
 	{
 		lpString = mMEMCALLOC( sizeof( sString ) );
 		if( lpString )
-			String_Create( lpString, apString->mpChars );
+			String_Init( lpString, apString->mpChars );
 	}
 
 	return( lpString );
