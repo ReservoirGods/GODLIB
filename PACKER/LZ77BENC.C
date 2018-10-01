@@ -93,7 +93,7 @@ U32	GodPack_Lz77b_Encode( const void * apSrc,void * apDst,const U32 aSize )
 	U32		lStringRun;
 	U32		lDstOff;
 
-	DebugLog_Init( "LZ77B.LOG" );
+	DebugLog_Init( eDebugLog_File, "LZ77B.LOG" );
 
 	lpSrc = (U8*)apSrc;
 	lpDst = (U8*)apDst;

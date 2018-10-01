@@ -31,11 +31,11 @@ typedef	void	(*fGuiFSCB)( struct sGuiFSInfo * apInfo );
 
 typedef	struct	sGuiFSInfo
 {
-	sString *	mpTitle;
-	sString *	mpDrive;
-	sString *	mpFilePath;
-	sString *	mpFileName;
-	sString *	mpFileMask;
+	sString 	mTitle;
+	sString 	mDrive;
+	sString 	mFilePath;
+	sString 	mFileName;
+	sString 	mFileMask;
 	fGuiFSCB	mpCB;
 	U16			mButton;
 } sGuiFSInfo;

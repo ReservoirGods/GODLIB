@@ -34,7 +34,7 @@ U8	GuiTextLine_Init( sGuiTextLine * apLine,sHashTreeVar * apVar )
 		{
 			apLine->mEditType = eGUI_EDITTYPE_STRING;
 			apLine->mpString  = lpString;
-			apLine->mCursorX  = (U16)lpString->mCharCount;
+			apLine->mCursorX  = (U16)String_GetLength( lpString );
 			apLine->mEditFlag = 1;
 			lRes              = 1;
 		}
@@ -124,11 +124,11 @@ U16	GuiTextLine_Update( sGuiTextLine * apLine,sGuiIKBD * apIKBD )
 				break;
 
 			case	eIKBDSCAN_RIGHTARROW:
-				if( apLine->mCursorX < apLine->mpString->mCharCount )
+				if( apLine->mCursorX < String_GetLength( apLine->mpString ) )
 				{
 					if( apLine->mShiftFlag )
 					{
-						apLine->mCursorX = (U16)apLine->mpString->mCharCount;
+						apLine->mCursorX = (U16)String_GetLength( apLine->mpString );
 					}
 					else
 					{

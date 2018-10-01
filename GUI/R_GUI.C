@@ -481,7 +481,7 @@ void	RenderGui_StringDraw( sGuiString * apString,sGraphicCanvas * apCanvas,sGuiF
 	sGraphicPos		lPos;
 	sString *		lpString;
 	sGuiTextLine *	lpTextLine;
-	char *			lpChars;
+	char *			lpChars = 0;
 	char			lChars[ 128 ];
 	S8				lS8;
 	U8				lU8;
@@ -560,7 +560,7 @@ void	RenderGui_StringDraw( sGuiString * apString,sGraphicCanvas * apCanvas,sGuiF
 				break;
 
 			case	eGUI_VAR_STRING:
-				HashTree_VarRead( lpVar->mpVar, &lpString, sizeof(lpString) );
+				HashTree_VarRead( lpVar->mpVar, &lpString, sizeof( lpString ) );
 				if( lpString )
 				{
 					lpChars = lpString->mpChars;

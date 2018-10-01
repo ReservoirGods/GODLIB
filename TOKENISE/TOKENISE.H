@@ -163,8 +163,8 @@ typedef	struct	sTokeniserBuilder
 	U32							mChunkHashCurrent;
 	const sTokeniserChunkDef *	mpChunkDefCurrent;
 	sTokeniserStructMember *	mpStructMemberCurrent;
-	sString	*					mpChunkTitle;
-	sString	*					mpChunkName;
+	sString						mChunkTitle;
+	sString						mChunkName;
 	U8 *						mpContainer;
 	U8 *						mpDataItem;
 	sTokeniserInfo *			mpInfo;

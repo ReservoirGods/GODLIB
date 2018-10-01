@@ -111,7 +111,7 @@ U32	StringList_GetStringsSize( sStringList * apList )
 		{
 			if( lpItem->mpString )
 			{
-				lSize  += lpItem->mpString->mCharCount + 1;
+				lSize  += String_GetLength( lpItem->mpString ) + 1;
 			}
 			lpItem  = lpItem->mpNext;
 		}
@@ -129,21 +129,20 @@ U32	StringList_GetStringsSize( sStringList * apList )
 
 sStringListItem *	StringList_ItemCreate( sStringList * apList,const char * apChars )
 {
-	sString *			lpString;
-	sStringListItem *	lpItem;
+	sStringListItem *	lpItem = 0;
 
 	if( apChars )
 	{
-		lpString         = String_Create( apChars );
-		lpItem           = (sStringListItem*)mMEMCALLOC( sizeof(sStringListItem) );
-		lpItem->mpNext   = apList->mpItems;
-		lpItem->mpString = lpString;
-		apList->mpItems  = lpItem;
-		apList->mCount++;
-	}
-	else
-	{
-		lpItem = 0;
+		sString * lpString = mMEMCALLOC( sizeof( sString ) );
+		if( lpString )
+		{
+			String_Create( lpString, apChars );
+			lpItem = (sStringListItem*)mMEMCALLOC( sizeof( sStringListItem ) );
+			lpItem->mpNext = apList->mpItems;
+			lpItem->mpString = lpString;
+			apList->mpItems = lpItem;
+			apList->mCount++;
+		}
 	}
 
 	return( lpItem );
@@ -175,6 +174,7 @@ void	StringList_ItemDestroy( sStringList * apList, sStringListItem * apItem )
 				lpItem->mpString->mpChars = 0;
 			}
 			String_Destroy( lpItem->mpString );
+			mMEMFREE( lpItem->mpString );
 			mMEMFREE( lpItem );
 			apList->mCount--;
 			return;
@@ -238,7 +238,7 @@ void StringList_StringsSerialiseTo(sStringList * apList,U8 * apDest)
 					mMEMFREE( lpString->mpChars );
 				}
 				lpString->mpChars = (char*)&apDest[ lOff ];
-				lOff += ( lpString->mCharCount + 1 );
+				lOff += ( String_GetLength( lpString ) + 1 );
 			}
 			lpItem = lpItem->mpNext;
 		}

@@ -75,7 +75,8 @@ typedef	struct sGuiFSClass
 	sHashTree *				mpTree;
 	sHashTreeVar *			mpVars[ eGUIFS_VAR_LIMIT ];
 	sHashTreeVarClient *	mpVarClients[ eGUIFS_VARCLIENT_LIMIT ];
-	sString *				mpStrings[ eGUIFS_STRING_LIMIT ];
+	sString	*				mpStrings[ eGUIFS_STRING_LIMIT ];
+	sString					mStrings[ eGUIFS_STRING_LIMIT ];
 	U16						mFileCount;
 	U16						mFolderCount;
 	U32						mAllocFlag;
@@ -124,7 +125,7 @@ int		GuiFS_DTASort( const void * apDTA0, const void * apDTA1 );
 void	GuiFS_Init( sHashTree * apTree )
 {
 	char	lString[ 512 ];
-	U16		lDrive;
+	U16		lDrive,i;
 	Memory_Clear( sizeof(sGuiFSClass), &gGuiFS );
 
 	gGuiFS.mpTree = apTree;
@@ -134,13 +135,16 @@ void	GuiFS_Init( sHashTree * apTree )
 	lString[ 0 ] = (char)('A' + lDrive);
 	lString[ 1 ] = 0;
 
-	gGuiFS.mpStrings[ eGUIFS_STRING_DRIVE    ] = String_Create( lString );
-	gGuiFS.mpStrings[ eGUIFS_STRING_FILEMASK ] = String_Create( "*.*" );
-	gGuiFS.mpStrings[ eGUIFS_STRING_FILENAME ] = String_Create( "TEST.GOD" );
+	String_Create( &gGuiFS.mStrings[ eGUIFS_STRING_DRIVE    ], lString );
+	String_Create( &gGuiFS.mStrings[ eGUIFS_STRING_FILEMASK ], "*.*" );
+	String_Create( &gGuiFS.mStrings[ eGUIFS_STRING_FILENAME ], "TEST.GOD" );
 	lString[ 0 ] = 0;
 	Drive_GetPath( 0, lString );
-	gGuiFS.mpStrings[ eGUIFS_STRING_FILEPATH ] = String_Create( lString );
-	gGuiFS.mpStrings[ eGUIFS_STRING_TITLE    ] = String_Create( "FILE SELECTOR" );
+	String_Create( &gGuiFS.mStrings[ eGUIFS_STRING_FILEPATH ], lString );
+	String_Create( &gGuiFS.mStrings[ eGUIFS_STRING_TITLE    ], "FILE SELECTOR" );
+
+	for( i = 0; i < eGUIFS_STRING_LIMIT; i++ )
+		gGuiFS.mpStrings[ i ] = &gGuiFS.mStrings[ i ];
 
 	gGuiFS.mpVars[ eGUIFS_VAR_DRIVE    ] = HashTree_VarInit( apTree, "GUI\\FS\\DRIVE",		sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_DRIVE    ]  );
 	gGuiFS.mpVars[ eGUIFS_VAR_FILE     ] = HashTree_VarInit( apTree, "GUI\\FS\\FILE",		sizeof(sGuiEvent), 0  );
@@ -188,7 +192,7 @@ void	GuiFS_DeInit( sHashTree * apTree )
 
 	for( i=0; i<eGUIFS_STRING_LIMIT; i++ )
 	{
-		String_Destroy( gGuiFS.mpStrings[ i ] );
+		String_Destroy( &gGuiFS.mStrings[ i ] );
 	}
 }
 
@@ -267,8 +271,8 @@ U16	GuiFS_GetFileCount( char * apFileSpec )
 
 void	GuiFS_FileListWindowBuild( sGuiWindow * apWindow )
 {
-	sString*		lpPath;
-	sString*		lpString;
+	sString			lPath;
+	sString			lString;
 	sGuiButton *	lpButtons;
 	S16				lY;
 	U16				lCount;
@@ -295,18 +299,18 @@ void	GuiFS_FileListWindowBuild( sGuiWindow * apWindow )
 		gGuiFS.mpDTAs = 0;
 	}
 
-	lpPath = String_Create( gGuiFS.mpStrings[ eGUIFS_STRING_DRIVE ]->mpChars );
-	String_Append( lpPath, ":\\" );
-	String_Append( lpPath, gGuiFS.mpStrings[ eGUIFS_STRING_FILEPATH ]->mpChars );
-	String_Append( lpPath, "\\" );
+	String_Create( &lPath, gGuiFS.mStrings[ eGUIFS_STRING_DRIVE ].mpChars );
+	String_Append( &lPath, ":\\" );
+	String_Append( &lPath, gGuiFS.mStrings[ eGUIFS_STRING_FILEPATH ].mpChars );
+	String_Append( &lPath, "\\" );
 
 
-	lpString = String_Create( lpPath->mpChars );
-	String_Append( lpString, gGuiFS.mpStrings[ eGUIFS_STRING_FILEMASK ]->mpChars );
-	String_Append( lpPath, "*.*" );
+	String_Create( &lString, lPath.mpChars );
+	String_Append( &lString, gGuiFS.mStrings[ eGUIFS_STRING_FILEMASK ].mpChars );
+	String_Append( &lPath, "*.*" );
 
-	lFolderCount = GuiFS_GetFolderCount( lpPath->mpChars );
-	lFileCount   = GuiFS_GetFileCount( lpString->mpChars );
+	lFolderCount = GuiFS_GetFolderCount( lPath.mpChars );
+	lFileCount   = GuiFS_GetFileCount( lString.mpChars );
 
 	lCount       = (U16)(lFileCount + lFolderCount);
 	if( lCount )
@@ -320,7 +324,7 @@ void	GuiFS_FileListWindowBuild( sGuiWindow * apWindow )
 		i = 0;
 
 		File_SetDTA( &gGuiFS.mDTA );
-		if( !File_ReadFirst( lpPath->mpChars, dGEMDOS_FA_DIR ) )
+		if( !File_ReadFirst( lPath.mpChars, dGEMDOS_FA_DIR ) )
 		{
 			do
 			{
@@ -341,7 +345,7 @@ void	GuiFS_FileListWindowBuild( sGuiWindow * apWindow )
 		}
 
 		File_SetDTA( &gGuiFS.mDTA );
-		if( !File_ReadFirst( lpString->mpChars, dGEMDOS_FA_READONLY ) )
+		if( !File_ReadFirst( lString.mpChars, dGEMDOS_FA_READONLY ) )
 		{
 			do
 			{
@@ -412,8 +416,8 @@ void	GuiFS_FileListWindowBuild( sGuiWindow * apWindow )
 		Gui_WorldPosUpdate();
 	}
 
-	String_Destroy( lpString );
-	String_Destroy( lpPath );
+	String_Destroy( &lString );
+	String_Destroy( &lPath );
 }
 
 
@@ -523,8 +527,8 @@ void	GuiFS_OnFolderBack( sHashTreeVarClient  * apClient )
 {
 	sGuiWindow *	lpWindow;
 	sGuiEvent *		lpEvent;
-	sString *		lpString;
-	sString *		lpFilePath;
+	sString 		lString;
+	sString * 		lpFilePath;
 	sHashTreeVar *	lpVar;
 	U16				i;
 
@@ -540,17 +544,17 @@ void	GuiFS_OnFolderBack( sHashTreeVarClient  * apClient )
 			lpFilePath = *(sString**)lpVar->mpData;
 			if( lpFilePath )
 			{
-				if( lpFilePath->mCharCount )
+				if( String_GetLength( lpFilePath ) )
 				{
-					lpString = String_Create( lpFilePath->mpChars );
-					i = (U16)(lpString->mCharCount-1);
-					while( (i) && (lpString->mpChars[ i ] != '\\') && (lpString->mpChars[ i ] != '/') )
+					String_Create( &lString, lpFilePath->mpChars );
+					i = (U16)(String_GetLength( &lString )-1);
+					while( (i) && (lString.mpChars[ i ] != '\\') && (lString.mpChars[ i ] != '/') )
 					{
 						i--;
 					}
-					lpString->mpChars[ i ] = 0;
-					String_Update( lpFilePath, lpString->mpChars );
-					String_Destroy( lpString );
+					lString.mpChars[ i ] = 0;
+					String_Update( lpFilePath, lString.mpChars );
+					String_Destroy( &lString );
 
 					HashTree_VarWrite( lpVar, &lpFilePath );
 
@@ -605,13 +609,13 @@ void	GuiFS_OnFile( sHashTreeVarClient  * apClient )
 		{
 			DebugLog_Printf0( "GuiFS_OnFile()" );
 			lpButton = (sGuiButton*)lpEvent->mpInfo;
-			String_Update( gGuiFS.mpStrings[ eGUIFS_STRING_FILENAME ], lpButton->mString.mpTitle );
+			String_Update( &gGuiFS.mStrings[ eGUIFS_STRING_FILENAME ], lpButton->mString.mpTitle );
 
 
 			lpVar = gGuiFS.mpVars[ eGUIFS_VAR_FILENAME ];
 			if( lpVar )
 			{
-				HashTree_VarWrite( lpVar, &gGuiFS.mpStrings[ eGUIFS_STRING_FILENAME ] );
+				HashTree_VarWrite( lpVar, &gGuiFS.mStrings[ eGUIFS_STRING_FILENAME ] );
 			}
 /*
 			lpVar = gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_FILENAME ]->mpVar;
@@ -657,7 +661,7 @@ void	GuiFS_OnFolder( sHashTreeVarClient  * apClient )
 			lpFilePath = *(sString**)lpVar->mpData;
 			if( lpFilePath )
 			{
-				if( lpFilePath->mCharCount )
+				if( String_GetLength( lpFilePath ) )
 				{
 					String_Append( lpFilePath, "\\" );
 				}
@@ -716,11 +720,11 @@ void	GuiFS_Open( sGuiFSInfo * apInfo )
 		lpEvent = (sGuiEvent*)lpVar->mpData;
 		if( lpEvent )
 		{
-			String_Update( gGuiFS.mpStrings[ eGUIFS_STRING_DRIVE    ], apInfo->mpDrive->mpChars    );
-			String_Update( gGuiFS.mpStrings[ eGUIFS_STRING_FILEMASK ], apInfo->mpFileMask->mpChars );
-			String_Update( gGuiFS.mpStrings[ eGUIFS_STRING_FILENAME ], apInfo->mpFileName->mpChars );
-			String_Update( gGuiFS.mpStrings[ eGUIFS_STRING_FILEPATH ], apInfo->mpFilePath->mpChars );
-			String_Update( gGuiFS.mpStrings[ eGUIFS_STRING_TITLE    ], apInfo->mpTitle->mpChars );
+			String_Update( &gGuiFS.mStrings[ eGUIFS_STRING_DRIVE    ], apInfo->mDrive.mpChars    );
+			String_Update( &gGuiFS.mStrings[ eGUIFS_STRING_FILEMASK ], apInfo->mFileMask.mpChars );
+			String_Update( &gGuiFS.mStrings[ eGUIFS_STRING_FILENAME ], apInfo->mFileName.mpChars );
+			String_Update( &gGuiFS.mStrings[ eGUIFS_STRING_FILEPATH ], apInfo->mFilePath.mpChars );
+			String_Update( &gGuiFS.mStrings[ eGUIFS_STRING_TITLE    ], apInfo->mTitle.mpChars );
 
 			lpWindow = (sGuiWindow*)lpEvent->mpInfo;
 			lEvent.mEvent = eGUIEVENT_WINDOW_OPEN;
@@ -752,10 +756,10 @@ void	GuiFS_OnOK( sHashTreeVarClient  * apClient )
 			if( lpInfo )
 			{
 				lpInfo->mButton    = eGUIFS_BUTTON_OK;
-				String_Update( lpInfo->mpDrive,    gGuiFS.mpStrings[ eGUIFS_STRING_DRIVE    ]->mpChars );
-				String_Update( lpInfo->mpFileMask, gGuiFS.mpStrings[ eGUIFS_STRING_FILEMASK ]->mpChars );
-				String_Update( lpInfo->mpFileName, gGuiFS.mpStrings[ eGUIFS_STRING_FILENAME ]->mpChars );
-				String_Update( lpInfo->mpFilePath, gGuiFS.mpStrings[ eGUIFS_STRING_FILEPATH ]->mpChars );
+				String_Update( &lpInfo->mDrive,    gGuiFS.mStrings[ eGUIFS_STRING_DRIVE    ].mpChars );
+				String_Update( &lpInfo->mFileMask, gGuiFS.mStrings[ eGUIFS_STRING_FILEMASK ].mpChars );
+				String_Update( &lpInfo->mFileName, gGuiFS.mStrings[ eGUIFS_STRING_FILENAME ].mpChars );
+				String_Update( &lpInfo->mFilePath, gGuiFS.mStrings[ eGUIFS_STRING_FILEPATH ].mpChars );
 				lpInfo->mpCB( lpInfo );
 			}
 		}
@@ -809,12 +813,12 @@ void	GuiFSInfo_Init( sGuiFSInfo * apInfo,const char * apTitle,const char * apMas
 		lString[ 0 ] = (char)('A' + lDrive);
 		lString[ 1 ] = 0;
 
-		apInfo->mpDrive    = String_Create( lString );
-		apInfo->mpFileMask = String_Create( apMask );
-		apInfo->mpFileName = String_Create( apFileName );
+		String_Create( &apInfo->mDrive, lString );
+		String_Create( &apInfo->mFileMask, apMask );
+		String_Create( &apInfo->mFileName, apFileName );
 		Drive_GetPath( 0, lString );
-		apInfo->mpFilePath = String_Create( lString );
-		apInfo->mpTitle    = String_Create( apTitle );
+		String_Create( &apInfo->mFilePath, lString );
+		String_Create( &apInfo->mTitle, apTitle );
 		apInfo->mpCB       = 0;
 		apInfo->mButton    = eGUIFS_BUTTON_CANCEL;
 	}
@@ -831,17 +835,11 @@ void GuiFSInfo_DeInit(sGuiFSInfo * apInfo)
 {
 	if( apInfo )
 	{
-		String_Destroy( apInfo->mpDrive );
-		String_Destroy( apInfo->mpFileMask );
-		String_Destroy( apInfo->mpFileName );
-		String_Destroy( apInfo->mpFilePath );
-		String_Destroy( apInfo->mpTitle );
-
-		apInfo->mpDrive    = 0;
-		apInfo->mpFileMask = 0;
-		apInfo->mpFileName = 0;
-		apInfo->mpFilePath = 0;
-		apInfo->mpTitle    = 0;
+		String_Destroy( &apInfo->mDrive );
+		String_Destroy( &apInfo->mFileMask );
+		String_Destroy( &apInfo->mFileName );
+		String_Destroy( &apInfo->mFilePath );
+		String_Destroy( &apInfo->mTitle );
 
 		apInfo->mpCB       = 0;
 	}
@@ -856,19 +854,19 @@ void GuiFSInfo_DeInit(sGuiFSInfo * apInfo)
 
 sString * GuiFSInfo_FullNameBuild(sGuiFSInfo * apInfo)
 {
-	sString *	lpString;
+	sString *	lpString = 0;
 
 	if( apInfo )
 	{
-		lpString = String_Create( apInfo->mpDrive->mpChars );
-		String_Append( lpString, ":\\" );
-		String_Append( lpString, apInfo->mpFilePath->mpChars );
-		String_Append( lpString, "\\" );
-		String_Append( lpString, apInfo->mpFileName->mpChars );
-	}
-	else
-	{
-		lpString = 0;
+		lpString = mMEMCALLOC( sizeof( sString ) );
+		if( lpString )
+		{
+			String_Create( lpString, apInfo->mDrive.mpChars );
+			String_Append( lpString, ":\\" );
+			String_Append( lpString, apInfo->mFilePath.mpChars );
+			String_Append( lpString, "\\" );
+			String_Append( lpString, apInfo->mFileName.mpChars );
+		}
 	}
 
 	return( lpString );

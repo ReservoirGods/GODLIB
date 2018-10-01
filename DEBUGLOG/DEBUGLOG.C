@@ -29,24 +29,19 @@
 #  DEFINES
 ################################################################################### */
 
-#define	dDEBUGLOG_TO_FILE	0
-#define	dDEBUGLOG_TO_STEEM	1
-#define	dDEBUGLOG_TO_SCREEN	0
-
 
 /* ###################################################################################
 #  VARIABLES
 ################################################################################### */
 
 char 			gDebugLogString[ 1024 ];
+U32			gDebugLogTargets = 0;
 sFileHandle	gDebugLogFileHandle = 0;
 
 
 /* ###################################################################################
 #  CODE
 ################################################################################### */
-
-#if		(dDEBUGLOG_TO_FILE)
 
 
 /*-----------------------------------------------------------------------------------*
@@ -55,8 +50,9 @@ sFileHandle	gDebugLogFileHandle = 0;
 * CREATION : 06.00.99 PNK
 *-----------------------------------------------------------------------------------*/
 
-void	DebugLog_Init( char * apFileName )
+void	DebugLog_Init( U32 aTargets, const char * apFileName )
 {
+	gDebugLogTargets = aTargets;
 	gDebugLogFileHandle = File_Create( apFileName );
 }
 
@@ -84,152 +80,34 @@ void	DebugLog_AddString( const char * apString )
 	U32	lLen;
 
 	if( !apString )
-	{
 		return;
-	}
 
-	lLen = strlen( apString );
+	for( lLen = 0; apString[ lLen ]; lLen++ );
 
 	if( lLen )
 	{
-		if( gDebugLogFileHandle )
+		if( (gDebugLogTargets & eDebugLog_File) && gDebugLogFileHandle )
 		{
 			File_Write( gDebugLogFileHandle, lLen, apString );
+		}
+		if( gDebugLogTargets & eDebugLog_Screen )
+		{
+			printf( apString );
+		}
+		if( gDebugLogTargets & eDebugLog_Debugger )
+		{
+#ifdef	dGODLIB_PLATFORM_ATARI
+			*(U32*)0xFFFFC1F0L = (U32)apString;
+#elif defined(dGODLIB_PLATFORM_WIN)
+			OutputDebugString( apString );
+			OutputDebugString( "\n" );
+#endif
 		}
 	}
 }
 
 
-#elif	(dDEBUGLOG_TO_STEEM)
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : DebugLog_Init( char * apFileName )
-* ACTION   : inits STEEM debugging
-* CREATION : 05.01.99 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	DebugLog_Init( char * apFileName )
-{
-	if( apFileName )
-	{
-	}
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : DebugLog_DeInit()
-* ACTION   : deinits STEEM debugging
-* CREATION : 06.00.99 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	DebugLog_DeInit()
-{
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : DebugLog_AddString( const char * apString )
-* ACTION   : prints string to steem browser
-* CREATION : 06.00.99 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	DebugLog_AddString( const char * apString )
-{
-	(void)apString;
-#ifdef	dGODLIB_PLATFORM_ATARI
-	*(U32*)0xFFFFC1F0L = (U32)apString;
-#else
-	printf( apString );
-#endif
-}
-
-
-#elif	(dDEBUGLOG_TO_SCREEN)
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : DebugLog_Init( char * apFileName )
-* ACTION   : inits STEEM debugging
-* CREATION : 05.01.99 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	DebugLog_Init( char * apFileName )
-{
-	if( apFileName )
-	{
-	}
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : DebugLog_DeInit()
-* ACTION   : deinits STEEM debugging
-* CREATION : 06.00.99 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	DebugLog_DeInit()
-{
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : DebugLog_AddString( char * apString )
-* ACTION   : prints string to steem browser
-* CREATION : 06.00.99 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	DebugLog_AddString( const char * apString )
-{
-#ifdef	dGODLIB_PLATFORM_WIN
-	OutputDebugString( apString );
-	OutputDebugString( "\n" );
-#endif
-	printf( apString );
-	printf( "\n" );
-}
-
-
-#else
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : DebugLog_Init( char * apFileName )
-* ACTION   : does nothing
-* CREATION : 05.01.99 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	DebugLog_Init( char * apFileName )
-{
-	(void)apFileName;
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : DebugLog_DeInit( void )
-* ACTION   : does nothing
-* CREATION : 05.01.99 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	DebugLog_DeInit()
-{
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : DebugLog_AddString( char * apString )
-* ACTION   : does nothing
-* CREATION : 05.01.99 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	DebugLog_AddString( const char * apString )
-{
-	(void)apString;
-}
-
 
 /* ################################################################################ */
-
-#endif
 
 #endif

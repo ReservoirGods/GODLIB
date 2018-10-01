@@ -15,7 +15,7 @@
 typedef	struct	sString
 {
 	char *	mpChars;
-	U32		mCharCount;
+	U32		mCharCountAndDynamicFlag;
 } sString;
 
 
@@ -23,8 +23,10 @@ typedef	struct	sString
 #  PROTOTYPES
 ################################################################################### */
 
-sString *	String_Create( const char * apChars );
-sString *	String_Create2( const char * apChars0, const char * apChars1 );
+#define		String_GetLength( aString )	((aString)->mCharCountAndDynamicFlag)
+
+void		String_Create( sString * apString, const char * apChars );
+void		String_Create2( sString * apString, const char * apChars0, const char * apChars1 );
 void		String_Destroy( sString * apString );
 
 void		String_Append( sString * apString, const char * apChars );
