@@ -73,6 +73,20 @@ static sStrCatTester gStringCatTesters[]=
 	{ "general", "big", "generalbig" },
 };
 
+typedef struct sStringCaseTester
+{
+	const char * mpCase0;
+	const char * mpCase1;
+}sStringCaseTester;
+
+sStringCaseTester gStringCaseTesters[]=
+{
+	{ "A", "a" },
+	{ "z", "Z" },
+	{ "ThIS", "thiS" },
+	{ "facLoN", "FACLOn" },
+};
+
 GOD_UNIT_TEST( String )
 {
 	U16 i;
@@ -143,7 +157,12 @@ GOD_UNIT_TEST( String )
 		sString lGodStringA;
 		sString lGodStringB;
 		sString lGodCopy;
-		U32 len;
+		U32 len,len0,len1;
+
+
+		for (len = 0; gStringCatTesters[i].mpCat[len]; len++);
+		for (len0 = 0; gStringCatTesters[i].mpStr0[len0]; len0++);
+		for (len1 = 0; gStringCatTesters[i].mpStr1[len1]; len1++);
 
 		String_Init(&lGodCopy, 0);
 
@@ -152,7 +171,6 @@ GOD_UNIT_TEST( String )
 		String_Init(&lGodString, gStringCatTesters[i].mpStr0);
 
 		String_Append( &lGodString, gStringCatTesters[i].mpStr1);
-		for (len = 0; gStringCatTesters[i].mpCat[len]; len++);
 		GOD_UNIT_TEST_EXPECT(0 == String_StrCmp(lGodString.mpChars, gStringCatTesters[i].mpCat), "Append Fail");
 		GOD_UNIT_TEST_EXPECT((String_GetLength(&lGodString) == len), "append string length fail");
 		GOD_UNIT_TEST_EXPECT((String_IsDynamic(&lGodString)), "Dynamic Flag not set for append");
@@ -216,6 +234,41 @@ GOD_UNIT_TEST( String )
 		GOD_UNIT_TEST_EXPECT((String_GetLength(&lGodString) == len), "prepend string length fail");
 		GOD_UNIT_TEST_EXPECT((String_IsDynamic(&lGodString)), "Dynamic Flag not set for prepend");
 		String_DeInit(&lGodString);
+
+
+		/* Set */
+
+		String_Init(&lGodString, 0);
+
+		String_Set(&lGodString, gStringCatTesters[i].mpStr0);
+		GOD_UNIT_TEST_EXPECT(0 == String_StrCmp(lGodString.mpChars, gStringCatTesters[i].mpStr0), "set");
+		GOD_UNIT_TEST_EXPECT((String_GetLength(&lGodString) == len0), "set string length fail");
+		GOD_UNIT_TEST_EXPECT((String_IsDynamic(&lGodString)), "Dynamic Flag not set for set");
+
+		String_Set(&lGodString, gStringCatTesters[i].mpStr1);
+		GOD_UNIT_TEST_EXPECT(0 == String_StrCmp(lGodString.mpChars, gStringCatTesters[i].mpStr1), "set");
+		GOD_UNIT_TEST_EXPECT((String_GetLength(&lGodString) == len1), "set string length fail");
+		GOD_UNIT_TEST_EXPECT((String_IsDynamic(&lGodString)), "Dynamic Flag not set for set");
+
+		String_Set2(&lGodString, gStringCatTesters[i].mpStr0, gStringCatTesters[i].mpStr1);
+		GOD_UNIT_TEST_EXPECT(0 == String_StrCmp(lGodString.mpChars, gStringCatTesters[i].mpCat), "set2");
+		GOD_UNIT_TEST_EXPECT((String_GetLength(&lGodString) == len), "set2 string length fail");
+		GOD_UNIT_TEST_EXPECT((String_IsDynamic(&lGodString)), "Dynamic Flag not set for set2");
+
+		String_DeInit(&lGodString);
+
+		String_SetStatic(&lGodString, gStringCatTesters[i].mpStr0, len0);
+		GOD_UNIT_TEST_EXPECT(0 == String_StrCmp(lGodString.mpChars, gStringCatTesters[i].mpStr0), "setstatic");
+		GOD_UNIT_TEST_EXPECT((String_GetLength(&lGodString) == len0), "setstatic string length fail");
+		GOD_UNIT_TEST_EXPECT((!String_IsDynamic(&lGodString)), "Dynamic Flag set for setstatic");
+		GOD_UNIT_TEST_EXPECT((gStringCatTesters[i].mpStr0 == lGodString.mpChars), "setstaic not using same pointer");
+
+		String_SetStatic(&lGodString, gStringCatTesters[i].mpStr1, len1);
+		GOD_UNIT_TEST_EXPECT(0 == String_StrCmp(lGodString.mpChars, gStringCatTesters[i].mpStr1), "setstatic");
+		GOD_UNIT_TEST_EXPECT((String_GetLength(&lGodString) == len1), "setstatic string length fail");
+		GOD_UNIT_TEST_EXPECT((!String_IsDynamic(&lGodString)), "Dynamic Flag set for setstatic");
+		GOD_UNIT_TEST_EXPECT((gStringCatTesters[i].mpStr1 == lGodString.mpChars), "setstaic not using same pointer");
+
 
 		String_DeInit(&lGodCopy);
 

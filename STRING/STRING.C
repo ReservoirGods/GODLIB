@@ -84,6 +84,7 @@ void	String_DeInit( sString * apString )
 	apString->mCharCountAndDynamicFlag = 0;
 }
 
+
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : String_Prepend( sString * apString,const char * apChars )
 * ACTION   : String_Prepend
@@ -236,27 +237,6 @@ void	String_CharRemove( sString * apString,const U16 aIndex )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : String_Clone( const sString * apString )
-* ACTION   : String_Clone
-* CREATION : 18.02.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-sString *	String_Clone( const sString * apString )
-{
-	sString *	lpString = 0;
-
-	if( apString )
-	{
-		lpString = mMEMCALLOC( sizeof( sString ) );
-		if( lpString )
-			String_Init( lpString, apString->mpChars );
-	}
-
-	return( lpString );
-}
-
-
-/*-----------------------------------------------------------------------------------*
 * FUNCTION : String_Copy( sString * apDst,const sString * apSrc )
 * ACTION   : String_Copy
 * CREATION : 18.02.2004 PNK
@@ -278,8 +258,6 @@ void	String_Copy( sString * apDst,const sString * apSrc )
 }
 
 
-
-
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : String_Set( sString * apString,const char * apChars )
 * ACTION   : String_Set
@@ -288,27 +266,21 @@ void	String_Copy( sString * apDst,const sString * apSrc )
 
 void	String_Set( sString * apString,const char * apChars )
 {
-	char *	lpChars;
-	U32		lCount;
-
 	if( apString && apChars )
 	{
-		lCount = String_StrLen( apChars );
-		if( lCount == String_GetCharCount( apString ) )
+		if (apChars)
 		{
-			String_StrCpy( apString->mpChars, apChars );
+			U32 lCount = String_StrLen(apChars);
+			char * lpDst = (char*)mMEMCALLOC(lCount + 1);
+			String_StrCpy(lpDst, apChars);
+
+			String_DeInit(apString);
+			apString->mpChars = lpDst;
+			apString->mCharCountAndDynamicFlag = lCount | eString_DynamicAllocFlag;
 		}
 		else
 		{
-			lpChars              = apString->mpChars;
-			String_SetCharCount( apString, lCount );
-			apString->mpChars    = (char*)mMEMCALLOC( String_GetCharCount(apString) + 1 );
-			String_StrCpy( apString->mpChars, apChars );
-
-			if( lpChars )
-			{
-				mMEMFREE( lpChars );
-			}
+			String_DeInit(apString);
 		}
 	}
 }
@@ -322,31 +294,68 @@ void	String_Set( sString * apString,const char * apChars )
 
 void	String_Set2( sString * apString,const char * apChars0,const char * apChars1 )
 {
-	char *	lpChars;
-	U32		lCount;
-
-	if( apString && apChars0 && apChars1 )
+	if( apString )
 	{
-		lCount  = String_StrLen( apChars0 );
-		lCount += String_StrLen( apChars1 );
-		if( lCount == String_GetCharCount(apString) )
+		if (apChars0 || apChars1)
 		{
-			String_StrCat( apString->mpChars, apChars0, apChars1 );
+			U32 lCount = String_StrLen(apChars0) + String_StrLen(apChars1);
+			char * lpDst = (char*)mMEMCALLOC(lCount+1);
+			String_StrCat(lpDst, apChars0, apChars1);
+
+			String_DeInit(apString);
+			apString->mpChars = lpDst;
+			apString->mCharCountAndDynamicFlag = lCount | eString_DynamicAllocFlag;
 		}
 		else
 		{
-			lpChars              = apString->mpChars;
-			String_SetCharCount( apString, lCount );
-			apString->mpChars    = (char*)mMEMCALLOC( String_GetCharCount(apString) + 1 );
-			String_StrCat( apString->mpChars, apChars0, apChars1 );
-
-			if( lpChars )
-			{
-				mMEMFREE( lpChars );
-			}
+			String_DeInit(apString);
 		}
 	}
+}
 
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : String_SetStatic(sString * apString, const char * apChars, U32 aLength)
+* ACTION   : Creates string pointing to a static already existing string
+* CREATION : 30.09.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void		String_SetStatic(sString * apString, const char * apChars, U32 aLength)
+{
+	String_DeInit(apString);
+	apString->mpChars = (char*)apChars;
+	apString->mCharCountAndDynamicFlag = aLength;
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : String_IsEqual(const sString * apString0, const sString * apString1)
+* ACTION   : Compares two (not null terminated) strings
+* CREATION : 30.09.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+U8		String_IsEqual(const sString * apString0, const sString * apString1)
+{
+	if (apString0)
+	{
+		const char * lpSrc0 = apString0->mpChars;
+		const char * lpSrc1;
+		U32 lCount = String_GetLength(apString0);
+		if (!apString1)
+			return 0;
+		if (lCount != String_GetLength(apString1))
+			return 0;
+		lpSrc1 = apString1->mpChars;
+		while (lCount--)
+		{
+			if (*lpSrc0++ != *lpSrc1++)
+				return 0;
+		}
+	}
+	else if (!apString1)
+	{
+		return(1);
+	}
+	return(0);
 }
 
 
@@ -489,9 +498,7 @@ U8 String_StrCmp(const char * apStr0,const char * apStr1)
 			lVal1 = *apStr1++;
 
 			if( lVal0 != lVal1 )
-			{
 				return( 1 );
-			}
 		}
 		if( *apStr0 != *apStr1 )
 			return 1;
@@ -523,18 +530,13 @@ U8 String_StrCmpi(const char * apStr0,const char * apStr1)
 			lVal1 = *apStr1++;
 
 			if( (lVal0 >= 'a') && (lVal0 <='z') )
-			{
 				lVal0 = (U8)(lVal0 + ( 'A'-'a' ));
-			}
+
 			if( (lVal1 >= 'a') && (lVal1 <='z') )
-			{
 				lVal1 = (U8)(lVal1 + ( 'A'-'a' ));
-			}
 
 			if( lVal0 != lVal1 )
-			{
 				return( 1 );
-			}
 		}
 	}
 	else if( apStr0 || apStr1 )

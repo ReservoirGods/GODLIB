@@ -49,6 +49,9 @@ void		String_Copy(sString * apDst, const sString * apSrc);
 void		String_Set(sString * apString, const char * apChars);
 void		String_Set2(sString * apString, const char * apChars0, const char * apChars1);
 
+void		String_SetStatic(sString * apString, const char * apChars, U32 aLength );
+U8			String_IsEqual(const sString * apString0, const sString * apString1);
+
 void		String_Prepend(sString * apString, const char * apChars);
 void		String_Append( sString * apString, const char * apChars );
 void		String_Cat( sString * apDst, const sString * apSrc0, const sString * apSrc1 );
