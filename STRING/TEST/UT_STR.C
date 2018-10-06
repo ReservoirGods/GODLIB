@@ -271,6 +271,43 @@ GOD_UNIT_TEST( String )
 
 
 		String_DeInit(&lGodCopy);
+	}
 
+	for (i = 0; i < mARRAY_COUNT(gStringCaseTesters); i++)
+	{
+		sString lGodString0;
+		sString lGodString1;
+		sString lGodStringCopy;
+		sString lGodStringFix;
+		U32 len0;
+
+		for (len0 = 0; gStringCaseTesters[i].mpCase0[len0]; len0++);
+
+		String_Init(&lGodString0, gStringCaseTesters[i].mpCase0);
+		String_Init(&lGodString1, gStringCaseTesters[i].mpCase1);
+		String_Init(&lGodStringCopy, 0);
+		String_Init(&lGodStringFix, 0);
+
+		GOD_UNIT_TEST_EXPECT((0 != String_StrCmp(gStringCaseTesters[i].mpCase0, gStringCaseTesters[i].mpCase1)), "String_StrCmp fail");
+		GOD_UNIT_TEST_EXPECT((0 != String_StrCmp(gStringCaseTesters[i].mpCase0, lGodString1.mpChars)), "String_StrCmp fail");
+
+		GOD_UNIT_TEST_EXPECT((0 == String_StrCmpi(gStringCaseTesters[i].mpCase0, gStringCaseTesters[i].mpCase1)), "String_StrCmpi fail");
+		GOD_UNIT_TEST_EXPECT((0 == String_StrCmpi(gStringCaseTesters[i].mpCase0, lGodString0.mpChars)), "String_StrCmpi fail");
+		GOD_UNIT_TEST_EXPECT((0 == String_StrCmpi(gStringCaseTesters[i].mpCase1, lGodString1.mpChars)), "String_StrCmpi fail");
+
+		GOD_UNIT_TEST_EXPECT((0 == String_IsEqual(&lGodString0, &lGodString1)), "string is equal fail");
+		GOD_UNIT_TEST_EXPECT((0 == String_IsEqual(0, &lGodString1)), "string is equal fail");
+		GOD_UNIT_TEST_EXPECT((0 == String_IsEqual(&lGodString0, 0)), "string is equal fail");
+
+		String_Copy(&lGodStringCopy, &lGodString0);
+		String_SetStatic(&lGodStringFix, gStringCaseTesters[i].mpCase0, len0);
+		GOD_UNIT_TEST_EXPECT((String_IsEqual(&lGodString0, &lGodStringCopy)), "string is equal fail");
+		GOD_UNIT_TEST_EXPECT((String_IsEqual(&lGodString0, &lGodStringFix)), "string is equal fail");
+		GOD_UNIT_TEST_EXPECT((!String_IsEqual(&lGodString1, &lGodStringFix)), "string is equal fail");
+
+		String_DeInit(&lGodStringFix);
+		String_DeInit(&lGodStringCopy);
+		String_DeInit(&lGodString1);
+		String_DeInit(&lGodString0);
 	}
 }
