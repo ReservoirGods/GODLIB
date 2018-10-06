@@ -30,7 +30,7 @@
 	}														\
 															\
 	*lppLast = apItem;										\
-	(apItem)->mpNext = 0;									\
+	(apItem)->apNext = 0;									\
 }
 
 #define	GOD_LL_REMOVE( aType, aHead, apNext, aItem )	\
