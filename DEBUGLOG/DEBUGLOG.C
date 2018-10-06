@@ -53,7 +53,10 @@ sFileHandle	gDebugLogFileHandle = 0;
 void	DebugLog_Init( U32 aTargets, const char * apFileName )
 {
 	gDebugLogTargets = aTargets;
-	gDebugLogFileHandle = File_Create( apFileName );
+	if( aTargets & eDebugLog_File )
+	{
+		gDebugLogFileHandle = File_Create( apFileName );
+	}
 }
 
 
@@ -65,7 +68,10 @@ void	DebugLog_Init( U32 aTargets, const char * apFileName )
 
 void	DebugLog_DeInit()
 {
-	File_Close( gDebugLogFileHandle );
+	if( gDebugLogTargets & eDebugLog_File )
+	{
+		File_Close( gDebugLogFileHandle );
+	}
 }
 
 
