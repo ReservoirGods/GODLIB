@@ -7,7 +7,9 @@
 
 #include	<GODLIB\BASE\BASE.H>
 #include	<GODLIB\ASSERT\ASSERT.H>
+#include	<GODLIB\DEBUGLOG\DEBUGLOG.H>
 #include	<GODLIB\RANDOM\RANDOM.H>
+
 
 /* ###################################################################################
 #  STRUCTS
@@ -50,8 +52,9 @@ extern sUnitTestContext  gUnitTestContext;
 #define GOD_UNIT_TEST_RAND( _aNum )			RandomSeed_GetClamped( &gUnitTestContext.mSeed, _aNum )
 #define GOD_UNIT_TEST_RAND32()				RandomSeed_GetClamped32( &gUnitTestContext.mSeed )
 
-#define	GOD_UNIT_TEST_EXPECT( _aValue, _aMsg ) { if( !( _aValue ) ) { printf( " %s @ %s (%d)\n", _aMsg, __FILE__, __LINE__ ); gUnitTestContext.mErrorCount++; } }
-#define	GOD_UNIT_TEST_ASSERT( _aValue, _aMsg ) { if( !( _aValue ) ) { printf( " %s @ %s (%d)\n", _aMsg, __FILE__, __LINE__ ); gUnitTestContext.mErrorCount++; return; } }
+#define	GOD_UNIT_TEST_EXPECT( _aValue, _aMsg ) { if( !( _aValue ) ) { DebugLog_Printf3( " %s @ %s (%d)\n", _aMsg, __FILE__, __LINE__ ); gUnitTestContext.mErrorCount++; } }
+#define	GOD_UNIT_TEST_ASSERT( _aValue, _aMsg ) { if( !( _aValue ) ) { DebugLog_Printf3( " %s @ %s (%d)\n", _aMsg, __FILE__, __LINE__ ); gUnitTestContext.mErrorCount++; return; } }
+
 
 /* ################################################################################ */
 
