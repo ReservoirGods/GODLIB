@@ -5,19 +5,11 @@
 
 const char * gpJsonTest = "{}";
 
-void	JSONTest_NodeCount( const char * apString, U32 aCount )
-{
-	sString jsonString;
-	sNodeJSON * lpNode;
-	String_Init( &jsonString, apString );
-	lpNode = JSON_Parse( &jsonString );
-	GOD_UNIT_TEST_EXPECT( ( aCount == JSON_GetNodeCount( lpNode ) ), "json node count mismatch" );
-	JSON_Destroy( lpNode );
-}
 
 
 GOD_UNIT_TEST( JSON )
 {
+#if 0
 	sString jsonString;
 	sNodeJSON * lpNode;
 
@@ -52,4 +44,5 @@ GOD_UNIT_TEST( JSON )
 	JSON_DebugShow( lpNode );
 	JSON_Destroy( lpNode );
 	String_DeInit( &jsonString );
+#endif
 }
