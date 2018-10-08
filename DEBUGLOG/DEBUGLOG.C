@@ -98,7 +98,7 @@ void	DebugLog_AddString( const char * apString )
 		}
 		if( gDebugLogTargets & eDebugLog_Screen )
 		{
-			printf( apString );
+			printf( "%s", apString );
 		}
 		if( gDebugLogTargets & eDebugLog_Debugger )
 		{
