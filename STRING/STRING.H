@@ -12,10 +12,14 @@
 #  STRUCTS
 ################################################################################### */
 
+/*
 enum
 {
 	eString_DynamicAllocFlag = 0x80000000
 };
+*/
+
+#define eString_DynamicAllocFlag 0x80000000
 
 typedef	struct	sString
 {
@@ -36,13 +40,20 @@ Look at using inplace fixed strings
 
 */
 
-#define		String_GetLength( aString )		((aString)->mCharCountAndDynamicFlag & ~eString_DynamicAllocFlag)
-#define		String_GetCharCount( aString )	String_GetLength( aString )
-#define		String_IsDynamic( aString )		((aString)->mCharCountAndDynamicFlag & eString_DynamicAllocFlag)
 
 void		String_Init( sString * apString, const char * apChars );
 void		String_Create2( sString * apString, const char * apChars0, const char * apChars1 );
 void		String_DeInit( sString * apString );
+void		String_Alloc( sString * apString, U32 aCharCount );
+
+
+/*
+	Accessors : get information about string
+*/
+#define		String_GetLength( aString )		((aString)->mCharCountAndDynamicFlag & ~eString_DynamicAllocFlag)
+#define		String_GetCharCount( aString )	String_GetLength( aString )
+#define		String_IsDynamic( aString )		((aString)->mCharCountAndDynamicFlag & eString_DynamicAllocFlag)
+
 
 void		String_Copy(sString * apDst, const sString * apSrc);
 
@@ -50,7 +61,10 @@ void		String_Set(sString * apString, const char * apChars);
 void		String_Set2(sString * apString, const char * apChars0, const char * apChars1);
 
 void		String_SetStatic(sString * apString, const char * apChars, U32 aLength );
+void		String_SetStaticNT(sString * apString, const char * apChars );
+
 U8			String_IsEqual(const sString * apString0, const sString * apString1);
+U8			String_IsEqualNT( const sString * apString0, const char * apString1 );
 
 void		String_Prepend(sString * apString, const char * apChars);
 void		String_Append( sString * apString, const char * apChars );
@@ -59,6 +73,9 @@ void		String_Cat( sString * apDst, const sString * apSrc0, const sString * apSrc
 void		String_CharInsert( sString * apString, const U16 aIndex, const U8 aChar );
 void		String_CharRemove( sString * apString, const U16 aIndex );
 
+void		String_QuoteTrim( sString * apString );
+
+#define		String_Action( apString, aAction )	{ if((apString)->mpChars) { char old =(apString)->mpChars[ String_GetLength(apString)]; (apString)->mpChars[ String_GetLength(apString)] = 0; aAction(apString); (apString)->mpChars[ String_GetLength(apString)] = old; } }
 
 /*
 This API is unsafe. Let's deprecate.

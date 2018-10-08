@@ -235,6 +235,27 @@ void	String_CharRemove( sString * apString,const U16 aIndex )
 	}
 }
 
+void		String_QuoteTrim( sString * apString )
+{
+	U32 length = String_GetLength( apString );
+	if( ( length > 1 ) && ( '"' == apString->mpChars[ 0 ] || ( '\'' == apString->mpChars[ 0 ] ) ) && ( apString->mpChars[ 0 ] == apString->mpChars[ length - 1 ] ) )
+	{
+		length -= 2;
+		if( String_IsDynamic( apString ) )
+		{
+			U32 i;
+			for( i = 1; i < length; i++ )
+				apString->mpChars[ i-1 ] = apString->mpChars[ i ];
+			apString->mCharCountAndDynamicFlag = length | eString_DynamicAllocFlag;
+		}
+		else
+		{
+			apString->mpChars++;
+			apString->mCharCountAndDynamicFlag = length;
+		}
+	}
+}
+
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : String_Copy( sString * apDst,const sString * apSrc )
@@ -326,6 +347,10 @@ void		String_SetStatic(sString * apString, const char * apChars, U32 aLength)
 	apString->mCharCountAndDynamicFlag = aLength;
 }
 
+void		String_SetStaticNT(sString * apString, const char * apChars)
+{
+	String_SetStatic(apString, apChars, String_StrLen(apChars));
+}
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : String_IsEqual(const sString * apString0, const sString * apString1)
@@ -351,11 +376,34 @@ U8		String_IsEqual(const sString * apString0, const sString * apString1)
 				return 0;
 		}
 	}
-	else if (!apString1)
+	else if (apString1)
 	{
-		return(1);
+		return(0);
 	}
-	return(0);
+	return(1);
+}
+
+U8			String_IsEqualNT( const sString * apString0, const char * apString1 )
+{
+	if( apString0 )
+	{
+		const char * lpSrc0 = apString0->mpChars;
+		const char * lpSrc1;
+		U32 lCount = String_GetLength( apString0 );
+		if( !apString1 )
+			return 0;
+		lpSrc1 = apString1;
+		while( lCount-- )
+		{
+			if( *lpSrc0++ != *lpSrc1++ )
+				return 0;
+		}
+	}
+	else if( apString1 )
+	{
+		return( 0 );
+	}
+	return( 1 );
 }
 
 
