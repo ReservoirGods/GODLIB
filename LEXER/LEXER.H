@@ -21,6 +21,7 @@ typedef struct sLexerContext
 	U32		mOffset;
 	U32		mLineIndex;
 	U16		mTokenFlag;
+	U32		mSeperators[ 4 ];
 } sLexerContext;
 
 
@@ -32,6 +33,7 @@ void	Lexer_Init(sLexerContext * apContext, const sString * apString);
 void	Lexer_Init2(sLexerContext * apContext, const char * apString);
 void	Lexer_DeInit(sLexerContext * apContext);
 
+void	Lexer_SetSeperators( sLexerContext * apContext, const char * apSeps );
 U8		Lexer_GetNextToken( sLexerContext * apContext );
 
 
