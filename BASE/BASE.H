@@ -340,6 +340,13 @@ U32		EndianSwap_U32( const U32 * apU32 );
 
 S32		AsciiToS32( const char * apTxt );
 
+typedef struct sBuffer
+{
+	U32		mByteCount;
+	U8 *	mpData;
+} sBuffer;
+
+#define	Buffer_Set( aBuffer, apData, aCount )							{ (apBuffer)->mpData=apData; (apBuffer)->mByteCount=aByteCount; }
 
 /* ################################################################################ */
 
