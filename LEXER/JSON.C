@@ -44,7 +44,7 @@ void	JSON_Parse( sString * apSrc, sElementCollectionJSON  * apCollection )
 	Lexer_Init( &lexer, apSrc );
 	while( Lexer_GetNextToken( &lexer ) )
 		elementCount++;
-//	Lexer_DeInit( &lexer );
+/*	Lexer_DeInit( &lexer );*/
 
 	if( elementCount )
 	{
@@ -53,7 +53,7 @@ void	JSON_Parse( sString * apSrc, sElementCollectionJSON  * apCollection )
 		Lexer_Init( &lexer, apSrc );
 		while( Lexer_GetNextToken( &lexer ) )
 			pElements[ index++ ].mToken = lexer.mToken;
-//		Lexer_DeInit( &lexer );
+/*		Lexer_DeInit( &lexer );*/
 
 		for( index = 0; index < elementCount;index++ )
 		{
