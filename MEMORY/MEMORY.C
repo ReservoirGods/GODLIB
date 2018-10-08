@@ -19,6 +19,7 @@
 #include	<GODLIB/GEMDOS/GEMDOS.H>
 #include	<GODLIB/DEBUG/DEBUG.H>
 #include	<GODLIB/DEBUG/DBGCHAN.H>
+#include	<GODLIB/DEBUGLOG\DEBUGLOG.H>
 #include	<GODLIB/SYSTEM/SYSTEM.H>
 
 
@@ -26,7 +27,11 @@
 #  DEFINES
 ################################################################################### */
 
+#ifdef dGODLIB_PLATFORM_WIN
+#define	dMEMORY_RECORD_LIMIT	65536
+#else
 #define	dMEMORY_RECORD_LIMIT	4096
+#endif
 #define	dMEMORY_HEADER_SIZE		16
 #define	dMEMORY_TRAILER_SIZE	16
 
@@ -54,6 +59,7 @@ typedef	struct sMemoryTrackRecord
 	U32				mLine;
 	void *			mpMem;
 	U32				mSize;
+	U32				mIndex;
 } sMemoryTrackRecord;
 
 
@@ -88,6 +94,7 @@ U32	gMemorySmallestAlloc = 0x7FFFFFFL;
 #ifdef dMEMORY_TRACK
 
 U8	gMemoryTrackInitialised = 0;
+U32 gMemoryTrackIndex = 0;
 sMemoryTrackRecord	gMemoryRecord[ dMEMORY_RECORD_LIMIT ];
 
 #endif
@@ -117,7 +124,7 @@ sMemoryTrackRecord *	Memory_TrackFindRecord( const void * apMem );
 
 void	Memory_TrackInit()
 {
-	U16	i;
+	U32	i;
 
 	gMemoryAllocCount    = 0;
 	gMemoryAllocatedSize = 0;
@@ -166,7 +173,7 @@ sMemoryTrackRecord *	Memory_TrackGetFreeRecord()
 
 sMemoryTrackRecord *	Memory_TrackFindRecord( const void * apMem )
 {
-	U16	i;
+	U32	i;
 
 	for( i=0; i<dMEMORY_RECORD_LIMIT; i++ )
 	{
@@ -223,7 +230,10 @@ void	Memory_TrackAlloc( const void * apMem,const U32 aSize,const char * apFileNa
 		lpRecord->mSize      = aSize;
 		lpRecord->mLine      = aLine;
 		lpRecord->mpFileName = apFileName;
+		lpRecord->mIndex	 = gMemoryTrackIndex;
 	}
+
+	gMemoryTrackIndex++;
 }
 
 
@@ -351,6 +361,7 @@ void * 	Memory_ScreenAlloc( const U32 aSize )
 	{
 		DebugChannel_Printf1( eDEBUGCHANNEL_MEMORY, "Memory_ScreenAlloc() : failed %ld bytes\n", aSize );
 	}
+
 
 /*	Debug_Action( Memory_TrackAlloc( lpMem, aSize ) );*/
 #ifdef	dMEMORY_GUARD
@@ -821,13 +832,15 @@ S32	Memory_DbgScreenFree( void * apMem,const char * apFile,const U32 aLine )
 void	Memory_ShowCurrentRecords( void )
 {
 #ifdef dMEMORY_TRACK
-	U16	i;
+	U32	i;
 
 	for( i=0; i<dMEMORY_RECORD_LIMIT; i++ )
 	{
 		if( gMemoryRecord[ i ].mpMem )
 		{
-			DebugChannel_Printf4( eDEBUGCHANNEL_MEMORY, "mem %08lx : (%ld) %s : %ld\n",
+/*			DebugChannel_Printf4( eDEBUGCHANNEL_MEMORY, "mem %08p : (%ld) %s : %ld\n",*/
+			DebugLog_Printf5( "mem [%08ld] %08p : (%ld) %s : %ld\n",
+				gMemoryRecord[ i ].mIndex,
 				gMemoryRecord[ i ].mpMem,
 				gMemoryRecord[ i ].mSize,
 				gMemoryRecord[ i ].mpFileName,
