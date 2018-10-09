@@ -326,5 +326,9 @@ U16	Screen_GetScrollY( void )
 	return( gScreenClass.mScrollY );
 }
 
+U16 *	Screen_GetpMemBase( void )
+{
+	return( gScreenClass.mpMemBase );
+}
 
 /* ################################################################################ */

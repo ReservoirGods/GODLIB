@@ -44,6 +44,8 @@ U16 *	Screen_GetpPhysic( void );
 U16 *	Screen_GetpLogic( void );
 U16 *	Screen_GetpBack( void );
 
+U16 *	Screen_GetpMemBase( void );
+
 U16		Screen_GetPhysicIndex( void );
 U16		Screen_GetLogicIndex( void );
 
