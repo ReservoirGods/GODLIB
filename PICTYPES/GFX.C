@@ -144,3 +144,25 @@ void		Gfx_UnMaskInteriorBlack( sGfx * apGfx )
 		}
 	}
 }
+
+
+void		Gfx_Delocate( sGfx * apGfx )
+{
+	if( !apGfx )
+		return;
+	Endian_FromBigU32( &apGfx->mHeader.mID );
+	Endian_FromBigU16( &apGfx->mHeader.mVersion );
+	Endian_FromBigU16( &apGfx->mHeader.mWidth );
+	Endian_FromBigU16( &apGfx->mHeader.mHeight );
+}
+
+
+void		Gfx_Relocate( sGfx * apGfx )
+{
+	if( !apGfx )
+		return;
+	Endian_FromBigU32( &apGfx->mHeader.mID );
+	Endian_FromBigU16( &apGfx->mHeader.mVersion );
+	Endian_FromBigU16( &apGfx->mHeader.mWidth );
+	Endian_FromBigU16( &apGfx->mHeader.mHeight );
+}

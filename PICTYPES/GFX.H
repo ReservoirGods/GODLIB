@@ -42,6 +42,8 @@ void		Gfx_Delete( sGfx * apGfx );
 U8			Gfx_Save( sGfx * apGfx, char * apFileName );
 void		Gfx_UnMaskInteriorBlack( sGfx * apGfx );
 
+void		Gfx_Delocate( sGfx * apGfx );
+void		Gfx_Relocate( sGfx * apGfx );
 
 /* ################################################################################ */
 
