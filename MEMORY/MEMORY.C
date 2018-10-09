@@ -652,10 +652,14 @@ U32	Memory_GetFailedSize( void )
 
 U32	Memory_GetSize( void )
 {
-	U32 *	lpRamTop;
-
+#if defined dGODLIB_PLATFORM_ATARI
+	U32 *	lpRamTop = 0;
 	lpRamTop = (U32*)0x42EL;
 	return( *lpRamTop );
+#else
+	/* just return a bunch for now*/
+	return( 1024 * 1024 * 14 );
+#endif
 }
 
 
