@@ -5,9 +5,10 @@
 
 enum eReflectType
 {
-	eReflectType_Leaf   = ( 1 << 0 ),
-	eReflectType_Signed = ( 1 << 1 ),
-	eReflectType_String = ( 1 << 2 ),
+	eReflectType_Float  = ( 1 << 0 ),
+	eReflectType_Leaf   = ( 1 << 2 ),
+	eReflectType_Signed = ( 1 << 3 ),
+	eReflectType_String = ( 1 << 4 ),
 };
 
 typedef struct sReflectElement
