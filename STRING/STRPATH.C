@@ -6,6 +6,7 @@
 
 #include	<GODLIB/DEBUGLOG/DEBUGLOG.H>
 #include	<GODLIB/MEMORY/MEMORY.H>
+#include	<GODLIB/STRING/STRING.H>
 
 
 /* ###################################################################################
@@ -80,6 +81,19 @@ void	StringPath_Copy( sStringPath * apDst, const sStringPath * apSrc )
 	for( i=0; (i<sizeof(sStringPath)-1) && *lpSrc; apDst->mChars[i++] = *lpSrc++ );
 	apDst->mChars[i] = 0;
 }
+
+void	StringPath_CopySS( sStringPath * apDst, const sString * apSrc )
+{
+	U32 len = String_GetLength( apSrc );
+	U32 i;
+	if( len > sizeof( sStringPath )-1 )
+		len = sizeof( sStringPath )-1;
+
+	for( i = 0; i < len; i++ )
+		apDst->mChars[ i ] = apSrc->mpChars[ i ];
+	apDst->mChars[ i ] = 0;
+}
+
 
 
 const char *		StringPath_GetpFileName( sStringPath * apPath )

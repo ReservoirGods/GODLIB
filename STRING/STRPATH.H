@@ -17,6 +17,7 @@ typedef	struct	sStringPath
 	char	mChars[ 256 ];
 } sStringPath;
 
+struct sString;
 
 /* ###################################################################################
 #  PROTOTYPES
@@ -26,6 +27,7 @@ const char *	StringPath_GetpExt( sStringPath * apPath );
 void			StringPath_SetExt( sStringPath * apPath, const char * apExt );
 
 void			StringPath_Copy( sStringPath * apDst, const sStringPath * apSrc );
+void			StringPath_CopySS( sStringPath * apDst, const struct sString * apSrc );
 
 const char *	StringPath_GetpFileName( sStringPath * apPath );
 void			StringPath_SetFileName( sStringPath * apPath, const char * apFileName );
@@ -45,6 +47,7 @@ void			StringPath_GetFolder( sStringPath * apDst, const sStringPath * apSrc );
 void			StringPath_Compact( sStringPath * apDst, const sStringPath * apSrc );
 
 #define			StringPath_IsSeperator( _aChar )	( ('\\' ==(_aChar)) || ('/'==(_aChar)) )
+
 
 /* ################################################################################ */
 
