@@ -430,5 +430,28 @@ U32	Time_GetAbsTime( void )
 	return( lCombine );
 }
 
+#ifndef dGODLIB_PLATFORM_ATARI
+
+void		Clock_TimeVbl( void ) 
+{
+	gClockTime.mMicroSeconds++;
+	if( gClockTime.mMicroSeconds >= gClockFrameRate )
+	{
+		gClockTime.mMicroSeconds++;
+		gClockTime.mSeconds++;
+		if( gClockTime.mSeconds >= 60 )
+		{
+			gClockTime.mSeconds = 0;
+			gClockTime.mMinutes++;
+			if( gClockTime.mMinutes >= 60 )
+			{
+				gClockTime.mMinutes = 0;
+				gClockTime.mHours++;
+			}
+		}
+	}
+}
+
+#endif // !GODLIB_PLATFORM_ATARI
 
 /* ################################################################################ */
