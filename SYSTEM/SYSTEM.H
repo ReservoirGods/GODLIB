@@ -197,6 +197,7 @@ U32			System_GetRamTT( void );
 
 U8			System_GetDebugBuildFlag( void );
 U8			System_GetFastForwardFlag( void );
+void		System_SetFastForwardFlag( U8 aFlag );
 U8			System_GetMhz( void );
 U8			System_GetSlowMotionFlag( void );
 U8			System_GetSlowMotionSpeed( void );

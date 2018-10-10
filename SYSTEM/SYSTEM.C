@@ -1474,6 +1474,16 @@ U8 System_GetFastForwardFlag(void)
 	return( lFlag );
 }
 
+void		System_SetFastForwardFlag( U8 aFlag )
+{
+	if( (System_GetEMU() == EMU_STEEM) && (System_GetpEmuDesc()) && System_GetEmuVersion() >= 0x330 )
+	{
+/*
+		System_GetpEmuDesc()->mFastForwardFlag = aFlag;
+*/		
+		*(U8*)0xffc11e = aFlag;
+	}
+}
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : U8 System_GetDebugBuildFlag(void)
