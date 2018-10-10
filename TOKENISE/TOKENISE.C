@@ -1043,6 +1043,9 @@ void * Tokeniser_Serialise(sTokeniserBuilder * apBuilder)
 
 
 	lpMem = (U8*)mMEMCALLOC( lSize );
+	if( !lpMem )
+		return 0;
+
 	lOff  = 0;
 
 	Memory_Copy( apBuilder->mpInfo->mContainerSize, apBuilder->mpContainer, lpMem );

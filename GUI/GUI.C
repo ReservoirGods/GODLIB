@@ -2099,7 +2099,7 @@ void	GuiButton_FocusUpdate( sGuiButton * apButton,sGuiClass * apData )
 		}
 		else if( apButton->mButtonType == eGUI_BUTTON_SPRING )
 		{
-			if( !apButton->mInfo.mFlags & eGUIINFO_FLAG_SELECTED )
+			if( !(apButton->mInfo.mFlags & eGUIINFO_FLAG_SELECTED) )
 			{
 				apButton->mInfo.mFlags |= eGUIINFO_FLAG_SELECTED;
 				apButton->mInfo.mRedrawFlag = 2;
@@ -2135,7 +2135,7 @@ void	GuiButton_FocusUpdate( sGuiButton * apButton,sGuiClass * apData )
 			(apButton->mButtonType == eGUI_BUTTON_SLIDERPAGESUB)
 			)
 		{
-			if( !apButton->mInfo.mFlags & eGUIINFO_FLAG_SELECTED )
+			if( !(apButton->mInfo.mFlags & eGUIINFO_FLAG_SELECTED) )
 			{
 				apButton->mInfo.mFlags |= eGUIINFO_FLAG_SELECTED;
 				apButton->mInfo.mRedrawFlag = 2;
