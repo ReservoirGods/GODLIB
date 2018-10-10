@@ -130,6 +130,9 @@ void	Graphic_ChunkList_Clear( sGraphicChunkList * apList );
 void	Graphic_ChunkList_Store( sGraphicChunkList * apList, sGraphicCanvas * apCanvas, const sGraphicRect * apRect );
 void	Graphic_ChunkList_ReStore( sGraphicChunkList * apList, sGraphicCanvas * apSrc, sGraphicCanvas * apDst );
 
+#define GraphicCanvas_Blit( apCanvas, apCoords, apRect, apSrc ) apCanvas->mpFuncs->Blit( apCanvas, apCoords, apRect, apSrc )
+#define GraphicCanvas_ClearScreen( apCanvas ) apCanvas->mpFuncs->ClearScreen( apCanvas )
+
 /* ################################################################################ */
 
 #endif	/* INCLUDED_GRAPHIC_H */
