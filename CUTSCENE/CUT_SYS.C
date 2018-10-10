@@ -806,7 +806,7 @@ void	CutScene_System_Render( void )
 									lPos.mY += lpFont->mHeightMax + lpFont->mKerning;
 									lPos.mX  = lpText->mCurrentDef.mRect.mX;
 
-									while( (*lpTextSrc) && ((*lpTextSrc!=10) || (*lpTextSrc!=13)) )
+									while( (*lpTextSrc) && ((*lpTextSrc!=10) && (*lpTextSrc!=13)) )
 									{
 										lpTextSrc++;
 									}
