@@ -29,6 +29,7 @@
 #  DEFINES
 ################################################################################### */
 
+U16		DebugLog_IsSTEEM( void );
 
 /* ###################################################################################
 #  VARIABLES
@@ -36,6 +37,7 @@
 
 char 			gDebugLogString[ 1024 ];
 U32			gDebugLogTargets = 0;
+U16			gDebugLogCanWriteSTEEM = 0;
 sFileHandle	gDebugLogFileHandle = 0;
 
 
@@ -53,6 +55,7 @@ sFileHandle	gDebugLogFileHandle = 0;
 void	DebugLog_Init( U32 aTargets, const char * apFileName )
 {
 	gDebugLogTargets = aTargets;
+	gDebugLogCanWriteSTEEM = DebugLog_IsSTEEM();
 	if( aTargets & eDebugLog_File )
 	{
 		gDebugLogFileHandle = File_Create( apFileName );
@@ -103,7 +106,8 @@ void	DebugLog_AddString( const char * apString )
 		if( gDebugLogTargets & eDebugLog_Debugger )
 		{
 #ifdef	dGODLIB_PLATFORM_ATARI
-			*(U32*)0xFFFFC1F0L = (U32)apString;
+			if( gDebugLogCanWriteSTEEM )
+				*(U32*)0xFFFFC1F0L = (U32)apString;
 #elif defined(dGODLIB_PLATFORM_WIN)
 			OutputDebugString( apString );
 			OutputDebugString( "\n" );
@@ -112,6 +116,14 @@ void	DebugLog_AddString( const char * apString )
 	}
 }
 
+#ifndef dGODLIB_PLATFORM_ATARI
+
+U16		DebugLog_IsSTEEM( void )
+{
+	return( 0 );
+}
+
+#endif // !dGODLIB_ATARI
 
 
 /* ################################################################################ */
