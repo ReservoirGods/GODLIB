@@ -76,11 +76,13 @@ void	Audio_SetVolume( const U8 aVol );
 
 void	Audio_DmaPlaySound( sAudioDmaSound * apSound );
 U8		Audio_DmaIsSoundPlaying( void );
-void	Audio_DmaToggleSign( sAudioDmaSound * apSound );
-void	Audio_DmaMaximiseUnsignedVol( sAudioDmaSound * apSound );
-void	Audio_DmaMaximiseSignedVol( sAudioDmaSound * apSound );
-void	Audio_DmaScaleSignedVol( sAudioDmaSound * apSound, const U16 aScale );
-void	Audio_DmaScaleUnsignedVol( sAudioDmaSound * apSound, const U16 aScale );
+
+void	Audio_ToggleSign( sAudioDmaSound * apSound );
+void	Audio_MaximiseVolumeUnSigned( sAudioDmaSound * apSound );
+void	Audio_MaximiseVolumeSigned( sAudioDmaSound * apSound );
+
+void	Audio_ScaleVolumeSigned( sAudioDmaSound * apSound, const U16 aScale );
+void	Audio_ScaleVolumeUnSigned( sAudioDmaSound * apSound, const U16 aScale );
 
 void	Audio_DmaSound_Delocate( sAudioDmaSound * apSnd );
 void	Audio_DmaSound_Relocate( sAudioDmaSound * apSnd );

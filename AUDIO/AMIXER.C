@@ -9,6 +9,24 @@
 :: [c] 2000 Reservoir Gods
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
 
+/*
+	http://www.cs.cmu.edu/~music/icm-online/readings/panlaws/
+
+	eMixer_PanType_Linear			[ cheap, but inaccurate. quietens in centre ]
+		gain(left) + gain(right) = 1
+		gain(right) = 1 - gain(left)
+
+	eMixer_PanType_ConstantPower	[ better sound balance, but slightly boosts centre]
+		gain(left) = cos(theta)
+		gain(right = cos(theta)
+		where theta = 0-90 degrees representing angle from listener to sound
+
+	eMixer_PanType_PanLaw			[ best type, but more expensive]
+		gain(left)  = sqrt( (pi/2 -theta) * (2/pi) * cos(theta)
+		gain(right) = sqrt ( theta * (2/pi) * sin theta )
+
+*/
+
 
 /* ###################################################################################
 #  INCLUDES
@@ -18,6 +36,8 @@
 
 #include	"AM_MUL.H"
 #include	"AM_SINE.H"
+#include	"AM_COS.H"
+#include	"AMPANLAW.H"
 
 #include	<GODLIB/AUDIO/AUDIO.H>
 #include	<GODLIB/FILE/FILE.H>
@@ -44,6 +64,8 @@
 
 U16		gAudioMixerDMAHardWareFlag;
 /*U8		gAudioMixerSineLaw[ 256 ];*/
+
+sAmixerConfig	gAudioMixerConfig;
 
 /* ###################################################################################
 #  PROTOTYPES
@@ -89,6 +111,11 @@ void	AudioMixer_Init( void )
 		gAudioMixerDMAHardWareFlag = 0;
 		break;
 	}
+
+	gAudioMixerConfig.mStereoFlag = 1;
+	gAudioMixerConfig.mBits = eAUDIO_BITS_8;
+	gAudioMixerConfig.mPanType = eMixer_PanType_Linear;
+
 
 	gpAudioMixerSilence        = (U8*)mMEMSCREENCALLOC( 4*1024 );
 	Memory_Clear( (4*1024), gpAudioMixerSilence );
@@ -199,7 +226,47 @@ void	AudioMixer_Disable( void )
 	}
 }
 
+sAmixerConfig *	AudioMixer_GetpConfig( void )
+{
+	return( &gAudioMixerConfig );
+}
 
+void			AudioMixer_SetConfig( const sAmixerConfig * apConfig )
+{
+	AudioMixer_Disable();
+	gAudioMixerConfig = *apConfig;
+	AudioMixer_Enable();
+}
+
+
+void	AudioMixer_MixerSampleActivate( sAmixerSpl * apMix, const sAudioDmaSound * apSpl, U8 aPan )
+{
+	apMix->mActiveFlag = 0;
+	apMix->mLength = apSpl->mLength;
+	apMix->mpStart = apSpl->mpSound;
+	switch( gAudioMixerConfig.mPanType )
+	{
+	case eMixer_PanType_Linear:
+		apMix->mGainLeft = 0xFF - aPan;
+		apMix->mGainRight = aPan;
+		break;
+	case eMixer_PanType_ConstantPower:
+		apMix->mGainLeft = gAudioMixerSineLaw[ aPan ];
+		apMix->mGainRight = aPan;
+		break;
+	case eMixer_PanType_PanLaw:
+		apMix->mGainLeft = gAudioMixerPanLawLeftTable[ aPan ];
+		apMix->mGainRight = gAudioMixerPanLawRightTable[ aPan ];
+		break;
+	}
+
+	apMix->mpCurrent = apSpl->mpSound;
+	apMix->mGainLeft = gAudioMixerSineLaw[ aPan ];
+	apMix->mGainRight = aPan;
+	apMix->mVolume = 0xFF;
+	apMix->mActiveFlag = 1;
+
+}
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : AudioMixer_PlaySample( sAudioDmaSound * apSpl, const U8 aPan )
 * ACTION   : adds sample to queue
@@ -219,14 +286,7 @@ U8		AudioMixer_PlaySample( sAudioDmaSound * apSpl, const U8 aPan )
 
 			if( !lpMix->mActiveFlag )
 			{
-				lpMix->mActiveFlag = 0;
-				lpMix->mLength     = apSpl->mLength;
-				lpMix->mpStart     = apSpl->mpSound;
-				lpMix->mpCurrent   = apSpl->mpSound;
-				lpMix->mGainLeft   = gAudioMixerSineLaw[ aPan ];
-				lpMix->mGainRight  = aPan;
-				lpMix->mVolume     = 0xFF;
-				lpMix->mActiveFlag = 1;
+				AudioMixer_MixerSampleActivate( lpMix, apSpl, aPan );
 				return( 1 );
 			}
 		}
@@ -243,12 +303,11 @@ U8		AudioMixer_PlaySample( sAudioDmaSound * apSpl, const U8 aPan )
 
 U8		AudioMixer_PlaySampleDirect( sAudioDmaSound * apSpl, const U8 aPan )
 {
-	sAmixerSpl *	lpMix;
+	sAmixerSpl *	lpMix = 0;
 	U32				lLeft;
 	U32				lBest;
 	U16				i;
 
-	lpMix = (sAmixerSpl*)0;
 	lBest = 0x7FFFFFFFL;
 
 	for( i=0; i<dAMIXER_CHANNEL_LIMIT; i++ )
@@ -274,14 +333,7 @@ U8		AudioMixer_PlaySampleDirect( sAudioDmaSound * apSpl, const U8 aPan )
 
 	if( lpMix )
 	{
-		lpMix->mActiveFlag = 0;
-		lpMix->mLength     = apSpl->mLength;
-		lpMix->mpStart     = apSpl->mpSound;
-		lpMix->mpCurrent   = apSpl->mpSound;
-		lpMix->mGainLeft   = gAudioMixerSineLaw[ aPan ];
-		lpMix->mGainRight  = aPan;
-		lpMix->mVolume     = 0xFF;
-		lpMix->mActiveFlag = 1;
+		AudioMixer_MixerSampleActivate( lpMix, apSpl, aPan );
 	}
 
 	return( 1 );
@@ -321,6 +373,7 @@ U8 *	AudioMixer_GetpBuffer( void )
 	return(	gpAudioMixerBuffer );
 }
 
+#if 0
 
 void	AudioMixer_TablesBuild( void )
 {
@@ -396,5 +449,7 @@ void	AudioMixer_TablesBuild( void )
 	}
 
 }
+
+#endif
 
 /* ################################################################################ */

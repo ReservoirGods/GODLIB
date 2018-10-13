@@ -144,17 +144,14 @@ AudioMixer_Vbl:
 	move.l	#(eAMIXER_BUFFER_SIZE),d0
 	add.l	d0,d7
 	sub.l	d6,d0
-;	bsr		AudioMixer_DoMixingW
 	jsr		(a3)
 
 	move.l	gpAudioMixerBuffer,a2
 	move.l	gAudioMixerBufferOffset,d0
-;	bsr		AudioMixer_DoMixingW
 	jsr		(a3)
 	bra.s	.update
 .lpls:
 	move.l	d7,d0
-;	bsr		AudioMixer_DoMixingW
 	jsr		(a3)
 
 .update:
@@ -596,33 +593,33 @@ AudioMixer_UpdateSamples:
 
 	lsr.l	#3,d0
 	add.l	d0,d0
-	moveq	#eAMIXER_CHANNEL_LIMIT-1,d1
-	move.l	gpAudioMixerSilence,a1
-	lea		gAudioMixerSamples,a0
+	moveq	#eAMIXER_CHANNEL_LIMIT-1,d1				; we have one sample per channel
+	move.l	gpAudioMixerSilence,a1					; go back to silence sample if queue is empty
+	lea		gAudioMixerSamples,a0					; start of samples
 
 .loop:
 
-	tst.b	sAmixerSpl_mActiveFlag(a0)
-	beq.s	.next
+	tst.b	sAmixerSpl_mActiveFlag(a0)				; is this sample active?
+	beq.s	.next									; no, goto next
 
 .active:
-	move.l	sAmixerSpl_mpCurrent(a0),d2
-	add.l	d0,d2
-	move.l	d2,sAmixerSpl_mpCurrent(a0)
-	sub.l	sAmixerSpl_mpStart(a0),d2
-	sub.l	sAmixerSpl_mLength(a0),d2
-	bmi.s	.next
+	move.l	sAmixerSpl_mpCurrent(a0),d2				; current sample pointer
+	add.l	d0,d2									; add offset
+	move.l	d2,sAmixerSpl_mpCurrent(a0)				; store updated sample pointer
+	sub.l	sAmixerSpl_mpStart(a0),d2				; diff from start
+	sub.l	sAmixerSpl_mLength(a0),d2				; minus length
+	bmi.s	.next									; still bytes to play
 
-	move.l	a1,sAmixerSpl_mpStart(a0)
-	move.l	a1,sAmixerSpl_mpCurrent(a0)
-	clr.b	sAmixerSpl_mActiveFlag(a0)
-	clr.b	sAmixerSpl_mVolume(a0)
-	clr.b	sAmixerSpl_mGainLeft(a0)
-	clr.b	sAmixerSpl_mGainRight(a0)
+	move.l	a1,sAmixerSpl_mpStart(a0)				; switch sample to silence
+	move.l	a1,sAmixerSpl_mpCurrent(a0)				; point current pointer to silence
+	clr.b	sAmixerSpl_mActiveFlag(a0)				; mark sample as free
+	clr.b	sAmixerSpl_mVolume(a0)					; volume = 0
+	clr.b	sAmixerSpl_mGainLeft(a0)				; gain.left = 0
+	clr.b	sAmixerSpl_mGainRight(a0)				; gain.right = 0
 
 .next:
-	lea		sAmixerSpl_msizeof(a0),a0
-	dbra	d1,.loop
+	lea		sAmixerSpl_msizeof(a0),a0				; next sample in the array
+	dbra	d1,.loop								; loop for all samples
 
 	rts
 

@@ -9,7 +9,62 @@
 :: [c] 2000 Reservoir Gods
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
 
-
+/*
+##############DMA Sound System                                     ###########
+------- +----- +-------------------------------------------------------+----------
+$FF8900 | byte | Buffer interrupts                        BIT 3 2 1 0  |R/W (F030)
+        |      | TimerA-Int at end of record buffer-----------' | | |  |
+        |      | TimerA-Int at end of replay buffer-------------' | |  |
+        |      | MFP-15-Int (I7) at end of record buffer----------' |  |
+        |      | MFP-15-Int (I7) at end of replay buffer------------'  |
+------- +----- +-------------------------------------------------------+----------
+$FF8901 | byte | DMA Control Register              BIT 7 . 5 4 . . 1 0 |R/W
+        |      | 1 - select record register -----------+   | |     | | |    (F030)
+        |      | 0 - select replay register -----------'   | |     | | |    (F030)
+        |      | Loop record buffer -----------------------' |     | | |    (F030)
+        |      | DMA Record on ------------------------------'     | | |    (F030)
+        |      | Loop replay buffer -------------------------------' | |     (STe)
+        |      | DMA Replay on --------------------------------------' |     (STe)
+--------+------+-------------------------------------------------------+----------
+$FF8903 | byte | Frame start address( high byte )                      |R/W  (STe)
+$FF8905 | byte | Frame start address( mid byte )                       |R/W  (STe)
+$FF8907 | byte | Frame start address( low byte )                       |R/W  (STe)
+$FF8909 | byte | Frame address counter( high byte )                    |R    (STe)
+$FF890B | byte | Frame address counter( mid byte )                     |R    (STe)
+$FF890D | byte | Frame address counter( low byte )                     |R    (STe)
+$FF890F | byte | Frame end address( high byte )                        |R/W  (STe)
+$FF8911 | byte | Frame end address( mid byte )                         |R/W  (STe)
+$FF8913 | byte | Frame end address( low byte )                         |R/W  (STe)
+------- +----- +---------------------------------------------------- - +----------
+$FF8920 | byte | DMA Track Control                     BIT 5 4 . . 1 0 |R/W (F030)
+        |      | 00 - Set DAC to Track 0 ------------------+-+     | | |
+        |      | 01 - Set DAC to Track 1 ------------------+ +     | | |
+        |      | 10 - Set DAC to Track 2 ------------------+-+     | | |
+        |      | 11 - Set DAC to Track 3 ------------------+-'     | | |
+        |      | 00 - Play 1 Track---------------------------------+-+ |
+        |      | 01 - Play 2 Tracks--------------------------------+-+ |
+        |      | 10 - Play 3 Tracks--------------------------------+-+ |
+        |      | 11 - Play 4 Tracks--------------------------------+-' |
+--------+------+-------------------------------------------------------+----------
+$FF8921 | byte | Sound mode control                BIT 7 6 . . . . 1 0 |R/W  (STe)
+        |      | 0 - Stereo, 1 - Mono -----------------' |         | | |
+        |      | 0 - 8bit------------------------------- +         | | |
+        |      | 1 - 16bit( F030 only )------------------'         | | |    (F030)
+        |      | Frequency control bits                            | | |
+        |      | 00 - Off( F030 only ) ----------------------------+-+ |    (F030)
+        |      | 00 - 6258hz frequency( STe only ) --------------- +-+ |
+        |      | 01 - 12517hz frequency -------------------------- +-+ |
+        |      | 10 - 25033hz frequency -------------------------- +-+ |
+        |      | 11 - 50066hz frequency -------------------------- +-' |
+        |      | Samples are always signed.In stereo mode, data is     |
+        |      | arranged in pairs with high pair the left channel, low|
+        |      | pair right channel.Sample length MUST be even in      |
+        |      | either mono or stereo mode.                           |
+        |      | Example: 8 bit Stereo : LRLRLRLRLRLRLRLR              |
+        |      | 16 bit Stereo : LLRRLLRRLLRRLLRR( F030 )              |
+        |      | 2 track 16 bit stereo : LLRRllrrLLRRllrr( F030 )      |
+--------+------+---------------------------------------------------- - +----------
+*/
 /* ###################################################################################
 #  INCLUDES
 ################################################################################### */
@@ -317,12 +372,12 @@ U8		Audio_DmaIsSoundPlaying( void )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Audio_DmaToggleSign( sAudioDmaSound * apSound )
+* FUNCTION : Audio_ToggleSign( sAudioDmaSound * apSound )
 * ACTION   : toggles audio between signed and unsigned
 * CREATION : 23.03.01 PNK
 *-----------------------------------------------------------------------------------*/
 
-void	Audio_DmaToggleSign( sAudioDmaSound * apSound )
+void	Audio_ToggleSign( sAudioDmaSound * apSound )
 {
 	U32	i;
 	U8 *	lpSrc;
@@ -343,66 +398,69 @@ void	Audio_DmaToggleSign( sAudioDmaSound * apSound )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Audio_DmaMaximiseSignedVol( sAudioDmaSound * apSound )
+* FUNCTION : Audio_MaximiseVolume( sAudioDmaSound * apSound, U8 aAdd )
+* ACTION   : maximises a sample volume. pass 0x80 to work with signed samples, 0 for unsigned
+* CREATION : 13.10.18 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	Audio_MaximiseVolume( sAudioDmaSound * apSound, U8 aAdd )
+{
+	U8	lMax = 0;
+	U8	lMin = 0xFF;
+	U32 i;
+	U16	scale;
+	U8	* lpS = apSound->mpSound;
+
+	for( i = 0; i < apSound->mLength; i++ )
+	{
+		U8 b = *lpS++;
+		b += aAdd;
+		if( b < lMin )
+			lMin = b;
+		if( b > lMax )
+			lMax = b;
+	}
+
+	scale = 0xFFFF;
+	scale /= lMax;
+
+	lpS = apSound->mpSound;
+	for( i = 0; i < apSound->mLength; i++ )
+	{
+		U16	lVal;
+		U8 b = *lpS;
+		b += aAdd;
+		lVal = b;
+		lVal *= scale;
+		lVal >>= 8;
+		b = (U8)lVal;
+		b -= aAdd;
+		*lpS++ = b;
+	}
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Audio_MaximiseVolumeSigned( sAudioDmaSound * apSound )
 * ACTION   : boosts volume of a sample to maximum level
 * CREATION : 23.03.01 PNK
 *-----------------------------------------------------------------------------------*/
 
-void	Audio_DmaMaximiseSignedVol( sAudioDmaSound * apSound )
+void	Audio_MaximiseVolumeSigned( sAudioDmaSound * apSound )
 {
-#ifndef dGODLIB_COMPILER_AHCC
-	FP32	lScaleF;
-	FP32	lMuled;
-	S8		lMax,lMin;
-	S8		lByte;
-	S8 *	lpSam;
-	U32		i;
+	Audio_MaximiseVolume( apSound, 0x80 );
+}
 
-	lMax = (S8)-127;
-	lMin = (S8)0x7F;
 
-	lpSam = (S8*)apSound->mpSound;
-	for( i=0; i<apSound->mLength; i++ )
-	{
-		lByte = *lpSam++;
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Audio_MaximiseVolumeUnSigned( sAudioDmaSound * apSound )
+* ACTION   : boosts volume of a sample to maximum level
+* CREATION : 23.03.01 PNK
+*-----------------------------------------------------------------------------------*/
 
-		if( lByte < lMin )
-		{
-			lMin = lByte;
-		}
-		if( lByte > lMax )
-		{
-			lMax = lByte;
-		}
-	}
-
-	if( (U8)lMin == (U8)0x80 )
-	{
-		lMin = (S8)-127;
-	}
-
-	lMin = (S8)-lMin;
-	if( lMin > lMax )
-	{
-		lMax = lMin;
-	}
-
-	if( lMax < 0x7F )
-	{
-		lScaleF  = 127.f;
-		lScaleF /= (FP32)lMax;
-
-		lpSam = (S8*)apSound->mpSound;
-		for( i=0; i<apSound->mLength; i++ )
-		{
-			lByte    = *lpSam;
-			lMuled   = (FP32)lByte;
-			lMuled  *= lScaleF;
-			lByte    = (S8)lMuled;
-			*lpSam++ = lByte;
-		}
-	}
-#endif
+void	Audio_MaximiseVolumeUnSigned( sAudioDmaSound * apSound )
+{
+	Audio_MaximiseVolume( apSound, 0x80 );
 }
 
 
@@ -412,7 +470,7 @@ void	Audio_DmaMaximiseSignedVol( sAudioDmaSound * apSound )
 * CREATION : 03.01.2003 PNK
 *-----------------------------------------------------------------------------------*/
 
-void	Audio_DmaScaleSignedVol( sAudioDmaSound * apSound,const U16 aScale )
+void	Audio_ScaleVolumeSigned( sAudioDmaSound * apSound,const U16 aScale )
 {
 	S16		lVol;
 	S8 *	lpByte;
@@ -432,7 +490,6 @@ void	Audio_DmaScaleSignedVol( sAudioDmaSound * apSound,const U16 aScale )
 
 		lpByte++;
 	}
-
 }
 
 
@@ -442,7 +499,7 @@ void	Audio_DmaScaleSignedVol( sAudioDmaSound * apSound,const U16 aScale )
 * CREATION : 03.01.2003 PNK
 *-----------------------------------------------------------------------------------*/
 
-void	Audio_DmaScaleUnsignedVol( sAudioDmaSound * apSound,const U16 aScale )
+void	Audio_ScaleVolumeUnsigned( sAudioDmaSound * apSound,const U16 aScale )
 {
 	(void)apSound;
 	(void)aScale;
