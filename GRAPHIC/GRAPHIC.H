@@ -130,8 +130,29 @@ void	Graphic_ChunkList_Clear( sGraphicChunkList * apList );
 void	Graphic_ChunkList_Store( sGraphicChunkList * apList, sGraphicCanvas * apCanvas, const sGraphicRect * apRect );
 void	Graphic_ChunkList_ReStore( sGraphicChunkList * apList, sGraphicCanvas * apSrc, sGraphicCanvas * apDst );
 
-#define GraphicCanvas_Blit( apCanvas, apCoords, apRect, apSrc ) apCanvas->mpFuncs->Blit( apCanvas, apCoords, apRect, apSrc )
-#define GraphicCanvas_ClearScreen( apCanvas ) apCanvas->mpFuncs->ClearScreen( apCanvas )
+#define GraphicCanvas_Blit( apCanvas, apCoords, apRect, apSrc )				apCanvas->mpFuncs->Blit( apCanvas, apCoords, apRect, apSrc )
+#define GraphicCanvas_ClearScreen( apCanvas )								apCanvas->mpFuncs->ClearScreen( apCanvas )
+#define GraphicCanvas_CopyScreen( apCanvas, apSrc )							apCanvas->mpFuncs->CopyScreen( apCanvas, apSrc )
+#define GraphicCanvas_ConvertBlit( apCanvas, apCoords, apRect, apSrc )		apCanvas->mpFuncs->ConvertBlit( apCanvas, apCoords, apRect, apSrc )
+#define GraphicCanvas_DrawBox( apCanvas, apCoords, aColour )				apCanvas->mpFuncs->DrawBox( apCanvas, apCoords, aColour )
+#define GraphicCanvas_DrawLine( apCanvas, apCoords, aColour )				apCanvas->mpFuncs->DrawLine( apCanvas, apCoords, aColour )
+#define GraphicCanvas_DrawPixel( apCanvas, apCoords, aColour )				apCanvas->mpFuncs->DrawPixel( apCanvas, apCoords, aColour )
+#define GraphicCanvas_DrawSprite( apCanvas, apCoords, apSprite )			apCanvas->mpFuncs->DrawSprite( apCanvas, apCoords, apSprite )
+#define GraphicCanvas_DrawTri( apCanvas, apCoords, aColour )				apCanvas->mpFuncs->DrawTri( apCanvas, apCoords, aColour )
+#define GraphicCanvas_DrawQuad( apCanvas, apCoords, aColour )				apCanvas->mpFuncs->DrawQuad( apCanvas, apCoords, aColour )
+#define GraphicCanvas_FontPrint( apCanvas, apCoords, apFont, apString )		apCanvas->mpFuncs->FontPrint( apCanvas, apCoords, apFont, apString )
+
+#define GraphicCanvas_Blit_Clip( apCanvas, apCoords, apRect, apSrc )			apCanvas->mpClipFuncs->Blit( apCanvas, apCoords, apRect, apSrc )
+#define GraphicCanvas_ClearScreen_Clip( apCanvas )								apCanvas->mpClipFuncs->ClearScreen( apCanvas )
+#define GraphicCanvas_CopyScreen_Clip( apCanvas, apSrc )						apCanvas->mpClipFuncs->CopyScreen( apCanvas, apSrc )
+#define GraphicCanvas_ConvertBlit_Clip( apCanvas, apCoords, apRect, apSrc )		apCanvas->mpClipFuncs->ConvertBlit( apCanvas, apCoords, apRect, apSrc )
+#define GraphicCanvas_DrawBox_Clip( apCanvas, apCoords, aColour )				apCanvas->mpClipFuncs->DrawBox( apCanvas, apCoords, aColour )
+#define GraphicCanvas_DrawLine_Clip( apCanvas, apCoords, aColour )				apCanvas->mpClipFuncs->DrawLine( apCanvas, apCoords, aColour )
+#define GraphicCanvas_DrawPixel_Clip( apCanvas, apCoords, aColour )				apCanvas->mpClipFuncs->DrawPixel( apCanvas, apCoords, aColour )
+#define GraphicCanvas_DrawSprite_Clip( apCanvas, apCoords, apSprite )			apCanvas->mpClipFuncs->DrawSprite( apCanvas, apCoords, apSprite )
+#define GraphicCanvas_DrawTri_Clip( apCanvas, apCoords, aColour )				apCanvas->mpClipFuncs->DrawTri( apCanvas, apCoords, aColour )
+#define GraphicCanvas_DrawQuad_Clip( apCanvas, apCoords, aColour )				apCanvas->mpClipFuncs->DrawQuad( apCanvas, apCoords, aColour )
+#define GraphicCanvas_FontPrint_Clip( apCanvas, apCoords, apFont, apString )	apCanvas->mpClipFuncs->FontPrint( apCanvas, apCoords, apFont, apString )
 
 /* ################################################################################ */
 
