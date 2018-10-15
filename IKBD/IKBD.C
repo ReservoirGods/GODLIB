@@ -42,6 +42,8 @@ extern	void	IKBD_MainHandler( void );
 extern	void	IKBD_PowerpadHandler( void );
 
 extern	void	IKBD_InitTosLink( U32 apBuffer, U32 aFunction );
+extern	void	IKBD_InstallTrap13( void );
+extern	void	IKBD_RestoreTrap13( void );
 
 
 /* ###################################################################################
@@ -106,6 +108,7 @@ void	IKBD_Init()
 #elif defined (dGODLIB_SYSTEM_SDL)
 	IKBD_SDL_Init();
 #endif
+	IKBD_InstallTrap13();
 }
 
 
@@ -117,6 +120,7 @@ void	IKBD_Init()
 
 void	IKBD_DeInit()
 {
+	IKBD_RestoreTrap13();
 	switch( System_GetMCH() )
 	{
 	case	MCH_FALCON:
@@ -758,6 +762,9 @@ U8	IKBD_IsTeamTap1Enabled( void )
 
 
 #ifndef	dGODLIB_PLATFORM_ATARI
+
+void	IKBD_InstallTrap13()	{}
+void	IKBD_RestoreTrap13() {}
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : IKBD_GetKbdBytesWaiting( void )

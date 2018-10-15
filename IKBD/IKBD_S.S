@@ -31,6 +31,9 @@
 
 	export		IKBD_InitTosLink
 
+	export	IKBD_InstallTrap13
+	export	IKBD_RestoreTrap13
+
 
 **************************************************************************************
 ;	STRUCTS
@@ -689,6 +692,302 @@ IKBD_InitTosLink:
 ;	move.l	d1,kbd_TosJump+2
 ;	move.w	#$4E71,kbd_StoreKey
 
+	rts
+
+
+*------------------------------------------------------------------------------------*
+* FUNCTION : IKBD_InstallTrap13
+* ACTION   : Installs our BIOS handler
+* CREATION : 14.10.2018 PNK
+*------------------------------------------------------------------------------------*
+
+IKBD_InstallTrap13:
+	cmp.l	#IKBD_OldTrap13,$B4.w	; read current trap #13 handler
+	beq		.alreadyInstalled		; if we have our replacement handler installed already, bail
+
+	move.l	$5A0,d0					; cookie jar
+	tst.l	d0						; valid pointer?
+	beq.s	.install				; no, must be oldschool ST
+	move.l	d0,a0					; ptr to first cookie
+.nextCookie:
+	move.l	(a0),d0					; read cookie key
+	beq.s	.install				; if zero we are at end of jar
+	cmp.l	#$5F435055,d0			; does key == _CPU ?
+	beq.s	.gotCPU					; yep
+	addq.l	#8,a0					; move to next cookie
+	bra.s	.nextCookie				; loop over all cookies
+.gotCPU:
+	move.l	4(a0),d0				; read _CPU value
+	cmp.l	#20,d0					; is it at least a 68020?
+	blt.s	.install				; no, stack frame is just 6 bytes
+	move.w	#8,IKBD_StackOff+2		; extend stack frame offset
+.install:
+
+	move.l	$B4.w,IKBD_OldTrap13+2	; old BIOS handler
+	move.l	#IKBD_Trap13,$B4.w		; install new handler
+.alreadyInstalled:
+	rts
+
+
+*------------------------------------------------------------------------------------*
+* FUNCTION : IKBD_RestoreTrap13
+* ACTION   : Restores original BIOS handler
+* CREATION : 14.10.2018 PNK
+*------------------------------------------------------------------------------------*
+
+IKBD_RestoreTrap13:
+	cmp.l	#IKBD_Trap13,$b4.w		; are we currently installed?
+	bne.s	.notInstalled			; no, so don't attempt to uninstall
+	move.l	IKBD_OldTrap13+2,$b4.w	; restore old bios handler
+.notInstalled:
+	rts
+
+
+*------------------------------------------------------------------------------------*
+* FUNCTION : IKBD_Trap13
+* ACTION   : Replacement for BIOS trap #13 handler to interface with GODLIB IKBD controller
+*			The following functions are overriden
+*			 $01 - Bconstat() - detects if ikbd byte is waiting to be read
+*			 $02 - Bconin() - reads a character from ikbd buffer
+*			 $0B - Kbshift() - reads/write special keys
+* CREATION : 14.10.2018 PNK
+*------------------------------------------------------------------------------------*
+
+IKBD_Trap13:
+	move.w	(a7),d0					; saved status register
+IKBD_StackOff:
+	lea		6(a7),a0				; skip exception stack frame, get to trap arguments
+	btst	#13,d0					; was trap called from supervisor mode?
+	bne.s	.super					; yes, use ssp
+	move.l	USP,a0					; no, use user mode stack pointer
+.super:
+	cmp.w	#$1,(a0)				; is it function 1 Bconstat()
+	beq		IKBD_Bconstat
+	cmp.w	#$2,(a0)				; is it function 2 Bconin()
+	beq		IKBD_Bconin
+	cmp.w	#$b,(a0)				; is it function b Kbshift()
+	beq		IKBD_Bkbshift
+IKBD_OldTrap13:
+	jmp		$12345678				; pass other functions back to original BIOS
+
+
+*------------------------------------------------------------------------------------*
+* FUNCTION : IKBD_IsConcreteKey
+* ACTION   : Determines if keypress is concrete, or is a key release or special key
+* CREATION : 14.10.2018 PNK
+*------------------------------------------------------------------------------------*
+
+IKBD_IsConcreteKey:
+	tst.b	d0						; check key
+	ble.s	.soft					; if negative, this is key release so skip
+	cmp.b	#$1d,d0					; is it control
+	beq.s	.soft					; skip if control
+	cmp.b	#$2a,d0					; is left shift
+	beq.s	.soft					; skip if left shift
+	cmp.b	#$36,d0					; is it right shift
+	beq.s	.soft					; skip if right shift
+	cmp.b	#$38,d0					; is it alternate
+	beq.s	.soft					; skip if alternate
+	cmp.b	#$3A,d0					; is it capslock
+	beq.s	.soft					; skip if capslock
+	cmp.b	#$47,d0					; is it clr/home
+	beq.s	.soft					; skip if clr/home
+	cmp.b	#$52,d0					; is it insert
+	beq.s	.soft					; skip if insert
+.ok:
+	cmp.b	d0,d0					; will always be true
+	rts
+.soft:
+	cmp.b	#' ',d0					; will always be false
+	rts
+
+
+*------------------------------------------------------------------------------------*
+* FUNCTION : IKBD_Bconstat
+* ACTION   : Replacement for BIOS Bconstat() function
+* CREATION : 14.10.2018 PNK
+*------------------------------------------------------------------------------------*
+
+IKBD_Bconstat:
+	move.w	2(a0),d0					; read argument from stack
+	cmp.w	#2,d0						; is it 2 (console)
+	bne		IKBD_OldTrap13				; no, let original bios handle other devices
+	moveq	#0,d0						; clear d0
+
+	lea		gIKBD+sIKBD_KbdBuffer,a0	; our keyboard ring buffer
+
+	move.w	gIKBD+sIKBD_KbdHead,d1		; head offset into ring buffer
+.loop:
+	and.w	#2047,d1					; wrap by ring buffer size
+	cmp.w	gIKBD+sIKBD_KbdTail,d1		; have we reached tail?
+	beq.s	.none						; yes, so no key to process
+
+	move.b	(a0,d1.w),d0				; read key from buffer
+	ble.s	.next						; skip key release (where high bit is set)
+
+	bsr		IKBD_IsConcreteKey			; is this a valid concrete key (not special key)?
+	beq.s	.gotcha						; yes, return and inform there are keys to process
+
+.next:
+	addq.w	#1,d1						; progress through ring buffer
+	bra.s	.loop						; loop
+.gotcha:
+	moveq	#-1,d0						; inform caller that there are keys to process
+	rte
+.none:
+	moveq	#0,d0						; nothing here guv'nor
+	rte
+
+
+*------------------------------------------------------------------------------------*
+* FUNCTION : IKBD_Bconin
+* ACTION   : Replacement for BIOS Bconin() function
+* CREATION : 14.10.2018 PNK
+*------------------------------------------------------------------------------------*
+
+IKBD_Bconin:
+	move.w	2(a0),d0						; read argument from stack
+	cmp.w	#2,d0							; is it 2 (console)
+	bne		IKBD_OldTrap13					; no, let original bios handle other devices
+.next:
+	moveq	#0,d0							; clear d0
+	bsr		IKBD_GetKbdBytesWaiting			; determine if there are bytes waiting
+	tst.l	d0								; check result
+	beq.s	.none							; nothing to process
+
+	moveq	#0,d0							; clear d0
+	bsr		IKBD_PopKbdByte					; grab keyboard byte
+	bsr		IKBD_IsConcreteKey				; is it a concrete key (not special key or key release)?
+	bne.s	.next							; no, so keep looping until we find a concrete key
+
+.some:
+	move.l	gIKBD+sIKBD_pUnshiftTable,a0	; standard keyboard table
+	tst.b	gIKBD+sIKBD_KbdPressTable+$2a	; is left shift pressed?
+	bne.s	.shift							; yes, use shift table
+	tst.b	gIKBD+sIKBD_KbdPressTable+$36	; is right shift pressed?
+	beq.s	.noshift						; no, use unshifted table
+.shift:
+	move.l	gIKBD+sIKBD_pShiftTable,a0		; shifted table
+.noshift:
+	moveq	#0,d1							; clear d1
+	move.b	(a0,d0.w),d1					; read ASCII value of key from table
+	tst.b	gIKBD+sIKBD_KbdPressTable+$1d	; is control pressed?
+	beq.s	.notControl						; nope
+	and.w	#$1f,d1							; mangle ASCII for control 
+.notControl:
+	tst.b	gIKBD+sIKBD_KbdPressTable+$38	; is ALT pressed?
+	beq.s	.notALT							; nope
+	moveq	#0,d1							; mangle ASCII for ALT
+.notALT:
+	swap	d0								; scancode into high byte
+	or.l	d0,d1							; combine with ascii code
+	moveq	#0,d0							; clear d0
+	btst.b	#3,$484.w						; check bit 3 of CONTERM
+	beq.s	.nokbreport						; if 0, don't add kbshift bits
+	bsr		IKBD_Kbshift_Build				; grab special key status
+	lsl.w	#8,d0							; shift into high byte
+	swap	d0								; shift into high word
+.nokbreport:
+	or.l	d1,d0							; combine scancode,ascii status and special status
+.none:
+	rte
+
+
+*------------------------------------------------------------------------------------*
+* FUNCTION : IKBD_Bkbshift:
+* ACTION   : Replacement for BIOS Kbshift() function
+* CREATION : 14.10.2018 PNK
+*------------------------------------------------------------------------------------*
+
+IKBD_Bkbshift:
+	move.w	2(a0),d0							; check argument
+	bmi		.read								; negative value means read, positive is write
+.write:
+	clr.b	gIKBD+sIKBD_KbdPressTable+$36		; clear right shift status
+	btst.b	#0,d0								; should we set right shift?
+	bne.s	.noShiftRight						; no
+	st.b	gIKBD+sIKBD_KbdPressTable+$36		; set right shift status
+.noShiftRight:
+	clr.b	gIKBD+sIKBD_KbdPressTable+$2a		; clear left shift status
+	btst.b	#1,d0								; should we set left shift?
+	bne.s	.noShiftLeft						; no
+	st.b	gIKBD+sIKBD_KbdPressTable+$2a		; set left shift status
+.noShiftLeft:
+	clr.b	gIKBD+sIKBD_KbdPressTable+$1d`		; clear control status
+	btst.b	#2,d0								; should we set control?
+	bne.s	.noControl							; no
+	st.b	gIKBD+sIKBD_KbdPressTable+$1d		; set control status
+.noControl:
+	clr.b	gIKBD+sIKBD_KbdPressTable+$38		; clear alt status
+	btst.b	#3,d0								; should we set alt?
+	bne.s	.noALT								; no
+	st.b	gIKBD+sIKBD_KbdPressTable+$38		; set alt status
+.noALT:
+	clr.b	gIKBD+sIKBD_KbdPressTable+$3A		; clear capslock status
+	btst.b	#4,d0								; should we set capslock?
+	bne.s	.noCapsLock							; no
+	st.b	gIKBD+sIKBD_KbdPressTable+$3A		; set capslock status
+.noCapsLock:
+	clr.b	gIKBD+sIKBD_KbdPressTable+$47		; clear clr/home status
+	btst.b	#5,d0								; should we set clr/home shift?
+	bne.s	.noClrHome							; no
+	st.b	gIKBD+sIKBD_KbdPressTable+$47		; set clr/home status
+.noClrHome
+	clr.b	gIKBD+sIKBD_KbdPressTable+$52		; clear insert status
+	btst.b	#6,d0								; should we set insert?
+	bne.s	.noInsert							; no
+	st.b	gIKBD+sIKBD_KbdPressTable+$52		; set insert status
+.noMouseLeft:
+
+	rte
+.read:
+	bsr	IKBD_Kbshift_Build
+	rte
+
+
+*------------------------------------------------------------------------------------*
+* FUNCTION : IKBD_Kbshift_Build
+* ACTION   : Builds a bitmask compatible with kbshift functions
+*			 0 : right shift
+*			 1 : left shift
+*			 2 : control
+*			 3 : alt
+*			 4 : caps lock
+*			 5 : CLR/HOME
+*			 6 : Insert
+* CREATION : 13.04.99 PNK
+*------------------------------------------------------------------------------------*
+
+IKBD_Kbshift_Build:
+	moveq	#0,d0								; clear d0
+	tst.b	gIKBD+sIKBD_KbdPressTable+$36		; is right shift set?
+	beq.s	.blankShiftRight					; not set
+	bset.b	#0,d0								; set relevant bit
+.blankShiftRight:
+	tst.b	gIKBD+sIKBD_KbdPressTable+$2a		; is left shift set?
+	beq.s	.blankShiftLeft						; not set
+	bset.b	#1,d0								; set relevant bit
+.blankShiftLeft:
+	tst.b	gIKBD+sIKBD_KbdPressTable+$1d		; is contrl set?
+	beq.s	.blankControl						; not set
+	bset.b	#2,d0								; set relevant bit
+.blankControl:
+	tst.b	gIKBD+sIKBD_KbdPressTable+$38		; is alt set?
+	beq.s	.blankALT							; not set
+	bset.b	#3,d0								; set relevant bit
+.blankALT:
+	tst.b	gIKBD+sIKBD_KbdPressTable+$3A		; is caps lock set?
+	beq.s	.blankCapsLock						; not set
+	bset.b	#4,d0								; set relevant bit
+.blankCapsLock:
+	tst.b	gIKBD+sIKBD_KbdPressTable+$47		; is clr/home set?
+	beq.s	.blankClrHome						; not set
+	bset.b	#5,d0								; set relevant bit
+.blankClrHome:
+	tst.b	gIKBD+sIKBD_KbdPressTable+$52		; is insert set?
+	beq.s	.blankInsert						; not set
+	bset.b	#6,d0								; set relevant bit
+.blankInsert:
 	rts
 
 
