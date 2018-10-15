@@ -913,7 +913,7 @@ IKBD_Bkbshift:
 	bne.s	.noShiftLeft						; no
 	st.b	gIKBD+sIKBD_KbdPressTable+$2a		; set left shift status
 .noShiftLeft:
-	clr.b	gIKBD+sIKBD_KbdPressTable+$1d`		; clear control status
+	clr.b	gIKBD+sIKBD_KbdPressTable+$1d		; clear control status
 	btst.b	#2,d0								; should we set control?
 	bne.s	.noControl							; no
 	st.b	gIKBD+sIKBD_KbdPressTable+$1d		; set control status
@@ -932,12 +932,12 @@ IKBD_Bkbshift:
 	btst.b	#5,d0								; should we set clr/home shift?
 	bne.s	.noClrHome							; no
 	st.b	gIKBD+sIKBD_KbdPressTable+$47		; set clr/home status
-.noClrHome
+.noClrHome:
 	clr.b	gIKBD+sIKBD_KbdPressTable+$52		; clear insert status
 	btst.b	#6,d0								; should we set insert?
 	bne.s	.noInsert							; no
 	st.b	gIKBD+sIKBD_KbdPressTable+$52		; set insert status
-.noMouseLeft:
+.noInsert:
 
 	rte
 .read:
