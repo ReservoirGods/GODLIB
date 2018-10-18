@@ -23,30 +23,35 @@ struct sString;
 #  PROTOTYPES
 ################################################################################### */
 
-const char *	StringPath_GetpExt( sStringPath * apPath );
+
+void			StringPath_Set( sStringPath * apDst, const sStringPath * apSrc );
+void			StringPath_SetNT( sStringPath * apPath, const char * apSrc );
+void			StringPath_SetSS( sStringPath * apDst, const struct sString * apSrc );
+
 void			StringPath_SetExt( sStringPath * apPath, const char * apExt );
 
-void			StringPath_Copy( sStringPath * apDst, const sStringPath * apSrc );
-void			StringPath_CopySS( sStringPath * apDst, const struct sString * apSrc );
+const char *	StringPath_GetpExt( const char * apPath );
+const char *	StringPath_GetpFileName( const char * apPath );
 
-const char *	StringPath_GetpFileName( sStringPath * apPath );
 void			StringPath_SetFileName( sStringPath * apPath, const char * apFileName );
 
-void			StringPath_Set( sStringPath * apPath, const char * apFile );
 void			StringPath_Append( sStringPath * apPath, const char * apFile );
 
 void			StringPath_Combine( sStringPath * apPath, const char * apDir, const char * apFileName );
 void			StringPath_Combine2( sStringPath * apPath, const char * apDir0, const char * apDir1, const char * apFileName );
 
-char			StringPath_GetDrive( const sStringPath * apPath );
-U16				StringPath_IsAbsolute( const sStringPath * apPath );
+char			StringPath_GetDrive( const char * apPath );
+U16				StringPath_IsAbsolute( const char * apPath );
 
-void			StringPath_GetDirectory( sStringPath * apDst, const sStringPath * apSrc  );
-void			StringPath_GetFolder( sStringPath * apDst, const sStringPath * apSrc );
+void			StringPath_GetDirectory( sStringPath * apDst, const char * apSrc  );
+void			StringPath_GetFolder( sStringPath * apDst, const char * apSrc );
 
-void			StringPath_Compact( sStringPath * apDst, const sStringPath * apSrc );
+void			StringPath_Compact( sStringPath * apDst, const char * apSrc );
 
 #define			StringPath_IsSeperator( _aChar )	( ('\\' ==(_aChar)) || ('/'==(_aChar)) )
+
+#define			StringPath_Begin( _aPath )	( _aPath->mChars )
+#define			StringPath_End( _aPath )	( &_aPath->mChars[ sizeof(sStringPath) - 1 ] )
 
 
 /* ################################################################################ */

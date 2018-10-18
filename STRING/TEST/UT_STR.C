@@ -91,10 +91,73 @@ GOD_UNIT_TEST( String )
 {
 	U16 i;
 	sStringPath	lPath0;
+	char lBigString[ sizeof( sStringPath ) + 64 ];
 
 	/*
 	STRING PATH
 	*/
+
+	for( i = 0; i < sizeof( lBigString ) - 1; i++ )
+		lBigString[ i ] = 'a';
+	lBigString[ sizeof( lBigString ) - 1 ] = 0;
+
+	/* check that setNT stays in bounds*/
+	{
+		GOD_UNIT_TEST_GUARDED_STRUCT( sStringPath, lPathG );
+		{
+			sStringPath * lpS = GOD_UNIT_TEST_GUARDED_STRUCT_BEGIN( sStringPath, lPathG );
+			StringPath_SetNT( lpS, lBigString );
+			GOD_UNIT_TEST_EXPECT( 0 == *StringPath_End( lpS ), "set not null terminating" );
+		}
+		GOD_UNIT_TEST_GUARDED_STRUCT_CHECK( sStringPath, lPathG );
+	}
+
+	/* check that setExt stays in bounds*/
+	{
+		GOD_UNIT_TEST_GUARDED_STRUCT( sStringPath, lPathG );
+		{
+			sStringPath * lpS = GOD_UNIT_TEST_GUARDED_STRUCT_BEGIN( sStringPath, lPathG );
+			StringPath_SetNT( lpS, "b.txt" );
+			StringPath_SetExt( lpS, lBigString );
+			GOD_UNIT_TEST_EXPECT( 0 == *StringPath_End( lpS ), "set not null terminating" );
+		}
+		GOD_UNIT_TEST_GUARDED_STRUCT_CHECK( sStringPath, lPathG );
+	}
+
+	/* check that append stays in bounds*/
+	{
+		GOD_UNIT_TEST_GUARDED_STRUCT( sStringPath, lPathG );
+		{
+			sStringPath * lpS = GOD_UNIT_TEST_GUARDED_STRUCT_BEGIN( sStringPath, lPathG );
+			StringPath_SetNT( lpS, "b.txt" );
+			StringPath_Append( lpS, lBigString );
+			GOD_UNIT_TEST_EXPECT( 0 == *StringPath_End( lpS ), "set not null terminating" );
+		}
+		GOD_UNIT_TEST_GUARDED_STRUCT_CHECK( sStringPath, lPathG );
+	}
+
+	/* check that setfilname stays in bounds*/
+	{
+		GOD_UNIT_TEST_GUARDED_STRUCT( sStringPath, lPathG );
+		{
+			sStringPath * lpS = GOD_UNIT_TEST_GUARDED_STRUCT_BEGIN( sStringPath, lPathG );
+			StringPath_SetNT( lpS, "b.txt" );
+			StringPath_SetFileName( lpS, lBigString );
+			GOD_UNIT_TEST_EXPECT( 0 == *StringPath_End( lpS ), "set not null terminating" );
+		}
+		GOD_UNIT_TEST_GUARDED_STRUCT_CHECK( sStringPath, lPathG );
+	}
+
+	/* check that combine stays in bounds*/
+	{
+		GOD_UNIT_TEST_GUARDED_STRUCT( sStringPath, lPathG );
+		{
+			sStringPath * lpS = GOD_UNIT_TEST_GUARDED_STRUCT_BEGIN( sStringPath, lPathG );
+			StringPath_Combine( lpS, lBigString, lBigString );
+			GOD_UNIT_TEST_EXPECT( 0 == *StringPath_End( lpS ), "set not null terminating" );
+		}
+		GOD_UNIT_TEST_GUARDED_STRUCT_CHECK( sStringPath, lPathG );
+	}
 
 	for( i = 0; i < mARRAY_COUNT( gStrPathTestDefs ); i++ )
 	{
@@ -105,12 +168,12 @@ GOD_UNIT_TEST( String )
 		const char * lpFileName;
 		char lDrive;
 
-		StringPath_Set( &lPath0, lpDef->mpPath );
-		lpExt		= StringPath_GetpExt( &lPath0 );
-		lpFileName	= StringPath_GetpFileName( &lPath0 );
-		lDrive		= StringPath_GetDrive( &lPath0 );
-		StringPath_GetFolder( &lFolder, &lPath0 );
-		StringPath_GetDirectory( &lDir, &lPath0 );
+		StringPath_SetNT( &lPath0, lpDef->mpPath );
+		lpExt		= StringPath_GetpExt( lPath0.mChars );
+		lpFileName	= StringPath_GetpFileName( lPath0.mChars );
+		lDrive		= StringPath_GetDrive( lPath0.mChars );
+		StringPath_GetFolder( &lFolder, lPath0.mChars );
+		StringPath_GetDirectory( &lDir, lPath0.mChars );
 /*		printf( "dir: %s [%s]\n", lDir.mChars, lpDef->mpDir );*/
 		GOD_UNIT_TEST_EXPECT( 0 == String_StrCmp( lpDef->mpDir, lDir.mChars ), "GetDir failure" );
 		GOD_UNIT_TEST_EXPECT( 0 == String_StrCmp( lpDef->mpFolder, lFolder.mChars ), "GetFolder failure" );
@@ -123,10 +186,14 @@ GOD_UNIT_TEST( String )
 		sStrPathTestCompact * lpCom = &gStrPathCompacts[ i ];
 		sStringPath lShort;
 
-		StringPath_Set( &lPath0, lpCom->mpPathLong );
-		StringPath_Compact( &lShort, &lPath0 );
+		StringPath_SetNT( &lPath0, lpCom->mpPathLong );
+		StringPath_Compact( &lShort, lPath0.mChars );
 /*		printf( "compact: %s [%s]\n", lShort.mChars, lpCom->mpPathShort );*/
 		GOD_UNIT_TEST_EXPECT( 0 == String_StrCmp( lpCom->mpPathShort, lShort.mChars ), "couldn't compact path" );
+
+		GODLIB_ASSERT( 0 == String_StrCmp( lpCom->mpPathShort, lShort.mChars ) );
+		StringPath_SetNT( &lPath0, lpCom->mpPathLong );
+		StringPath_Compact( &lShort, lPath0.mChars );
 	}
 
 	/*

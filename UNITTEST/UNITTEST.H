@@ -56,6 +56,12 @@ extern sUnitTestContext  gUnitTestContext;
 #define	GOD_UNIT_TEST_ASSERT( _aValue, _aMsg ) { if( !( _aValue ) ) { DebugLog_Printf3( " %s @ %s (%d)\n", _aMsg, __FILE__, __LINE__ ); gUnitTestContext.mErrorCount++; return; } }
 
 
+#define	GOD_UNIT_TEST_GUARDED_STRUCT( _aType, _aName )	U8 _aName[ sizeof(_aType) + 32]; { U16 _i; for( _i=0;_i<16;_i++) _aName[ _i ] = _aName[ sizeof(_aType)+_i+16] = (U8)(0xE0 + _i);  }
+#define	GOD_UNIT_TEST_GUARDED_STRUCT_BEGIN( _aType, _aName )	(_aType*)(&_aName [16])
+#define	GOD_UNIT_TEST_GUARDED_STRUCT_CHECK2( _aType, _aName )	{ U16 _i; for( _i=0;_i<16;_i++) GOD_UNIT_TEST_EXPECT( _aName[ _i ] == _aName[ sizeof(_aType)+_i+16] == (U8)(0xE0 + _i), "scribbler" );  }
+#define	GOD_UNIT_TEST_GUARDED_STRUCT_CHECK( _aType, _aName )	{ U16 _i; for( _i=0;_i<16;_i++) { GOD_UNIT_TEST_EXPECT( _aName[ _i ] == (U8)(0xE0 + _i), "scribbler" ); GOD_UNIT_TEST_EXPECT( _aName[ _i + sizeof(_aType) + 16 ] == (U8)(0xE0 + _i), "scribbler" ); }  }
+
+
 /* ################################################################################ */
 
 #endif	/*	INCLUDED_SCREEN_H	*/

@@ -4,15 +4,7 @@
 
 #include	"STRPATH.H"
 
-#include	<GODLIB/DEBUGLOG/DEBUGLOG.H>
-#include	<GODLIB/MEMORY/MEMORY.H>
 #include	<GODLIB/STRING/STRING.H>
-
-
-/* ###################################################################################
-#  ENUMS
-################################################################################### */
-
 
 
 /* ###################################################################################
@@ -20,74 +12,47 @@
 ################################################################################### */
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : StringList_Init( sStringList * apList )
-* ACTION   : StringList_Init
-* CREATION : 18.02.2004 PNK
+* FUNCTION : StringPath_Set( sStringPath * apDst, const sStringPath * apSrc )
+* ACTION   : sets a string path from another stringpath
+* CREATION : 18.10.2018 PNK
 *-----------------------------------------------------------------------------------*/
 
-const char *		StringPath_GetpExt( sStringPath * apPath )
+void	StringPath_Set( sStringPath * apDst, const sStringPath * apSrc )
 {
-	const char * lpExt = 0;
-	U16 i;
-
-	for( i=0; apPath->mChars[i]; i++ )
-	{
-		if( '.' == apPath->mChars[ i ] )
-		{
-			lpExt = &apPath->mChars[ i ];
-		}
-	}
-
-	return( lpExt );
-}
-
-void		StringPath_SetExt( sStringPath * apPath, const char * apExt )
-{
-	char * lpExt = (char *)StringPath_GetpExt( apPath );
-	if( lpExt )
-	{
-		U16 i = (U16)(lpExt - &apPath->mChars[0]);
-		for( ; i<sizeof(sStringPath)-1 && *apExt; apPath->mChars[i++]=*apExt++);
-		apPath->mChars[i]=0;
-	}
-}
-
-void	StringPath_Append( sStringPath * apPath, const char * apFile )
-{
-	U16 i=0;
-	for( i=0; apPath->mChars[i]; i++ );
-
-	if( i && i<sizeof(sStringPath)-1 && '\\' !=apPath->mChars[i-1] && '/' != apPath->mChars[i-1])
-	{
-		apPath->mChars[i++] = '\\';
-	}
-	for( ; (i<sizeof(sStringPath)-1) && *apFile; apPath->mChars[ i++ ] = *apFile++);
-	apPath->mChars[ i ] = 0;
-}
-
-void	StringPath_Set( sStringPath * apPath, const char * apFile )
-{
-	U16 i=0;
-	for( ; (i<sizeof(sStringPath)-1) && *apFile; apPath->mChars[ i++ ] = *apFile++);
-	apPath->mChars[ i ] = 0;
+	StringPath_SetNT( apDst, apSrc->mChars );
 }
 
 
-void	StringPath_Copy( sStringPath * apDst, const sStringPath * apSrc )
-{
-	U16 i;
-	const char * lpSrc = apSrc->mChars;
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_Set( sStringPath * apPath, const char * apSrc )
+* ACTION   : sets a stringpath from a null terminated string
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
 
-	for( i=0; (i<sizeof(sStringPath)-1) && *lpSrc; apDst->mChars[i++] = *lpSrc++ );
-	apDst->mChars[i] = 0;
+void	StringPath_SetNT( sStringPath * apPath, const char * apSrc )
+{
+	char * lpDst = StringPath_Begin( apPath );
+	char * lpEnd = StringPath_End( apPath );
+
+	for( ; ( lpDst < lpEnd ) && *apSrc; )
+		*lpDst++ = *apSrc++;
+
+	*lpDst = 0;
 }
 
-void	StringPath_CopySS( sStringPath * apDst, const sString * apSrc )
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_SetSS( sStringPath * apDst, const sString * apSrc )
+* ACTION   : sets a stringpath from a sString
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	StringPath_SetSS( sStringPath * apDst, const sString * apSrc )
 {
 	U32 len = String_GetLength( apSrc );
 	U32 i;
-	if( len > sizeof( sStringPath )-1 )
-		len = sizeof( sStringPath )-1;
+	if( len > sizeof( sStringPath ) - 1 )
+		len = sizeof( sStringPath ) - 1;
 
 	for( i = 0; i < len; i++ )
 		apDst->mChars[ i ] = apSrc->mpChars[ i ];
@@ -95,138 +60,283 @@ void	StringPath_CopySS( sStringPath * apDst, const sString * apSrc )
 }
 
 
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_GetpExt( const char * apPath )
+* ACTION   : returns extension of null terminated string
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
 
-const char *		StringPath_GetpFileName( sStringPath * apPath )
+const char *	StringPath_GetpExt( const char * apPath )
 {
-	const char * lpFileName = apPath->mChars;
-	U16 i;
+	const char * lpExt = 0;
 
-	if( apPath->mChars[0])
+	for( ;*apPath; apPath++ )
+		if( '.' == *apPath )
+			lpExt = apPath;
+
+	return( lpExt );
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_SetExt( sStringPath * apPath, const char * apExt )
+* ACTION   : sets extension of string path
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void		StringPath_SetExt( sStringPath * apPath, const char * apExt )
+{
+	char * lpExt = (char *)StringPath_GetpExt( apPath->mChars );
+	if( lpExt )
 	{
-		for( i=1; apPath->mChars[i]; i++ )
-		{
-			if( ('\\' == apPath->mChars[i-1]) || ('/' == apPath->mChars[i-1]) )
-			{
-				lpFileName = &apPath->mChars[i];
-			}
-		}
+		char * lpEnd = StringPath_End( apPath );
+		for( ;lpExt < lpEnd && *apExt; )
+			*lpExt++ = *apExt++;
+
+		*lpExt = 0;
 	}
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_Append( sStringPath * apPath, const char * apFile )
+* ACTION   : appends to string path, and ensures seperators are inserted
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	StringPath_Append( sStringPath * apPath, const char * apFile )
+{
+	char * lpStart = StringPath_Begin( apPath );
+	char * lpEnd = StringPath_End( apPath );
+
+	char * lpDst = lpStart;
+
+	/* find end of string*/
+	for( ;*lpDst && lpDst < lpEnd; )
+		lpDst++;
+
+	/* insert seperator if needed */
+	if( lpDst > lpStart && lpDst < lpEnd )
+		if( !StringPath_IsSeperator( lpDst[ -1 ] ) )
+			*lpDst++ = '\\';
+
+	for( ;lpDst < lpEnd && *apFile; )
+		*lpDst++ = *apFile++;
+
+	*lpDst = 0;
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_GetpFileName( const sStringPath * apPath )
+* ACTION   : gets filename from a path
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+const char *		StringPath_GetpFileName( const char * apPath )
+{
+	const char * lpFileName = apPath;
+
+	if( apPath )
+		for( apPath++; *apPath; apPath++ )
+			if( StringPath_IsSeperator( apPath[ -1 ] ) )
+				lpFileName = apPath;
+
 	return( lpFileName );
 }
 
 
-void				StringPath_SetFileName( sStringPath * apPath, const char * apFileName )
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_SetFileName( sStringPath * apPath, const char * apFileName )
+* ACTION   : sets filename in a stringpath
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void		StringPath_SetFileName( sStringPath * apPath, const char * apFileName )
 {
-	U16 i;
-	const char * lpFileName = StringPath_GetpFileName(apPath);
-	
-	for( i = (U16)(lpFileName - &apPath->mChars[0]); i<sizeof(sStringPath)-1 && *apFileName; apPath->mChars[i++]=*apFileName++);
+	char * lpDst = (char*)StringPath_GetpFileName(apPath->mChars);
+	char * lpEnd = StringPath_End( apPath );
+
+	for( ;lpDst < lpEnd && apFileName; )
+		*lpDst++ = *apFileName++;
+
+	*lpDst = 0;
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_Combine( sStringPath * apPath, const char * apDir, const char * apFileName )
+* ACTION   : combines a directory and filename into a path
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
 
 void		StringPath_Combine( sStringPath * apPath, const char * apDir, const char * apFileName )
 {
-	U16 i;
+	char * lpStart = StringPath_Begin( apPath );
+	char * lpDst = lpStart;
+	char * lpEnd = StringPath_End( apPath );
 
-	for( i=0; i<sizeof(sStringPath)-1 && *apDir; apPath->mChars[i++] = *apDir++ );
-	if( i && i<sizeof(sStringPath)-1 && '\\' !=apPath->mChars[i-1] && '/' != apPath->mChars[i-1])
-	{
-		apPath->mChars[i++] = '\\';
-	}
-	for( ; i<sizeof(sStringPath)-1 && apFileName; apPath->mChars[i++] = *apFileName++ );
-	apPath->mChars[i]=0;
+	for( ;lpDst < lpEnd && *apDir; )
+		*lpDst++ = *apDir++;
+
+	if( lpDst > lpStart && lpDst < lpEnd && !StringPath_IsSeperator( lpDst[ -1 ] ) )
+		*lpDst++ = '\\';
+
+	for( ;lpDst < lpEnd && *apFileName; )
+		*lpDst++ = *apFileName++;
+
+	*lpDst = 0;
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_Combine2( sStringPath * apPath, const char * apDir0, const char * apDir1, const char * apFileName )
+* ACTION   : combines two directories and filename into a path
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
 
 void		StringPath_Combine2( sStringPath * apPath, const char * apDir0, const char * apDir1, const char * apFileName )
 {
-	U16 i;
-	for( i=0; i<sizeof(sStringPath)-1 && apDir0[i]; apPath->mChars[i++] = *apDir0++ );
-	if( i && i<sizeof(sStringPath)-1 && '\\' !=apPath->mChars[i-1] && '/' != apPath->mChars[i-1])
-	{
-		apPath->mChars[i++] = '\\';
-	}
-	for( ; i<sizeof(sStringPath)-1 && apDir1[i]; apPath->mChars[i++] = *apDir1++ );
-	if( i && i<sizeof(sStringPath)-1 && '\\' !=apPath->mChars[i-1] && '/' != apPath->mChars[i-1])
-	{
-		apPath->mChars[i++] = '\\';
-	}
-	for( ; i<sizeof(sStringPath)-1 && apFileName[i]; apPath->mChars[i++] = *apFileName++ );
-	apPath->mChars[ i ] =0;
+	char * lpStart = StringPath_Begin( apPath );
+	char * lpDst = lpStart;
+	char * lpEnd = StringPath_End( apPath );
+
+	for( ;lpDst < lpEnd && *apDir0; )
+		*lpDst++ = *apDir0++;
+
+	if( lpDst > lpStart && lpDst < lpEnd && !StringPath_IsSeperator( lpDst[ -1 ] ) )
+		*lpDst++ = '\\';
+
+	for( ;lpDst < lpEnd && *apDir1; )
+		*lpDst++ = *apDir1++;
+
+	if( lpDst > lpStart && lpDst < lpEnd && !StringPath_IsSeperator( lpDst[ -1 ] ) )
+		*lpDst++ = '\\';
+
+	for( ;lpDst < lpEnd && *apFileName; )
+		*lpDst++ = *apFileName++;
+
+	*lpDst = 0;
 }
 
-char	StringPath_GetDrive( const sStringPath * apPath )
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_GetDrive( const char * apPath );
+* ACTION   : returns the drive if absolute path
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+char	StringPath_GetDrive( const char * apPath )
 {
 	char lRes = 0;
-	if( ':' == apPath->mChars[ 1 ] )
-		lRes = apPath->mChars[ 0 ];
+	if( apPath && ':' == apPath[1] )
+		lRes = apPath[0];
 	return lRes;
 }
 
-U16			StringPath_IsAbsolute( const sStringPath * apPath )
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_IsAbsolute( const char * apPath )
+* ACTION   : returns non zero if absolute
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+U16			StringPath_IsAbsolute( const char * apPath )
 {
 	return( 0 != StringPath_GetDrive( apPath ) );
 }
 
-void			StringPath_GetDirectory( sStringPath * apDst, const sStringPath * apSrc )
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_IsAbsolute( const char * apPath )
+* ACTION   : gets directory from a path string
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void			StringPath_GetDirectory( sStringPath * apDst, const char * apSrc )
 {
-	U16 i;
-	U16 d = 0;
+	char * lpDst = StringPath_Begin( apDst );
+	char * lpEnd = StringPath_End( apDst );
+	char * lpSep = 0;
 
-	for( i = 0; i < sizeof(sStringPath) && apSrc->mChars[ i ]; i++ )
+	for( ;lpDst < lpEnd && apSrc; )
 	{
-		apDst->mChars[ i ] = apSrc->mChars[ i ];
-		if( StringPath_IsSeperator( apSrc->mChars[ i ] ) )
-			d = i;
+		if( StringPath_IsSeperator( *apSrc ) )
+			lpSep = lpDst;
+		*lpDst++ = *apSrc++;
 	}
-	apDst->mChars[ d ] = 0;
 
-}
-void			StringPath_GetFolder( sStringPath * apDst, const sStringPath * apSrc )
-{
-	U16 i = 0;
-	U16 a = 0;
-	U16 b = 0;
-	for( i = 0; i < sizeof( sStringPath ) && apSrc->mChars[ i ]; i++ )
-	{
-		if( StringPath_IsSeperator( apSrc->mChars[i] ) )
-		{
-			a = b;
-			b = i;
-		}
-	}
-	if( StringPath_IsSeperator( apSrc->mChars[a] ) )
-		a++;
-
-	if( 2 == b && ':' == apSrc->mChars[ 1 ] )
-	{
-		apDst->mChars[ 0 ] = 0;
-	}
+	if( lpSep )
+		*lpSep = 0;
 	else
-	{
-		for( i = 0; a < b; )
-			apDst->mChars[ i++ ] = apSrc->mChars[ a++ ];
-		apDst->mChars[ i ] = 0;
-	}
+		*lpDst = 0;
 }
 
-void			StringPath_Compact( sStringPath * apDst, const sStringPath * apSrc )
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_GetFolder( sStringPath * apDst, const char * apSrc )
+* ACTION   : gets folder from a path string
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void		StringPath_GetFolder( sStringPath * apDst, const char * apSrc )
 {
-	U16	i,j=0;
-	for( i = 0; i<sizeof(sStringPath) && apSrc->mChars[ i ];  )
+	const char * lpSrc = apSrc;
+	char * lpDst = StringPath_Begin( apDst );
+	char * lpEnd = StringPath_End( apDst );
+
+	const char * lpFolderStart = apSrc;
+	const char * lpFolderEnd = apSrc;
+
+	for( ;*lpSrc; lpSrc++ )
 	{
-		apDst->mChars[ j++ ] = apSrc->mChars[ i++ ];
-		if( (j > 2) && ('.' == apDst->mChars[ j - 1 ]) && ('.' == apDst->mChars[ j - 2 ]) )
+		if( StringPath_IsSeperator( *lpSrc ) )
 		{
-			for( j -= 3; j && !StringPath_IsSeperator( apDst->mChars[ j-1 ] ); j-- );
-			if( j )
-				j--;
+			lpFolderStart = lpFolderEnd;
+			lpFolderEnd = lpSrc;
 		}
 	}
-	if( j && StringPath_IsSeperator( apDst->mChars[ j - 1 ] ) )
-		j--;
 
-	apDst->mChars[ j ] = 0;
+	if( StringPath_IsSeperator( *lpFolderStart ) )
+		lpFolderStart++;
+
+	if( !( *lpFolderStart && ':' == lpFolderStart[ 1 ] ) )
+		for( ;lpDst < lpEnd && lpFolderStart < lpFolderEnd; )
+			*lpDst++ = *lpFolderStart++;
+
+	*lpDst = 0;
 }
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_GetFolder( sStringPath * apDst, const char * apSrc )
+* ACTION   : gets folder from a path string
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void			StringPath_Compact( sStringPath * apDst, const char * apSrc )
+{
+	char * lpStart = StringPath_Begin( apDst );
+	char * lpDst = lpStart;
+	char * lpEnd = StringPath_End( apDst );
+
+
+	for( ;lpDst < lpEnd && *apSrc; )
+	{
+		*lpDst++ = *apSrc++;
+		if( ( '.' == lpDst[ -1 ] ) && ( ( lpDst - lpStart ) > 2 ) && ( '.' == lpDst[ -2 ] ) )
+		{
+			for( lpDst -= 3; ( lpDst > lpStart ) && ( !StringPath_IsSeperator( lpDst[ -1 ] )); lpDst-- );
+			if( lpDst > lpStart )
+				lpDst--;
+
+		}
+	}
+	if( lpDst > lpStart && StringPath_IsSeperator( lpDst[ -1 ] ) )
+		lpDst--;
+
+	*lpDst = 0;
+}
+
 
 /* ################################################################################ */

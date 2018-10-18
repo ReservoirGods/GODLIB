@@ -71,7 +71,7 @@ U8			Reflect_SetData( const sReflectType * apType, const sString * apElementName
 				{
 					S32 lVal;
 					sStringPath chars;
-					StringPath_CopySS( &chars, apValue );
+					StringPath_SetSS( &chars, apValue );
 					if( !String_StrCmpi( "true", chars.mChars ) )
 						lVal = 1;
 					else if( !String_StrCmpi( "false", chars.mChars ) )
@@ -90,7 +90,7 @@ U8			Reflect_SetData( const sReflectType * apType, const sString * apElementName
 				{
 					U32 lVal;
 					sStringPath chars;
-					StringPath_CopySS( &chars, apValue );
+					StringPath_SetSS( &chars, apValue );
 					if( !String_StrCmpi( "true", chars.mChars ) )
 						lVal = 1;
 					else if( !String_StrCmpi( "false", chars.mChars ) )
