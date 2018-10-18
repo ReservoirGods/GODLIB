@@ -83,7 +83,13 @@ S32		Drive_DeleteDirectory( const char * apDirName )
 
 U8		Drive_DirectoryExists( const char * apDirName )
 {
+/*
 	return( 0 == File_ReadFirst( apDirName, dGEMDOS_FA_DIR ) );
+*/
+	S16	lBits = (S16)File_GetAttribute( apDirName );
+	if( lBits > 0 && ( lBits & dGEMDOS_FA_DIR ) )
+		return 1;
+	return 0;
 }
 
 /*-----------------------------------------------------------------------------------*

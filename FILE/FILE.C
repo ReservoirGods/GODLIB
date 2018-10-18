@@ -275,7 +275,20 @@ S32		File_Rename( const char * apOldFname, const char * apNewFname )
 
 S32		File_GetAttribute( const char * apFname )
 {
+#ifdef dGODLB_PLATFORM_ATARI
 	return( GemDos_Fattrib( apFname, 0, 0 ) );
+#else
+	S32	lAttribs = 0;
+	DWORD lWinAt =	GetFileAttributesA( apFname );
+
+	lAttribs |= ( lWinAt & FILE_ATTRIBUTE_ARCHIVE   ) ? dGEMDOS_FA_ARCHIVE  : 0;
+	lAttribs |= ( lWinAt & FILE_ATTRIBUTE_DIRECTORY ) ? dGEMDOS_FA_DIR      : 0;
+	lAttribs |= ( lWinAt & FILE_ATTRIBUTE_HIDDEN    ) ? dGEMDOS_FA_HIDDEN   : 0;
+	lAttribs |= ( lWinAt & FILE_ATTRIBUTE_READONLY  ) ? dGEMDOS_FA_READONLY : 0;
+	lAttribs |= ( lWinAt & FILE_ATTRIBUTE_SYSTEM    ) ? dGEMDOS_FA_SYSTEM   : 0;
+
+	return lAttribs;
+#endif
 }
 
 
@@ -391,7 +404,11 @@ void	File_SetDTA( sGemDosDTA * apDTA )
 
 sGemDosDTA* File_GetDTA( void )
 {
+#ifdef dGODLIB_PLATFORM_ATARI
 	return( GemDos_Fgetdta() );
+#else
+	return( gpFileDTA );
+#endif
 }
 
 
@@ -403,6 +420,7 @@ sGemDosDTA* File_GetDTA( void )
 
 S32		File_ReadFirst( const char * apFspec, U16 aAttribs )
 {
+	GODLIB_ASSERT( 0!=gpFileDTA );
 #ifdef	dGODLIB_PLATFORM_ATARI
 	return( GemDos_Fsfirst( apFspec, aAttribs ) );
 #elif defined(dGODLIB_COMPILER_GCC)

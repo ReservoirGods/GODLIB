@@ -48,7 +48,6 @@ U8				gAudioMixerLockFlag;
 U8				gAudioMixerEnableFlag;
 sAmixerSpl		gAudioMixerSamples[ 2 ];
 
-void			AudioMixer_Vbl( void ){}
 
 /*-----------------------------------------------------------------------------------*
 	AUDIO_S.S
