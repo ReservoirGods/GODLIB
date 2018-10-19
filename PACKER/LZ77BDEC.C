@@ -27,7 +27,7 @@ U32	GodPack_Lz77b_Decode( const void * apSrc,void * apDst,const U32 aSize )
 	U16		lCount;
 	U32		i;
 
-	DebugLog_Init( eDebugLog_File, "LZB_DEC.LOG" );
+/*	DebugLog_Init( eDebugLog_File, "LZB_DEC.LOG" );*/
 
 	lpSrc = (U8*)apSrc;
 	lpDst = (U8*)apDst;
@@ -116,7 +116,7 @@ U32	GodPack_Lz77b_Decode( const void * apSrc,void * apDst,const U32 aSize )
 
 		}
 	}
-	DebugLog_DeInit();
+/*	DebugLog_DeInit();*/
 	return( i );
 }
 
