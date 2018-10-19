@@ -40,6 +40,7 @@ char *	Assert_GetpString( void );
 		Assert_Display( Assert_GetpString() );																\
 	}
 
+#define	GODLIB_ASSERT( _aValue )	{	if( !(_aValue))	{__debugbreak();}	}
 
 #else
 
@@ -47,6 +48,8 @@ char *	Assert_GetpString( void );
 #define	Assert( aExp )
 #define	Assert_Display( apString )
 #define	Assert_GetpString()	0
+
+#define	GODLIB_ASSERT( _aValue )
 
 #endif
 
