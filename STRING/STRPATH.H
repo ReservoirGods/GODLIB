@@ -34,6 +34,7 @@ const char *	StringPath_GetpExt( const char * apPath );
 const char *	StringPath_GetpFileName( const char * apPath );
 
 void			StringPath_SetFileName( sStringPath * apPath, const char * apFileName );
+void			StringPath_SetFileNameNoExt( sStringPath * apPath, const char * apFileName );
 
 void			StringPath_Append( sStringPath * apPath, const char * apFile );
 

@@ -154,13 +154,31 @@ const char *		StringPath_GetpFileName( const char * apPath )
 
 void		StringPath_SetFileName( sStringPath * apPath, const char * apFileName )
 {
-	char * lpDst = (char*)StringPath_GetpFileName(apPath->mChars);
+	char * lpSrc = (char*)StringPath_GetpFileName( apFileName );
+	char * lpDst = StringPath_Begin( apPath );
 	char * lpEnd = StringPath_End( apPath );
 
-	for( ;lpDst < lpEnd && apFileName; )
-		*lpDst++ = *apFileName++;
+	for( ;lpDst < lpEnd && *lpSrc; )
+		*lpDst++ = *lpSrc++;
 
 	*lpDst = 0;
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : StringPath_SetFileNameNoExt( sStringPath * apPath, const char * apFileName )
+* ACTION   : gets a filename without an extension
+* CREATION : 18.10.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	StringPath_SetFileNameNoExt( sStringPath * apPath, const char * apFileName )
+{
+	char * lpExt;
+
+	StringPath_SetFileName( apPath, apFileName );
+	lpExt = (char*)StringPath_GetpExt( apPath->mChars );
+	if( lpExt )
+		*lpExt = 0;
 }
 
 
@@ -259,7 +277,7 @@ void			StringPath_GetDirectory( sStringPath * apDst, const char * apSrc )
 	char * lpEnd = StringPath_End( apDst );
 	char * lpSep = 0;
 
-	for( ;lpDst < lpEnd && apSrc; )
+	for( ;lpDst < lpEnd && *apSrc; )
 	{
 		if( StringPath_IsSeperator( *apSrc ) )
 			lpSep = lpDst;
