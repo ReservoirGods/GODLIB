@@ -16,7 +16,7 @@
 
 #ifdef	dDEBUGLOG
 
-#include	<STRING.H>
+#include	<GODLIB/ASSERT/ASSERT.H>
 #include	<GODLIB/FILE/FILE.H>
 
 #ifdef	dGODLIB_PLATFORM_WIN
@@ -54,6 +54,8 @@ sFileHandle	gDebugLogFileHandle = 0;
 
 void	DebugLog_Init( U32 aTargets, const char * apFileName )
 {
+	GODLIB_ASSERT( 0 == gDebugLogFileHandle );
+
 	gDebugLogTargets = aTargets;
 	gDebugLogCanWriteSTEEM = DebugLog_IsSTEEM();
 	if( aTargets & eDebugLog_File )
