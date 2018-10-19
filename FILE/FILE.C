@@ -294,7 +294,7 @@ S32		File_Rename( const char * apOldFname, const char * apNewFname )
 
 S32		File_GetAttribute( const char * apFname )
 {
-#ifdef dGODLB_PLATFORM_ATARI
+#ifdef dGODLIB_PLATFORM_ATARI
 	return( GemDos_Fattrib( apFname, 0, 0 ) );
 #else
 	S32	lAttribs = 0;

@@ -16,6 +16,7 @@
 
 #include	<STRING.H>
 #include	<GODLIB/CLI/CLI.H>
+#include	<GODLIB/DRIVE/DRIVE.H>
 #include	<GODLIB/DEBUG/DBGCHAN.H>
 #include	<GODLIB/FILE/FILE.H>
 #include	<GODLIB/GEMDOS/GEMDOS.H>
@@ -23,6 +24,7 @@
 #include	<GODLIB/PACKER/GODPACK.H>
 #include	<GODLIB/PACKER/PACKER.H>
 #include	<GODLIB/STRING/STRING.H>
+#include	<GODLIB/STRING/STRPATH.H>
 
 
 /* ###################################################################################
@@ -1150,9 +1152,13 @@ void	LinkFile_SaveData( sLinkFileFolder * apFolder,sFileHandle aHandle,char * ap
 
 void	LinkFile_Dump( sLinkFile * apLinkFile,char * apFileName,char * apSrcDirectory )
 {
+	sStringPath		lDir;
 	sFileHandle		lHandle;
 	sLinkFile *		lpLinkFile;
 	S32				lSize;
+
+	StringPath_GetDirectory( &lDir, apFileName );
+	Drive_CreateDirectory( lDir.mChars );
 
 	lHandle = File_Create( apFileName );
 
