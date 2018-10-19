@@ -87,6 +87,8 @@ void	Audio_ScaleVolumeUnSigned( sAudioDmaSound * apSound, const U16 aScale );
 void	Audio_DmaSound_Delocate( sAudioDmaSound * apSnd );
 void	Audio_DmaSound_Relocate( sAudioDmaSound * apSnd );
 
+U32		Audio_GetFrequency( U8 aFreq );
+
 sAudioDmaSound *	Audio_GetpDmaCurrentSound( void );
 U8 *				Audio_GetpSavedYM( void );
 void				Audio_SaveYM( void );

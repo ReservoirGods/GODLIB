@@ -39,6 +39,7 @@
 #include	"AM_COS.H"
 #include	"AMPANLAW.H"
 
+#include	<GODLIB/ASSERT/ASSERT.H>
 #include	<GODLIB/AUDIO/AUDIO.H>
 #include	<GODLIB/FILE/FILE.H>
 #include	<GODLIB/MEMORY/MEMORY.H>
@@ -54,7 +55,7 @@
 #  DEFINES
 ################################################################################### */
 
-#define	dAMIXER_BUFFER_SIZE		(8*1024)
+#define	dAMIXER_SILENCE_SIZE	(4*1024)
 #define	dAMIXER_CHANNEL_LIMIT	2
 
 
@@ -64,8 +65,11 @@
 
 U16		gAudioMixerDMAHardWareFlag;
 /*U8		gAudioMixerSineLaw[ 256 ];*/
+U32		gAudioMixerChunkSize;
+U32		gAudioMixerOffset;
 
 sAmixerConfig	gAudioMixerConfig;
+sAmixerSpl		gAudioMixerSilenceSpl;
 
 /* ###################################################################################
 #  PROTOTYPES
@@ -108,17 +112,21 @@ void	AudioMixer_Init( void )
 		gAudioMixerDMAHardWareFlag = 1;
 		break;
 	default:
+#ifdef dGODLIB_PLATFORM_WIN
+		gAudioMixerDMAHardWareFlag = 1;
+#else
 		gAudioMixerDMAHardWareFlag = 0;
+#endif
 		break;
 	}
 
+	gAudioMixerConfig.mBits			= eAUDIO_BITS_8;
+	gAudioMixerConfig.mFrequency	= eAUDIO_FREQ_12;
+	gAudioMixerConfig.mPanType		= eMixer_PanType_Linear;
 	gAudioMixerConfig.mStereoFlag = 1;
-	gAudioMixerConfig.mBits = eAUDIO_BITS_8;
-	gAudioMixerConfig.mPanType = eMixer_PanType_Linear;
 
-
-	gpAudioMixerSilence        = (U8*)mMEMSCREENCALLOC( 4*1024 );
-	Memory_Clear( (4*1024), gpAudioMixerSilence );
+	gpAudioMixerSilence        = (U8*)mMEMSCREENCALLOC( dAMIXER_SILENCE_SIZE );
+	Memory_Clear( ( dAMIXER_SILENCE_SIZE ), gpAudioMixerSilence );
 	gpAudioMixerBuffer         = (U8*)mMEMSCREENCALLOC( dAMIXER_BUFFER_SIZE+(2*1024) );
 /*	gpAudioMixerMulTable       = (U8*)mMEMCALLOC( 0x10000L );*/
 	gAudioMixerBufferOffset    = (4*1024);
@@ -127,13 +135,14 @@ void	AudioMixer_Init( void )
 	gpAudioMixerMulTable = &AM_MUL_Array[0];
 
 
+	gAudioMixerSilenceSpl.mActiveFlag = 0;
+	gAudioMixerSilenceSpl.mpCurrent = gpAudioMixerSilence;
+	gAudioMixerSilenceSpl.mpStart = gpAudioMixerSilence;
+	gAudioMixerSilenceSpl.mLength = dAMIXER_SILENCE_SIZE;
+	gAudioMixerSilenceSpl.mpEnd = ( (U8*)gAudioMixerSilenceSpl.mpStart ) + gAudioMixerSilenceSpl.mLength;
+
 	for( i=0; i<dAMIXER_CHANNEL_LIMIT; i++ )
-	{
-		gAudioMixerSamples[ i ].mActiveFlag = 0;
-		gAudioMixerSamples[ i ].mpCurrent   = gpAudioMixerSilence;
-		gAudioMixerSamples[ i ].mpStart     = gpAudioMixerSilence;
-		gAudioMixerSamples[ i ].mLength     = 1024;
-	}
+		gAudioMixerSamples[ i ] = gAudioMixerSilenceSpl;
 
 /*
 	AudioMixer_TablesBuild();
@@ -176,14 +185,21 @@ void	AudioMixer_Enable( void )
 {
 	sAudioDmaSound	lSound;
 	U16				i;
+	U32 lFreq = Audio_GetFrequency( gAudioMixerConfig.mFrequency );
+
+	if( gAudioMixerConfig.mStereoFlag )
+		lFreq <<= 1;
+	lFreq /= 50;						/* amount to process per VBL*/
+	gAudioMixerChunkSize = lFreq * 2;	/* process up to 2 VBLs each iteration*/
+	gAudioMixerOffset = lFreq / 2;	/* offset from DMA ptr to begin mixing at*/
 
 	if( (gAudioMixerDMAHardWareFlag) && (!gAudioMixerEnableFlag) )
 	{
-		lSound.mBits        = eAUDIO_BITS_8;
-		lSound.mFreq        = eAUDIO_FREQ_50;
+		lSound.mBits        = gAudioMixerConfig.mBits;
+		lSound.mFreq        = gAudioMixerConfig.mFrequency;
 		lSound.mLength      = dAMIXER_BUFFER_SIZE;
 		lSound.mLoopingFlag = 1;
-		lSound.mStereoFlag  = 1;
+		lSound.mStereoFlag  = gAudioMixerConfig.mStereoFlag;
 		lSound.mpSound      = gpAudioMixerBuffer;
 
 
@@ -211,17 +227,18 @@ void	AudioMixer_Enable( void )
 
 void	AudioMixer_Disable( void )
 {
-	U8 *	lpCR;
-	U8		lOff;
 
+	gAudioMixerEnableFlag = 0;
 	if( gAudioMixerEnableFlag )
 	{
-		gAudioMixerEnableFlag = 0;
+#ifdef dGODLIB_PLATFORM_ATARI
+		U8 *	lpCR;
+		U8		lOff;
 		lpCR                  = (U8*)0xFFFF8901L;
 		lOff                  = *lpCR;
 		lOff                 &= 0xFE;
 		*lpCR                 = lOff;
-
+#endif
 		Vbl_RemoveCall( AudioMixer_Vbl );
 	}
 }
@@ -244,6 +261,7 @@ void	AudioMixer_MixerSampleActivate( sAmixerSpl * apMix, const sAudioDmaSound * 
 	apMix->mActiveFlag = 0;
 	apMix->mLength = apSpl->mLength;
 	apMix->mpStart = apSpl->mpSound;
+	apMix->mpEnd   = ((U8*)apSpl->mpSound) + apSpl->mLength;
 	switch( gAudioMixerConfig.mPanType )
 	{
 	case eMixer_PanType_Linear:
@@ -372,6 +390,278 @@ U8 *	AudioMixer_GetpBuffer( void )
 {
 	return(	gpAudioMixerBuffer );
 }
+
+void	AudioMixer_MixIt( sAmixerSpl * apSpl0, sAmixerSpl * apSpl1, U8 * apDst, U32 aByteCount )
+{
+	(void)apSpl0;
+	(void)apSpl1;
+	(void)apDst;
+	(void)aByteCount;
+#if 0
+	U32 i;
+	U32	lCount = aByteCount >> 1;
+	U8 * lpSrc0 = apSpl0->mpCurrent;
+	U8 * lpSrc1 = apSpl1->mpCurrent;
+
+	GODLIB_ASSERT( apSpl0->mpCurrent + lCount <= apSpl0->mpEnd );
+	GODLIB_ASSERT( apSpl1->mpCurrent + lCount <= apSpl1->mpEnd );
+
+	for( i = 0; i < lCount; i++ )
+	{
+/*
+		*apDst++ = *lpSrc0++;
+		*apDst++ = *lpSrc1++;
+*/
+		(void)lpSrc0;
+		(void)lpSrc1;
+		*apDst++ = 0x80;
+		*apDst++ = 0x40;
+	}
+#endif
+}
+
+typedef struct sAmixerOp
+{
+	sAmixerSpl *	mpSample;
+	U32				mRemainingByteCount;
+} sAmixerOp;
+
+void	AudioMixer_Slow()
+{
+	sAmixerSpl * spl0 = &gAudioMixerSamples[ 0 ];
+	sAmixerSpl * spl1 = &gAudioMixerSamples[ 1 ];
+	sAmixerOp	src[ 2 ];
+	U32			ringSize;
+
+	if( !gAudioMixerEnableFlag )
+		return;
+
+	src[ 0 ].mpSample = spl0;
+	src[ 0 ].mRemainingByteCount = (U32)spl0->mpEnd - (U32)spl0->mpCurrent;
+
+	src[ 1 ].mpSample = spl1;
+	src[ 1 ].mRemainingByteCount = (U32)spl1->mpEnd - (U32)spl1->mpCurrent;
+
+#ifdef dGODLIB_PLATFORM_ATARI
+	{
+		U32 lDMA = 0;
+		U8 * lpDMA = (U8*)0xFFFF8909L;
+		lDMA = lpDMA[ 0 ];
+		lDMA <<= 8;
+		lDMA |= lpDMA[ 2 ];
+		lDMA <<= 8;
+		lDMA |= lpDMA[ 4 ];
+
+		lDMA -= (U32)gpAudioMixerBuffer;
+		lDMA &= ( dAMIXER_BUFFER_SIZE - 1 );
+		lDMA += gAudioMixerChunkSize;
+		if( lDMA < gAudioMixerOffset )
+			ringSize = ( dAMIXER_BUFFER_SIZE - gAudioMixerOffset ) + lDMA;
+		else
+			ringSize = lDMA - gAudioMixerOffset;
+	}
+#else
+	ringSize = gAudioMixerChunkSize;
+
+#endif // dGODLIB_PLATFORM_ATARI
+	ringSize = gAudioMixerChunkSize;
+
+
+	while( ringSize )
+	{
+		U32 lMixBytes = ringSize;
+		U32	lLeft = dAMIXER_BUFFER_SIZE - gAudioMixerOffset;
+
+		if( !lLeft )
+		{
+			lLeft = dAMIXER_BUFFER_SIZE;
+			gAudioMixerOffset = 0;
+		}
+
+		if( lLeft < lMixBytes )
+			lMixBytes = lLeft;
+
+		if( src[ 0 ].mRemainingByteCount < lMixBytes )
+			lMixBytes = src[ 0 ].mRemainingByteCount;
+		if( src[ 1 ].mRemainingByteCount < lMixBytes )
+			lMixBytes = src[ 1 ].mRemainingByteCount;
+
+		AudioMixer_MixIt( &gAudioMixerSamples[ 0 ], &gAudioMixerSamples[ 1 ], gpAudioMixerBuffer + gAudioMixerOffset, lMixBytes );
+
+		gAudioMixerOffset += lMixBytes;
+		src[ 0 ].mRemainingByteCount -= lMixBytes;
+		src[ 0 ].mpSample->mpCurrent += lMixBytes;
+
+		src[ 1 ].mRemainingByteCount -= lMixBytes;
+		src[ 1 ].mpSample->mpCurrent += lMixBytes;
+
+		if( !src[ 0 ].mRemainingByteCount )
+		{
+			*src[ 0 ].mpSample = gAudioMixerSilenceSpl;
+			src[ 0 ].mRemainingByteCount = gAudioMixerSilenceSpl.mLength;
+		}
+		if( !src[ 1 ].mRemainingByteCount )
+		{
+			*src[ 1 ].mpSample = gAudioMixerSilenceSpl;
+			src[ 1 ].mRemainingByteCount = gAudioMixerSilenceSpl.mLength;
+		}
+
+		ringSize -= lMixBytes;
+	}
+
+
+#if 0
+
+	S32	ringBufferBytesLeft = dAMIXER_BUFFER_SIZE - gAudioMixerOffset;
+	sAmixerSpl * spl0 = &gAudioMixerSamples[ 0 ];
+	sAmixerSpl * spl1 = &gAudioMixerSamples[ 1 ];
+	sAmixerOp	src[ 3 ];
+	S32			ringSizes[ 2 ];
+	U16			i;
+
+
+	src[ 0 ].mpSample = spl0;
+	src[ 0 ].mRemainingByteCount = (U32)spl0->mpEnd - (U32)spl0->mpCurrent;
+
+	src[ 1 ].mpSample = spl1;
+	src[ 1 ].mRemainingByteCount = (U32)spl1->mpEnd - (U32)spl1->mpCurrent;
+
+	if( src[ 1 ].mRemainingByteCount < src[ 0 ].mRemainingByteCount )
+	{
+		src[ 2 ] = src[ 0 ];
+		src[ 0 ] = src[ 1 ];
+		src[ 1 ] = src[ 2 ];
+	}
+
+	ringSizes[ 0 ] = gAudioMixerChunkSize;
+
+	if( ringBufferBytesLeft < (S32)gAudioMixerChunkSize )
+		ringSizes[ 0 ] = ringBufferBytesLeft;
+
+	ringSizes[ 1 ] = gAudioMixerChunkSize - ringSizes[0];
+
+	for( i = 0; i < 2; i++ )
+	{
+		S32 ringSize = ringSizes[ i ];
+		S32	left = ringSize - (S32)src[ 0 ].mRemainingByteCount;
+		S32 left2;
+		if( !ringSize )
+			continue;
+
+		if( i )
+			gAudioMixerOffset = 0;
+
+		while( ringSize )
+		{
+			U32 lMixBytes = ringSize;
+
+			if( src[ 0 ].mRemainingByteCount < lMixBytes )
+				lMixBytes = src[ 0 ].mRemainingByteCount;
+			if( src[ 1 ].mRemainingByteCount < lMixBytes )
+				lMixBytes = src[ 1 ].mRemainingByteCount;
+
+			AudioMixer_MixIt( src[ 0 ].mpSample, src[ 0 ].mpSample, gpAudioMixerBuffer + gAudioMixerOffset, lMixBytes );
+
+			gAudioMixerOffset += lMixBytes;
+			src[ 0 ].mRemainingByteCount -= lMixBytes;
+			src[ 0 ].mpSample->mpCurrent += lMixBytes;
+
+			src[ 1 ].mRemainingByteCount -= lMixBytes;
+			src[ 1 ].mpSample->mpCurrent += lMixBytes;
+
+			if( !src[ 0 ].mRemainingByteCount )
+			{
+				*src[ 0 ].mpSample = gAudioMixerSilenceSpl;
+				src[ 0 ].mRemainingByteCount = gAudioMixerSilenceSpl.mLength;
+			}
+			if( !src[ 1 ].mRemainingByteCount )
+			{
+				*src[ 1 ].mpSample = gAudioMixerSilenceSpl;
+				src[ 1 ].mRemainingByteCount = gAudioMixerSilenceSpl.mLength;
+			}
+
+			ringSize -= lMixBytes;
+		}
+		if( left > 0 )
+		{
+			AudioMixer_MixIt( src[ 0 ].mpSample, src[ 0 ].mpSample, gpAudioMixerBuffer + gAudioMixerOffset, src[ 0 ].mRemainingByteCount );
+
+			ringSize -= src[ 0 ].mRemainingByteCount;
+
+			if( src[ 1 ].mpSample->mActiveFlag )
+			{
+				src[ 1 ].mpSample->mpCurrent += src[ 0 ].mRemainingByteCount;
+				src[ 1 ].mRemainingByteCount -= src[ 0 ].mRemainingByteCount;
+			}
+
+			*src[ 0 ].mpSample = gAudioMixerSilenceSpl;
+			src[ 0 ].mRemainingByteCount = gAudioMixerSilenceSpl.mLength;
+
+			gAudioMixerOffset += src[ 0 ].mRemainingByteCount;
+			GODLIB_ASSERT( src[ 0 ].mpSample->mpCurrent <= src[ 0 ].mpSample->mpEnd );
+			GODLIB_ASSERT( src[ 1 ].mpSample->mpCurrent <= src[ 1 ].mpSample->mpEnd );
+		}
+
+		left2 = ringSize - (S32)src[ 1 ].mRemainingByteCount;
+		if( left2 > 0 )
+		{
+			AudioMixer_MixIt( src[ 0 ].mpSample, src[ 0 ].mpSample, gpAudioMixerBuffer + gAudioMixerOffset, src[ 1 ].mRemainingByteCount );
+
+			ringSize -= src[ 0 ].mRemainingByteCount;
+
+			if( src[ 0 ].mpSample->mActiveFlag )
+			{
+				src[ 0 ].mpSample->mpCurrent += src[ 1 ].mRemainingByteCount;
+				src[ 0 ].mRemainingByteCount -= src[ 1 ].mRemainingByteCount;
+			}
+
+			*src[ 1 ].mpSample = gAudioMixerSilenceSpl;
+			src[ 1 ].mRemainingByteCount = gAudioMixerSilenceSpl.mLength;
+
+			gAudioMixerOffset += src[ 1 ].mRemainingByteCount;
+			GODLIB_ASSERT( src[ 0 ].mpSample->mpCurrent <= src[ 0 ].mpSample->mpEnd );
+			GODLIB_ASSERT( src[ 1 ].mpSample->mpCurrent <= src[ 1 ].mpSample->mpEnd );
+		}
+
+		if( ringSize > 0 )
+		{
+			AudioMixer_MixIt( src[ 0 ].mpSample, src[ 0 ].mpSample, gpAudioMixerBuffer + gAudioMixerOffset, ringSize );
+
+			GODLIB_ASSERT( src[ 0 ].mpSample->mpCurrent <= src[ 0 ].mpSample->mpEnd );
+			GODLIB_ASSERT( src[ 1 ].mpSample->mpCurrent <= src[ 1 ].mpSample->mpEnd );
+
+			if( src[ 0 ].mpSample->mActiveFlag )
+			{
+				src[ 0 ].mpSample->mpCurrent += ringSize;
+				if( src[ 0 ].mpSample->mpCurrent > src[ 0 ].mpSample->mpEnd )
+					*src[ 0 ].mpSample = gAudioMixerSilenceSpl;
+			}
+			if( src[ 1 ].mpSample->mActiveFlag )
+			{
+				src[ 1 ].mpSample->mpCurrent += ringSize;
+				if( src[ 1 ].mpSample->mpCurrent > src[ 1 ].mpSample->mpEnd )
+					*src[ 1 ].mpSample = gAudioMixerSilenceSpl;
+			}
+			GODLIB_ASSERT( src[ 0 ].mpSample->mpCurrent <= src[ 0 ].mpSample->mpEnd );
+			GODLIB_ASSERT( src[ 1 ].mpSample->mpCurrent <= src[ 1 ].mpSample->mpEnd );
+
+			gAudioMixerOffset += ringSize;
+		}
+	}
+#endif
+}
+
+#ifndef dGODLIB_PLATFORM_ATARI
+
+void			AudioMixer_Vbl( void )
+{
+	AudioMixer_Slow();
+}
+
+#endif // !dGODLIB_PLATFORM_ATARI
+
+
+
 
 #if 0
 

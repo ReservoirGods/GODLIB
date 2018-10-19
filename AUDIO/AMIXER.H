@@ -8,6 +8,11 @@
 #include	<GODLIB/BASE/BASE.H>
 #include	<GODLIB/AUDIO/AUDIO.H>
 
+/* ###################################################################################
+#  DEFINES
+################################################################################### */
+
+#define	dAMIXER_BUFFER_SIZE		(8*1024)
 
 /* ###################################################################################
 #  ENUMS
@@ -36,8 +41,9 @@ enum
 
 typedef	struct sAmixerSpl
 {
-	void *	mpStart;
-	void *	mpCurrent;
+	U8 *	mpStart;
+	U8 *	mpCurrent;
+	U8 *	mpEnd;
 	U32		mLength;
 	U8		mGainLeft;
 	U8		mGainRight;
@@ -49,8 +55,9 @@ typedef	struct sAmixerSpl
 typedef struct sAmixerConfig
 {
 	U8	mBits;
-	U8	mStereoFlag;
+	U8	mFrequency;
 	U8	mPanType;
+	U8	mStereoFlag;
 } sAmixerConfig;
 
 /* ###################################################################################
@@ -70,7 +77,9 @@ void			AudioMixer_SetConfig( const sAmixerConfig * apConfig );
 U8		AudioMixer_CanPlayNewSpl( void );
 U8		AudioMixer_PlaySample( sAudioDmaSound * apSpl, const U8 aPan );
 U8		AudioMixer_PlaySampleDirect( sAudioDmaSound * apSpl, const U8 aPan );
+
 U8 *	AudioMixer_GetpBuffer( void );
+#define	AudioMixer_GetBufferSize()	dAMIXER_BUFFER_SIZE
 
 /* ################################################################################ */
 

@@ -6,6 +6,13 @@
 *	[c] 2001 Reservoir Gods
 **************************************************************************************
 
+;	Mixer frequencies:
+;   Frequency : Bytes Per Frame @ 50hz (mono/stereo) 
+;	 6258	  :  125 / 250
+;	12517	  :  250 / 500
+;	25033     :  500 / 1000
+;	50066     : 1001 / 2002
+
 **************************************************************************************
 ;	EXPORTS / IMPORTS
 **************************************************************************************
@@ -22,11 +29,19 @@
 
 	import	gAudioMixerSineLaw
 
+	; a chunk is our unit of mixing, should always be mixing up to 2 VBLs ahead
+
+	import	gAudioMixerChunkSize
+	import	gAudioMixerOffset
+
+	import	AudioMixer_Slow
+
 **************************************************************************************
 ;	EQUATES
 **************************************************************************************
 
 eAMIXER_BUFFER_SIZE		EQU	(8*1024)
+eAMIXER_SILENCE_SIZE	EQU	(4*1024)
 eAMIXER_PLAY_OFFSET		EQU	(6*1024)
 eAMIXER_CHANNEL_LIMIT	EQU	2
 
@@ -39,6 +54,7 @@ eAMIXER_CHANNEL_LIMIT	EQU	2
 
 sAmixerSpl_mpStart:		ds.l	1
 sAmixerSpl_mpCurrent:	ds.l	1
+sAmixerSpl_mpEnd:		ds.l	1
 sAmixerSpl_mLength:		ds.l	1
 sAmixerSpl_mGainLeft:	ds.b	1
 sAmixerSpl_mGainRight:	ds.b	1
@@ -46,6 +62,14 @@ sAmixerSpl_mVolume:		ds.b	1
 sAmixerSpl_mActiveFlag:	ds.b	1
 sAmixerSpl_msizeof:		ds.b	1
 
+
+	OFFSET
+
+sAmixerOp_mpSpl0:			ds.l	1
+sAmixerOp_mpSpl1:			ds.l	1
+sAmixerOp_mBufferOffset:	ds.l	1
+sAmixerOp_mByteCount:		ds.l	1
+sAmixerOp_sizeof:			ds.b	1
 
 **************************************************************************************
 	TEXT
@@ -57,34 +81,235 @@ sAmixerSpl_msizeof:		ds.b	1
 * CREATION : 11.04.01 PNK
 *------------------------------------------------------------------------------------*
 
+export poop	
+poop:
+
 AudioMixer_Vbl:
+	tas		gAudioMixerLockFlag			; already in a mixer interrupt?
+	bne		.locked						; yes, don't try further mixing
+	movem.l	d0-a6,-(a7)					; save registers
+	jsr		AudioMixer_Slow
+	movem.l	(a7)+,d0-a6
+	clr.b	gAudioMixerLockFlag			; signal end of mixing
+.locked:
+	rts
+
+AudioMixer_Vbl1:
 ;	not.w	$ffff8240.w
 	tas		gAudioMixerLockFlag			; already in a mixer interrupt?
 	bne		.locked						; yes, don't try further mixing
 
 	movem.l	d0-a6,-(a7)					; save registers
 
-	lea		gAudioMixerSamples,a0
-	lea		sAmixerSpl_msizeof(a0),a1
+	lea		gAudioMixerSamples,a0				; sample0
+	lea		sAmixerSpl_msizeof(a0),a1			; sample1
 
-	move.l	gpAudioMixerMulTable,a2
+	tst.b	sAmixerSpl_mActiveFlag(a0)
+	bne.s	.new
+	tst.b	sAmixerSpl_mActiveFlag(a1)
+	beq.s	.silence
+.new:
 	moveq	#0,d0
-	move.b	sAmixerSpl_mGainLeft(a0),d0
-	lsl.w	#8,d0
-	lea		(a2,d0.l),a3				; gain left
+.silence:
+
+	; build set of mix operations
+	; this takes into account wrapping of ring buffer
+	; and fact we could hit end of current samples during mixing
+
+	move.l	gAudioMixerBufferOffset,d4			; size of ring buffer
+	move.l	gAudioMixerChunkSize,d3				; amount to mix per VBL
+
+	lea		gAudioMixerOperations,a2			; array of operations to perform
+	move.l	sAmixerSpl_mpCurrent(a0),a3			; data for spl0
+	move.l	sAmixerSpl_mpCurrent(a1),a4			; data for spl1
+
+	move.l	a3,sAmixerOp_mpSpl0(a2)				; ptr to start of spl0
+	move.l	a4,sAmixerOp_mpSpl1(a2)				; ptr to start of spl0
+	move.l	d4,sAmixerOp_mBufferOffset(a2)		; dst (offset into mixing buffer)
+	move.l	d3,sAmixerOp_mByteCount(a2)			; bytes to mix
+
+	move.l	sAmixerSpl_mpEnd(a0),d0				; end of spl0
+	sub.l	sAmixerSpl_mpCurrent(a0),d0			; bytes left in sample 0
+	move.l	sAmixerSpl_mpEnd(a1),d1				; end of spl1
+	sub.l	sAmixerSpl_mpCurrent(a1),d1			; bytes left in sample 1
+
+	move.l	#eAMIXER_BUFFER_SIZE,d2				; ring buffer size
+	sub.l	d4,d2								; mixable bytes left 
+
+	sub.l	d2,d3								; how much left over?
+	bge.s	.overflow							; some overflow, wrapping needed
+	moveq	#0,d3								; no need to wrap
+.overflow:
+
+	cmp.l	d0,d1								; is more left in s0 or s1?
+	bge		.s1bigger
+
+	move.l	d2,d4								; ring buffer chunk0 size
+	sub.l	d0,d4								; can we fill it completely?
+	bmi		.s0checkr1							; yes
+
+	move.l	d0,sAmixerOp_mByteCount(a2)			; first mix chunk just size of spl0
+	lea		sAmixerOp_sizeof(a2),a2
+
+	move.l	gpAudioMixerSilence,a3				; spl0 now silence
+	move.l	#eAMIXER_SILENCE_SIZE,d0			; size of silence
+
+	add.l	d0,a4								; move start ptr of spl1
+	sub.l	d0,d1								; remaining bytes in spl1
+
+
+.s0checkr1:
+
+.s1bigger:
+
+	move.l	d2,d4								; ring chunk 0
+	sub.l	d0,d4								; -spl0
+
+	;
+	; Calculate gain scalars for sample0 and sample1
+	;
+
+	move.l	gpAudioMixerMulTable,a2				; fixed point multiply table
+	
+	moveq	#0,d0								;
+	move.b	sAmixerSpl_mGainLeft(a0),d0			; sample0.gain.left
+	lsl.w	#8,d0								; *256
+	lea		(a2,d0.l),a3						; gain left
 	moveq	#0,d0
-	move.b	sAmixerSpl_mGainRight(a0),d0
-	lsl.w	#8,d0
-	lea		(a2,d0.l),a4				; gain right
+	move.b	sAmixerSpl_mGainRight(a0),d0		; sample0.gain.right
+	lsl.w	#8,d0								; *256
+	lea		(a2,d0.l),a4						; gain right
 
 	moveq	#0,d0
-	move.b	sAmixerSpl_mGainLeft(a1),d0
-	lsl.w	#8,d0
-	lea		(a2,d0.l),a5				; gain left
-	moveq	#0,d0
-	move.b	sAmixerSpl_mGainRight(a1),d0
-	lsl.w	#8,d0
-	lea		(a2,d0.l),a6				; gain right
+	move.b	sAmixerSpl_mGainLeft(a1),d0			; sample1.gain.left
+	lsl.w	#8,d0								; *256
+	lea		(a2,d0.l),a5						; gain left
+	moveq	#0,d0								;
+	move.b	sAmixerSpl_mGainRight(a1),d0		; sample1.gain.right
+	lsl.w	#8,d0								; *256
+	lea		(a2,d0.l),a6						; gain right
+
+
+
+
+
+	move.l	sAmixerSpl_mpCurrent(a0),a0
+	move.l	sAmixerSpl_mpCurrent(a1),a1
+
+
+	movea.w	#$8909,a2							; current DMA sound ptr
+	moveq	#0,d7
+	move.b	(a2),d7								; hi byte of ptr
+	swap	d7
+	move.b	2(a2),d7							; mid byte of ptr
+	lsl.w	#8,d7
+	move.b	4(a2),d7							; low byte of ptr
+
+	; valid start ptr
+
+	add.l	gAudioMixerOffset,d7				; start of mixing
+	move.l	gpAudioMixerBuffer,a2				; start of mixing buffer
+	sub.l	a2,d7								; current h/w offset into buffer
+
+	add.l	gAudioMixerOffset,d7				; get to our mixing start point
+	and.l	#(eAMIXER_BUFFER_SIZE-1),d7			; clip to buffer size
+	add.l	d7,a2								; start of buffer to mix into
+	move.l	gAudioMixerChunkSize,d0				; size to mix per vbl
+	move.l	d7,d2								; start offset
+	add.l	d0,d2								; end offset
+	sub.l	#eAMIXER_BUFFER_SIZE,d2				; have we wrapped?
+	bmi.s	.singlepass							; no, do single pass
+	move.l	d2,-(a7)
+	sub.l	d2,d0								; size from current to end of ring buffer
+	bsr		AudioMixer_Mix1						; mix to end of ring buffer
+	move.l	gpAudioMixerBuffer,a2				; wrap buffer
+	move.l	(a7)+,d2
+.singlepass:
+	bsr		AudioMixer_Mix1
+.nowrap:
+
+	; update sample positions, and reset to silence when finished
+
+	lea		gAudioMixerSamples,a2				; sample0
+	tst.b	sAmixerSpl_mActiveFlag(a2)			; is this sample active?
+	beq.s	.noSpl0
+	move.l	a0,sAmixerSpl_mpCurrent(a2)
+	cmp.l	sAmixerSpl_mpEnd(a2),a0
+	blt.s	.noSpl0
+	bsr		AudioMixer_SampleReset	
+.noSpl0:
+	lea		sAmixerSpl_msizeof(a2),a2
+	tst.b	sAmixerSpl_mActiveFlag(a2)				; is this sample active?
+	beq.s	.noSpl1
+	move.l	a1,sAmixerSpl_mpCurrent(a2)
+	cmp.l	sAmixerSpl_mpEnd(a2),a0
+	blt.s	.noSpl1
+	bsr		AudioMixer_SampleReset	
+.noSpl1:
+
+	clr.b	gAudioMixerLockFlag			; signal end of mixing
+	movem.l	(a7)+,d0-a6					; restore registers
+.locked:
+	rts
+
+AudioMixer_SampleReset:
+	move.l	gpAudioMixerSilence,d0
+	move.l	d0,sAmixerSpl_mpStart(a2)				; switch sample to silence
+	move.l	d0,sAmixerSpl_mpCurrent(a2)				; point current pointer to silence
+	add.l	#1024,d0
+	move.l	d0,sAmixerSpl_mpEnd(a2)				; point current pointer to silence
+	move.l	#1024,sAmixerSpl_mLength(a2)
+	clr.b	sAmixerSpl_mActiveFlag(a2)				; mark sample as free
+	clr.b	sAmixerSpl_mVolume(a2)					; volume = 0
+	clr.b	sAmixerSpl_mGainLeft(a2)				; gain.left = 0
+	clr.b	sAmixerSpl_mGainRight(a2)				; gain.right = 0
+	rts
+
+
+	movea.w	#$8909,a2								; dma sound frame ptr
+	movep.l	(a2),d7									; read address
+	lsr.l	#8,d7									; ignore frame end address high byte
+
+	move.l	gpAudioMixerBuffer,a2					; start of mixing buffer
+	sub.l	a2,d7									; current h/w offset into buffer
+	move.l	gAudioMixerBufferOffset,d6				; end of last s/w mix
+	and.l	#(eAMIXER_BUFFER_SIZE-1),d6				; clip to buffer size
+	lea		(a2,d6.l),a2							; get to place in buffer
+
+	and.l	#(eAMIXER_BUFFER_SIZE-1)&$FFFFFFF8,d7	; offset moves in steps of 8
+	move.l	d7,gAudioMixerBufferOffset				; end of new s/w mix
+	sub.l	d6,d7									; mix length
+	bpl.s	.lpls									; do straight linear mix
+
+	move.l	#(eAMIXER_BUFFER_SIZE),d0
+	add.l	d0,d7
+	sub.l	d6,d0
+	bsr		AudioMixer_Mix1
+
+	move.l	gpAudioMixerBuffer,a2
+	move.l	gAudioMixerBufferOffset,d0
+	bsr		AudioMixer_Mix1
+	bra.s	.update
+.lpls:
+	move.l	d7,d0
+	bsr		AudioMixer_Mix1
+
+.update:
+	move.l	d7,d0
+	bsr		AudioMixer_UpdateSamples
+
+	clr.b	gAudioMixerLockFlag			; signal end of mixing
+	movem.l	(a7)+,d0-a6					; restore registers
+
+.locked:
+;	not.w	$ffff8240.w
+	rts
+
+
+
+
+
+OldShit:
 
 	moveq	#0,d3
 	move.w	d3,d4
@@ -126,15 +351,15 @@ AudioMixer_Vbl:
 	move.l	sAmixerSpl_mpCurrent(a0),a0
 	move.l	sAmixerSpl_mpCurrent(a1),a1
 
-	movea.w	#$8909,a2					; dma sound frame ptr
-	movep.l	(a2),d7						; read address
-	lsr.l	#8,d7						; ignore frame end address high byte
+	movea.w	#$8909,a2								; dma sound frame ptr
+	movep.l	(a2),d7									; read address
+	lsr.l	#8,d7									; ignore frame end address high byte
 
-	move.l	gpAudioMixerBuffer,a2			; start of mixing buffer
-	sub.l	a2,d7							; current h/w offset into buffer
-	move.l	gAudioMixerBufferOffset,d6		; end of last s/w mix
-	and.l	#(eAMIXER_BUFFER_SIZE-1),d6		; clip to buffer size
-	lea		(a2,d6.l),a2					; get to place in buffer
+	move.l	gpAudioMixerBuffer,a2					; start of mixing buffer
+	sub.l	a2,d7									; current h/w offset into buffer
+	move.l	gAudioMixerBufferOffset,d6				; end of last s/w mix
+	and.l	#(eAMIXER_BUFFER_SIZE-1),d6				; clip to buffer size
+	lea		(a2,d6.l),a2							; get to place in buffer
 
 	and.l	#(eAMIXER_BUFFER_SIZE-1)&$FFFFFFF8,d7	; offset moves in steps of 8
 	move.l	d7,gAudioMixerBufferOffset				; end of new s/w mix
@@ -164,6 +389,82 @@ AudioMixer_Vbl:
 .locked:
 ;	not.w	$ffff8240.w
 	rts
+
+
+
+AudioMixer_Mix1:
+;	lsr.l	#3,d0
+	lsr.l	#1,d0
+	subq.w	#1,d0
+	bmi.s	.nomix
+
+.loop:
+
+	move.b	(a0)+,d1					; sample0 [s0]
+	move.b	(a1)+,d2					; sample1 [s1]
+	move.b d1,d2
+
+	move.b	d1,(a2)+
+	move.b	d2,(a2)+
+
+	dbra	d0,.loop
+
+.nomix:
+	rts
+
+; equation:
+;	left = (sample0 * leftgain) + (sample1 *leftgain) - ((sample0 * leftgain) * (sample1 *leftgain)/256)
+;	left = (sample0 * rightgain) + (sample1 *rightgain) - ((sample0 * rightgain) * (sample1 *rightgain)/256)
+
+AudioMixer_Mix1b:
+	lsr.l	#1,d0
+	subq.w	#1,d0
+	bmi.s	.nomix
+
+.loop:
+	move.l	a2,d6
+	move.l	gpAudioMixerMulTable,a2
+	moveq	#0,d1
+	moveq	#0,d2
+
+	move.b	(a0)+,d1					; sample0 [s0]
+	move.b	(a1)+,d3					; sample1 [s1]
+
+	move.b	(a4,d1),d2					; s0 * r0
+	move.b	(a3,d1),d1					; s0 * l0
+
+	move.b	(a6,d3),d4					; s1 * r1
+	move.b	(a5,d3),d3					; s1 * l1
+
+	move.w	d1,d5						; s0 * l0
+	lsl.w	#8,d5						; * 256
+	add.w	d3,d5						; s1 * l1
+	move.b	(a2,d3),d5					;  (s0*l1) * (s1*l1) / 256
+
+	add.w	d3,d1						; (s0*l0) + (s1*l1)
+	sub.b	d5,d1						; (s0*l0) + (s1*l1) - ( (s0*l1) * (s1*l1) / 256)
+
+
+	move.w	d2,d5						; s0 * r0
+	lsl.w	#8,d5						; * 256
+	add.w	d4,d5						; s1 * r1
+	move.b	(a2,d3),d5					;  (s0*r0) * (s1*r1) / 256
+
+	add.w	d4,d2
+	sub.b	d5,d2
+
+	add.b	#128,d1
+	add.b	#128,d2
+
+	move.l	d6,a2
+	move.b	d1,(a2)+
+	move.b	d2,(a2)+
+
+	dbra	d0,.loop
+
+.nomix:
+	rts
+
 
 *------------------------------------------------------------------------------------*
 * FUNCTION : Audio_DoMixingI( U8 * apSpl0, U8 * apSpl1, U8 * apBuffer, U32 aBytes )
@@ -591,7 +892,8 @@ Audio_DoMixingRR:
 
 AudioMixer_UpdateSamples:
 
-	lsr.l	#3,d0
+;	lsr.l	#3,d0
+	lsr.l	#1,d0
 	add.l	d0,d0
 	moveq	#eAMIXER_CHANNEL_LIMIT-1,d1				; we have one sample per channel
 	move.l	gpAudioMixerSilence,a1					; go back to silence sample if queue is empty
@@ -661,5 +963,6 @@ gAudioMixerEnableFlag:		dc.b	0
 	BSS
 **************************************************************************************
 
+gAudioMixerOperations:		ds.b	(sAmixerOp_sizeof*4)
 gAudioMixerSamples:			ds.l	(sAmixerSpl_msizeof*eAMIXER_CHANNEL_LIMIT)
 

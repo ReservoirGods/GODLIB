@@ -108,6 +108,14 @@ sAudioDmaSound	gAudioCurrentSound;
 U8				gAudioSavedYM[ 16 ];
 extern	U8		gAudioDmaPlayingFlag;
 
+U32				gAudioFrequencies[ eAUDIO_FREQ_LIMIT  ] =
+{
+	6258,
+	12517,
+	25033,
+	50066
+};
+
 
 /* ###################################################################################
 #  PROTOTYPES
@@ -714,6 +722,10 @@ U8 *	Audio_GetpSavedYM( void )
 	return( gAudioSavedYM );
 }
 
+U32		Audio_GetFrequency( U8 aFreq )
+{
+	return( gAudioFrequencies[ aFreq ] );
+}
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : Audio_DmaSound_Delocate( sAudioDmaSound * apSnd )
