@@ -167,6 +167,25 @@ S32		File_Write( sFileHandle aHandle, U32 aBytes, const void * apBuffer )
 
 
 /*-----------------------------------------------------------------------------------*
+* FUNCTION : File_WriteString( sFileHandle aHandle, const char * apString )
+* ACTION   : writes a string to file
+* CREATION : 10.18.18 PNK
+*-----------------------------------------------------------------------------------*/
+
+S32			File_WriteString( sFileHandle aHandle, const char * apString )
+{
+	U32 len = 0;
+
+	for( ;apString[ len ]; len++ );
+
+	if( len )
+		return File_Write( aHandle, len, apString );
+
+	return 0;
+}
+
+
+/*-----------------------------------------------------------------------------------*
 * FUNCTION : File_SeekFromStart( sFileHandle aHandle, S32 aOffset )
 * ACTION   : seeks aOffset bytes from start of file
 * CREATION : 11.09.99 PNK
@@ -279,7 +298,10 @@ S32		File_GetAttribute( const char * apFname )
 	return( GemDos_Fattrib( apFname, 0, 0 ) );
 #else
 	S32	lAttribs = 0;
-	DWORD lWinAt =	GetFileAttributesA( apFname );
+	int lWinAt =	GetFileAttributesA( apFname );
+
+	if( lWinAt < 0 )
+		return lWinAt;
 
 	lAttribs |= ( lWinAt & FILE_ATTRIBUTE_ARCHIVE   ) ? dGEMDOS_FA_ARCHIVE  : 0;
 	lAttribs |= ( lWinAt & FILE_ATTRIBUTE_DIRECTORY ) ? dGEMDOS_FA_DIR      : 0;
