@@ -305,7 +305,19 @@ ForEach( .Platform in .Platforms )
     }
 #endif
 
-.ExtraBuildTargets = { 'DummyCopy' }
 
 
 //------------------------------------------------------------------------------
+//  Placeholder for data builds
+//------------------------------------------------------------------------------
+
+Exec( 'DataBuild' )
+{
+    .ExecExecutable = "..\..\..\TOOLS.RG\BIN\WIN32\TOOLBASE\TOOLBASE.exe"
+    .ExecInput = "..\$ProjectName$.TBS"
+    .ExecArguments = "%1"
+    .ExecWorkingDir = ".."
+    .ExecOutput = "..\TBS_DBG.LOG"
+}
+
+.ExtraBuildTargets = { 'DummyCopy' }
