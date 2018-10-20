@@ -87,14 +87,14 @@ const char *	StringPath_GetpExt( const char * apPath )
 void		StringPath_SetExt( sStringPath * apPath, const char * apExt )
 {
 	char * lpExt = (char *)StringPath_GetpExt( apPath->mChars );
-	if( lpExt )
-	{
-		char * lpEnd = StringPath_End( apPath );
-		for( ;lpExt < lpEnd && *apExt; )
-			*lpExt++ = *apExt++;
+	char * lpEnd = StringPath_End( apPath );
+	if( !lpExt )
+		for( lpExt=StringPath_Begin(apPath) ;*lpExt && ( lpExt < lpEnd ); lpExt++ );
 
-		*lpExt = 0;
-	}
+	for( ;lpExt < lpEnd && *apExt; )
+		*lpExt++ = *apExt++;
+
+	*lpExt = 0;
 }
 
 
