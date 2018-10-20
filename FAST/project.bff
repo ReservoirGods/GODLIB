@@ -1,6 +1,6 @@
 .ProjectCommon =
 [
-    .ProjectBuildCommand        = 'cd ^$(SolutionDir) &amp; "$FastBuildDir$\fbuild" -vs -dist -monitor -fastcancel -cache ^$(ProjectName)-exe-^$(Configuration)'
+    .ProjectBuildCommand        = 'cd ^$(SolutionDir) &amp; "$FastBuildDir$\fbuild" -vs -dist -monitor -fastcancel -cache ^$(ProjectName)-exe-^$(Configuration) ExtraBuild'
     .ProjectRebuildCommand      = 'cd ^$(SolutionDir) &amp; "$FastBuildDir$\fbuild" -vs -dist -monitor -fastcancel -cache -clean ^$(ProjectName)-exe-^$(Configuration) sln'
     .OutputDirectory            = '^$(ProjectDir)\Out'
     .IntermediateDirectory      = '^$(ProjectDir)\Int'

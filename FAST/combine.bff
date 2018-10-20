@@ -47,6 +47,13 @@ ForEach( .Config in .ExeConfigs )
 }
 
 
+Copy( 'DummyCopy' )
+{
+    .Source = "fbuild.bff"
+    .Dest = "dummy.txt"
+}
+
+
 //--------------------------------------------------------------------------
 // Aliases
 //--------------------------------------------------------------------------
@@ -55,7 +62,7 @@ Alias( '$ProjectName$-Debug' )           { .Targets = { '$ProjectName$-exe-X86-D
 Alias( '$ProjectName$-Profile' )         { .Targets = { '$ProjectName$-exe-X86-Profile' } }
 Alias( '$ProjectName$-Release' )         { .Targets = { '$ProjectName$-exe-X86-Release' } }
 
-
+Alias( 'ExtraBuild' ) { .Targets = .ExtraBuildTargets }
 
 
 //--------------------------------------------------------------------------
@@ -69,7 +76,7 @@ VCXProject( '$ProjectName$_vcx' )
     .ProjectBasePath    = '..'
     .ProjectInputPaths  = '..'
     .ProjectOutput      = '$ProjectName$.vcxproj'
-    .ProjectFiles       = { '..\*.PRJ', '..\*.TBS' }
+    .ProjectFiles       = { '..\*.PRJ', '..\*.SCR', '..\*.TBS' }
 
     .ProjectFileTypes = { .CFileType, .BatFileType, .BffFileType, .PrjFileType }
 

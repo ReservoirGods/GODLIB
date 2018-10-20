@@ -305,5 +305,7 @@ ForEach( .Platform in .Platforms )
     }
 #endif
 
+.ExtraBuildTargets = { 'DummyCopy' }
+
 
 //------------------------------------------------------------------------------
