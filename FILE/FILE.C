@@ -245,7 +245,7 @@ S32		File_Close( sFileHandle aHandle )
 #ifdef	dGODLIB_PLATFORM_ATARI
 	lRes = GemDos_Fclose( (S16)aHandle );
 #else
-	if( aHandle )
+	if( File_HandleIsValid(aHandle) )
 	{
 		lRes = fclose( (FILE*)aHandle );
 	}
