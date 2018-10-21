@@ -101,6 +101,15 @@ void		File_Identifier_SetMask( sFileIdentifier * apID, const char * apMask );
 void		File_Identifier_FromFullName( sFileIdentifier * apID, const char * apFullName );
 char *		File_Identifier_ToFullName( sFileIdentifier * apID );
 
+#ifdef dGODLIB_PLATFORM_ATARI
+
+#define		File_HandleIsValid( aHandle )	(aHandle>0)
+
+#else
+
+#define		File_HandleIsValid( aHandle )	(aHandle!=0)
+
+#endif
 
 /* ################################################################################ */
 

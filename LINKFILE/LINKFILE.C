@@ -80,7 +80,7 @@ sLinkFile *	LinkFile_Init( char * apLinkFileName )
 	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "LinkFile_Init(): %s", apLinkFileName );
 
 	lHandle = File_Open( apLinkFileName );
-	if( lHandle < 0 )
+	if( !File_HandleIsValid(lHandle) )
 	{
 		DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "LinkFile_Init() : ERROR : couldn't open linkfile %s\n", apLinkFileName );
 		return( (sLinkFile*)0 );
@@ -137,7 +137,7 @@ sLinkFile *	LinkFile_InitToRAM( char * apLinkFileName )
 	lHandle    = File_Open( apLinkFileName );
 	lpLinkFile = 0;
 
-	if( lHandle > 0 )
+	if( File_HandleIsValid(lHandle) )
 	{
 		File_Read( lHandle, sizeof(sPackerHeader), &lPackHead );
 		File_Close( lHandle );
@@ -173,7 +173,7 @@ sLinkFile *	LinkFile_InitToRAM( char * apLinkFileName )
 			{
 
 				lHandle = File_Open( apLinkFileName );
-				if( lHandle > 0 )
+				if( File_HandleIsValid( lHandle ) )
 				{
 					lpBuffer = (U32*)mMEMALLOC( lSize );
 /*
@@ -265,10 +265,12 @@ void *		LinkFile_FileLoad(     sLinkFile * apLinkFile, char * apFileName, const 
 	{
 		return( 0 );
 	}
-	if( apLinkFile->mFileHandle < 0 )
+/*
+	if( !File_HandleIsValid( apLinkFile->mFileHandle ) )
 	{
 		return( 0 );
 	}
+*/
 
 	lpFile = LinkFile_GetpFile( apLinkFile, apFileName );
 	if( !lpFile )
@@ -282,13 +284,13 @@ void *		LinkFile_FileLoad(     sLinkFile * apLinkFile, char * apFileName, const 
 	}
 	else
 	{
-		if( apLinkFile->mFileHandle < 0 )
+		if( !File_HandleIsValid( apLinkFile->mFileHandle ) )
 		{
 			return( 0 );
 		}
 		if( aDepackFlag )
 		{
-			lSize = lpFile->mUnPackedSize;
+			lSize = lpFile->mUnPackedSize + dGODPACK_OVERFLOW;
 		}
 		else
 		{
@@ -355,7 +357,7 @@ U8		LinkFile_FileLoadAt(   sLinkFile * apLinkFile, char * apFileName, void * apB
 	}
 	else
 	{
-		if( apLinkFile->mFileHandle < 0 )
+		if( !File_HandleIsValid(apLinkFile->mFileHandle) )
 		{
 			return( 0 );
 		}
