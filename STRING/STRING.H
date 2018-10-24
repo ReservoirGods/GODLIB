@@ -96,6 +96,7 @@ U8			String_StrCmpi( const char * apStr0, const char * apStr1 );
 U32			String_StrLen( const char * apString );
 S32			String_ToValue( const char * apString );
 
+const sTagString *	sTagString_GetFromString( const sString * apString, const sTagString * apTagStrings, const U32 aLimit );
 
 /* ################################################################################ */
 

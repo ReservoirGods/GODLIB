@@ -679,4 +679,15 @@ S32	String_ToValue( const char * apString )
 }
 
 
+const sTagString *	sTagString_GetFromString( const sString * apString, const sTagString * apTagStrings, const U32 aLimit )
+{
+	const sTagString * end = &apTagStrings[ aLimit ];
+
+	for( ; apTagStrings < end; apTagStrings++ )
+		if( String_IsEqualNT( apString, apTagStrings->pString ) )
+			return apTagStrings;
+
+	return 0;
+}
+
 /* ################################################################################ */
