@@ -11,6 +11,18 @@ enum eReflectType
 	eReflectType_String = ( 1 << 4 ),
 };
 
+typedef struct sReflectEnumElement
+{
+	const char *	mpName;
+	U32				mValue;
+} sReflectEnumElement;
+
+typedef struct sReflectEnumType
+{
+	U32						mEnumElementCount;
+	sReflectEnumElement *	mpEnumElements;
+} sReflectEnumType;
+
 typedef struct sReflectElement
 {
 	char *				mpTypeName;
@@ -31,8 +43,10 @@ typedef struct sReflectType
 
 typedef struct sReflectDictionary
 {
-	U32						mTypeCount;
-	struct sReflectType *	mpTypes;
+	U32							mTypeCount;
+	struct sReflectType *		mpTypes;
+	U32							mEnumCount;
+	struct sReflectEnumType*	mpEnums;
 }sReflectDictionary;
 
 sReflectType *	Reflect_GetpType( const sReflectDictionary * apDictionary, const char * apType );
