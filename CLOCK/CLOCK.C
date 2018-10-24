@@ -15,9 +15,8 @@
 #ifdef dGODLIB_PLATFORM_WIN
 #include	<windows.h>
 #endif
-#ifdef dGODLIB_PLATFORM_ATARI
+
 #include	<TIME.H>
-#endif
 
 
 /* ###################################################################################
@@ -122,7 +121,8 @@ void	Clock_DeInit( void )
 
 void	Clock_Update( sClock * apClock )
 {
-#ifdef	dGODLIB_PLATFORM_WIN
+/*#ifdef	dGODLIB_PLATFORM_WIN*/
+#if 0
 	S32	lNewTicks;
 	S32	lTicks;
 
@@ -432,12 +432,45 @@ U32	Time_GetAbsTime( void )
 
 #ifndef dGODLIB_PLATFORM_ATARI
 
+ULARGE_INTEGER	gClockBaseTime = { 0 };
+
 void		Clock_TimeVbl( void ) 
 {
+#if 0
+	SYSTEMTIME sysTime;
+	FILETIME fileTime;
+	ULARGE_INTEGER	timeBits;
+
+	if( 0 == gClockBaseTime.QuadPart )
+	{
+		GetSystemTime( &sysTime );
+		SystemTimeToFileTime( &sysTime, &fileTime );
+		gClockBaseTime.LowPart = fileTime.dwLowDateTime;
+		gClockBaseTime.HighPart = fileTime.dwHighDateTime;
+	}
+
+	GetSystemTime( &sysTime );
+	SystemTimeToFileTime( &sysTime, &fileTime );
+	timeBits.LowPart = fileTime.dwLowDateTime;
+	timeBits.HighPart = fileTime.dwHighDateTime;
+
+	timeBits.QuadPart -= gClockBaseTime.QuadPart;
+
+	fileTime.dwHighDateTime = timeBits.HighPart;
+	fileTime.dwLowDateTime = timeBits.LowPart;
+
+	FileTimeToSystemTime( &fileTime, &sysTime );
+
+	gClockTime.mMicroSeconds = (U8)sysTime.wMilliseconds;
+	gClockTime.mSeconds = (U8)sysTime.wSecond;
+	gClockTime.mMinutes = (U8)sysTime.wMinute;
+	gClockTime.mHours = (U8)sysTime.wHour;
+
+#else
 	gClockTime.mMicroSeconds++;
 	if( gClockTime.mMicroSeconds >= gClockFrameRate )
 	{
-		gClockTime.mMicroSeconds++;
+		gClockTime.mMicroSeconds=0;
 		gClockTime.mSeconds++;
 		if( gClockTime.mSeconds >= 60 )
 		{
@@ -450,6 +483,7 @@ void		Clock_TimeVbl( void )
 			}
 		}
 	}
+#endif
 }
 
 #endif // !GODLIB_PLATFORM_ATARI
