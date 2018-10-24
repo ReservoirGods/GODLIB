@@ -109,10 +109,12 @@ sFileHandle		File_Open( const char * apFname )
 #else
 	sFileHandle	lHandle;
 	lHandle = (sFileHandle)fopen( apFname, "rb" );
+/*
 	if( !lHandle )
 	{
 		lHandle = -1;
 	}
+*/
 	return( lHandle );
 #endif
 }
