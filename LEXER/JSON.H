@@ -24,6 +24,8 @@ enum eTypeJSON
 	eTypeJSON_PropertyName,
 	eTypeJSON_PropertyValue,
 	eTypeJSON_Seperator,
+
+	eTypeJSON_LIMIT
 };
 
 
@@ -46,10 +48,27 @@ typedef struct sElementCollectionJSON
 
 typedef struct sElementCollectionWalkerJSON
 {
-	U32							mIndex;
-	sString						mObjectName;
+	U32								mIndex;
+	sString							mObjectName;
 	const sElementCollectionJSON *	mpCollection;
 }sElementCollectionWalkerJSON;
+
+typedef struct sPropertyJSON
+{
+	sString					mPropertyName;
+	U32						mValueCount;
+	sString *				mpValues;
+	struct sPropertyJSON *	mpSibling;
+} sPropertyJSON;
+
+typedef struct sObjectJSON
+{
+	sString					mObjectName;
+	struct sObjectJSON *	mpChildren;
+	struct sObjectJSON *	mpSibling;
+	U32						mPropertyCount;
+	sPropertyJSON *			mpProperties;
+} sObjectJSON;
 
 
 /* ###################################################################################
@@ -65,6 +84,12 @@ void	JSON_ElementsToStruct( const sElementCollectionJSON * apCollection,  const 
 void	JSON_ElementWalker_Init( sElementCollectionWalkerJSON * apWalker, const sElementCollectionJSON * apCollection );
 void	JSON_ElementWalker_DeInit( sElementCollectionWalkerJSON * apWalker );
 U8		JSON_ElementWalker_GetNextObject( sElementCollectionWalkerJSON * apWalker );
+
+U32		JSON_GetObjectCount( const sElementCollectionJSON * apCollection, const char * apObjectName );
+U32		JSON_GetValueCount( const sElementCollectionJSON * apCollection, const char * apObjectName, const char * apPropertyName );
+
+sObjectJSON	*	JSON_TreeCreate( const sElementCollectionJSON * apCollection );
+void		 	JSON_TreeDestroy( sObjectJSON * apJSON );
 
 #define	JSON_ElementIsObject( aElement )		(aElement=>mFlags&eJSON_Object)
 #define	JSON_ElementIsProperty( aElement )		(aElement=>mFlags&eJSON_Property)

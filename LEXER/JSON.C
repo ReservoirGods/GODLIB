@@ -15,6 +15,7 @@
 
 #include	"JSON.H"
 
+#include	<GODLIB\ASSERT\ASSERT.H>
 #include	<GODLIB\DEBUGLOG\DEBUGLOG.H>
 #include	<GODLIB\LEXER\LEXER.H>
 #include	<GODLIB\LINKLIST\GOD_LL.H>
@@ -206,5 +207,185 @@ U8		JSON_ElementWalker_GetNextObject( sElementCollectionWalkerJSON * apWalker )
 	}
 	return 0;
 }
+
+U32		JSON_GetObjectCount( const sElementCollectionJSON * apCollection, const char * apObjectName )
+{
+	U32 count = 0;
+	U32 i;
+	U8	found = 0;
+
+	sString lObjName;
+	String_Init( &lObjName, apObjectName );
+
+	for( i = 0; i <apCollection->mCount; i++ )
+	{
+		const sElementJSON * lpE = &apCollection->mpElements[ i ];
+		if( eTypeJSON_ObjectName == lpE->mTypeFlags )
+			found = String_IsEqual( &lpE->mToken, &lObjName );
+		else if( found && ( eTypeJSON_ObjectBegin == lpE->mTypeFlags ) )
+		{
+			if( i && eTypeJSON_ArrayBegin == apCollection->mpElements[ i - 1 ].mTypeFlags )
+			{
+				U32 depth = apCollection->mpElements[ i - 1 ].mDepth;
+				for( ; i < apCollection->mCount; i++ )
+				{
+					if( ( eTypeJSON_ObjectEnd == apCollection->mpElements[ i ].mTypeFlags ) && ( lpE->mDepth == apCollection->mpElements[ i ].mDepth ) )
+						count++;
+					if( ( eTypeJSON_ArrayEnd == apCollection->mpElements[ i ].mTypeFlags ) && ( depth == apCollection->mpElements[ i ].mDepth ) )
+						break;
+				}
+
+			}
+			else
+			{
+				for( ; i < apCollection->mCount; i++ )
+					if( ( eTypeJSON_ObjectEnd == apCollection->mpElements[ i ].mTypeFlags ) && ( lpE->mDepth == apCollection->mpElements[ i ].mDepth ) )
+						break;
+				count++;
+			}
+			found = 0;
+		}
+	}
+	return count;
+}
+
+U32		JSON_GetValueCount( const sElementCollectionJSON * apCollection, const char * apObjectName, const char * apPropertyName )
+{
+	U32 count = 0;
+
+	(void)apCollection;
+	(void)apObjectName;
+	(void)apPropertyName;
+
+	return count;
+}
+
+sObjectJSON	* JSON_TreeCreate( const sElementCollectionJSON * apCollection )
+{
+	U32 jsonTypeCounts[ eTypeJSON_LIMIT ];
+	U32 i;
+	U8 * pMem = 0;
+	U16 depthMax = 0;
+	U32 objSizeBytes = 0;
+	U32 propSizeBytes = 0;
+	U32 valueSizeBytes = 0;
+	sObjectJSON * pTree =0;
+	
+
+	Memory_Clear( sizeof( jsonTypeCounts ), jsonTypeCounts );
+
+	for( i=0; i<apCollection->mCount; i++ )
+	{
+		const sElementJSON * lpE = &apCollection->mpElements[ i ];
+		jsonTypeCounts[ lpE->mTypeFlags ]++;
+		if( lpE->mDepth > depthMax )
+			depthMax = lpE->mDepth;
+	}
+
+
+	objSizeBytes   = (jsonTypeCounts[ eTypeJSON_ObjectBegin ]+1) * sizeof(sObjectJSON);
+	propSizeBytes  = jsonTypeCounts[ eTypeJSON_PropertyName ] * sizeof(sPropertyJSON);
+	valueSizeBytes = jsonTypeCounts[ eTypeJSON_PropertyValue ] * sizeof(sTagString);
+
+	pMem = mMEMCALLOC(objSizeBytes + propSizeBytes + valueSizeBytes);
+	if( pMem )
+	{
+		U32	objCursor = 0;
+		U32 jsonTypeIndex[ eTypeJSON_LIMIT ];
+		sObjectJSON * pObjects = (sObjectJSON*)(&pMem[0]);
+		sObjectJSON * pObjCurrent = 0;
+		sPropertyJSON * pProps = (sPropertyJSON*)(&pMem[objSizeBytes]);
+		sPropertyJSON * pPropCurrent = 0;
+		sString * pValues = (sString*)(&pMem[objSizeBytes+propSizeBytes]);
+		const sString * pObjName = 0;
+		sObjectJSON ** ppObjStack = 0;
+
+		Memory_Clear( sizeof( jsonTypeIndex ), jsonTypeIndex );
+		ppObjStack = mMEMCALLOC( sizeof(sObjectJSON*) * (depthMax+1) );
+
+		ppObjStack[ 0 ] = pObjects;
+		pObjCurrent = pObjects;
+
+		pTree = (sObjectJSON*)pMem;
+		for( i=0; i<apCollection->mCount; i++ )
+		{
+			const sElementJSON * lpE = &apCollection->mpElements[ i ];
+			if( eTypeJSON_ObjectName== lpE->mTypeFlags )
+			{
+				pObjName = &lpE->mToken;
+			}
+			else if( eTypeJSON_ObjectBegin== lpE->mTypeFlags )
+			{
+				pObjCurrent = pObjects;
+				if( objCursor )
+				{
+					sObjectJSON * pParent = ppObjStack[ objCursor - 1 ];
+					sObjectJSON * sib = pParent->mpChildren;
+					if( sib )
+					{
+						for( ;sib->mpSibling; sib = sib->mpSibling );
+						GODLIB_ASSERT( sib != pObjects );
+						sib->mpSibling = pObjects;
+					}
+					else
+						pParent->mpChildren = pObjects;
+				}
+				if( pObjName )
+				{
+					pObjCurrent->mObjectName = *pObjName;
+				}
+				else
+				{
+					String_Init( &pObjCurrent->mObjectName, "");
+				}
+				ppObjStack[ objCursor++ ] = pObjCurrent;
+				pObjects++;
+			}
+			else if( eTypeJSON_PropertyName== lpE->mTypeFlags )
+			{
+				sPropertyJSON * pParentProp;
+				pObjCurrent->mPropertyCount++;
+				pParentProp = pObjCurrent->mpProperties;
+				if( pParentProp )
+				{
+					for( ;pParentProp->mpSibling; pParentProp = pParentProp->mpSibling);
+					GODLIB_ASSERT( pParentProp != pProps );
+					pParentProp->mpSibling = pProps;
+				}
+				else
+					pObjCurrent->mpProperties = pProps;
+				pProps->mPropertyName = lpE->mToken;
+				pProps->mpValues = pValues;
+				pPropCurrent = pProps;
+				pProps++;
+			}
+			else if( eTypeJSON_PropertyValue== lpE->mTypeFlags )
+			{
+				if( pPropCurrent )
+					pPropCurrent->mValueCount++;
+				*pValues = lpE->mToken;
+				pValues++;
+			}
+			else if( eTypeJSON_ObjectEnd== lpE->mTypeFlags )
+			{
+				objCursor--;
+				pObjCurrent = ppObjStack[objCursor];
+				pObjName = &pObjCurrent->mObjectName;
+			}
+		}
+		mMEMFREE(ppObjStack);
+		GODLIB_ASSERT( (pObjects+1) == (sObjectJSON*)( &pMem[ objSizeBytes ] ) );
+		GODLIB_ASSERT( pProps == (sPropertyJSON*)( &pMem[ objSizeBytes + propSizeBytes ] ) );
+	}
+
+
+	return pTree;
+}
+
+void		JSON_TreeDestroy( sObjectJSON * apJSON )
+{
+	(void)apJSON;
+}
+
 
 /* ################################################################################ */
