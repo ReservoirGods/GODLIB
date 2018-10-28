@@ -295,6 +295,8 @@ typedef	struct	sFedCall
 	pagestyle - fonts, bg images and transitions
 	sample - sound effects for different situations
 	sprite - spries
+	spritelist - sprites to show on a page
+	spritegroup - collection of sprites (e.g. controller icons)
 	text - raw text
 	transition - fades/wipes
 	var - hashtree variables

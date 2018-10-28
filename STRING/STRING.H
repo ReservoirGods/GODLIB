@@ -74,6 +74,7 @@ void		String_CharInsert( sString * apString, const U16 aIndex, const U8 aChar );
 void		String_CharRemove( sString * apString, const U16 aIndex );
 
 void		String_QuoteTrim( sString * apString );
+S32			String_ToS32( sString * apString );
 
 #define		String_Action( apString, aAction )	{ if((apString)->mpChars) { char old =(apString)->mpChars[ String_GetLength(apString)]; (apString)->mpChars[ String_GetLength(apString)] = 0; aAction(apString); (apString)->mpChars[ String_GetLength(apString)] = old; } }
 

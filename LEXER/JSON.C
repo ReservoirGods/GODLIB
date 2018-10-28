@@ -532,6 +532,33 @@ sTreeCollectorJSON *	JSON_Tree_Collect( const sObjectJSON * apTree, const char *
 	return apCol;
 }
 
+void	JSON_Tree_Callback( const sObjectJSON * apTree, const char * apObjectName, const char * apPropertyName, fJSON aCallback, void * apContext )
+{
+	for( ;apTree; apTree = apTree->mpSibling )
+	{
+		if( !apObjectName || (String_IsEqualNT( &apTree->mObjectName, apObjectName)))
+		{
+			sPropertyJSON * prop = apTree->mpProperties;
+			for( ;prop; prop=prop->mpSibling)
+			{
+				if( !apPropertyName || (String_IsEqualNT( &prop->mPropertyName, apPropertyName)))
+				{
+					aCallback( apTree, prop, apContext );
+				}
+			}
+		}
+		JSON_Tree_Callback( apTree->mpChildren, apObjectName, apPropertyName, aCallback, apContext );
+	}
+
+}
+
+sPropertyJSON *	JSON_Tree_GetpProperty( const sObjectJSON * apTree, const char * apPropName )
+{
+	sPropertyJSON * prop = apTree->mpProperties;
+	for( ;prop && !String_IsEqualNT(&prop->mPropertyName, apPropName); prop=prop->mpSibling);
+	return prop;
+}
+
 void		JSON_TreeDestroy( sObjectJSON * apJSON )
 {
 	mMEMFREE( apJSON );

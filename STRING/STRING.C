@@ -607,46 +607,44 @@ U8 String_StrCmpi(const char * apStr0,const char * apStr1)
 * CREATION : 18.04.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-S32	String_ToValue( const char * apString )
+S32	String_ToValue_Internal( const char * apString, U32 aLength )
 {
-	S32	lVal;
-	S32	lSign;
-	U8	lMode;
+	const char * pEnd = &apString[aLength];
+	S32	lVal = 0;
+	S32	lSign = 1;
+	U8	lMode = 0;
 
-	while( *apString == ' ' )
-	{
-		apString++;
-	}
+	for( ; apString < pEnd && (' '== *apString || '\t'== *apString); apString++ );
 
-	if( *apString == '-' )
+	if( apString >= pEnd )
+		return 0;
+	
+	if( '-' == *apString )
 	{
 		lSign = -1;
 		apString++;
 	}
-	else
-	{
-		lSign = 1;
-	}
 
-	lMode = 0;
-	if( *apString == '$' )
+	if( apString >= pEnd )
+		return 0;
+
+	if(  '$' == *apString )
 	{
 		lMode = 1;
 		apString++;
 	}
-	if( apString[ 1 ] == 'x' )
+	if( (apString+1 < pEnd) && ('x' == apString[ 1 ]) )
 	{
 		lMode = 1;
 		apString += 2;
 	}
 
-	lVal = 0;
 	if( lMode )
 	{
-		while(
+		while(  (apString < pEnd) && (
 				( (*apString >= '0') && (*apString <= '9') )
 			||	( (*apString >= 'a') && (*apString <= 'f') )
-			||	( (*apString >= 'A') && (*apString <= 'F') )
+			||	( (*apString >= 'A') && (*apString <= 'F') ) )
 			)
 		{
 			lVal *= 16L;
@@ -667,7 +665,7 @@ S32	String_ToValue( const char * apString )
 	}
 	else
 	{
-		while( (*apString >= '0') && (*apString <= '9') )
+		while( (apString < pEnd) && (*apString >= '0') && (*apString <= '9') )
 		{
 			lVal *= 10L;
 			lVal += *apString - '0';
@@ -679,6 +677,17 @@ S32	String_ToValue( const char * apString )
 	return( lVal );
 }
 
+S32	String_ToValue( const char * apString )
+{
+	U32 len = String_StrLen( apString );
+	return String_ToValue_Internal( apString, len );
+}
+
+S32			String_ToS32( sString * apString )
+{
+	U32 len = String_GetLength( apString );
+	return String_ToValue_Internal( apString->mpChars, len );
+}
 
 const sTagString *	sTagString_GetFromString( const sString * apString, const sTagString * apTagStrings, const U32 aLimit )
 {

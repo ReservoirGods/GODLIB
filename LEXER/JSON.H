@@ -78,6 +78,8 @@ typedef struct sTreeCollectorJSON
 	U32 mTextSize;
 } sTreeCollectorJSON;
 
+typedef	void (*fJSON)( const sObjectJSON * apObject, const sPropertyJSON * apProperty, void * apContext );
+
 /* ###################################################################################
 #  PROTOTYPES
 ################################################################################### */
@@ -98,6 +100,7 @@ U32		JSON_GetValueCount( const sElementCollectionJSON * apCollection, const char
 sObjectJSON	*	JSON_TreeCreate( const sElementCollectionJSON * apCollection );
 void		 	JSON_TreeDestroy( sObjectJSON * apJSON );
 
+sPropertyJSON *	JSON_Tree_GetpProperty( const sObjectJSON * apTree, const char * apPropName );
 U32				JSON_Tree_GetObjectCount( const sObjectJSON * apTree, const char * apObjectName );
 U32				JSON_Tree_GetPropertyCount( const sObjectJSON * apTree, const char * apObjectName, const char * apPropertyName );
 U32				JSON_Tree_GetPropertyValueCount( const sObjectJSON * apTree, const char * apObjectName, const char * apPropertyName );
@@ -107,6 +110,7 @@ U32				JSON_Tree_GetPropertyValuesTextSize( const sObjectJSON * apTree, const ch
 U32				JSON_Tree_GetObjectPropertyTextSize( const sObjectJSON * apTree, const char * apObjectName );
 
 sTreeCollectorJSON*	JSON_Tree_Collect( const sObjectJSON * apTree, const char * apObjectName, const char * apPropertyName, sTreeCollectorJSON * apCol );
+void				JSON_Tree_Callback( const sObjectJSON * apTree, const char * apObjectName, const char * apPropertyName, fJSON aCallback, void * apContext );
 
 #define	JSON_ElementIsObject( aElement )		(aElement=>mFlags&eJSON_Object)
 #define	JSON_ElementIsProperty( aElement )		(aElement=>mFlags&eJSON_Property)
