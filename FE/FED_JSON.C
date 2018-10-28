@@ -93,7 +93,7 @@ sReflectDictionary	gFedJSON_Dictionary = { 1, &gFedJSON_Layout_Type };
 
 #define FEDJSON_ARRANGE( aType ) apHeader->mp##aType##s = (sFed##aType*)&pMem[ offset ]; offset += sizeof(sFed##aType) * apHeader->m##aType##Count;
 
-void	FedJSON_MemoryArrange( sFedHeader * apHeader, U32 aSize )
+U32	FedJSON_MemoryArrange( sFedHeader * apHeader, U32 aSize )
 {
 	U8 * pMem = (U8*)apHeader;
 	U32 offset = 0;
@@ -118,11 +118,12 @@ void	FedJSON_MemoryArrange( sFedHeader * apHeader, U32 aSize )
 	FEDJSON_ARRANGE( Transition );
 	FEDJSON_ARRANGE( Var );
 
-	GODLIB_ASSERT( offset == aSize );
+	return offset;
 }
 
 sFedHeader *		FedJSON_ParseText( const char * apText, const U32 aSize )
 {
+	sFedHeader	lHeader = {0};
 	sFedHeader * pHeader = 0;
 	sString jsonString;
 	sElementCollectionJSON jsonElements;
@@ -146,11 +147,45 @@ sFedHeader *		FedJSON_ParseText( const char * apText, const U32 aSize )
 
 	for( i = 1; i < eFedObject_LIMIT; i++ )
 	{
-		objectTypeCounts[ i ] = JSON_GetObjectCount( &jsonElements, gFedObjectTagStrings[ i ].pString );
+/*		objectTypeCounts[ i ] = JSON_GetObjectCount( &jsonElements, gFedObjectTagStrings[ i ].pString );*/
+
 	}
 
 	{
 		sObjectJSON * pTree = JSON_TreeCreate( &jsonElements );
+		sTreeCollectorJSON collector;
+		U32 textSize = 0;
+
+		lHeader.mAssetCount = (U16)JSON_Tree_Collect( pTree, "images", 0, &collector )->mPropertyCount,
+							+ (U16)JSON_Tree_Collect( pTree, "fonts", 0, &collector )->mPropertyCount,
+							+ (U16)JSON_Tree_Collect( pTree, "sprites", 0, &collector )->mPropertyCount,
+							+ (U16)JSON_Tree_Collect( pTree, "sounds", 0, &collector )->mPropertyCount;
+
+		lHeader.mCallCount = (U16)JSON_Tree_Collect( pTree, 0, "action", &collector )->mPropertyCount;
+		lHeader.mControlCount = (U16)JSON_Tree_Collect( pTree, "controls", 0, &collector )->mObjectCount;
+		lHeader.mListCount = (U16)JSON_Tree_Collect( pTree, "controls", "selector", &collector )->mPropertyCount;
+		lHeader.mListItemCount = (U16)JSON_Tree_Collect( pTree, "controls", "selections", &collector )->mValueCount;
+		lHeader.mLockCount = (U16)JSON_Tree_Collect( pTree, "controls", "lock", &collector )->mPropertyCount;
+		lHeader.mPageCount = (U16)JSON_Tree_Collect( pTree, "page", 0, &collector )->mObjectCount;
+		lHeader.mSliderCount = (U16)JSON_Tree_Collect( pTree, "controls", "slider", &collector )->mPropertyCount;
+		lHeader.mSpriteCount = (U16)JSON_Tree_Collect( pTree, "sprites", 0, &collector )->mObjectCount;
+		lHeader.mVarCount = (U16)JSON_Tree_Collect( pTree, "vars", 0, &collector )->mPropertyCount;
+
+		if( JSON_Tree_GetObjectCount( pTree, "fonts") )
+			lHeader.mFontGroupCount = 1;
+		lHeader.mPageCount = lHeader.mControlListCount;
+		lHeader.mTextCount = lHeader.mControlCount + lHeader.mControlListCount + lHeader.mPageCount;
+		
+
+		
+		textSize = (U16)JSON_Tree_Collect( pTree, "vars", 0, &collector )->mTextSize
+				  +(U16)JSON_Tree_Collect( pTree, 0, "filename", &collector )->mTextSize
+				  +(U16)JSON_Tree_Collect( pTree, 0, "context", &collector )->mTextSize;
+
+		for( i=0; i<eFedControl_LIMIT; i++ )
+			textSize += (U16)JSON_Tree_Collect( pTree, "controls", gFedControlTagStrings[i].pString, &collector )->mTextSize;
+
+
 		JSON_TreeDestroy( pTree );
 	}
 

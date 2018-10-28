@@ -398,6 +398,7 @@ U8			String_IsEqualNT( const sString * apString0, const char * apString1 )
 			if( *lpSrc0++ != *lpSrc1++ )
 				return 0;
 		}
+		return 0 == *lpSrc1;
 	}
 	else if( apString1 )
 	{

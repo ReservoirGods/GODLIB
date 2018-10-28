@@ -100,7 +100,7 @@ void	JSON_Parse( sString * apSrc, sElementCollectionJSON  * apCollection )
 						pElements[ index ].mTypeFlags = eTypeJSON_ObjectName;
 						break;
 					}
-					else if( ',' == pElements[ i2 ].mToken.mpChars[ 0 ] || '}' == pElements[ i2 ].mToken.mpChars[ 0 ] )
+					else if( ',' == pElements[ i2 ].mToken.mpChars[ 0 ] || '}' == pElements[ i2 ].mToken.mpChars[ 0 ] || ']' == pElements[ i2 ].mToken.mpChars[ 0 ] )
 					{
 						pElements[ index ].mTypeFlags = eTypeJSON_PropertyValue;
 						break;
@@ -382,9 +382,159 @@ sObjectJSON	* JSON_TreeCreate( const sElementCollectionJSON * apCollection )
 	return pTree;
 }
 
+U32				JSON_Tree_GetObjectCount( const sObjectJSON * apTree, const char * apObjectName )
+{
+	U32 count = 0;
+	for( ;apTree; apTree = apTree->mpSibling )
+	{
+		if( String_IsEqualNT( &apTree->mObjectName, apObjectName ))
+			count++;
+		count += JSON_Tree_GetObjectCount( apTree->mpChildren, apObjectName );
+	}
+	return count;
+}
+
+
+U32				JSON_Tree_GetPropertyCount( const sObjectJSON * apTree, const char * apObjectName, const char * apPropertyName )
+{
+	U32 count = 0;
+	for( ;apTree; apTree = apTree->mpSibling )
+	{
+		if( String_IsEqualNT( &apTree->mObjectName, apObjectName ))
+		{
+			sPropertyJSON * prop = apTree->mpProperties;
+			for( ;prop; prop=prop->mpSibling )
+			{
+				if( String_IsEqualNT( &prop->mPropertyName, apPropertyName))
+					count++;
+			}
+		}
+		count += JSON_Tree_GetPropertyCount( apTree->mpChildren, apObjectName, apPropertyName );
+	}
+	return count;
+}
+
+U32				JSON_Tree_GetObjectPropertyCount( const sObjectJSON * apTree, const char * apObjectName )
+{
+	U32 count = 0;
+	for( ;apTree; apTree = apTree->mpSibling )
+	{
+		if( String_IsEqualNT( &apTree->mObjectName, apObjectName ))
+		{
+			sPropertyJSON * prop = apTree->mpProperties;
+			for( ;prop; prop=prop->mpSibling)
+				count++;
+		}
+		count += JSON_Tree_GetObjectPropertyCount( apTree->mpChildren, apObjectName );
+	}
+	return count;
+}
+
+U32				JSON_Tree_GetPropertyValueCount( const sObjectJSON * apTree, const char * apObjectName, const char * apPropertyName )
+{
+	U32 count = 0;
+	for( ;apTree; apTree = apTree->mpSibling )
+	{
+		if( String_IsEqualNT( &apTree->mObjectName, apObjectName ))
+		{
+			sPropertyJSON * prop = apTree->mpProperties;
+			for( ;prop; prop=prop->mpSibling )
+			{
+				if( String_IsEqualNT( &prop->mPropertyName, apPropertyName))
+					count += prop->mValueCount;
+			}
+		}
+		count += JSON_Tree_GetPropertyValueCount( apTree->mpChildren, apObjectName, apPropertyName );
+	}
+	return count;
+}
+
+U32				JSON_Tree_GetPropertyTextSize( const sObjectJSON * apTree, const char * apPropertyName )
+{
+	U32 count = 0;
+	for( ;apTree; apTree = apTree->mpSibling )
+	{
+		sPropertyJSON * prop = apTree->mpProperties;
+		for( ;prop; prop=prop->mpSibling )
+		{
+			if( String_IsEqualNT( &prop->mPropertyName, apPropertyName))
+			{
+				U32 i;
+				for( i=0; i<prop->mValueCount; i++ )			
+				{
+					count += String_GetCharCount( &prop->mpValues[i] );
+				}
+			}
+		}
+		count += JSON_Tree_GetPropertyTextSize( apTree->mpChildren, apPropertyName );
+	}
+	return count;
+}
+
+U32				JSON_Tree_GetObjectPropertyTextSize( const sObjectJSON * apTree, const char * apObjectName )
+{
+	U32 count = 0;
+	for( ;apTree; apTree = apTree->mpSibling )
+	{
+		if( String_IsEqualNT( &apTree->mObjectName, apObjectName ))
+		{
+			sPropertyJSON * prop = apTree->mpProperties;
+			for( ;prop; prop=prop->mpSibling)
+			{
+				U32 i;
+				for( i=0; i<prop->mValueCount; i++ )			
+				{
+					count += String_GetCharCount( &prop->mpValues[i] );
+				}
+			}
+		}
+		count += JSON_Tree_GetObjectPropertyTextSize( apTree->mpChildren, apObjectName );
+	}
+	return count;
+}
+
+
+sTreeCollectorJSON *	JSON_Tree_Collect_Internal( const sObjectJSON * apTree, const char * apObjectName, const char * apPropertyName, sTreeCollectorJSON * apCol )
+{
+	for( ;apTree; apTree = apTree->mpSibling )
+	{
+		if( !apObjectName || (String_IsEqualNT( &apTree->mObjectName, apObjectName)))
+		{
+			sPropertyJSON * prop = apTree->mpProperties;
+			for( ;prop; prop=prop->mpSibling)
+			{
+				if( !apPropertyName || (String_IsEqualNT( &prop->mPropertyName, apPropertyName)))
+				{
+					U32 i;
+					for( i=0; i<prop->mValueCount; i++ )			
+					{
+						apCol->mTextSize += String_GetCharCount( &prop->mpValues[i] );
+					}
+					apCol->mValueCount += prop->mValueCount;
+					apCol->mPropertyCount++;
+				}
+			}
+			apCol->mObjectCount++;
+
+		}
+		JSON_Tree_Collect_Internal( apTree->mpChildren, apObjectName, apPropertyName, apCol );
+	}
+	return apCol;
+}
+
+sTreeCollectorJSON *	JSON_Tree_Collect( const sObjectJSON * apTree, const char * apObjectName, const char * apPropertyName, sTreeCollectorJSON * apCol )
+{
+	apCol->mObjectCount = 0;
+	apCol->mPropertyCount = 0;
+	apCol->mTextSize = 0;
+	apCol->mValueCount = 0;
+	JSON_Tree_Collect_Internal( apTree, apObjectName, apPropertyName, apCol );
+	return apCol;
+}
+
 void		JSON_TreeDestroy( sObjectJSON * apJSON )
 {
-	(void)apJSON;
+	mMEMFREE( apJSON );
 }
 
 

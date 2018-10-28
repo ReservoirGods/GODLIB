@@ -282,6 +282,24 @@ typedef	struct	sFedCall
 	S32			mCallValue;
 } sFedCall;
 
+/*
+	asset - file with context
+	call - details variable to write to which can invoke hashtree callback function
+	control - a single control
+	controllist - a list of controls on a page
+	fontgroup - normal/selected fonts
+	list - a combobox like sliding selection of values
+	listitem - a single item in the selection
+	lock - a variable and value to lock against
+	page - collection of controls and style
+	pagestyle - fonts, bg images and transitions
+	sample - sound effects for different situations
+	sprite - spries
+	text - raw text
+	transition - fades/wipes
+	var - hashtree variables
+
+*/
 
 typedef struct	sFedHeader
 {
