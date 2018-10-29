@@ -83,6 +83,31 @@ enum
 	eFedPageStyle_LIMIT
 };
 
+sTagValue gFedItemSizeofs[ eFedItem_LIMIT ] =
+{
+	{ eFedItem_Asset, sizeof(sFedAsset) }, 
+	{ eFedItem_Box,sizeof(sFedBox ) },
+	{ eFedItem_Call,sizeof(sFedCall ) },
+	{ eFedItem_Control,sizeof(sFedControl ) },
+	{ eFedItem_ControlList,sizeof(sFedControlList ) },
+	{ eFedItem_FontGroup,sizeof(sFedFontGroup ) },
+	{ eFedItem_Lock,sizeof(sFedLock ) },
+	{ eFedItem_List,sizeof(sFedList ) },
+	{ eFedItem_ListItem,sizeof(sFedListItem ) },
+	{ eFedItem_Page,sizeof(sFedPage ) },
+	{ eFedItem_PageStyle,sizeof(sFedPageStyle ) },
+	{ eFedItem_Sample,sizeof(sFedSample ) },
+	{ eFedItem_Size,sizeof(sFedSize ) },
+	{ eFedItem_Slider,sizeof(sFedSlider ) },
+	{ eFedItem_Sprite,sizeof(sFedSprite ) },
+	{ eFedItem_SpriteList,sizeof(sFedSpriteList ) },
+	{ eFedItem_SpriteGroup,sizeof(sFedSpriteGroup ) },
+	{ eFedItem_Text,sizeof(sFedText ) },
+	{ eFedItem_Transition,sizeof(sFedTransition ) },
+	{ eFedItem_Pos,sizeof(sFedPos ) },
+	{ eFedItem_Var,sizeof(sFedVar ) },
+};
+
 sTagString	gFedPageStyleTagStrings[ eFedObject_LIMIT ] =
 {
 	{	eFedPageStyle_FontNormal,		"font_normal"	},
@@ -116,6 +141,14 @@ sTagString gFedControlTagStrings[ eFedControl_LIMIT ] =
 	{ eFedControl_Selector,	"selector"	},
 	{ eFedControl_Slider,	"slider"	},
 	{ eFedControl_Toggle,	"toggle"	},
+};
+
+sTagString	gFedFadeNames[ eFED_FADE_LIMIT ] =
+{
+	{	eFED_FADE_NONE,		"NONE"		},
+	{	eFED_FADE_BG,		"BG"		},
+	{	eFED_FADE_PAL,		"PAL"		},
+	{	eFED_FADE_RGB,		"RGB"		},
 };
 
 
@@ -164,6 +197,9 @@ typedef struct sFedJSON_Context
 	char *		mpTextBase;
 	U32			mTextOffset;
 	U32			mTextSize;
+
+	U32			mModeCounting;
+
 } sFedJSON_Context;
 
 sReflectDictionary	gFedJSON_Dictionary = { 1, &gFedJSON_Layout_Type };
@@ -201,7 +237,7 @@ U32	FedJSON_MemoryArrange( sFedHeader * apHeader )
 	return offset;
 }
 
-void	FedJSON_AssetBuild( const sObjectJSON * apObject, const sPropertyJSON * apProperty, void * apContext )
+void	FedJSON_AssetBuildOld( const sObjectJSON * apObject, const sPropertyJSON * apProperty, void * apContext )
 {
 	sFedJSON_Context * context = (sFedJSON_Context*)apContext;
 	sFedAsset * ass = &context->pHeader->mpAssets[ context->pHeader->mAssetCount ];
@@ -290,7 +326,7 @@ char *	FedJSON_ItemStringCreate( sFedJSON_Context * apContext, sString * apSrc )
 	return pDst;
 }
 
-sFedAsset *	FEDJSON_AssetBuild( sFedJSON_Context * apContext, sObjectJSON * apObject )
+sFedAsset *	FedJSON_AssetBuild( sFedJSON_Context * apContext, sObjectJSON * apObject )
 {
 	sFedAsset * ass = (sFedAsset*)FedJSON_ItemCreate( apContext, eFedItem_Asset );
 	sPropertyJSON * filename = JSON_Tree_GetpProperty( apObject, "filename");
@@ -312,6 +348,37 @@ sFedAsset *	FEDJSON_AssetBuild( sFedJSON_Context * apContext, sObjectJSON * apOb
 	return ass;
 }
 
+
+sFedTransition *	FedJSON_TransitionBuild( sFedJSON_Context * apContext, sObjectJSON * apObject )
+{
+	sFedTransition * trans = FedJSON_ItemCreate( apContext, eFedItem_Transition );
+	
+	sPropertyJSON * framecount = JSON_Tree_GetpProperty( apObject, "framecount");
+	sPropertyJSON * fadetype = JSON_Tree_GetpProperty( apObject, "fadetype");
+	sPropertyJSON * fadecolour = JSON_Tree_GetpProperty( apObject, "fadecolour");
+
+	if( !trans )
+		return trans;
+
+	if( framecount && framecount->mValueCount )
+	{
+		trans->mFadeFrameCount = (U16)String_ToS32( &framecount->mpValues[0]);
+	}
+	if( fadetype && fadetype->mValueCount )
+	{
+		const sTagString * tag = sTagString_GetFromString( &fadetype->mpValues[0], gFedFadeNames, eFED_FADE_LIMIT );
+		if( tag )
+			trans->mFadeType = (U16)tag->ID;
+	}
+	if( fadecolour && fadecolour->mValueCount )
+	{
+		trans->mFadeColour = (U16)String_ToS32( &fadecolour->mpValues[0]);
+	}
+
+	return trans;
+}
+
+
 void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 {
 	sString lOnOffStrings[ 2 ];
@@ -326,137 +393,175 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 		{
 			if( eFedObject_Controls == tag->ID )
 			{
-				if( apContext->pHeader )
+				sObjectJSON * pControlObj = apObject->mpChildren;
+				sFedControlList * pControlList = (sFedControlList *)FedJSON_ItemCreate( apContext, eFedItem_ControlList );
+				sFedPage * pPage = (sFedPage*)FedJSON_ItemGetCurrent( apContext, eFedItem_Page );
+				if( pPage )
+					pPage->mpControlList = pControlList;
+				
+/*					pControlList->mppControls = &apContext->mppControlsBase[ apContext->mControlsOffset ];*/
+				for( ; pControlObj; pControlObj=pControlObj->mpSibling)
 				{
-					sObjectJSON * pControlObj = apObject->mpChildren;
-					sFedControlList * pControlList = (sFedControlList *)FedJSON_ItemCreate( apContext, eFedItem_ControlList );
-					sFedPage * pPage = (sFedPage*)FedJSON_ItemGetCurrent( apContext, eFedItem_Page );
-					if( pPage )
-						pPage->mpControlList = pControlList;
-					
-//					pControlList->mppControls = &apContext->mppControlsBase[ apContext->mControlsOffset ];
-					for( ; pControlObj; pControlObj=pControlObj->mpSibling)
-					{
-						U32 t;
-						sPropertyJSON * prop;
-						sFedControl * pControl = (sFedControl *)FedJSON_ItemCreate( apContext, eFedItem_Control );
+					U32 t;
+					sPropertyJSON * prop;
+					sFedControl * pControl = (sFedControl *)FedJSON_ItemCreate( apContext, eFedItem_Control );
+					if( pControlList)
 						pControlList->mppControls[ pControlList->mControlCount++ ] = pControl;
 
-						prop = JSON_Tree_GetpProperty( pControlObj, "binding");
-						if( prop )
+					prop = JSON_Tree_GetpProperty( pControlObj, "binding");
+					if( prop )
+					{
+						char * name = FedJSON_ItemStringCreate( apContext, &prop->mpValues[0] );
+						sFedVar * var = (sFedVar*)FedJSON_ItemCreate( apContext, eFedItem_Var );
+						if( pControl )
 						{
-							pControl->mpSetVar = (sFedVar*)FedJSON_ItemCreate( apContext, eFedItem_Var );
-							pControl->mpSetVar->mpName = FedJSON_ItemStringCreate( apContext, &prop->mpValues[0] );
+							pControl->mpSetVar = var;
+							pControl->mpSetVar->mpName =  name;
 						}
+					}
 
-						prop = JSON_Tree_GetpProperty( pControlObj, "lock");
-						if( prop )
+					prop = JSON_Tree_GetpProperty( pControlObj, "lock");
+					if( prop )
+					{
+						sFedLock * lock = (sFedLock*)FedJSON_ItemCreate( apContext, eFedItem_Lock );
+						sFedVar * var = (sFedVar*)FedJSON_ItemCreate( apContext, eFedItem_Var );
+						char * name =FedJSON_ItemStringCreate( apContext, &prop->mpValues[0]);
+						if( pControl )
 						{
-							pControl->mpLock =(sFedLock*)FedJSON_ItemCreate( apContext, eFedItem_Lock );
-							pControl->mpLock->mpVisVar = (sFedVar*)FedJSON_ItemCreate( apContext, eFedItem_Var );
-							pControl->mpLock->mpVisVar->mpName = FedJSON_ItemStringCreate( apContext, &prop->mpValues[0]);
+							pControl->mpLock = lock;
+							pControl->mpLock->mpVisVar = var;
+							pControl->mpLock->mpVisVar->mpName = name;
 							pControl->mpLock->mVisValue = 1;
 							if( prop->mValueCount > 1 )
 								pControl->mpLock->mVisValue = String_ToS32( &prop->mpValues[1]);
 						}
+					}
 
 
-						for( t=0; t<eFedControl_LIMIT; t++ )
+					for( t=0; t<eFedControl_LIMIT; t++ )
+					{
+						prop = JSON_Tree_GetpProperty( pControlObj, gFedControlTagStrings[t].pString );
+						if( prop )
 						{
-							prop = JSON_Tree_GetpProperty( pControlObj, gFedControlTagStrings[t].pString );
-							if( prop )
+							FedJSON_SetText( &pControl->mpTitle, pControlObj, gFedControlTagStrings[t].pString, 0, apContext);
+
+							if( eFedControl_Action == t )
 							{
-								FedJSON_SetText( &pControl->mpTitle, pControlObj, gFedControlTagStrings[t].pString, 0, apContext);
-
-								if( eFedControl_Action == t )
+								pControl->mControlType = eFED_CONTROL_CALL;
+								prop = JSON_Tree_GetpProperty( pControlObj, "binding");
+								if( prop )
 								{
-									pControl->mControlType = eFED_CONTROL_CALL;
-									prop = JSON_Tree_GetpProperty( pControlObj, "binding");
-									if( prop )
-									{
-										pControl->mpCall = (sFedCall*)FedJSON_ItemCreate( apContext, eFedItem_Call );
+									sFedCall * call = (sFedCall*)FedJSON_ItemCreate( apContext, eFedItem_Call );
+									pControl->mpCall = call;
+									if( pControl->mpCall )
 										pControl->mpCall->mpCallVar = pControl->mpSetVar;
-									}
 								}
-								else if( eFedControl_BackLink == t )
-								{
-									/* write to page link matrix */
-									pControl->mControlType = eFED_CONTROL_LINK;
-								}
-								else if( eFedControl_Link == t )
-								{
-									/* write to page link matrix */
-									pControl->mControlType = eFED_CONTROL_LINK;
-									/* temp copy name of link page into link pointer, we will resolve these in second pass */
-									pControl->mpLink = (sFedPage*)&prop->mpValues[0];
-								}
-								else if( eFedControl_Selector == t )
-								{
-									/* read all values and build list */
+							}
+							else if( eFedControl_BackLink == t )
+							{
+								/* write to page link matrix */
+								pControl->mControlType = eFED_CONTROL_LINK;
+							}
+							else if( eFedControl_Link == t )
+							{
+								/* write to page link matrix */
+								pControl->mControlType = eFED_CONTROL_LINK;
+								/* temp copy name of link page into link pointer, we will resolve these in second pass */
+								pControl->mpLink = (sFedPage*)&prop->mpValues[0];
+							}
+							else if( eFedControl_Selector == t )
+							{
+								/* read all values and build list */
+								sFedList * list = (sFedList*)FedJSON_ItemCreate( apContext, eFedItem_List);
 
+								if( pControl )
+								{
 									pControl->mControlType = eFED_CONTROL_LIST;
-									pControl->mpList = (sFedList*)FedJSON_ItemCreate( apContext, eFedItem_List);
+									pControl->mpList = list;
 									pControl->mpList->mpVar = pControl->mpSetVar;
-									prop = JSON_Tree_GetpProperty( pControlObj, "selections" );
-									if( prop )
+								}
+								prop = JSON_Tree_GetpProperty( pControlObj, "selections" );
+								if( prop )
+								{
+									U32 it = 0;
+									sFedListItem ** ppItems = FedJSON_RawCreate( apContext, prop->mValueCount * sizeof(sFedListItem*));
+									if( pControl )
 									{
 										pControl->mpList->mItemCount = (U16)prop->mValueCount;
-										pControl->mpList->mppItems = FedJSON_RawCreate( apContext, prop->mValueCount * sizeof(sFedListItem*));
-										U32 it = 0;
-										for( it=0; it<prop->mValueCount; it++ )
-										{
-											sFedListItem * item = (sFedListItem*)FedJSON_ItemCreate( apContext, eFedItem_ListItem);
-											item->mpText = (sFedText*)FedJSON_ItemCreate( apContext, eFedItem_Text);
-											item->mpText->mpString = FedJSON_ItemStringCreate( apContext, &prop->mpValues[it]);
-											pControl->mpList->mppItems[it] = item;
-										}
+										pControl->mpList->mppItems = ppItems;
 									}
-								}
-								else if( eFedControl_Toggle == t )
-								{
-									/* build list of two values */									
-									pControl->mControlType = eFED_CONTROL_LIST;
-
-									pControl->mpList = (sFedList*)FedJSON_ItemCreate( apContext, eFedItem_List);
-									pControl->mpList->mpVar = pControl->mpSetVar;
-
-									pControl->mpList->mppItems = FedJSON_RawCreate( apContext, 2 * sizeof(sFedListItem*));
-
-									U32 it;
-									for( it=0; it<2; it++ )
+									for( it=0; it<prop->mValueCount; it++ )
 									{
 										sFedListItem * item = (sFedListItem*)FedJSON_ItemCreate( apContext, eFedItem_ListItem);
-										item->mpText = (sFedText*)FedJSON_ItemCreate( apContext, eFedItem_Text);
-										item->mpText->mpString = FedJSON_ItemStringCreate( apContext, &lOnOffStrings[it]);
-										pControl->mpList->mppItems[it] = item;
+										sFedText * text = (sFedText*)FedJSON_ItemCreate( apContext, eFedItem_Text);
+										char * name = FedJSON_ItemStringCreate( apContext, &prop->mpValues[it]);
+										if( item )
+										{
+											item->mpText = text;
+											item->mpText->mpString = name;
+										}
+										if( pControl )
+											pControl->mpList->mppItems[it] = item;
 									}
-
 								}
-								else if( eFedControl_Slider == t )
+							}
+							else if( eFedControl_Toggle == t )
+							{
+								U32 it;
+								sFedList * list = (sFedList*)FedJSON_ItemCreate( apContext, eFedItem_List);
+								sFedListItem ** ppItems = (sFedListItem**)FedJSON_RawCreate( apContext, 2 * sizeof(sFedListItem*));
+
+								/* build list of two values */
+								if( pControl )
 								{
-									/* create slider */
+									pControl->mControlType = eFED_CONTROL_LIST;
+
+									pControl->mpList = list;
+									pControl->mpList->mpVar = pControl->mpSetVar;
+
+									pControl->mpList->mppItems = ppItems;
+								}
+
+								for( it=0; it<2; it++ )
+								{
+									sFedListItem * item = (sFedListItem*)FedJSON_ItemCreate( apContext, eFedItem_ListItem);
+									sFedText * text = (sFedText*)FedJSON_ItemCreate( apContext, eFedItem_Text);
+									char * name = FedJSON_ItemStringCreate( apContext, &lOnOffStrings[it]);
+									if( item )
+									{
+										item->mpText = text;
+										item->mpText->mpString = name;
+									}
+									if( pControl )
+										pControl->mpList->mppItems[it] = item;
+								}
+
+							}
+							else if( eFedControl_Slider == t )
+							{
+								sFedSlider * slider = (sFedSlider*)FedJSON_ItemCreate( apContext, eFedItem_Slider );
+								/* create slider */
+								if( pControl )
+								{
 									pControl->mControlType = eFED_CONTROL_SLIDER;
 
-									pControl->mpSlider = (sFedSlider*)FedJSON_ItemCreate( apContext, eFedItem_Slider );
+									pControl->mpSlider =slider;
 									pControl->mpSlider->mpVar = pControl->mpSetVar;
-									prop = JSON_Tree_GetpProperty( pControlObj, "range" );
-									if( prop )
-									{
-										if( prop->mValueCount > 0)
-											pControl->mpSlider->mValueMin = String_ToS32( &prop->mpValues[ 0 ] );
-										if( prop->mValueCount > 1)
-											pControl->mpSlider->mValueMax = String_ToS32( &prop->mpValues[ 1 ] );
-									}
 								}
-
-								break;
+								prop = JSON_Tree_GetpProperty( pControlObj, "range" );
+								if( prop )
+								{
+									if( prop->mValueCount > 0)
+										pControl->mpSlider->mValueMin = String_ToS32( &prop->mpValues[ 0 ] );
+									if( prop->mValueCount > 1)
+										pControl->mpSlider->mValueMax = String_ToS32( &prop->mpValues[ 1 ] );
+								}
 							}
-						}
-					}						
-				}
 
-				/* we have manually done recursion, so don't recurse later in this loop*/
-				continue;
+							break;
+						}
+					}
+				}						
 			}
 			else if( eFedObject_Layout == tag->ID )
 			{
@@ -464,23 +569,100 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 			}
 			else if( eFedObject_PageStyle == tag->ID )
 			{
+				sFedPageStyle * style = (sFedPageStyle*)FedJSON_ItemCreate(apContext, eFedItem_PageStyle);
+				sFedFontGroup * fontGroup = (sFedFontGroup*)FedJSON_ItemCreate(apContext, eFedItem_FontGroup);
 
+				if( style )
+					style->mpControlFonts = fontGroup;
+				
+				sObjectJSON * pStyleObj = apObject->mpChildren;				
+				for( ; pStyleObj; pStyleObj=pStyleObj->mpSibling)
+				{				
+					const sTagString * styleTag = sTagString_GetFromString( &pStyleObj->mObjectName, gFedPageStyleTagStrings, eFedPageStyle_LIMIT );
+					if( styleTag )
+					{
+						if( eFedPageStyle_FontNormal == styleTag->ID )
+						{
+							sFedAsset * ass = (sFedAsset*)FedJSON_AssetBuild( apContext, pStyleObj );
+							if( fontGroup )
+								fontGroup->mpFontNormal = ass;
+						}
+						else if( eFedPageStyle_FontSelected == styleTag->ID)
+						{
+							sFedAsset * ass = (sFedAsset*)FedJSON_AssetBuild( apContext, pStyleObj );
+							if( fontGroup )
+								fontGroup->mpFontSelected = ass;
+						}
+						else if( eFedPageStyle_ImageBG == styleTag->ID)
+						{
+							sFedAsset * ass = (sFedAsset*)FedJSON_AssetBuild( apContext, pStyleObj );
+							if( style )
+								style->mpPageBG = ass;
+						}
+						else if( eFedPageStyle_SoundMove == styleTag->ID)
+						{
+							sFedSample * spl = FedJSON_ItemCreate( apContext, eFedItem_Sample );
+							sFedAsset * ass = (sFedAsset*)FedJSON_AssetBuild( apContext, pStyleObj );
+							if( spl )
+								spl->mpAsset = ass;
+							if( style )
+								style->mpSampleMove = spl;
+						}
+						else if( eFedPageStyle_SoundSelect == styleTag->ID)
+						{
+							sFedSample * spl = FedJSON_ItemCreate( apContext, eFedItem_Sample );
+							sFedAsset * ass = (sFedAsset*)FedJSON_AssetBuild( apContext, pStyleObj );
+							if( spl )
+								spl->mpAsset = ass;
+							if( style )
+								style->mpSampleSelect = spl;
+						}
+						else if (eFedPageStyle_SpriteCursor == styleTag->ID )
+						{
+							sFedSprite * sprite = (sFedSprite*)FedJSON_ItemCreate( apContext, eFedItem_Sprite );
+							sFedAsset * ass = FedJSON_AssetBuild( apContext, pStyleObj );
+							if( sprite )
+								sprite->mpAsset = ass;
+							if( style )
+								style->mpCursor = sprite;
+							
+						}
+						else if( eFedPageStyle_TransitionIn == styleTag->ID)
+						{
+							sFedTransition * trans = FedJSON_TransitionBuild( apContext, pStyleObj );
+							if( style )
+								style->mpIntroTrans = trans;
+						}
+						else if( eFedPageStyle_TransitionOut == styleTag->ID)
+						{
+							sFedTransition * trans = FedJSON_TransitionBuild( apContext, pStyleObj );						
+							if( style )
+								style->mpOutroTrans = trans;
+						}
+					}
+				}
 			}
 			else if( eFedObject_Pages == tag->ID )
 			{
-				if( apContext->pHeader )
+				sFedPage * page = FedJSON_ItemCreate( apContext, eFedItem_Page );
+				const sPropertyJSON * prop = JSON_Tree_GetpProperty( apObject, "id" );
+
+				if( prop && prop->mValueCount )
 				{
-					sFedPage * page = &apContext->pHeader->mpPages[apContext->mCounters.mPageCount ];
-					FedJSON_SetText( &page->mpTitle, apObject, "id", 0, apContext );
+					sFedText * text = (sFedText*)FedJSON_ItemCreate( apContext, eFedItem_Text );
+					char * name = FedJSON_ItemStringCreate( apContext, &prop->mpValues[0]);
+					if( text )
+						text->mpString = name;
+					if( page )
+						page->mpTitle = text;
 				}
-				else
-				{
-					FedJSON_GetTextSize( apObject, "id", 0, apContext );
-				}
-				apContext->mCounters.mPageCount++;
+				FedJSON_Build( apObject->mpChildren, apContext );
+			}
+			else
+			{
+				FedJSON_Build( apObject->mpChildren, apContext );
 			}
 		}
-		FedJSON_Build( apObject->mpChildren, apContext );
 	}
 }
 
@@ -521,6 +703,18 @@ sFedHeader *		FedJSON_ParseText( const char * apText, const U32 aSize )
 		sObjectJSON * pTree = JSON_TreeCreate( &jsonElements );
 		sTreeCollectorJSON collector;
 		U32 textSize = 0;
+
+		Memory_Clear( sizeof(context), &context );
+
+		/* pass 1 - calculate sizes */
+		FedJSON_Build( pTree, &context);
+
+		size = 0;
+
+		/* pass 2 - build */
+		FedJSON_Build( pTree, &context);
+
+
 
 		lHeader.mAssetCount = (U16)JSON_Tree_Collect( pTree, "images", 0, &collector )->mPropertyCount,
 							+ (U16)JSON_Tree_Collect( pTree, "fonts", 0, &collector )->mPropertyCount,
@@ -566,7 +760,6 @@ sFedHeader *		FedJSON_ParseText( const char * apText, const U32 aSize )
 		context.pCalculatedHeader = &lHeader;
 		FedJSON_Build( pTree, &context );
 
-		JSON_Tree_Callback( pTree, "images", 0, FedJSON_AssetBuild, &context );
 
 
 		JSON_TreeDestroy( pTree );
