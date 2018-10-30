@@ -491,15 +491,10 @@ void	String_StrCpy( char * apDst,const char * apSrc )
 
 void	String_StrCpy2( char * apDst, const char * apSrc, const U32 aDstLen )
 {
-	U32	lIndex;
-	if( apDst && apSrc )
+	if( apDst && apSrc && aDstLen )
 	{
-		lIndex = 1;
-		while( (*apSrc) && (lIndex<aDstLen) )
-		{
-			*apDst++ = *apSrc++;
-			lIndex++;
-		}
+		const char * apEnd = &apDst[ aDstLen-1 ];
+		for( ;apDst<apEnd; *apDst++ = *apSrc++ )
 		*apDst++ = 0;
 	}
 }

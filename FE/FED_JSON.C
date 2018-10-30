@@ -16,31 +16,37 @@
 #  CODE
 ################################################################################### */
 
+#define FEDX_ELEMENTS		\
+	FEDX( Asset )			\
+	FEDX( Call )			\
+	FEDX( Control )			\
+	FEDX( ControlList )		\
+	FEDX( FontGroup )		\
+	FEDX( Lock )			\
+	FEDX( List )			\
+	FEDX( ListItem )		\
+	FEDX( Page )			\
+	FEDX( PageStyle )		\
+	FEDX( Sample )			\
+	FEDX( Slider )			\
+	FEDX( Sprite )			\
+	FEDX( SpriteList )		\
+	FEDX( SpriteGroup )		\
+	FEDX( Text )			\
+	FEDX( Transition )		\
+	FEDX( Var )				
+
+/*
+	FEDX( Box )				\
+	FEDX( Pos )				\
+	FEDX( Size )			\
+*/
 
 enum	
 {
-	eFedItem_Asset,
-	eFedItem_Box,
-	eFedItem_Call,
-	eFedItem_Control,
-	eFedItem_ControlList,
-	eFedItem_FontGroup,
-	eFedItem_Lock,
-	eFedItem_List,
-	eFedItem_ListItem,
-	eFedItem_Page,
-	eFedItem_PageStyle,
-	eFedItem_Sample,
-	eFedItem_Size,
-	eFedItem_Slider,
-	eFedItem_Sprite,
-	eFedItem_SpriteList,
-	eFedItem_SpriteGroup,
-	eFedItem_Text,
-	eFedItem_Transition,
-	eFedItem_Pos,
-	eFedItem_Var,
-
+#define FEDX( fi )	eFedItem_##fi,
+FEDX_ELEMENTS
+#undef FEDX
 	eFedItem_LIMIT
 };
 
@@ -83,6 +89,14 @@ enum
 	eFedPageStyle_LIMIT
 };
 
+U32	gFedItemSizeofs[ eFedItem_LIMIT ] =
+{
+#define FEDX( fi )	sizeof(sFed##fi),
+FEDX_ELEMENTS
+#undef FEDX
+};
+
+/*
 sTagValue gFedItemSizeofs[ eFedItem_LIMIT ] =
 {
 	{ eFedItem_Asset, sizeof(sFedAsset) }, 
@@ -107,6 +121,7 @@ sTagValue gFedItemSizeofs[ eFedItem_LIMIT ] =
 	{ eFedItem_Pos,sizeof(sFedPos ) },
 	{ eFedItem_Var,sizeof(sFedVar ) },
 };
+*/
 
 sTagString	gFedPageStyleTagStrings[ eFedObject_LIMIT ] =
 {
@@ -189,6 +204,7 @@ typedef struct sFedJSON_Context
 	U32		mItemCounts[ eFedItem_LIMIT ];
 	U32		mItemIndices[ eFedItem_LIMIT ];
 	U8 *	mpItemBases[ eFedItem_LIMIT ];
+	U8 ** 	mppItemBases[ eFedItem_LIMIT];
 
 	U8*			mpRawBase;
 	U32			mRawOffset;
@@ -237,37 +253,6 @@ U32	FedJSON_MemoryArrange( sFedHeader * apHeader )
 	return offset;
 }
 
-void	FedJSON_AssetBuildOld( const sObjectJSON * apObject, const sPropertyJSON * apProperty, void * apContext )
-{
-	sFedJSON_Context * context = (sFedJSON_Context*)apContext;
-	sFedAsset * ass = &context->pHeader->mpAssets[ context->pHeader->mAssetCount ];
-	
-	(void)apObject;
-	(void)apProperty;
-	(void)ass;
-
-	context->pHeader->mAssetCount++;
-}
-
-void	FedJSON_SetText( sFedText ** appText, const sObjectJSON * apObject, const char * apPropName, U16 aValueIndex, sFedJSON_Context * apContext )
-{
-	sPropertyJSON * prop = JSON_Tree_GetpProperty(apObject,apPropName);
-	if( prop && (prop->mValueCount > aValueIndex))
-	{
-		U32 i;
-		U32 len = String_GetLength( &prop->mpValues[aValueIndex]);
-
-		*appText = &apContext->pHeader->mpTexts[ apContext->mCounters.mTextCount ];
-		(*appText)->mpString = &apContext->mpTextBase[ apContext->mTextOffset ];
-		
-		for(i=0;i<len; i++)
-			apContext->mpTextBase[ apContext->mTextOffset++ ] = prop->mpValues[aValueIndex].mpChars[ i ];
-		apContext->mpTextBase[ apContext->mTextOffset++ ] = 0;
-		apContext->mCounters.mTextCount++;
-		GODLIB_ASSERT( apContext->mTextOffset <= apContext->mTextSize );
-	}
-}
-
 
 void	FedJSON_GetTextSize(  const sObjectJSON * apObject, const char * apPropName, U16 aValueIndex, sFedJSON_Context * apContext )
 {
@@ -301,27 +286,21 @@ void * FedJSON_ItemGetCurrent( sFedJSON_Context * apContext, U16 aFedItemType )
 	return pMem;
 }
 
-void *	FedJSON_RawCreate( sFedJSON_Context * apContext, U32 aSizeBytes )
-{
-	U8 * pMem = apContext->mpRawBase;
-	if( pMem )
-	{
-		pMem += apContext->mRawOffset;
-		apContext->mRawOffset += aSizeBytes;
-	}
-	return pMem;
-}
-
 char *	FedJSON_ItemStringCreate( sFedJSON_Context * apContext, sString * apSrc )
 {
 	char * pDst = apContext->mpTextBase;
 	U32 len = String_GetLength(apSrc);
 	if( pDst )
 	{
-		pDst += apContext->mTextOffset;
-		String_StrCpy2( pDst, apSrc->mpChars, len );
-		pDst[ len ] = 0;
+		char * src = apSrc->mpChars;
+		char * end = &src[ len ];
+		char * dst = pDst + apContext->mTextOffset;
+		pDst = dst;
+
+		for( ;src < end; *dst++ = *src++ );
+		*dst = 0;
 	}
+
 	apContext->mTextOffset += (len+1);
 	return pDst;
 }
@@ -383,8 +362,10 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 {
 	sString lOnOffStrings[ 2 ];
 
-	String_Init( &lOnOffStrings[ 0 ], "OFF" );
-	String_Init( &lOnOffStrings[ 1 ], "ON" );
+	String_Init( &lOnOffStrings[ 0 ], 0 );
+	String_Init( &lOnOffStrings[ 1 ], 0 );
+	String_SetStaticNT( &lOnOffStrings[ 0 ], "OFF" );
+	String_SetStaticNT( &lOnOffStrings[ 1 ], "ON" );
 
 	for( ;apObject; apObject=apObject->mpSibling )
 	{
@@ -393,20 +374,26 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 		{
 			if( eFedObject_Controls == tag->ID )
 			{
-				sObjectJSON * pControlObj = apObject->mpChildren;
+				sFedControl ** ppControls = (sFedControl**)apContext->mppItemBases[ eFedItem_Control ];
+				const sObjectJSON * pControlObj = apObject;
 				sFedControlList * pControlList = (sFedControlList *)FedJSON_ItemCreate( apContext, eFedItem_ControlList );
 				sFedPage * pPage = (sFedPage*)FedJSON_ItemGetCurrent( apContext, eFedItem_Page );
 				if( pPage )
 					pPage->mpControlList = pControlList;
-				
-/*					pControlList->mppControls = &apContext->mppControlsBase[ apContext->mControlsOffset ];*/
+
+				if( ppControls )
+					ppControls += apContext->mItemIndices[ eFedItem_Control ];
+
+				if( pControlList )
+					pControlList->mppControls = ppControls;
+
 				for( ; pControlObj; pControlObj=pControlObj->mpSibling)
 				{
 					U32 t;
 					sPropertyJSON * prop;
 					sFedControl * pControl = (sFedControl *)FedJSON_ItemCreate( apContext, eFedItem_Control );
-					if( pControlList)
-						pControlList->mppControls[ pControlList->mControlCount++ ] = pControl;
+					if( ppControls)
+						*ppControls++ = pControl;
 
 					prop = JSON_Tree_GetpProperty( pControlObj, "binding");
 					if( prop )
@@ -443,31 +430,47 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 						prop = JSON_Tree_GetpProperty( pControlObj, gFedControlTagStrings[t].pString );
 						if( prop )
 						{
-							FedJSON_SetText( &pControl->mpTitle, pControlObj, gFedControlTagStrings[t].pString, 0, apContext);
+							sFedText * titText = (sFedText*)FedJSON_ItemCreate( apContext, eFedItem_Text);
+							char * titName = FedJSON_ItemStringCreate( apContext, &prop->mpValues[0]);
+
+							if( titText )
+								titText->mpString = titName;
+							if( pControl )
+								pControl->mpTitle = titText;
+
+/*							FedJSON_SetText( &pControl->mpTitle, pControlObj, gFedControlTagStrings[t].pString, 0, apContext);*/
 
 							if( eFedControl_Action == t )
 							{
-								pControl->mControlType = eFED_CONTROL_CALL;
+								if( pControl )
+									pControl->mControlType = eFED_CONTROL_CALL;
 								prop = JSON_Tree_GetpProperty( pControlObj, "binding");
 								if( prop )
 								{
 									sFedCall * call = (sFedCall*)FedJSON_ItemCreate( apContext, eFedItem_Call );
-									pControl->mpCall = call;
-									if( pControl->mpCall )
-										pControl->mpCall->mpCallVar = pControl->mpSetVar;
+
+									if( call )
+										call->mpCallVar = pControl->mpSetVar;
+
+									if( pControl )
+										pControl->mpCall = call;
 								}
 							}
 							else if( eFedControl_BackLink == t )
 							{
 								/* write to page link matrix */
-								pControl->mControlType = eFED_CONTROL_LINK;
+								if( pControl )
+									pControl->mControlType = eFED_CONTROL_LINK;
 							}
 							else if( eFedControl_Link == t )
 							{
-								/* write to page link matrix */
-								pControl->mControlType = eFED_CONTROL_LINK;
-								/* temp copy name of link page into link pointer, we will resolve these in second pass */
-								pControl->mpLink = (sFedPage*)&prop->mpValues[0];
+								if( pControl )
+								{
+									/* write to page link matrix */
+									pControl->mControlType = eFED_CONTROL_LINK;
+									/* temp copy name of link page into link pointer, we will resolve these in second pass */
+									pControl->mpLink = (sFedPage*)&prop->mpValues[0];
+								}
 							}
 							else if( eFedControl_Selector == t )
 							{
@@ -484,7 +487,9 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 								if( prop )
 								{
 									U32 it = 0;
-									sFedListItem ** ppItems = FedJSON_RawCreate( apContext, prop->mValueCount * sizeof(sFedListItem*));
+									sFedListItem ** ppItems = (sFedListItem**)apContext->mpItemBases[ eFedItem_ListItem ];
+									if( ppItems )
+										ppItems += apContext->mItemIndices[ eFedItem_ListItem];
 									if( pControl )
 									{
 										pControl->mpList->mItemCount = (U16)prop->mValueCount;
@@ -500,8 +505,8 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 											item->mpText = text;
 											item->mpText->mpString = name;
 										}
-										if( pControl )
-											pControl->mpList->mppItems[it] = item;
+										if( ppItems )
+											*ppItems++ = item;
 									}
 								}
 							}
@@ -509,7 +514,9 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 							{
 								U32 it;
 								sFedList * list = (sFedList*)FedJSON_ItemCreate( apContext, eFedItem_List);
-								sFedListItem ** ppItems = (sFedListItem**)FedJSON_RawCreate( apContext, 2 * sizeof(sFedListItem*));
+								sFedListItem ** ppItems = (sFedListItem**)apContext->mpItemBases[ eFedItem_ListItem ];
+								if( ppItems )
+									ppItems += apContext->mItemIndices[ eFedItem_ListItem];
 
 								/* build list of two values */
 								if( pControl )
@@ -532,8 +539,8 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 										item->mpText = text;
 										item->mpText->mpString = name;
 									}
-									if( pControl )
-										pControl->mpList->mppItems[it] = item;
+									if( ppItems )
+										*ppItems++ = item;
 								}
 
 							}
@@ -549,7 +556,7 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 									pControl->mpSlider->mpVar = pControl->mpSetVar;
 								}
 								prop = JSON_Tree_GetpProperty( pControlObj, "range" );
-								if( prop )
+								if( prop && pControl )
 								{
 									if( prop->mValueCount > 0)
 										pControl->mpSlider->mValueMin = String_ToS32( &prop->mpValues[ 0 ] );
@@ -668,7 +675,6 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 
 sFedHeader *		FedJSON_ParseText( const char * apText, const U32 aSize )
 {
-	sFedHeader	lHeader = {0};
 	sFedHeader * pHeader = 0;
 	sString jsonString;
 	sElementCollectionJSON jsonElements;
@@ -701,65 +707,62 @@ sFedHeader *		FedJSON_ParseText( const char * apText, const U32 aSize )
 	{
 		sFedJSON_Context context;
 		sObjectJSON * pTree = JSON_TreeCreate( &jsonElements );
-		sTreeCollectorJSON collector;
-		U32 textSize = 0;
+		U32 off =0;
 
 		Memory_Clear( sizeof(context), &context );
 
 		/* pass 1 - calculate sizes */
 		FedJSON_Build( pTree, &context);
 
-		size = 0;
+		size = sizeof( sFedHeader );
+
+		for( i=0; i<eFedItem_LIMIT; i++ )
+		{
+			size += context.mItemIndices[i] * gFedItemSizeofs[i];
+		}
+		size += (context.mItemIndices[ eFedItem_Control ] * sizeof(sFedControl*));
+		size += (context.mItemIndices[ eFedItem_ListItem ] * sizeof(sFedListItem*));
+		size += (context.mItemIndices[ eFedItem_Sprite ] * sizeof(sFedSprite*));
+		size += context.mTextOffset + 1;
+
+		pMem = mMEMCALLOC(size);
+		pHeader = (sFedHeader*)pMem;
+		off = sizeof(sFedHeader);
+		for( i=0; i<eFedItem_LIMIT; i++ )
+		{
+			if( context.mItemIndices[i] )
+			{
+				context.mpItemBases[i] = &pMem[ off ];
+				off += context.mItemIndices[i] * gFedItemSizeofs[i];
+			}
+		}
+
+		context.mppItemBases[ eFedItem_Control] = (U8**)&pMem[ off ];
+		off += (context.mItemIndices[ eFedItem_Control ] * sizeof(sFedControl*));
+
+		context.mppItemBases[ eFedItem_ListItem] = (U8**)&pMem[ off ];
+		off += (context.mItemIndices[ eFedItem_ListItem ] * sizeof(sFedListItem*));
+
+		context.mppItemBases[ eFedItem_Sprite] = (U8**)&pMem[ off ];
+		off += (context.mItemIndices[ eFedItem_Sprite ] * sizeof(sFedSprite*));
+
+		context.mpTextBase = (char*)&pMem[ off ];
+
+		GODLIB_ASSERT( ( off + context.mTextOffset + 1) == size );
+
+		#define FEDX( fi )	pHeader->m##fi##Count = (U16)context.mItemIndices[ eFedItem_##fi ]; pHeader->mp##fi##s = (sFed##fi*)context.mpItemBases[ eFedItem_##fi ];
+		FEDX_ELEMENTS
+		#undef FEDX
+
+		for( i=0; i<eFedItem_LIMIT; i++ )
+		{
+			context.mItemCounts [ i ] = context.mItemIndices [ i ];
+			context.mItemIndices[ i ] = 0;
+		}
+		context.mTextOffset = 0;
 
 		/* pass 2 - build */
 		FedJSON_Build( pTree, &context);
-
-
-
-		lHeader.mAssetCount = (U16)JSON_Tree_Collect( pTree, "images", 0, &collector )->mPropertyCount,
-							+ (U16)JSON_Tree_Collect( pTree, "fonts", 0, &collector )->mPropertyCount,
-							+ (U16)JSON_Tree_Collect( pTree, "sprites", 0, &collector )->mPropertyCount,
-							+ (U16)JSON_Tree_Collect( pTree, "sounds", 0, &collector )->mPropertyCount;
-
-		lHeader.mCallCount = (U16)JSON_Tree_Collect( pTree, 0, "action", &collector )->mPropertyCount;
-		lHeader.mControlCount = (U16)JSON_Tree_Collect( pTree, "controls", 0, &collector )->mObjectCount;
-		lHeader.mListCount = (U16)JSON_Tree_Collect( pTree, "controls", "selector", &collector )->mPropertyCount;
-		lHeader.mListItemCount = (U16)JSON_Tree_Collect( pTree, "controls", "selections", &collector )->mValueCount;
-		lHeader.mLockCount = (U16)JSON_Tree_Collect( pTree, "controls", "lock", &collector )->mPropertyCount;
-		lHeader.mPageCount = (U16)JSON_Tree_Collect( pTree, "page", 0, &collector )->mObjectCount;
-		lHeader.mSliderCount = (U16)JSON_Tree_Collect( pTree, "controls", "slider", &collector )->mPropertyCount;
-		lHeader.mSpriteCount = (U16)JSON_Tree_Collect( pTree, "sprites", 0, &collector )->mObjectCount;
-		lHeader.mVarCount = (U16)JSON_Tree_Collect( pTree, "vars", 0, &collector )->mPropertyCount;
-
-		if( JSON_Tree_GetObjectCount( pTree, "fonts") )
-			lHeader.mFontGroupCount = 1;
-		lHeader.mPageCount = lHeader.mControlListCount;
-		lHeader.mTextCount = lHeader.mControlCount + lHeader.mControlListCount + lHeader.mPageCount;
-		
-
-		
-		textSize = (U16)JSON_Tree_Collect( pTree, "vars", 0, &collector )->mTextSize
-				  +(U16)JSON_Tree_Collect( pTree, 0, "filename", &collector )->mTextSize
-				  +(U16)JSON_Tree_Collect( pTree, 0, "context", &collector )->mTextSize;
-
-		for( i=0; i<eFedControl_LIMIT; i++ )
-			textSize += (U16)JSON_Tree_Collect( pTree, "controls", gFedControlTagStrings[i].pString, &collector )->mTextSize;
-
-
-		size = FedJSON_MemoryArrange( &lHeader );
-		size += textSize;
-
-		pMem = (U8*)mMEMALLOC(size);
-		pHeader = (sFedHeader*)pMem;
-		*pHeader = lHeader;
-		FedJSON_MemoryArrange( pHeader );
-
-		/* layout assets */
-
-		context.pHeader = pHeader;
-		context.pCalculatedHeader = &lHeader;
-		FedJSON_Build( pTree, &context );
-
 
 
 		JSON_TreeDestroy( pTree );
