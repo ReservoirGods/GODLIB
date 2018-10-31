@@ -12,7 +12,7 @@
 #  PROTOTYPES
 ################################################################################### */
 
-struct sFedHeader *		FedJSON_ParseText( const char * apText, const U32 aSize );
+struct sFedHeader *		FedJSON_ParseText( const char * apText, const U32 aSize, U32 * apSizeOut );
 
 
 /* ################################################################################ */
