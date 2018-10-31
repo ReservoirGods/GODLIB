@@ -503,7 +503,6 @@ U32	Font_GetSize( sFont * apFont )
 	{
 		lSize  = sizeof(sFont);
 		lSize += apFont->mSpriteCount * sizeof(sSpriteRegion);
-		lSize += apFont->mSpriteCount;
 		for( i=0; i<apFont->mSpriteCount; i++ )
 		{
 			lSize += Sprite_GetSize( &apFont->mpSprites[ i ] );
