@@ -200,7 +200,6 @@ typedef struct sFedJSON_Context
 	sFedHeader * pCalculatedHeader;
 	sFedHeader	mCounters;
 
-	U32		mItemSizes[ eFedItem_LIMIT ];
 	U32		mItemCounts[ eFedItem_LIMIT ];
 	U32		mItemIndices[ eFedItem_LIMIT ];
 	U8 *	mpItemBases[ eFedItem_LIMIT ];
@@ -269,7 +268,7 @@ void *	FedJSON_ItemCreate( sFedJSON_Context * apContext, U16 aFedItemType )
 	GODLIB_ASSERT( aFedItemType < eFedItem_LIMIT );
 	if( pMem )
 	{
-		pMem += (apContext->mItemSizes[aFedItemType] * apContext->mItemIndices[ aFedItemType ]);
+		pMem += (gFedItemSizeofs[aFedItemType] * apContext->mItemIndices[ aFedItemType ]);
 	}
 	apContext->mItemIndices[ aFedItemType ]++;
 	return pMem;
@@ -281,7 +280,7 @@ void * FedJSON_ItemGetCurrent( sFedJSON_Context * apContext, U16 aFedItemType )
 	GODLIB_ASSERT( aFedItemType < eFedItem_LIMIT );
 	if( pMem && apContext->mItemIndices[ aFedItemType ] )
 	{
-		pMem += (apContext->mItemSizes[aFedItemType] * (apContext->mItemIndices[ aFedItemType ]-1));
+		pMem += (gFedItemSizeofs[ aFedItemType ] * (apContext->mItemIndices[ aFedItemType ]-1));
 	}
 	return pMem;
 }
@@ -395,6 +394,9 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 					if( ppControls)
 						*ppControls++ = pControl;
 
+					if( pControlList )
+						pControlList->mControlCount++;
+
 					prop = JSON_Tree_GetpProperty( pControlObj, "binding");
 					if( prop )
 					{
@@ -487,7 +489,7 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 								if( prop )
 								{
 									U32 it = 0;
-									sFedListItem ** ppItems = (sFedListItem**)apContext->mpItemBases[ eFedItem_ListItem ];
+									sFedListItem ** ppItems = (sFedListItem**)apContext->mppItemBases[ eFedItem_ListItem ];
 									if( ppItems )
 										ppItems += apContext->mItemIndices[ eFedItem_ListItem];
 									if( pControl )
@@ -514,7 +516,7 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 							{
 								U32 it;
 								sFedList * list = (sFedList*)FedJSON_ItemCreate( apContext, eFedItem_List);
-								sFedListItem ** ppItems = (sFedListItem**)apContext->mpItemBases[ eFedItem_ListItem ];
+								sFedListItem ** ppItems = (sFedListItem**)apContext->mppItemBases[ eFedItem_ListItem ];
 								if( ppItems )
 									ppItems += apContext->mItemIndices[ eFedItem_ListItem];
 
@@ -582,7 +584,7 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 				if( style )
 					style->mpControlFonts = fontGroup;
 				
-				sObjectJSON * pStyleObj = apObject->mpChildren;				
+				sObjectJSON * pStyleObj = apObject->mpChildren;
 				for( ; pStyleObj; pStyleObj=pStyleObj->mpSibling)
 				{				
 					const sTagString * styleTag = sTagString_GetFromString( &pStyleObj->mObjectName, gFedPageStyleTagStrings, eFedPageStyle_LIMIT );
@@ -642,7 +644,7 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 						}
 						else if( eFedPageStyle_TransitionOut == styleTag->ID)
 						{
-							sFedTransition * trans = FedJSON_TransitionBuild( apContext, pStyleObj );						
+							sFedTransition * trans = FedJSON_TransitionBuild( apContext, pStyleObj );
 							if( style )
 								style->mpOutroTrans = trans;
 						}
