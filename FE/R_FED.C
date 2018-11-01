@@ -531,7 +531,7 @@ void	RenderFed_SpriteDraw( sFedSprite * apSprite,sGraphicCanvas * apCanvas,const
 				apSprite->mRedrawFlag--;
 			}
 
-			if( apSprite->mpAsset )
+			if( apSprite->mpAsset && apSprite->mpAsset->mpData )
 			{
 				lpBlock = (sSpriteBlock*)apSprite->mpAsset->mpData;
 

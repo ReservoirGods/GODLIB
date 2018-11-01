@@ -1163,7 +1163,7 @@ void	FedParse_HeaderInit( void )
 
 
 	gFedParser.mpHeader->mID      = dFED_ID;
-	gFedParser.mpHeader->mVersion = dFED_VERSION;
+	gFedParser.mpHeader->mVersion = dFED_VERSION_OLD;
 
 	gFedParser.mpHeader->mAssetCount       = gFedParser.mLists[ eFEDPARSE_CHUNK_ASSET ].mItemCount;
 	gFedParser.mpHeader->mCallCount        = gFedParser.mLists[ eFEDPARSE_CHUNK_CALL ].mItemCount;

@@ -656,6 +656,11 @@ sFedHeader *		FedJSON_ParseText( const char * apText, const U32 aSize, U32 * apS
 
 		pMem = mMEMCALLOC(size);
 		pHeader = (sFedHeader*)pMem;
+
+		pHeader->mID = dFED_ID;
+		pHeader->mVersion = dFED_VERSION_NEW;
+
+
 		off = sizeof(sFedHeader);
 		for( i=0; i<eFedItem_LIMIT; i++ )
 		{
@@ -694,7 +699,9 @@ sFedHeader *		FedJSON_ParseText( const char * apText, const U32 aSize, U32 * apS
 		/* pass 2 - build */
 		FedJSON_Build( pTree, &context);
 
+
 		/* have to hack this for delocate to work */
+/*
 		for( i = 0; i < pHeader->mControlListCount; i++ )
 		{
 			*(U32*)( &pHeader->mpControlLists[ i ].mppControls ) -= (U32)pHeader;
@@ -707,13 +714,22 @@ sFedHeader *		FedJSON_ParseText( const char * apText, const U32 aSize, U32 * apS
 		{
 			*(U32*)( &pHeader->mpSpriteLists[ i ].mppSprites ) -= (U32)pHeader;
 		}
-
-/*/
-		Fed_Delocate( pHeader );
-		Fed_Relocate( pHeader );
 */
 
+		for( i = 0; i < pHeader->mPageCount; i++ )
+		{
+			if( !pHeader->mpPages[i].mpPageStyle )
+			{
+				if( pHeader->mPageStyleCount )
+					pHeader->mpPages[i].mpPageStyle = &pHeader->mpPageStyles[0];
+			}
+		}
+
+		Fed_Delocate( pHeader );
+		Fed_Relocate( pHeader );
+
 		JSON_TreeDestroy( pTree );
+
 	}
 
 

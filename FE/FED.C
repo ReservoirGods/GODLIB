@@ -62,6 +62,8 @@ void	Fed_LockEvaluate( sFedLock * apLock,sFedLockStatus * apRFL );
 void	Fed_SampleMovePlay( void );
 void	Fed_SampleSelectPlay( void );
 
+void		Fed_DelocateOld( sFedHeader * apHeader );
+void		Fed_RelocateOld( sFedHeader * apHeader );
 
 /* ###################################################################################
 #  CODE
@@ -73,38 +75,47 @@ void	Fed_SampleSelectPlay( void );
 * CREATION : 07.02.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-#define	mFED_DELOC( _a )	{ (*(U32*)(&apHeader->_a) -= (U32)apHeader); Endian_FromBigU32( &apHeader->_a ); }
-#define	mFED_RELOC( _a )			{ Endian_FromBigU32( &apHeader->_a ); *(U32*)&apHeader->_a += (U32)apHeader;	}
+#define	mFED_DELOC( _a )			if( apHeader->_a ) { (*(U32*)(&apHeader->_a) -= (U32)apHeader); Endian_FromBigU32( &apHeader->_a ); }
+#define	mFED_RELOC( _a )			if( apHeader->_a ) { Endian_FromBigU32( &apHeader->_a ); *(U32*)&apHeader->_a += (U32)apHeader;	}
 #define	mFED_LIST_RELOC( _a, _l )	if( apHeader->_a ) { Endian_FromBigU32( &apHeader->_a ); apHeader->_a = &apHeader->_l[ (U32)(apHeader->_a) - 1]; }
 
 void	Fed_Delocate( sFedHeader * apHeader )
 {
 	U16	i,j;
 
+	Endian_FromBigU32( &apHeader->mID );
+	Endian_FromBigU32( &apHeader->mVersion );
+
+	if( apHeader->mVersion < dFED_VERSION_NEW )
+	{
+		Fed_DelocateOld( apHeader );
+		return;
+	}
+
 	for( i=0; i<apHeader->mAssetCount; i++ )
 	{
-		Endian_FromBigU32( &apHeader->mpAssets[ i ].mpFileName );
-		Endian_FromBigU32( &apHeader->mpAssets[ i ].mpContext );
+		mFED_DELOC( mpAssets[ i ].mpFileName );
+		mFED_DELOC( mpAssets[ i ].mpContext );
 	}
 
 	for( i=0; i<apHeader->mCallCount; i++ )
 	{
-		Endian_FromBigU32( &apHeader->mpCalls[ i ].mpPageReturn );
-		Endian_FromBigU32( &apHeader->mpCalls[ i ].mpCallVar    );
+		mFED_DELOC( mpCalls[ i ].mpPageReturn );
+		mFED_DELOC( mpCalls[ i ].mpCallVar    );
 		Endian_FromBigU32( &apHeader->mpCalls[ i ].mCallValue   );
 	}
 
 	for( i=0; i<apHeader->mControlCount; i++ )
 	{
-		Endian_FromBigU32( &apHeader->mpControls[ i ].mpLock );
-		Endian_FromBigU32( &apHeader->mpControls[ i ].mpSprite );
-		Endian_FromBigU32( &apHeader->mpControls[ i ].mpTitle );
+		mFED_DELOC( mpControls[ i ].mpLock );
+		mFED_DELOC( mpControls[ i ].mpSprite );
+		mFED_DELOC( mpControls[ i ].mpTitle );
 
-		Endian_FromBigU32( &apHeader->mpControls[ i ].mpCall );
-		Endian_FromBigU32( &apHeader->mpControls[ i ].mpLink );
-		Endian_FromBigU32( &apHeader->mpControls[ i ].mpList );
-		Endian_FromBigU32( &apHeader->mpControls[ i ].mpSlider );
-		Endian_FromBigU32( &apHeader->mpControls[ i ].mpSetVar );
+		mFED_DELOC( mpControls[ i ].mpCall );
+		mFED_DELOC( mpControls[ i ].mpLink );
+		mFED_DELOC( mpControls[ i ].mpList );
+		mFED_DELOC( mpControls[ i ].mpSlider );
+		mFED_DELOC( mpControls[ i ].mpSetVar );
 
 		Endian_FromBigU32( &apHeader->mpControls[ i ].mSetValue );
 		Endian_FromBigU16( &apHeader->mpControls[ i ].mControlType );
@@ -114,11 +125,9 @@ void	Fed_Delocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mControlListCount; i++ )
 	{
-		*(U32*)(&apHeader->mpControlLists[ i ].mppControls) += (U32)apHeader;
-
 		for( j=0; j<apHeader->mpControlLists[ i ].mControlCount; j++ )
 		{
-			Endian_FromBigU32( &apHeader->mpControlLists[ i ].mppControls[ j ] );
+			mFED_DELOC( mpControlLists[ i ].mppControls[ j ] );
 		}
 		Endian_FromBigU16( &apHeader->mpControlLists[ i ].mControlCount );
 		Endian_FromBigU16( &apHeader->mpControlLists[ i ].mControlIndex );
@@ -127,34 +136,32 @@ void	Fed_Delocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mFontGroupCount; i++ )
 	{
-		Endian_FromBigU32( &apHeader->mpFontGroups[ i ].mpFontLocked );
-		Endian_FromBigU32( &apHeader->mpFontGroups[ i ].mpFontNormal );
-		Endian_FromBigU32( &apHeader->mpFontGroups[ i ].mpFontSelected );
-		Endian_FromBigU32( &apHeader->mpFontGroups[ i ].mpFontLockedSelected );
+		mFED_DELOC( mpFontGroups[ i ].mpFontLocked );
+		mFED_DELOC( mpFontGroups[ i ].mpFontNormal );
+		mFED_DELOC( mpFontGroups[ i ].mpFontSelected );
+		mFED_DELOC( mpFontGroups[ i ].mpFontLockedSelected );
 	}
 
 	for( i=0; i<apHeader->mListCount; i++ )
 	{
-		*(U32*)(&apHeader->mpLists[ i ].mppItems) += (U32)apHeader;
-
 		for( j=0; j<apHeader->mpLists[ i ].mItemCount; j++ )
 		{
-			Endian_FromBigU32( &apHeader->mpLists[ i ].mppItems[ j ] );
+			mFED_DELOC( mpLists[ i ].mppItems[ j ] );
 		}
 		Endian_FromBigU16( &apHeader->mpLists[ i ].mItemCount );
 		Endian_FromBigU16( &apHeader->mpLists[ i ].mPos.mX  );
 		Endian_FromBigU16( &apHeader->mpLists[ i ].mPos.mY  );
 
-		Endian_FromBigU32( &apHeader->mpLists[ i ].mpVar );
+		mFED_DELOC( mpLists[ i ].mpVar );
 
 		mFED_DELOC( mpLists[ i ].mppItems );
 	}
 
 	for( i=0; i<apHeader->mListItemCount; i++ )
 	{
-		Endian_FromBigU32( &apHeader->mpListItems[ i ].mpSpriteGroup );
-		Endian_FromBigU32( &apHeader->mpListItems[ i ].mpLock   );
-		Endian_FromBigU32( &apHeader->mpListItems[ i ].mpText   );
+		mFED_DELOC( mpListItems[ i ].mpSpriteGroup );
+		mFED_DELOC( mpListItems[ i ].mpLock   );
+		mFED_DELOC( mpListItems[ i ].mpText   );
 
 		Endian_FromBigU16( &apHeader->mpListItems[ i ].mPos.mX  );
 		Endian_FromBigU16( &apHeader->mpListItems[ i ].mPos.mY  );
@@ -162,8 +169,8 @@ void	Fed_Delocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mLockCount; i++ )
 	{
-		Endian_FromBigU32( &apHeader->mpLocks[ i ].mpLockVar );
-		Endian_FromBigU32( &apHeader->mpLocks[ i ].mpVisVar  );
+		mFED_DELOC( mpLocks[ i ].mpLockVar );
+		mFED_DELOC( mpLocks[ i ].mpVisVar  );
 
 		Endian_FromBigU32( &apHeader->mpLocks[ i ].mLockValue );
 		Endian_FromBigU32( &apHeader->mpLocks[ i ].mVisValue  );
@@ -174,16 +181,16 @@ void	Fed_Delocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mPageCount; i++ )
 	{
-		Endian_FromBigU32( &apHeader->mpPages[ i ].mpBG          );
-		Endian_FromBigU32( &apHeader->mpPages[ i ].mpCursor      );
-		Endian_FromBigU32( &apHeader->mpPages[ i ].mpPageStyle   );
-		Endian_FromBigU32( &apHeader->mpPages[ i ].mpPageParent  );
-		Endian_FromBigU32( &apHeader->mpPages[ i ].mpSampleMove  );
-		Endian_FromBigU32( &apHeader->mpPages[ i ].mpSampleSelect);
-		Endian_FromBigU32( &apHeader->mpPages[ i ].mpTitle       );
+		mFED_DELOC( mpPages[ i ].mpBG          );
+		mFED_DELOC( mpPages[ i ].mpCursor      );
+		mFED_DELOC( mpPages[ i ].mpPageStyle   );
+		mFED_DELOC( mpPages[ i ].mpPageParent  );
+		mFED_DELOC( mpPages[ i ].mpSampleMove  );
+		mFED_DELOC( mpPages[ i ].mpSampleSelect);
+		mFED_DELOC( mpPages[ i ].mpTitle       );
 
-		Endian_FromBigU32( &apHeader->mpPages[ i ].mpControlList );
-		Endian_FromBigU32( &apHeader->mpPages[ i ].mpSpriteList  );
+		mFED_DELOC( mpPages[ i ].mpControlList );
+		mFED_DELOC( mpPages[ i ].mpSpriteList  );
 
 		Endian_FromBigU32( &apHeader->mpPages[ i ].mHash         );
 		Endian_FromBigU16( &apHeader->mpPages[ i ].mControlIndex );
@@ -191,19 +198,19 @@ void	Fed_Delocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mPageStyleCount; i++ )
 	{
-		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpPageTitleFont );
-		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpPageBG );
-		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpCursor );
-		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpControlFonts );
-		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpIntroTrans );
-		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpOutroTrans );
-		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpSampleMove  );
-		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpSampleSelect);
+		mFED_DELOC( mpPageStyles[ i ].mpPageTitleFont );
+		mFED_DELOC( mpPageStyles[ i ].mpPageBG );
+		mFED_DELOC( mpPageStyles[ i ].mpCursor );
+		mFED_DELOC( mpPageStyles[ i ].mpControlFonts );
+		mFED_DELOC( mpPageStyles[ i ].mpIntroTrans );
+		mFED_DELOC( mpPageStyles[ i ].mpOutroTrans );
+		mFED_DELOC( mpPageStyles[ i ].mpSampleMove  );
+		mFED_DELOC( mpPageStyles[ i ].mpSampleSelect);
 	}
 
 	for( i=0; i<apHeader->mSampleCount; i++ )
 	{
-		Endian_FromBigU32( &apHeader->mpSamples[ i ].mpAsset );
+		mFED_DELOC( mpSamples[ i ].mpAsset );
 	}
 
 	for( i=0; i<apHeader->mSliderCount; i++ )
@@ -221,7 +228,7 @@ void	Fed_Delocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mSpriteCount; i++ )
 	{
-		Endian_FromBigU32( &apHeader->mpSprites[ i ].mpAsset );
+		mFED_DELOC( mpSprites[ i ].mpAsset );
 
 		Endian_FromBigU32( &apHeader->mpSprites[ i ].mAnimSpeed );
 		Endian_FromBigU16( &apHeader->mpSprites[ i ].mFrameBase  );
@@ -232,12 +239,12 @@ void	Fed_Delocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mSpriteListCount; i++ )
 	{
-		*(U32*)(&apHeader->mpSpriteLists[ i ].mppSprites) += (U32)apHeader;
 		for( j=0; j<apHeader->mpSpriteLists[ i ].mSpriteCount; j++ )
 		{
-			Endian_FromBigU32( &apHeader->mpSpriteLists[ i ].mppSprites[ j ] );
+			mFED_DELOC( mpSpriteLists[ i ].mppSprites[ j ] );
 		}
-		Endian_FromBigU32( &apHeader->mpSpriteLists[ i ].mppSprites );
+		mFED_DELOC( mpSpriteLists[ i ].mppSprites );
+
 		Endian_FromBigU16( &apHeader->mpSpriteLists[ i ].mSpriteCount );
 
 		mFED_DELOC( mpSpriteLists[ i ].mppSprites );
@@ -245,17 +252,17 @@ void	Fed_Delocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mSpriteGroupCount; i++ )
 	{
-		Endian_FromBigU32( &apHeader->mpSpriteGroups[ i ].mpSpriteLocked );
-		Endian_FromBigU32( &apHeader->mpSpriteGroups[ i ].mpSpriteNormal );
-		Endian_FromBigU32( &apHeader->mpSpriteGroups[ i ].mpSpriteSelected );
-		Endian_FromBigU32( &apHeader->mpSpriteGroups[ i ].mpSpriteLockedSelected );
+		mFED_DELOC( mpSpriteGroups[ i ].mpSpriteLocked );
+		mFED_DELOC( mpSpriteGroups[ i ].mpSpriteNormal );
+		mFED_DELOC( mpSpriteGroups[ i ].mpSpriteSelected );
+		mFED_DELOC( mpSpriteGroups[ i ].mpSpriteLockedSelected );
 	}
 
 
 	for( i=0; i<apHeader->mTextCount; i++ )
 	{
-		Endian_FromBigU32( &apHeader->mpTexts[ i ].mpFontGroup );
-		Endian_FromBigU32( &apHeader->mpTexts[ i ].mpString );
+		mFED_DELOC( mpTexts[ i ].mpFontGroup );
+		mFED_DELOC( mpTexts[ i ].mpString );
 
 		Endian_FromBigU16( &apHeader->mpTexts[ i ].mAlign );
 		Endian_FromBigU16( &apHeader->mpTexts[ i ].mBox.mPos.mX       );
@@ -268,7 +275,7 @@ void	Fed_Delocate( sFedHeader * apHeader )
 	{
 		if( eFED_FADE_RGB != apHeader->mpTransitions[ i ].mFadeType )
 		{
-			Endian_FromBigU16( &apHeader->mpTransitions[ i ].mFadeColour );
+			mFED_DELOC( mpTransitions[ i ].mFadeColour );
 		}
 		Endian_FromBigU16( &apHeader->mpTransitions[ i ].mFadeFrameCount );
 		Endian_FromBigU16( &apHeader->mpTransitions[ i ].mFadeType );
@@ -277,6 +284,249 @@ void	Fed_Delocate( sFedHeader * apHeader )
 	}
 
 	for( i=0; i<apHeader->mVarCount; i++ )
+	{
+		mFED_DELOC( mpVars[ i ].mpName );
+	}
+
+	mFED_DELOC( mpAssets );
+	mFED_DELOC( mpCalls );
+	mFED_DELOC( mpControls );
+	mFED_DELOC( mpControlLists );
+	mFED_DELOC( mpFontGroups );
+	mFED_DELOC( mpLists );
+	mFED_DELOC( mpListItems );
+	mFED_DELOC( mpLocks );
+	mFED_DELOC( mpPages );
+	mFED_DELOC( mpPageStyles );
+	mFED_DELOC( mpSamples );
+	mFED_DELOC( mpSliders );
+	mFED_DELOC( mpSprites );
+	mFED_DELOC( mpSpriteGroups );
+	mFED_DELOC( mpSpriteLists );
+	mFED_DELOC( mpTexts );
+	mFED_DELOC( mpTransitions );
+	mFED_DELOC( mpVars );
+
+	Endian_FromBigU16( &apHeader->mAssetCount );
+	Endian_FromBigU16( &apHeader->mCallCount );
+	Endian_FromBigU16( &apHeader->mControlCount );
+	Endian_FromBigU16( &apHeader->mControlListCount );
+	Endian_FromBigU16( &apHeader->mFontGroupCount );
+	Endian_FromBigU16( &apHeader->mListCount );
+	Endian_FromBigU16( &apHeader->mListItemCount );
+	Endian_FromBigU16( &apHeader->mLockCount );
+	Endian_FromBigU16( &apHeader->mPageCount );
+	Endian_FromBigU16( &apHeader->mPageStyleCount );
+	Endian_FromBigU16( &apHeader->mSampleCount );
+	Endian_FromBigU16( &apHeader->mSliderCount );
+	Endian_FromBigU16( &apHeader->mSpriteCount );
+	Endian_FromBigU16( &apHeader->mSpriteGroupCount );
+	Endian_FromBigU16( &apHeader->mSpriteListCount );
+	Endian_FromBigU16( &apHeader->mTextCount );
+	Endian_FromBigU16( &apHeader->mTransitionCount );
+	Endian_FromBigU16( &apHeader->mVarCount );
+}
+
+void	Fed_DelocateOld( sFedHeader * apHeader )
+{
+	U16	i, j;
+
+	for( i = 0; i<apHeader->mAssetCount; i++ )
+	{
+		Endian_FromBigU32( &apHeader->mpAssets[ i ].mpFileName );
+		Endian_FromBigU32( &apHeader->mpAssets[ i ].mpContext );
+	}
+
+	for( i = 0; i<apHeader->mCallCount; i++ )
+	{
+		Endian_FromBigU32( &apHeader->mpCalls[ i ].mpPageReturn );
+		Endian_FromBigU32( &apHeader->mpCalls[ i ].mpCallVar );
+		Endian_FromBigU32( &apHeader->mpCalls[ i ].mCallValue );
+	}
+
+	for( i = 0; i<apHeader->mControlCount; i++ )
+	{
+		Endian_FromBigU32( &apHeader->mpControls[ i ].mpLock );
+		Endian_FromBigU32( &apHeader->mpControls[ i ].mpSprite );
+		Endian_FromBigU32( &apHeader->mpControls[ i ].mpTitle );
+
+		Endian_FromBigU32( &apHeader->mpControls[ i ].mpCall );
+		Endian_FromBigU32( &apHeader->mpControls[ i ].mpLink );
+		Endian_FromBigU32( &apHeader->mpControls[ i ].mpList );
+		Endian_FromBigU32( &apHeader->mpControls[ i ].mpSlider );
+		Endian_FromBigU32( &apHeader->mpControls[ i ].mpSetVar );
+
+		Endian_FromBigU32( &apHeader->mpControls[ i ].mSetValue );
+		Endian_FromBigU16( &apHeader->mpControls[ i ].mControlType );
+		Endian_FromBigU16( &apHeader->mpControls[ i ].mPos.mX );
+		Endian_FromBigU16( &apHeader->mpControls[ i ].mPos.mY );
+	}
+
+	for( i = 0; i<apHeader->mControlListCount; i++ )
+	{
+		*(U32*)( &apHeader->mpControlLists[ i ].mppControls ) += (U32)apHeader;
+
+		for( j = 0; j<apHeader->mpControlLists[ i ].mControlCount; j++ )
+		{
+			Endian_FromBigU32( &apHeader->mpControlLists[ i ].mppControls[ j ] );
+		}
+		Endian_FromBigU16( &apHeader->mpControlLists[ i ].mControlCount );
+		Endian_FromBigU16( &apHeader->mpControlLists[ i ].mControlIndex );
+		mFED_DELOC( mpControlLists[ i ].mppControls );
+	}
+
+	for( i = 0; i<apHeader->mFontGroupCount; i++ )
+	{
+		Endian_FromBigU32( &apHeader->mpFontGroups[ i ].mpFontLocked );
+		Endian_FromBigU32( &apHeader->mpFontGroups[ i ].mpFontNormal );
+		Endian_FromBigU32( &apHeader->mpFontGroups[ i ].mpFontSelected );
+		Endian_FromBigU32( &apHeader->mpFontGroups[ i ].mpFontLockedSelected );
+	}
+
+	for( i = 0; i<apHeader->mListCount; i++ )
+	{
+		*(U32*)( &apHeader->mpLists[ i ].mppItems ) += (U32)apHeader;
+
+		for( j = 0; j<apHeader->mpLists[ i ].mItemCount; j++ )
+		{
+			Endian_FromBigU32( &apHeader->mpLists[ i ].mppItems[ j ] );
+		}
+		Endian_FromBigU16( &apHeader->mpLists[ i ].mItemCount );
+		Endian_FromBigU16( &apHeader->mpLists[ i ].mPos.mX );
+		Endian_FromBigU16( &apHeader->mpLists[ i ].mPos.mY );
+
+		Endian_FromBigU32( &apHeader->mpLists[ i ].mpVar );
+
+		mFED_DELOC( mpLists[ i ].mppItems );
+	}
+
+	for( i = 0; i<apHeader->mListItemCount; i++ )
+	{
+		Endian_FromBigU32( &apHeader->mpListItems[ i ].mpSpriteGroup );
+		Endian_FromBigU32( &apHeader->mpListItems[ i ].mpLock );
+		Endian_FromBigU32( &apHeader->mpListItems[ i ].mpText );
+
+		Endian_FromBigU16( &apHeader->mpListItems[ i ].mPos.mX );
+		Endian_FromBigU16( &apHeader->mpListItems[ i ].mPos.mY );
+	}
+
+	for( i = 0; i<apHeader->mLockCount; i++ )
+	{
+		Endian_FromBigU32( &apHeader->mpLocks[ i ].mpLockVar );
+		Endian_FromBigU32( &apHeader->mpLocks[ i ].mpVisVar );
+
+		Endian_FromBigU32( &apHeader->mpLocks[ i ].mLockValue );
+		Endian_FromBigU32( &apHeader->mpLocks[ i ].mVisValue );
+
+		Endian_FromBigU16( &apHeader->mpLocks[ i ].mLockCompare );
+		Endian_FromBigU16( &apHeader->mpLocks[ i ].mVisCompare );
+	}
+
+	for( i = 0; i<apHeader->mPageCount; i++ )
+	{
+		Endian_FromBigU32( &apHeader->mpPages[ i ].mpBG );
+		Endian_FromBigU32( &apHeader->mpPages[ i ].mpCursor );
+		Endian_FromBigU32( &apHeader->mpPages[ i ].mpPageStyle );
+		Endian_FromBigU32( &apHeader->mpPages[ i ].mpPageParent );
+		Endian_FromBigU32( &apHeader->mpPages[ i ].mpSampleMove );
+		Endian_FromBigU32( &apHeader->mpPages[ i ].mpSampleSelect );
+		Endian_FromBigU32( &apHeader->mpPages[ i ].mpTitle );
+
+		Endian_FromBigU32( &apHeader->mpPages[ i ].mpControlList );
+		Endian_FromBigU32( &apHeader->mpPages[ i ].mpSpriteList );
+
+		Endian_FromBigU32( &apHeader->mpPages[ i ].mHash );
+		Endian_FromBigU16( &apHeader->mpPages[ i ].mControlIndex );
+	}
+
+	for( i = 0; i<apHeader->mPageStyleCount; i++ )
+	{
+		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpPageTitleFont );
+		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpPageBG );
+		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpCursor );
+		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpControlFonts );
+		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpIntroTrans );
+		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpOutroTrans );
+		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpSampleMove );
+		Endian_FromBigU32( &apHeader->mpPageStyles[ i ].mpSampleSelect );
+	}
+
+	for( i = 0; i<apHeader->mSampleCount; i++ )
+	{
+		Endian_FromBigU32( &apHeader->mpSamples[ i ].mpAsset );
+	}
+
+	for( i = 0; i<apHeader->mSliderCount; i++ )
+	{
+		Endian_FromBigU32( &apHeader->mpSliders[ i ].mpVar );
+		Endian_FromBigU32( &apHeader->mpSliders[ i ].mValueMax );
+		Endian_FromBigU32( &apHeader->mpSliders[ i ].mValueMin );
+		Endian_FromBigU32( &apHeader->mpSliders[ i ].mValueAdd );
+
+		Endian_FromBigU16( &apHeader->mpSliders[ i ].mBox.mPos.mX );
+		Endian_FromBigU16( &apHeader->mpSliders[ i ].mBox.mPos.mY );
+		Endian_FromBigU16( &apHeader->mpSliders[ i ].mBox.mSize.mWidth );
+		Endian_FromBigU16( &apHeader->mpSliders[ i ].mBox.mSize.mHeight );
+	}
+
+	for( i = 0; i<apHeader->mSpriteCount; i++ )
+	{
+		Endian_FromBigU32( &apHeader->mpSprites[ i ].mpAsset );
+
+		Endian_FromBigU32( &apHeader->mpSprites[ i ].mAnimSpeed );
+		Endian_FromBigU16( &apHeader->mpSprites[ i ].mFrameBase );
+
+		Endian_FromBigU16( &apHeader->mpSprites[ i ].mPos.mX );
+		Endian_FromBigU16( &apHeader->mpSprites[ i ].mPos.mY );
+	}
+
+	for( i = 0; i<apHeader->mSpriteListCount; i++ )
+	{
+		*(U32*)( &apHeader->mpSpriteLists[ i ].mppSprites ) += (U32)apHeader;
+		for( j = 0; j<apHeader->mpSpriteLists[ i ].mSpriteCount; j++ )
+		{
+			Endian_FromBigU32( &apHeader->mpSpriteLists[ i ].mppSprites[ j ] );
+		}
+		Endian_FromBigU32( &apHeader->mpSpriteLists[ i ].mppSprites );
+		Endian_FromBigU16( &apHeader->mpSpriteLists[ i ].mSpriteCount );
+
+		mFED_DELOC( mpSpriteLists[ i ].mppSprites );
+	}
+
+	for( i = 0; i<apHeader->mSpriteGroupCount; i++ )
+	{
+		Endian_FromBigU32( &apHeader->mpSpriteGroups[ i ].mpSpriteLocked );
+		Endian_FromBigU32( &apHeader->mpSpriteGroups[ i ].mpSpriteNormal );
+		Endian_FromBigU32( &apHeader->mpSpriteGroups[ i ].mpSpriteSelected );
+		Endian_FromBigU32( &apHeader->mpSpriteGroups[ i ].mpSpriteLockedSelected );
+	}
+
+
+	for( i = 0; i<apHeader->mTextCount; i++ )
+	{
+		Endian_FromBigU32( &apHeader->mpTexts[ i ].mpFontGroup );
+		Endian_FromBigU32( &apHeader->mpTexts[ i ].mpString );
+
+		Endian_FromBigU16( &apHeader->mpTexts[ i ].mAlign );
+		Endian_FromBigU16( &apHeader->mpTexts[ i ].mBox.mPos.mX );
+		Endian_FromBigU16( &apHeader->mpTexts[ i ].mBox.mPos.mY );
+		Endian_FromBigU16( &apHeader->mpTexts[ i ].mBox.mSize.mWidth );
+		Endian_FromBigU16( &apHeader->mpTexts[ i ].mBox.mSize.mHeight );
+	}
+
+	for( i = 0; i<apHeader->mTransitionCount; i++ )
+	{
+		if( eFED_FADE_RGB != apHeader->mpTransitions[ i ].mFadeType )
+		{
+			Endian_FromBigU16( &apHeader->mpTransitions[ i ].mFadeColour );
+		}
+		Endian_FromBigU16( &apHeader->mpTransitions[ i ].mFadeFrameCount );
+		Endian_FromBigU16( &apHeader->mpTransitions[ i ].mFadeType );
+		Endian_FromBigU16( &apHeader->mpTransitions[ i ].mWipeIndex );
+		Endian_FromBigU16( &apHeader->mpTransitions[ i ].mWipeType );
+	}
+
+	for( i = 0; i<apHeader->mVarCount; i++ )
 	{
 		Endian_FromBigU32( &apHeader->mpVars[ i ].mpName );
 	}
@@ -332,6 +582,16 @@ void	Fed_Relocate( sFedHeader * apHeader )
 {
 	U16	i,j;
 
+	Endian_FromBigU32( &apHeader->mID );
+	Endian_FromBigU32( &apHeader->mVersion );
+
+	if( apHeader->mVersion < dFED_VERSION_NEW )
+	{
+		Fed_RelocateOld( apHeader );
+		return;
+	}
+
+
 	mFED_RELOC( mpAssets );
 	mFED_RELOC( mpCalls );
 	mFED_RELOC( mpControls );
@@ -378,22 +638,22 @@ void	Fed_Relocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mCallCount; i++ )
 	{
-		mFED_LIST_RELOC( mpCalls[ i ].mpPageReturn, mpPages );
-		mFED_LIST_RELOC( mpCalls[ i ].mpCallVar,    mpVars  );
+		mFED_RELOC( mpCalls[ i ].mpPageReturn );
+		mFED_RELOC( mpCalls[ i ].mpCallVar    );
 		Endian_FromBigU32( &apHeader->mpCalls[ i ].mCallValue );
 	}
 
 	for( i=0; i<apHeader->mControlCount; i++ )
 	{
-		mFED_LIST_RELOC( mpControls[ i ].mpLock,   mpLocks   );
-		mFED_LIST_RELOC( mpControls[ i ].mpSprite, mpSprites );
-		mFED_LIST_RELOC( mpControls[ i ].mpTitle,  mpTexts   );
+		mFED_RELOC( mpControls[ i ].mpLock   );
+		mFED_RELOC( mpControls[ i ].mpSprite );
+		mFED_RELOC( mpControls[ i ].mpTitle  );
 
-		mFED_LIST_RELOC( mpControls[ i ].mpCall,  mpCalls   );
-		mFED_LIST_RELOC( mpControls[ i ].mpLink,  mpPages   );
-		mFED_LIST_RELOC( mpControls[ i ].mpList,  mpLists   );
-		mFED_LIST_RELOC( mpControls[ i ].mpSlider,  mpSliders   );
-		mFED_LIST_RELOC( mpControls[ i ].mpSetVar,  mpVars   );
+		mFED_RELOC( mpControls[ i ].mpCall   );
+		mFED_RELOC( mpControls[ i ].mpLink   );
+		mFED_RELOC( mpControls[ i ].mpList   );
+		mFED_RELOC( mpControls[ i ].mpSlider );
+		mFED_RELOC( mpControls[ i ].mpSetVar );
 
 		Endian_FromBigU32( &apHeader->mpControls[ i ].mSetValue );
 		Endian_FromBigU16( &apHeader->mpControls[ i ].mControlType );
@@ -410,16 +670,16 @@ void	Fed_Relocate( sFedHeader * apHeader )
 		Endian_FromBigU16( &apHeader->mpControlLists[ i ].mControlIndex );
 		for( j=0; j<apHeader->mpControlLists[ i ].mControlCount; j++ )
 		{
-			mFED_LIST_RELOC( mpControlLists[ i ].mppControls[ j ], mpControls );
+			mFED_RELOC( mpControlLists[ i ].mppControls[ j ] );
 		}
 	}
 
 	for( i=0; i<apHeader->mFontGroupCount; i++ )
 	{
-		mFED_LIST_RELOC( mpFontGroups[ i ].mpFontLocked,   mpAssets );
-		mFED_LIST_RELOC( mpFontGroups[ i ].mpFontNormal,   mpAssets );
-		mFED_LIST_RELOC( mpFontGroups[ i ].mpFontSelected, mpAssets );
-		mFED_LIST_RELOC( mpFontGroups[ i ].mpFontLockedSelected, mpAssets );
+		mFED_RELOC( mpFontGroups[ i ].mpFontLocked );
+		mFED_RELOC( mpFontGroups[ i ].mpFontNormal );
+		mFED_RELOC( mpFontGroups[ i ].mpFontSelected );
+		mFED_RELOC( mpFontGroups[ i ].mpFontLockedSelected );
 	}
 
 	for( i=0; i<apHeader->mListCount; i++ )
@@ -430,17 +690,17 @@ void	Fed_Relocate( sFedHeader * apHeader )
 		Endian_FromBigU16( &apHeader->mpLists[ i ].mPos.mY  );
 		for( j=0; j<apHeader->mpLists[ i ].mItemCount; j++ )
 		{
-			mFED_LIST_RELOC( mpLists[ i ].mppItems[ j ], mpListItems );
+			mFED_RELOC( mpLists[ i ].mppItems[ j ] );
 		}
 
-		mFED_LIST_RELOC( mpLists[ i ].mpVar, mpVars );
+		mFED_RELOC( mpLists[ i ].mpVar );
 	}
 
 	for( i=0; i<apHeader->mListItemCount; i++ )
 	{
-		mFED_LIST_RELOC( mpListItems[ i ].mpSpriteGroup, mpSpriteGroups );
-		mFED_LIST_RELOC( mpListItems[ i ].mpLock,   mpLocks );
-		mFED_LIST_RELOC( mpListItems[ i ].mpText,   mpTexts );
+		mFED_RELOC( mpListItems[ i ].mpSpriteGroup );
+		mFED_RELOC( mpListItems[ i ].mpLock );
+		mFED_RELOC( mpListItems[ i ].mpText );
 
 		Endian_FromBigU16( &apHeader->mpListItems[ i ].mPos.mX  );
 		Endian_FromBigU16( &apHeader->mpListItems[ i ].mPos.mY  );
@@ -448,8 +708,8 @@ void	Fed_Relocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mLockCount; i++ )
 	{
-		mFED_LIST_RELOC( mpLocks[ i ].mpLockVar,   mpVars );
-		mFED_LIST_RELOC( mpLocks[ i ].mpVisVar,    mpVars );
+		mFED_RELOC( mpLocks[ i ].mpLockVar );
+		mFED_RELOC( mpLocks[ i ].mpVisVar );
 
 		Endian_FromBigU32( &apHeader->mpLocks[ i ].mLockValue );
 		Endian_FromBigU32( &apHeader->mpLocks[ i ].mVisValue  );
@@ -460,18 +720,18 @@ void	Fed_Relocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mPageCount; i++ )
 	{
-		mFED_LIST_RELOC( mpPages[ i ].mpBG,        mpAssets );
-		mFED_LIST_RELOC( mpPages[ i ].mpCursor,    mpSprites );
-		mFED_LIST_RELOC( mpPages[ i ].mpPageStyle, mpPageStyles );
+		mFED_RELOC( mpPages[ i ].mpBG );
+		mFED_RELOC( mpPages[ i ].mpCursor );
+		mFED_RELOC( mpPages[ i ].mpPageStyle );
 
-		mFED_LIST_RELOC( mpPages[ i ].mpSampleMove,   mpSamples );
-		mFED_LIST_RELOC( mpPages[ i ].mpSampleSelect, mpSamples );
+		mFED_RELOC( mpPages[ i ].mpSampleMove );
+		mFED_RELOC( mpPages[ i ].mpSampleSelect );
 
-		mFED_LIST_RELOC( mpPages[ i ].mpPageParent, mpPages );
-		mFED_LIST_RELOC( mpPages[ i ].mpTitle, mpTexts );
+		mFED_RELOC( mpPages[ i ].mpPageParent );
+		mFED_RELOC( mpPages[ i ].mpTitle );
 
-		mFED_LIST_RELOC( mpPages[ i ].mpControlList, mpControlLists );
-		mFED_LIST_RELOC( mpPages[ i ].mpSpriteList, mpSpriteLists );
+		mFED_RELOC( mpPages[ i ].mpControlList );
+		mFED_RELOC( mpPages[ i ].mpSpriteList );
 
 		Endian_FromBigU32( &apHeader->mpPages[ i ].mHash         );
 		Endian_FromBigU16( &apHeader->mpPages[ i ].mControlIndex );
@@ -479,24 +739,24 @@ void	Fed_Relocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mPageStyleCount; i++ )
 	{
-		mFED_LIST_RELOC( mpPageStyles[ i ].mpPageTitleFont, mpAssets   );
-		mFED_LIST_RELOC( mpPageStyles[ i ].mpPageBG,        mpAssets  );
-		mFED_LIST_RELOC( mpPageStyles[ i ].mpCursor,        mpSprites );
-		mFED_LIST_RELOC( mpPageStyles[ i ].mpControlFonts,  mpFontGroups  );
-		mFED_LIST_RELOC( mpPageStyles[ i ].mpIntroTrans,    mpTransitions );
-		mFED_LIST_RELOC( mpPageStyles[ i ].mpOutroTrans,    mpTransitions );
-		mFED_LIST_RELOC( mpPageStyles[ i ].mpSampleMove,   mpSamples );
-		mFED_LIST_RELOC( mpPageStyles[ i ].mpSampleSelect, mpSamples );
+		mFED_RELOC( mpPageStyles[ i ].mpPageTitleFont );
+		mFED_RELOC( mpPageStyles[ i ].mpPageBG );
+		mFED_RELOC( mpPageStyles[ i ].mpCursor );
+		mFED_RELOC( mpPageStyles[ i ].mpControlFonts );
+		mFED_RELOC( mpPageStyles[ i ].mpIntroTrans );
+		mFED_RELOC( mpPageStyles[ i ].mpOutroTrans );
+		mFED_RELOC( mpPageStyles[ i ].mpSampleMove );
+		mFED_RELOC( mpPageStyles[ i ].mpSampleSelect );
 	}
 
 	for( i=0; i<apHeader->mSampleCount; i++ )
 	{
-		mFED_LIST_RELOC( mpSamples[ i ].mpAsset, mpAssets );
+		mFED_RELOC( mpSamples[ i ].mpAsset );
 	}
 
 	for( i=0; i<apHeader->mSliderCount; i++ )
 	{
-		mFED_LIST_RELOC( mpSliders[ i ].mpVar,      mpVars );
+		mFED_RELOC( mpSliders[ i ].mpVar );
 		Endian_FromBigU32( &apHeader->mpSliders[ i ].mValueMax );
 		Endian_FromBigU32( &apHeader->mpSliders[ i ].mValueMin );
 		Endian_FromBigU32( &apHeader->mpSliders[ i ].mValueAdd );
@@ -509,7 +769,7 @@ void	Fed_Relocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mSpriteCount; i++ )
 	{
-		mFED_LIST_RELOC( mpSprites[ i ].mpAsset,      mpAssets );
+		mFED_RELOC( mpSprites[ i ].mpAsset );
 
 		Endian_FromBigU32( &apHeader->mpSprites[ i ].mAnimSpeed );
 		Endian_FromBigU16( &apHeader->mpSprites[ i ].mFrameBase  );
@@ -523,10 +783,10 @@ void	Fed_Relocate( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mSpriteGroupCount; i++ )
 	{
-		mFED_LIST_RELOC( mpSpriteGroups[ i ].mpSpriteLocked,   mpSprites );
-		mFED_LIST_RELOC( mpSpriteGroups[ i ].mpSpriteNormal,   mpSprites );
-		mFED_LIST_RELOC( mpSpriteGroups[ i ].mpSpriteSelected, mpSprites );
-		mFED_LIST_RELOC( mpSpriteGroups[ i ].mpSpriteLockedSelected, mpSprites );
+		mFED_RELOC( mpSpriteGroups[ i ].mpSpriteLocked );
+		mFED_RELOC( mpSpriteGroups[ i ].mpSpriteNormal );
+		mFED_RELOC( mpSpriteGroups[ i ].mpSpriteSelected );
+		mFED_RELOC( mpSpriteGroups[ i ].mpSpriteLockedSelected );
 	}
 
 	for( i=0; i<apHeader->mSpriteListCount; i++ )
@@ -536,13 +796,13 @@ void	Fed_Relocate( sFedHeader * apHeader )
 
 		for( j=0; j<apHeader->mpSpriteLists[ i ].mSpriteCount; j++ )
 		{
-			mFED_LIST_RELOC( mpSpriteLists[ i ].mppSprites[ j ], mpSprites );
+			mFED_RELOC( mpSpriteLists[ i ].mppSprites[ j ] );
 		}
 	}
 
 	for( i=0; i<apHeader->mTextCount; i++ )
 	{
-		mFED_LIST_RELOC( mpTexts[ i ].mpFontGroup,  mpFontGroups );
+		mFED_RELOC( mpTexts[ i ].mpFontGroup );
 		mFED_RELOC( mpTexts[ i ].mpString );
 
 		Endian_FromBigU16( &apHeader->mpTexts[ i ].mAlign );
@@ -565,6 +825,249 @@ void	Fed_Relocate( sFedHeader * apHeader )
 	}
 
 	for( i=0; i<apHeader->mVarCount; i++ )
+	{
+		mFED_RELOC( mpVars[ i ].mpName );
+	}
+}
+
+
+void	Fed_RelocateOld( sFedHeader * apHeader )
+{
+	U16	i, j;
+
+	mFED_RELOC( mpAssets );
+	mFED_RELOC( mpCalls );
+	mFED_RELOC( mpControls );
+	mFED_RELOC( mpControlLists );
+	mFED_RELOC( mpFontGroups );
+	mFED_RELOC( mpListItems );
+	mFED_RELOC( mpLists );
+	mFED_RELOC( mpLocks );
+	mFED_RELOC( mpPages );
+	mFED_RELOC( mpPageStyles );
+	mFED_RELOC( mpSamples );
+	mFED_RELOC( mpSliders );
+	mFED_RELOC( mpSprites );
+	mFED_RELOC( mpSpriteGroups );
+	mFED_RELOC( mpSpriteLists );
+	mFED_RELOC( mpTexts );
+	mFED_RELOC( mpTransitions );
+	mFED_RELOC( mpVars );
+
+	Endian_FromBigU16( &apHeader->mAssetCount );
+	Endian_FromBigU16( &apHeader->mCallCount );
+	Endian_FromBigU16( &apHeader->mControlCount );
+	Endian_FromBigU16( &apHeader->mControlListCount );
+	Endian_FromBigU16( &apHeader->mFontGroupCount );
+	Endian_FromBigU16( &apHeader->mListCount );
+	Endian_FromBigU16( &apHeader->mListItemCount );
+	Endian_FromBigU16( &apHeader->mLockCount );
+	Endian_FromBigU16( &apHeader->mPageCount );
+	Endian_FromBigU16( &apHeader->mPageStyleCount );
+	Endian_FromBigU16( &apHeader->mSampleCount );
+	Endian_FromBigU16( &apHeader->mSliderCount );
+	Endian_FromBigU16( &apHeader->mSpriteCount );
+	Endian_FromBigU16( &apHeader->mSpriteGroupCount );
+	Endian_FromBigU16( &apHeader->mSpriteListCount );
+	Endian_FromBigU16( &apHeader->mTextCount );
+	Endian_FromBigU16( &apHeader->mTransitionCount );
+	Endian_FromBigU16( &apHeader->mVarCount );
+
+	for( i = 0; i<apHeader->mAssetCount; i++ )
+	{
+		mFED_RELOC( mpAssets[ i ].mpFileName );
+		mFED_RELOC( mpAssets[ i ].mpContext );
+	}
+
+	for( i = 0; i<apHeader->mCallCount; i++ )
+	{
+		mFED_LIST_RELOC( mpCalls[ i ].mpPageReturn, mpPages );
+		mFED_LIST_RELOC( mpCalls[ i ].mpCallVar, mpVars );
+		Endian_FromBigU32( &apHeader->mpCalls[ i ].mCallValue );
+	}
+
+	for( i = 0; i<apHeader->mControlCount; i++ )
+	{
+		mFED_LIST_RELOC( mpControls[ i ].mpLock, mpLocks );
+		mFED_LIST_RELOC( mpControls[ i ].mpSprite, mpSprites );
+		mFED_LIST_RELOC( mpControls[ i ].mpTitle, mpTexts );
+
+		mFED_LIST_RELOC( mpControls[ i ].mpCall, mpCalls );
+		mFED_LIST_RELOC( mpControls[ i ].mpLink, mpPages );
+		mFED_LIST_RELOC( mpControls[ i ].mpList, mpLists );
+		mFED_LIST_RELOC( mpControls[ i ].mpSlider, mpSliders );
+		mFED_LIST_RELOC( mpControls[ i ].mpSetVar, mpVars );
+
+		Endian_FromBigU32( &apHeader->mpControls[ i ].mSetValue );
+		Endian_FromBigU16( &apHeader->mpControls[ i ].mControlType );
+		Endian_FromBigU16( &apHeader->mpControls[ i ].mPos.mX );
+		Endian_FromBigU16( &apHeader->mpControls[ i ].mPos.mY );
+	}
+
+
+	for( i = 0; i<apHeader->mControlListCount; i++ )
+	{
+		mFED_RELOC( mpControlLists[ i ].mppControls );
+
+		Endian_FromBigU16( &apHeader->mpControlLists[ i ].mControlCount );
+		Endian_FromBigU16( &apHeader->mpControlLists[ i ].mControlIndex );
+		for( j = 0; j<apHeader->mpControlLists[ i ].mControlCount; j++ )
+		{
+			mFED_LIST_RELOC( mpControlLists[ i ].mppControls[ j ], mpControls );
+		}
+	}
+
+	for( i = 0; i<apHeader->mFontGroupCount; i++ )
+	{
+		mFED_LIST_RELOC( mpFontGroups[ i ].mpFontLocked, mpAssets );
+		mFED_LIST_RELOC( mpFontGroups[ i ].mpFontNormal, mpAssets );
+		mFED_LIST_RELOC( mpFontGroups[ i ].mpFontSelected, mpAssets );
+		mFED_LIST_RELOC( mpFontGroups[ i ].mpFontLockedSelected, mpAssets );
+	}
+
+	for( i = 0; i<apHeader->mListCount; i++ )
+	{
+		mFED_RELOC( mpLists[ i ].mppItems );
+		Endian_FromBigU16( &apHeader->mpLists[ i ].mItemCount );
+		Endian_FromBigU16( &apHeader->mpLists[ i ].mPos.mX );
+		Endian_FromBigU16( &apHeader->mpLists[ i ].mPos.mY );
+		for( j = 0; j<apHeader->mpLists[ i ].mItemCount; j++ )
+		{
+			mFED_LIST_RELOC( mpLists[ i ].mppItems[ j ], mpListItems );
+		}
+
+		mFED_LIST_RELOC( mpLists[ i ].mpVar, mpVars );
+	}
+
+	for( i = 0; i<apHeader->mListItemCount; i++ )
+	{
+		mFED_LIST_RELOC( mpListItems[ i ].mpSpriteGroup, mpSpriteGroups );
+		mFED_LIST_RELOC( mpListItems[ i ].mpLock, mpLocks );
+		mFED_LIST_RELOC( mpListItems[ i ].mpText, mpTexts );
+
+		Endian_FromBigU16( &apHeader->mpListItems[ i ].mPos.mX );
+		Endian_FromBigU16( &apHeader->mpListItems[ i ].mPos.mY );
+	}
+
+	for( i = 0; i<apHeader->mLockCount; i++ )
+	{
+		mFED_LIST_RELOC( mpLocks[ i ].mpLockVar, mpVars );
+		mFED_LIST_RELOC( mpLocks[ i ].mpVisVar, mpVars );
+
+		Endian_FromBigU32( &apHeader->mpLocks[ i ].mLockValue );
+		Endian_FromBigU32( &apHeader->mpLocks[ i ].mVisValue );
+
+		Endian_FromBigU16( &apHeader->mpLocks[ i ].mLockCompare );
+		Endian_FromBigU16( &apHeader->mpLocks[ i ].mVisCompare );
+	}
+
+	for( i = 0; i<apHeader->mPageCount; i++ )
+	{
+		mFED_LIST_RELOC( mpPages[ i ].mpBG, mpAssets );
+		mFED_LIST_RELOC( mpPages[ i ].mpCursor, mpSprites );
+		mFED_LIST_RELOC( mpPages[ i ].mpPageStyle, mpPageStyles );
+
+		mFED_LIST_RELOC( mpPages[ i ].mpSampleMove, mpSamples );
+		mFED_LIST_RELOC( mpPages[ i ].mpSampleSelect, mpSamples );
+
+		mFED_LIST_RELOC( mpPages[ i ].mpPageParent, mpPages );
+		mFED_LIST_RELOC( mpPages[ i ].mpTitle, mpTexts );
+
+		mFED_LIST_RELOC( mpPages[ i ].mpControlList, mpControlLists );
+		mFED_LIST_RELOC( mpPages[ i ].mpSpriteList, mpSpriteLists );
+
+		Endian_FromBigU32( &apHeader->mpPages[ i ].mHash );
+		Endian_FromBigU16( &apHeader->mpPages[ i ].mControlIndex );
+	}
+
+	for( i = 0; i<apHeader->mPageStyleCount; i++ )
+	{
+		mFED_LIST_RELOC( mpPageStyles[ i ].mpPageTitleFont, mpAssets );
+		mFED_LIST_RELOC( mpPageStyles[ i ].mpPageBG, mpAssets );
+		mFED_LIST_RELOC( mpPageStyles[ i ].mpCursor, mpSprites );
+		mFED_LIST_RELOC( mpPageStyles[ i ].mpControlFonts, mpFontGroups );
+		mFED_LIST_RELOC( mpPageStyles[ i ].mpIntroTrans, mpTransitions );
+		mFED_LIST_RELOC( mpPageStyles[ i ].mpOutroTrans, mpTransitions );
+		mFED_LIST_RELOC( mpPageStyles[ i ].mpSampleMove, mpSamples );
+		mFED_LIST_RELOC( mpPageStyles[ i ].mpSampleSelect, mpSamples );
+	}
+
+	for( i = 0; i<apHeader->mSampleCount; i++ )
+	{
+		mFED_LIST_RELOC( mpSamples[ i ].mpAsset, mpAssets );
+	}
+
+	for( i = 0; i<apHeader->mSliderCount; i++ )
+	{
+		mFED_LIST_RELOC( mpSliders[ i ].mpVar, mpVars );
+		Endian_FromBigU32( &apHeader->mpSliders[ i ].mValueMax );
+		Endian_FromBigU32( &apHeader->mpSliders[ i ].mValueMin );
+		Endian_FromBigU32( &apHeader->mpSliders[ i ].mValueAdd );
+
+		Endian_FromBigU16( &apHeader->mpSliders[ i ].mBox.mPos.mX );
+		Endian_FromBigU16( &apHeader->mpSliders[ i ].mBox.mPos.mY );
+		Endian_FromBigU16( &apHeader->mpSliders[ i ].mBox.mSize.mWidth );
+		Endian_FromBigU16( &apHeader->mpSliders[ i ].mBox.mSize.mHeight );
+	}
+
+	for( i = 0; i<apHeader->mSpriteCount; i++ )
+	{
+		mFED_LIST_RELOC( mpSprites[ i ].mpAsset, mpAssets );
+
+		Endian_FromBigU32( &apHeader->mpSprites[ i ].mAnimSpeed );
+		Endian_FromBigU16( &apHeader->mpSprites[ i ].mFrameBase );
+
+		Endian_FromBigU16( &apHeader->mpSprites[ i ].mPos.mX );
+		Endian_FromBigU16( &apHeader->mpSprites[ i ].mPos.mY );
+
+		apHeader->mpSprites[ i ].mFrame.w.w1 = apHeader->mpSprites[ i ].mFrameBase;
+		apHeader->mpSprites[ i ].mFrame.w.w0 = 0;
+	}
+
+	for( i = 0; i<apHeader->mSpriteGroupCount; i++ )
+	{
+		mFED_LIST_RELOC( mpSpriteGroups[ i ].mpSpriteLocked, mpSprites );
+		mFED_LIST_RELOC( mpSpriteGroups[ i ].mpSpriteNormal, mpSprites );
+		mFED_LIST_RELOC( mpSpriteGroups[ i ].mpSpriteSelected, mpSprites );
+		mFED_LIST_RELOC( mpSpriteGroups[ i ].mpSpriteLockedSelected, mpSprites );
+	}
+
+	for( i = 0; i<apHeader->mSpriteListCount; i++ )
+	{
+		mFED_RELOC( mpSpriteLists[ i ].mppSprites );
+		Endian_FromBigU16( &apHeader->mpSpriteLists[ i ].mSpriteCount );
+
+		for( j = 0; j<apHeader->mpSpriteLists[ i ].mSpriteCount; j++ )
+		{
+			mFED_LIST_RELOC( mpSpriteLists[ i ].mppSprites[ j ], mpSprites );
+		}
+	}
+
+	for( i = 0; i<apHeader->mTextCount; i++ )
+	{
+		mFED_LIST_RELOC( mpTexts[ i ].mpFontGroup, mpFontGroups );
+		mFED_RELOC( mpTexts[ i ].mpString );
+
+		Endian_FromBigU16( &apHeader->mpTexts[ i ].mAlign );
+		Endian_FromBigU16( &apHeader->mpTexts[ i ].mBox.mPos.mX );
+		Endian_FromBigU16( &apHeader->mpTexts[ i ].mBox.mPos.mY );
+		Endian_FromBigU16( &apHeader->mpTexts[ i ].mBox.mSize.mWidth );
+		Endian_FromBigU16( &apHeader->mpTexts[ i ].mBox.mSize.mHeight );
+	}
+
+	for( i = 0; i<apHeader->mTransitionCount; i++ )
+	{
+		Endian_FromBigU16( &apHeader->mpTransitions[ i ].mFadeFrameCount );
+		Endian_FromBigU16( &apHeader->mpTransitions[ i ].mFadeType );
+		Endian_FromBigU16( &apHeader->mpTransitions[ i ].mWipeIndex );
+		Endian_FromBigU16( &apHeader->mpTransitions[ i ].mWipeType );
+		if( eFED_FADE_RGB != apHeader->mpTransitions[ i ].mFadeType )
+		{
+			Endian_FromBigU16( &apHeader->mpTransitions[ i ].mFadeColour );
+		}
+	}
+
+	for( i = 0; i<apHeader->mVarCount; i++ )
 	{
 		mFED_RELOC( mpVars[ i ].mpName );
 	}

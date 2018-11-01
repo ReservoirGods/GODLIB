@@ -20,7 +20,8 @@
 ################################################################################### */
 
 #define	dFED_ID			mSTRING_TO_U32( 'F','E', 'D', 'S' )
-#define	dFED_VERSION	0
+#define	dFED_VERSION_OLD	0
+#define	dFED_VERSION_NEW	1
 
 enum
 {
