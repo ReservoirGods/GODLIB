@@ -267,6 +267,23 @@ sFedAsset *	FedJSON_AssetBuild( sFedJSON_Context * apContext, sObjectJSON * apOb
 	return ass;
 }
 
+sFedSprite *	FedJSON_SpriteBuild( sFedJSON_Context * apContext, sObjectJSON * apObject )
+{
+	sFedSprite * sprite = (sFedSprite*)FedJSON_ItemCreate( apContext, eFedItem_Sprite );
+	sFedAsset * ass = FedJSON_AssetBuild( apContext, apObject );
+	sPropertyJSON * x = JSON_Tree_GetpProperty( apObject, "x" );
+
+	if( sprite )
+		sprite->mpAsset = ass;
+
+	if( x && x->mValueCount )
+	{
+		if( sprite )
+			sprite->mPos.mX = (S16)String_ToS32( &x->mpValues[ 0 ] );
+	}
+
+	return sprite;
+}
 
 sFedTransition *	FedJSON_TransitionBuild( sFedJSON_Context * apContext, sObjectJSON * apObject )
 {
@@ -314,29 +331,21 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 		{
 			if( eFedObject_Controls == tag->ID )
 			{
-				sFedControl ** ppControls = (sFedControl**)apContext->mppItemBases[ eFedItem_Control ];
 				const sObjectJSON * pControlObj = apObject;
-				sFedControlList * pControlList = (sFedControlList *)FedJSON_ItemCreate( apContext, eFedItem_ControlList );
 				sFedPage * pPage = (sFedPage*)FedJSON_ItemGetCurrent( apContext, eFedItem_Page );
-				if( pPage )
-					pPage->mpControlList = pControlList;
 
-				if( ppControls )
-					ppControls += apContext->mItemIndices[ eFedItem_Control ];
-
-				if( pControlList )
-					pControlList->mppControls = ppControls;
-
-				for( ; pControlObj; pControlObj=pControlObj->mpSibling)
+/*				for( ; pControlObj; pControlObj=pControlObj->mpSibling)*/
 				{
 					U32 t;
 					sPropertyJSON * prop;
 					sFedControl * pControl = (sFedControl *)FedJSON_ItemCreate( apContext, eFedItem_Control );
-					if( ppControls)
-						*ppControls++ = pControl;
 
-					if( pControlList )
-						pControlList->mControlCount++;
+					if( pPage && pPage->mpControlList )
+					{
+						if( pPage->mpControlList->mppControls )
+							pPage->mpControlList->mppControls[ pPage->mpControlList->mControlCount ] = pControl;
+						pPage->mpControlList->mControlCount++;
+					}
 
 					prop = JSON_Tree_GetpProperty( pControlObj, "binding");
 					if( prop )
@@ -567,13 +576,15 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 						}
 						else if (eFedPageStyle_SpriteCursor == styleTag->ID )
 						{
+							sFedSprite * sprite = FedJSON_SpriteBuild( apContext, pStyleObj );
+/*
 							sFedSprite * sprite = (sFedSprite*)FedJSON_ItemCreate( apContext, eFedItem_Sprite );
 							sFedAsset * ass = FedJSON_AssetBuild( apContext, pStyleObj );
 							if( sprite )
 								sprite->mpAsset = ass;
+*/
 							if( style )
 								style->mpCursor = sprite;
-							
 						}
 						else if( eFedPageStyle_TransitionIn == styleTag->ID)
 						{
@@ -593,7 +604,15 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 			else if( eFedObject_Pages == tag->ID )
 			{
 				sFedPage * page = FedJSON_ItemCreate( apContext, eFedItem_Page );
+				sFedControlList * pControlList = (sFedControlList *)FedJSON_ItemCreate( apContext, eFedItem_ControlList );
+				sFedControl ** lppControls = (sFedControl**)apContext->mppItemBases[ eFedItem_Control ];
 				const sPropertyJSON * prop = JSON_Tree_GetpProperty( apObject, "id" );
+
+				if( page )
+					page->mpControlList = pControlList;
+
+				if( page && page->mpControlList )
+					page->mpControlList->mppControls = lppControls + apContext->mItemIndices[ eFedItem_Control ];;
 
 				if( prop && prop->mValueCount )
 				{
@@ -604,6 +623,7 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 					if( page )
 						page->mpTitle = text;
 				}
+
 				FedJSON_Build( apObject->mpChildren, apContext );
 			}
 			else
@@ -718,11 +738,24 @@ sFedHeader *		FedJSON_ParseText( const char * apText, const U32 aSize, U32 * apS
 
 		for( i = 0; i < pHeader->mPageCount; i++ )
 		{
-			if( !pHeader->mpPages[i].mpPageStyle )
+			U32 j;
+			sFedPage * page = &pHeader->mpPages[i];
+
+			if( !page->mpPageStyle )
 			{
 				if( pHeader->mPageStyleCount )
-					pHeader->mpPages[i].mpPageStyle = &pHeader->mpPageStyles[0];
+					page->mpPageStyle = &pHeader->mpPageStyles[0];
 			}
+
+			if( page->mpControlList )
+			{
+				for( j=0; j<page->mpControlList->mControlCount; j++ )
+				{
+					page->mpControlList->mppControls[ j ]->mPos.mX = 32;
+					page->mpControlList->mppControls[ j ]->mPos.mY = (S16)(100 + (j*10));
+				}
+			}
+
 		}
 
 		Fed_Delocate( pHeader );
