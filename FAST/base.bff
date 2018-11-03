@@ -311,6 +311,15 @@ ForEach( .Platform in .Platforms )
 //  Placeholder for data builds
 //------------------------------------------------------------------------------
 
+// We want the databuild to always trigger (TOOLBASE has its own dependency system)
+// So delete output file of databuilder to force rebuild
+
+RemoveDir( 'DataRebuilder' )
+{
+	.RemovePaths = '..'
+	.RemovePatterns = 'TBS_DBG.LOG'
+}
+
 Exec( 'DataBuild' )
 {
     .ExecExecutable = "..\..\..\TOOLS.RG\BIN\WIN32\TOOLBASE\TOOLBASE.exe"
@@ -318,6 +327,7 @@ Exec( 'DataBuild' )
     .ExecArguments = "%1"
     .ExecWorkingDir = ".."
     .ExecOutput = "..\TBS_DBG.LOG"
+	.PreBuildDependencies = 'DataRebuilder'
 }
 
 .ExtraBuildTargets = { 'DummyCopy' }
