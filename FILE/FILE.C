@@ -483,7 +483,7 @@ S32		File_ReadFirst( const char * apFspec, U16 aAttribs )
 	gFileFindAttribs = (U16)(aAttribs | dGEMDOS_FA_ARCHIVE);
 	gFileFindHandle  = _findfirst( apFspec, &lFindData );
 
-	if( gFileFindHandle >= 0 )
+	if( gFileFindHandle )
 	{
 		lRes = 0;
 		while( (lFindData.attrib & (~gFileFindAttribs)) && (!lRes) )
@@ -690,8 +690,11 @@ void *	File_Load( const char * apFileName )
 	{
 		lpMem  = mMEMALLOC( lSize );
 		lpFile = fopen( apFileName, "rb" );
-		fread( lpMem, 1, lSize, lpFile );
-		fclose( lpFile );
+		if( lpFile )
+		{
+			fread( lpMem, 1, lSize, lpFile );
+			fclose( lpFile );
+		}
 	}
 	else
 	{
