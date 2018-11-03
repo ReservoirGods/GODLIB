@@ -1164,10 +1164,8 @@ void	LinkFile_Dump( sLinkFile * apLinkFile,char * apFileName,char * apSrcDirecto
 
 	lHandle = File_Create( apFileName );
 
-	if( lHandle < 0 )
-	{
+	if( !File_HandleIsValid(lHandle) )
 		return;
-	}
 
 	lpLinkFile = LinkFile_SerialiseFAT( apLinkFile );
 	LinkFile_SetFileOffsets( lpLinkFile->mpRoot, lpLinkFile->mFatSize, apSrcDirectory );
