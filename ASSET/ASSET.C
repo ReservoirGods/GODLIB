@@ -182,6 +182,36 @@ U32	Asset_OnUnLoad( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
+* FUNCTION : AssetClient_Init( sAssetClient * apClient, const char * apFileName, const char * apContextName, void ** appData )
+* ACTION   : AssetClient_Init
+* CREATION : 03.11.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	AssetClient_Init( sAssetClient * apClient, const char * apFileName, const char * apContextName, void ** appData )
+{
+	sContext * lpContext = ContextManager_ContextRegister( apContextName );
+	sAsset * lpAsset     = Context_AssetRegister( lpContext, apFileName );
+
+	lpAsset->mpContext = lpContext;
+
+	apClient->mpAsset  = lpAsset;
+	apClient->mppData  = appData;
+	apClient->mpNext   = lpAsset->mpClients;
+
+	lpAsset->mpClients = apClient;
+
+	if( lpAsset->mStatus == eASSET_STATUS_LOADED )
+	{
+		if( apClient->mppData )
+			*apClient->mppData = lpAsset->mpData;
+
+		if( apClient->OnLoad )
+			apClient->OnLoad( lpAsset->mpData, lpAsset->mSize, apClient->mUserData );
+	}
+}
+
+
+/*-----------------------------------------------------------------------------------*
 * FUNCTION : AssetClient_Register( const char * apFileName,const char * apContextName,fAsset aOnLoad,fAsset aOnUnload,void ** appData )
 * ACTION   : AssetClient_Register
 * CREATION : 04.01.2004 PNK
@@ -189,49 +219,25 @@ U32	Asset_OnUnLoad( sAsset * apAsset )
 
 sAssetClient *	AssetClient_Register( const char * apFileName,const char * apContextName,fAsset aOnLoad,fAsset aOnUnLoad,void ** appData )
 {
-	sContext *		lpContext;
-	sAsset *		lpAsset;
-	sAssetClient *	lpClient;
-
-	lpContext = ContextManager_ContextRegister( apContextName );
-	lpAsset   = Context_AssetRegister( lpContext, apFileName );
-
-	lpAsset->mpContext = lpContext;
-
-	lpClient  = (sAssetClient*)mMEMCALLOC( sizeof( sAssetClient ) );
+	sAssetClient * lpClient  = (sAssetClient*)mMEMCALLOC( sizeof( sAssetClient ) );
 	if( lpClient )
 	{
-		lpClient->mpAsset  = lpAsset;
-		lpClient->mppData  = appData;
-		lpClient->mpNext   = lpAsset->mpClients;
 		lpClient->OnLoad   = aOnLoad;
 		lpClient->OnUnLoad = aOnUnLoad;
 
-		lpAsset->mpClients = lpClient;
-
-		if( lpAsset->mStatus == eASSET_STATUS_LOADED )
-		{
-			if( lpClient->mppData )
-			{
-				*lpClient->mppData = lpAsset->mpData;
-			}
-			if( lpClient->OnLoad )
-			{
-				lpClient->OnLoad( lpAsset->mpData, lpAsset->mSize, lpClient->mUserData );
-			}
-		}
+		AssetClient_Init( lpClient, apFileName, apContextName, appData );
 	}
 	return( lpClient );
 }
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : AssetClient_UnRegister( sAssetClient * apClient )
-* ACTION   : AssetClient_UnRegister
-* CREATION : 30.11.2003 PNK
+* FUNCTION : AssetClient_DeInit( sAssetClient * apClient )
+* ACTION   : AssetClient_DeInit
+* CREATION : 03.11.2018 PNK
 *-----------------------------------------------------------------------------------*/
 
-void	AssetClient_UnRegister( sAssetClient * apClient )
+void			AssetClient_DeInit( sAssetClient * apClient )
 {
 	sAsset *		lpAsset;
 	sContext *		lpContext;
@@ -243,6 +249,17 @@ void	AssetClient_UnRegister( sAssetClient * apClient )
 	Context_AssetUnRegister( lpContext, lpAsset );
 	ContextManager_ContextUnRegister( lpContext );
 
+}
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : AssetClient_UnRegister( sAssetClient * apClient )
+* ACTION   : AssetClient_UnRegister
+* CREATION : 30.11.2003 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	AssetClient_UnRegister( sAssetClient * apClient )
+{
+	AssetClient_DeInit( apClient );
 	mMEMFREE( apClient );
 }
 
