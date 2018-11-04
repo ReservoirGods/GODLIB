@@ -18,9 +18,11 @@
 typedef struct sUnitTestContext
 {
 	const char *		mpTestName;
+	sRandomSeed			mSeed;
 	U16					mTestCount;
 	U16					mErrorCount;
-	sRandomSeed			mSeed;
+	U16					mBreakOnErrorFlag;
+	U16					mPad;
 } sUnitTestContext;
 
 extern sUnitTestContext  gUnitTestContext;
@@ -37,6 +39,11 @@ extern sUnitTestContext  gUnitTestContext;
 	}												\
 	void	UnitTest_Action_##_aName( void )
 
+#if defined dGODLIB_PLATFORM_WIN
+	#define	GOD_UNIT_TEST_BREAK	if( gUnitTestContext.mBreakOnErrorFlag ) __debugbreak();
+#else
+	#define	GOD_UNIT_TEST_BREAK
+#endif
 
 #define GOD_UNIT_TEST_TYPES()			\
 	GOD_UNIT_TEST_TYPE_ACTION( U8 )		\
@@ -48,12 +55,16 @@ extern sUnitTestContext  gUnitTestContext;
 
 #define	dGOD_UNIT_TEST_TYPE_LIMIT	6
 
+#define GOD_UNIT_TEST_BREAK_ENABLE			gUnitTestContext.mBreakOnErrorFlag = 1;
+#define GOD_UNIT_TEST_BREAK_DISABLE			gUnitTestContext.mBreakOnErrorFlag = 0;
+
+#define GOD_UNIT_TEST_PROTOTYPE( _aName )	void UnitTest##_aName( void);
 #define	GOD_UNIT_TEST_INVOKE( _aName )		{ void UnitTest##_aName( void); { UnitTest##_aName(); } }
 #define GOD_UNIT_TEST_RAND( _aNum )			RandomSeed_GetClamped( &gUnitTestContext.mSeed, _aNum )
 #define GOD_UNIT_TEST_RAND32()				RandomSeed_GetClamped32( &gUnitTestContext.mSeed )
 
-#define	GOD_UNIT_TEST_EXPECT( _aValue, _aMsg ) { if( !( _aValue ) ) { DebugLog_Printf3( " %s @ %s (%d)\n", _aMsg, __FILE__, __LINE__ ); gUnitTestContext.mErrorCount++; } }
-#define	GOD_UNIT_TEST_ASSERT( _aValue, _aMsg ) { if( !( _aValue ) ) { DebugLog_Printf3( " %s @ %s (%d)\n", _aMsg, __FILE__, __LINE__ ); gUnitTestContext.mErrorCount++; return; } }
+#define	GOD_UNIT_TEST_EXPECT( _aValue, _aMsg ) { if( !( _aValue ) ) { DebugLog_Printf3( " %s @ %s (%d)\n", _aMsg, __FILE__, __LINE__ ); gUnitTestContext.mErrorCount++; GOD_UNIT_TEST_BREAK } }
+#define	GOD_UNIT_TEST_ASSERT( _aValue, _aMsg ) { if( !( _aValue ) ) { DebugLog_Printf3( " %s @ %s (%d)\n", _aMsg, __FILE__, __LINE__ ); gUnitTestContext.mErrorCount++; GOD_UNIT_TEST_BREAK return; } }
 
 
 #define	GOD_UNIT_TEST_GUARDED_STRUCT( _aType, _aName )	U8 _aName[ sizeof(_aType) + 32]; { U16 _i; for( _i=0;_i<16;_i++) _aName[ _i ] = _aName[ sizeof(_aType)+_i+16] = (U8)(0xE0 + _i);  }
