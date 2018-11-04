@@ -751,12 +751,61 @@ sFedHeader *		FedJSON_ParseText( const char * apText, const U32 aSize, U32 * apS
 			{
 				for( j=0; j<page->mpControlList->mControlCount; j++ )
 				{
-					page->mpControlList->mppControls[ j ]->mPos.mX = 32;
-					page->mpControlList->mppControls[ j ]->mPos.mY = (S16)(100 + (j*10));
+					sFedControl * control = page->mpControlList->mppControls[ j ];
+
+					if( eFED_CONTROL_LINK == control->mControlType )
+					{
+						sString * str = (sString*)control->mpLink;
+						if( str )
+						{
+							U16 k;
+							for( k=0; k<pHeader->mPageCount; k++ )
+							{
+								if( String_IsEqualNT( str, pHeader->mpPages[k].mpTitle->mpString ) )
+								{
+									control->mpLink = &pHeader->mpPages[k];
+									break;
+								}
+							}
+							GODLIB_ASSERT( k<pHeader->mPageCount );
+						}
+					}
+					control->mPos.mX = 32;
+					control->mPos.mY = (S16)(100 + (j*10));
+					control->mpTitle->mBox.mSize.mHeight = 10;
 				}
 			}
-
 		}
+
+
+		for( i = 0; i < pHeader->mPageCount; i++ )
+		{
+			U32 j;
+			sFedPage * page = &pHeader->mpPages[i];
+
+			/* we link all normal links first. any null pointers left are backlinks */
+			for( j=0; j<page->mpControlList->mControlCount; j++ )
+			{
+				sFedControl * control = page->mpControlList->mppControls[ j ];
+
+				if( eFED_CONTROL_LINK == control->mControlType )
+				{
+					sFedPage * subPage = control->mpLink;
+					if( subPage )
+					{
+						U16 k;
+						for( k=0; k<subPage->mpControlList->mControlCount; k++ )
+						{
+							sFedControl * subControl = subPage->mpControlList->mppControls[ k ];
+
+							if( (eFED_CONTROL_LINK == subControl->mControlType) && (!subControl->mpLink) )
+								subControl->mpLink = page;
+						}
+					}
+				}
+			}
+		}
+
 
 		Fed_Delocate( pHeader );
 		Fed_Relocate( pHeader );
