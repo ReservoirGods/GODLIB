@@ -7,6 +7,7 @@
 #include	<GODLIB/ASSERT/ASSERT.H>
 #include	<GODLIB/DEBUGLOG/DEBUGLOG.H>
 #include	<GODLIB/MEMORY/MEMORY.H>
+#include	<GODLIB/LINKLIST/GOD_LL.H>
 
 
 /* ###################################################################################
@@ -56,6 +57,11 @@ void			HashTree_NodeLoad( sHashTree * apTree, sHashTreeNode * apNode, const sHas
 void			HashTree_NodeUnLoad( sHashTree * apTree, sHashTreeNode * apNode, const sHashTreeSaveNode * apSrc );
 void			HashTree_NodesLoad( sHashTree * apTree, sHashTreeNode * apNode, const sHashTreeSaveNode * apSrc );
 
+#ifdef dGODLIB_PLATFORM_ATARI
+#define			HashTree_Validate( _a )
+#else
+void			HashTree_Validate( sHashTree * apTree );
+#endif
 
 /* ###################################################################################
 #  CODE
@@ -145,6 +151,9 @@ sHashTreeNode *	HashTree_NodeCreate( sHashTree * apTree, const U32 aGlobalID,con
 		}
 	}
 
+	HashTree_Validate( apTree );
+
+
 	return( lpNode );
 }
 
@@ -159,10 +168,20 @@ void	HashTree_NodeDestroy( sHashTree * apTree, sHashTreeNode * apNode )
 {
 	if( apTree )
 	{
+		if( apNode->mpParent )
+		{
+			GOD_LL_REMOVE( sHashTreeNode, apNode->mpParent->mpChild, mpNext, apNode );
+		}
+		else
+		{
+			GOD_LL_REMOVE( sHashTreeNode, apTree->mpNodes, mpNext, apNode );
+		}
+/*
 		if( apTree->mpNodes == apNode )
 		{
 			apTree->mpNodes = 0;
 		}
+*/
 		apTree->mNodeCount--;
 	}
 	mMEMFREE( apNode );
@@ -194,9 +213,13 @@ sHashTreeNode *	HashTree_NodeRegister( sHashTree * apTree,const char * apName )
 	sHashTreeTokeniser	lTokeniser;
 	sHashTreeNode *		lpNode;
 
+	HashTree_Validate( apTree );
+
 	HashTree_Tokenise( &lTokeniser, apName );
 
 	lpNode = HashTree_NodeTokReg( apTree, &lTokeniser );
+
+	HashTree_Validate( apTree );
 
 	return( lpNode );
 }
@@ -286,6 +309,8 @@ void	HashTree_NodeUnRegister( sHashTree * apTree, sHashTreeNode * apNode )
 	sHashTreeNode *			lpNode;
 
 
+	HashTree_Validate( apTree );
+
 	if( apNode )
 	{
 		apNode->mRefCount--;
@@ -319,6 +344,9 @@ void	HashTree_NodeUnRegister( sHashTree * apTree, sHashTreeNode * apNode )
 			HashTree_NodeDestroy( apTree, apNode );
 		}
 	}
+
+	HashTree_Validate( apTree );
+
 }
 
 
@@ -333,6 +361,8 @@ void	HashTree_SubNodesDestroy( sHashTree * apTree, sHashTreeNode * apNode )
 	sHashTreeNode *			lpNode;
 	sHashTreeNode *			lpNodeNext;
 
+	HashTree_Validate( apTree );
+
 	lpNode = apNode;
 	while( lpNode )
 	{
@@ -342,6 +372,9 @@ void	HashTree_SubNodesDestroy( sHashTree * apTree, sHashTreeNode * apNode )
 		HashTree_NodeDestroy( apTree, lpNode );
 		lpNode     = lpNodeNext;
 	}
+
+	HashTree_Validate( apTree );
+
 }
 
 
@@ -824,6 +857,28 @@ void	HashTree_Tokenise( sHashTreeTokeniser * apToken,const char * apString )
 	}
 }
 
+void		HashTree_NodeValidate( sHashTreeNode * apNode )
+{
+	sHashTreeNode * node;
+
+	for( node=apNode; node; node =node->mpNext )
+	{
+		sHashTreeVar * var;
+
+		for( var=node->mpVars; var; var=var->mpNext)
+		{
+			GODLIB_ASSERT( var->mpNode == node );
+		}
+		HashTree_NodeValidate( node->mpChild);
+	}
+}
+
+#ifndef dGODLIB_PLATFORM_ATARI
+void		HashTree_Validate( sHashTree * apTree )
+{
+	HashTree_NodeValidate( apTree->mpNodes );
+}
+#endif
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : HashTree_SaveNodeBuild( sHashTree * apTree,const char * apNodeName )
