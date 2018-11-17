@@ -357,4 +357,32 @@ void			StringPath_Compact( sStringPath * apDst, const char * apSrc )
 }
 
 
+char *	StringPath_GetFolder_Internal( sStringPath * apPath, char * apStart )
+{
+	char * begin;
+	for( ;StringPath_IsSeperator(*apStart); apStart++ );
+	begin = apStart;
+	for( ;*apStart && !StringPath_IsSeperator(*apStart); apStart++ );
+	if( !*apStart)
+		return 0;
+	apPath->mChars[255]=*apStart;
+	*apStart=0;
+	return begin;
+}
+
+
+char *	StringPath_GetFolderFirst( sStringPath * apPath )
+{
+	return StringPath_GetFolder_Internal( apPath, &apPath->mChars[0]);
+}
+
+
+char *	StringPath_GetFolderNext( sStringPath * apPath, char * apPrevous )
+{
+	for( ;*apPrevous; apPrevous++)	
+		apPrevous[0]=apPath->mChars[255];
+	return StringPath_GetFolder_Internal( apPath, (char*)apPrevous+1 );
+}
+
+
 /* ################################################################################ */

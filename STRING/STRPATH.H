@@ -49,6 +49,12 @@ void			StringPath_GetFolder( sStringPath * apDst, const char * apSrc );
 
 void			StringPath_Compact( sStringPath * apDst, const char * apSrc );
 
+/* functions to iterate through folder hierarchy in a path. to avoid memory allocations, they perform temporary modifications on the underlying stringpath */
+
+char *	StringPath_GetFolderFirst( sStringPath * apPath );
+char *	StringPath_GetFolderNext( sStringPath * apPath, char * apPrevous );
+
+
 #define			StringPath_IsSeperator( _aChar )	( ('\\' ==(_aChar)) || ('/'==(_aChar)) )
 
 #define			StringPath_Begin( _aPath )	( _aPath->mChars )
