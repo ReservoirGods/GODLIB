@@ -6,6 +6,7 @@
 ################################################################################### */
 
 #include	<GODLIB/BASE/BASE.H>
+#include	<GODLIB\FILE\FILE.H>
 
 /* ###################################################################################
 #  STRUCTS
@@ -59,11 +60,71 @@ typedef struct sDiskImageDirEntry
 	U32		mSize;
 } sDiskImageDirEntry;
 
+
+typedef struct sDiskImage
+{
+	U16							mSectorsPerCluster;
+	U16							mSectorSizeBytes;
+	U16							mClusterSizeBytes;
+	U16							mRootDirectoryEntryCount;
+	U16							mDataSectorOffset;
+	sBootSector *				mpBootSector;
+	U8 *						mpFAT;
+	sDiskImageDirEntry *		mpRootDirectory;
+	sFileHandle					mFileHandle;
+	struct sDiskImageFuncs *	mfFuncs;
+} sDiskImage;
+
+typedef struct sDiskImageFuncs
+{
+	void (* Init )( 		struct sDiskImage * apImage, const char * apFileName );
+	void (* DeInit )( 		struct sDiskImage * apImage );
+
+	void (*	SectorsRead )(   struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount );
+	void (*	SectorsWrite )(  struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount );
+} sDiskImageFuncs;
+
+
+typedef struct sDiskImageDirWalker
+{
+	U16						mEntryIndex;
+	U16						mEntryCount;
+	sDiskImageDirEntry *	mpEntries;
+	sDiskImage *			mpDiskImage;
+} sDiskImageDirWalker;
+
+
+extern sDiskImageFuncs	gfDiskImageFuncs_ST_Memory;
+extern sDiskImageFuncs	gfDiskImageFuncs_ST_Streamed;
+
+
 typedef struct sBootSector sDiskImageST;
 
 /* ###################################################################################
 #  PROTOTYPES
 ################################################################################### */
+
+void					DiskImage_Init( sDiskImage * apImage, sDiskImageFuncs * apFuncs, const char * apFileName );
+void					DiskImage_DeInit( sDiskImage * apImage );
+
+U8						DiskImage_File_Exists( sDiskImage * apImage, const char * apFileName );
+U32						DiskImage_File_GetSize( sDiskImage * apImage, const char * apFileName );
+void *					DiskImage_File_Load( sDiskImage * apImage, const char * apFileName );
+U8						DiskImage_File_LoadAt( sDiskImage * apImage, const char * apFileName, void * apBuffer );
+
+U8						DiskImage_File_Save( sDiskImage * apImage, const char * apFileName, void * apBuffer, U32 aBytes );
+
+void					DiskImage_DirWalker_Init( sDiskImage * apImage, const char * apDirName, sDiskImageDirWalker * apWalker );
+void					DiskImage_DirWalker_DeInit( sDiskImageDirWalker * apWalker );
+
+sDiskImageDirEntry *	DiskImage_DirWalker_Next( sDiskImageDirWalker * apWalker );
+
+U16						DiskImage_FAT_GetLinkedClusterNext( sDiskImage * apImage, U16 aClusterIndex );
+U16						DiskImage_FAT_GetLinkedClusterCount(  sDiskImage * apImage, U16 aClusterIndex );
+
+
+/* old api */
+
 
 void			Disk_BootSector_Init( sBootSector * apBoot, const sDiskFormatParameters * apParams );
 

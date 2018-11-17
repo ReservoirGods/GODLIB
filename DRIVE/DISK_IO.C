@@ -21,6 +21,7 @@
 */
 
 
+
 /* ###################################################################################
 #  INCLUDES
 ################################################################################### */
@@ -28,7 +29,7 @@
 #include	"DISK_IO.H"
 
 #include	<GODLIB\CLOCK\CLOCK.H>
-#include	<GODLIB\FILE\FILE.H>
+#include	<GODLIB\GEMDOS\GEMDOS.H>
 #include	<GODLIB\MEMORY\MEMORY.H>
 #include	<GODLIB\RANDOM\RANDOM.H>
 #include	<GODLIB\STRING\STRPATH.H>
@@ -37,10 +38,364 @@
 #define	mDISK_IMAGE_U16_READ( _var )          ((((U16)_var[1]) << 8) | _var[0])
 #define	mDISK_IMAGE_U16_WRITE( _var, _value ) { _var[0]=(_value>>8)&0xFF; _var[1]=_value&0xFF; }
 
+U8	DiskImageDirEntry_FileNameEqual( const sDiskImageDirEntry * entry, const char * apFileName );
+
+void DiskImageFuncs_ST_Memory_Init( struct sDiskImage * apImage, const char * apFileName );
+void DiskImageFuncs_ST_Memory_DeInit(	struct sDiskImage * apImage );
+
+void DiskImageFuncs_ST_Memory_SectorsRead(   struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount );
+void DiskImageFuncs_ST_Memory_SectorsWrite(  struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount );
+
+sDiskImageFuncs gfDiskImageFuncs_ST_Memory =
+{
+	&DiskImageFuncs_ST_Memory_Init,
+	&DiskImageFuncs_ST_Memory_DeInit,
+	&DiskImageFuncs_ST_Memory_SectorsRead,
+	&DiskImageFuncs_ST_Memory_SectorsWrite
+};
+
+void DiskImageFuncs_ST_Streamed_Init( struct sDiskImage * apImage, const char * apFileName );
+void DiskImageFuncs_ST_Streamed_DeInit(	struct sDiskImage * apImage );
+
+void DiskImageFuncs_ST_Streamed_SectorsRead(   struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount );
+void DiskImageFuncs_ST_Streamed_SectorsWrite(  struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount );
+
+sDiskImageFuncs gfDiskImageFuncs_ST_Streamed =
+{
+	&DiskImageFuncs_ST_Streamed_Init,
+	&DiskImageFuncs_ST_Streamed_DeInit,
+	&DiskImageFuncs_ST_Streamed_SectorsRead,
+	&DiskImageFuncs_ST_Streamed_SectorsWrite
+};
+
 
 /* ###################################################################################
 #  CODE
 ################################################################################### */
+
+void			DiskImage_Init( sDiskImage * apImage, sDiskImageFuncs * apFuncs, const char * apFileName )
+{
+	apImage->mfFuncs = apFuncs;
+	apImage->mfFuncs->Init( apImage, apFileName );
+}
+
+
+void			DiskImage_DeInit( sDiskImage * apImage )
+{
+	apImage->mfFuncs->DeInit( apImage );
+}
+
+
+U16				DiskImage_FAT_GetLinkedClusterNext( sDiskImage * apImage, U16 aClusterIndex )
+{
+	U8 * fat = apImage->mpFAT;
+	U16 next = 0;
+
+	fat += (aClusterIndex*3);
+
+	if( aClusterIndex & 1 )
+	{
+		next = fat[ 2 ];
+		next <<= 4;
+		next |= ( ( fat[ 1 ] >> 4 ) & 0xF );
+	}
+	else
+	{
+		next = fat[ 1 ] & 0x0F;
+		next <<= 8;
+		next |= fat[ 0 ];
+	}
+
+	return next;
+}
+
+
+U16				DiskImage_FAT_GetLinkedClusterCount(  sDiskImage * apImage, U16 aClusterIndex )
+{
+	U16	count = 0;
+	U16 clusterIndex = aClusterIndex;
+
+	while( clusterIndex < 0xFF7 )
+	{
+		clusterIndex = DiskImage_FAT_GetLinkedClusterNext( apImage, aClusterIndex );
+		count++;
+	}
+
+	return count;
+}
+
+
+/*
+	Functions for memory based ST disk image
+*/
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : DiskImageFuncs_ST_Memory_Init( struct sDiskImage * apImage, const char * apFileName )
+* ACTION   : 
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
+void DiskImageFuncs_ST_Memory_Init( struct sDiskImage * apImage, const char * apFileName )
+{
+	apImage->mpBootSector = File_Load( apFileName );
+	if( apImage->mpBootSector )
+	{
+		U8 * mem = (U8*)apImage->mpBootSector;
+		U16 fatSize = mDISK_IMAGE_U16_READ( apImage->mpBootSector->mSectorsPerFAT );
+		apImage->mSectorSizeBytes = mDISK_IMAGE_U16_READ( apImage->mpBootSector->mBytesPerSector );
+		apImage->mClusterSizeBytes = apImage->mSectorSizeBytes * apImage->mpBootSector->mSectorsPerCluster;
+		apImage->mpFAT = mem + apImage->mSectorSizeBytes;
+		apImage->mRootDirectoryEntryCount = mDISK_IMAGE_U16_READ( apImage->mpBootSector->mNumberOfDirEntries );
+
+		fatSize *= apImage->mSectorSizeBytes;
+		fatSize *= apImage->mpBootSector->mNumberOfFATs;
+
+		apImage->mpRootDirectory = (sDiskImageDirEntry*)( mem + apImage->mSectorSizeBytes + fatSize );
+	}
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : DiskImageFuncs_ST_Memory_DeInit( struct sDiskImage * apImage )
+* ACTION   : 
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
+void DiskImageFuncs_ST_Memory_DeInit(	struct sDiskImage * apImage )
+{
+	if(apImage->mpBootSector )
+	{
+		File_UnLoad( apImage->mpBootSector );
+		apImage->mpBootSector = 0;
+	}
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : DiskImageFuncs_ST_Memory_SectorsRead(   struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount )
+* ACTION   : 
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
+void DiskImageFuncs_ST_Memory_SectorsRead(   struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount )
+{
+	U8 *	mem = (U8*)apImage->mpBootSector;
+	U32 	size = apImage->mClusterSizeBytes;
+	U32 	offset = apImage->mClusterSizeBytes;
+	offset *= aSectorIndex;
+	offset += apImage->mDataSectorOffset;
+	size *= aSectorCount;
+	mem += offset;
+	Memory_Copy( size, mem, apBuffer );
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : DiskImageFuncs_ST_Memory_SectorsWrite(  struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount )
+* ACTION   : 
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
+void DiskImageFuncs_ST_Memory_SectorsWrite(  struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount )
+{
+	U8 *	mem = (U8*)apImage->mpBootSector;
+	U32 	size = apImage->mClusterSizeBytes;
+	U32 	offset = apImage->mClusterSizeBytes;
+	offset *= aSectorIndex;
+	offset += apImage->mDataSectorOffset;
+	size *= aSectorCount;
+	mem += offset;
+	Memory_Copy( size, apBuffer, mem );
+}
+
+
+/*
+	Functions for streaming ST disk images
+*/
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : DiskImageFuncs_ST_Streamed_Init( struct sDiskImage * apImage, const char * apFileName )
+* ACTION   : 
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
+void DiskImageFuncs_ST_Streamed_Init( struct sDiskImage * apImage, const char * apFileName )
+{
+	apImage->mFileHandle = File_Open( apFileName );
+
+	if( File_HandleIsValid(apImage->mFileHandle))
+	{
+		U16 fatSectors;
+		U32 fatSize;
+		U32 dirSize;
+		apImage->mpBootSector = mMEMCALLOC( 512 );
+		File_Read( apImage->mFileHandle, 512, apImage->mpBootSector );
+
+		fatSectors = mDISK_IMAGE_U16_READ( apImage->mpBootSector->mSectorsPerFAT );
+		apImage->mSectorSizeBytes = mDISK_IMAGE_U16_READ( apImage->mpBootSector->mBytesPerSector );
+		apImage->mClusterSizeBytes = apImage->mSectorSizeBytes * apImage->mpBootSector->mSectorsPerCluster;
+		apImage->mRootDirectoryEntryCount = mDISK_IMAGE_U16_READ( apImage->mpBootSector->mNumberOfDirEntries );
+
+		fatSize  = fatSectors;
+		fatSize *= apImage->mSectorSizeBytes;
+		apImage->mpFAT = mMEMCALLOC( fatSize );
+		File_Read( apImage->mFileHandle, fatSize, apImage->mpFAT );
+		File_SeekFromCurrent( apImage->mFileHandle, fatSize );
+		dirSize = apImage->mRootDirectoryEntryCount;
+		dirSize *= sizeof(sDiskImageDirEntry);
+		apImage->mpRootDirectory = mMEMCALLOC( dirSize );
+		File_Read( apImage->mFileHandle, dirSize, apImage->mpRootDirectory );
+	}
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : DiskImageFuncs_ST_Streamed_DeInit( struct sDiskImage * apImage )
+* ACTION   : 
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
+void DiskImageFuncs_ST_Streamed_DeInit(	struct sDiskImage * apImage )
+{
+	if(apImage->mpBootSector )
+	{
+		mMEMFREE( apImage->mpBootSector );
+		apImage->mpBootSector = 0;
+	}
+	if(apImage->mpFAT )
+	{
+		mMEMFREE( apImage->mpFAT );
+		apImage->mpFAT = 0;
+	}
+	if(apImage->mpRootDirectory )
+	{
+		mMEMFREE( apImage->mpRootDirectory );
+		apImage->mpRootDirectory = 0;
+	}
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : DiskImageFuncs_ST_Streamed_SectorsRead(   struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount )
+* ACTION   : 
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
+void DiskImageFuncs_ST_Streamed_SectorsRead(   struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount )
+{
+	if( File_HandleIsValid(apImage->mFileHandle))
+	{
+		U32 size = apImage->mSectorSizeBytes;
+		U32 offset = apImage->mSectorSizeBytes;
+		size *= aSectorCount;
+		offset *= aSectorIndex;
+		File_SeekFromStart( apImage->mFileHandle, apImage->mDataSectorOffset + offset );
+		File_Read( apImage->mFileHandle, size, apBuffer);
+	}
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : DiskImageFuncs_ST_Streamed_SectorsWrite(  struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount )
+* ACTION   : 
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
+void DiskImageFuncs_ST_Streamed_SectorsWrite(  struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount )
+{
+	if( File_HandleIsValid(apImage->mFileHandle))
+	{
+		U32 size = apImage->mSectorSizeBytes;
+		U32 offset = apImage->mSectorSizeBytes;
+		size *= aSectorCount;
+		offset *= aSectorIndex;
+		File_SeekFromStart( apImage->mFileHandle, apImage->mDataSectorOffset + offset );
+		File_Write( apImage->mFileHandle, size, apBuffer);
+	}
+}
+
+
+void	DiskImage_DirWalker_Init( sDiskImage * apImage, const char * apDirName, sDiskImageDirWalker * apWalker )
+{
+	sStringPath path;
+	char * folder;
+
+	Memory_Clear( sizeof(sDiskImageDirWalker), apWalker );
+	apWalker->mEntryCount = apImage->mRootDirectoryEntryCount;
+	apWalker->mpEntries = apImage->mpRootDirectory;	
+	apWalker->mpEntries[ apWalker->mEntryCount ];
+	apWalker->mpDiskImage = apImage;
+
+	if( apDirName && *apDirName )
+	{
+		StringPath_SetNT( &path, apDirName );
+
+		folder=StringPath_GetFolderFirst( &path );
+		while( folder )
+		{
+			U16 i;
+			for( i=0; i<apWalker->mEntryCount; i++ )
+			{
+				sDiskImageDirEntry * entry = &apWalker->mpEntries[ i ];
+				if( DiskImageDirEntry_FileNameEqual( entry, folder))
+				{
+					U16	cluster = entry->mFirstCluster;
+					U16 clusterCount = DiskImage_FAT_GetLinkedClusterCount( apImage, cluster );
+					U32 size = clusterCount * apImage->mClusterSizeBytes;
+
+					if( apWalker->mpEntries && apImage->mpRootDirectory != apWalker->mpEntries )
+					{
+						mMEMFREE( apWalker->mpEntries );
+					}
+
+					apWalker->mpEntries = mMEMCALLOC( size );
+					apImage->mfFuncs->SectorsRead( apImage, apWalker->mpEntries, cluster, clusterCount / apImage->mSectorsPerCluster );
+					apWalker->mEntryCount = (U16)( size / sizeof(sDiskImageDirEntry) );
+				}
+			}
+			folder = StringPath_GetFolderNext(&path, folder);
+		}
+	}
+}
+
+
+void	DiskImage_DirWalker_DeInit( sDiskImageDirWalker * apWalker )
+{
+	if( apWalker->mpEntries && apWalker->mpDiskImage->mpRootDirectory != apWalker->mpEntries )
+	{
+		mMEMFREE( apWalker->mpEntries );
+		apWalker->mpEntries = 0;
+	}
+}
+
+
+sDiskImageDirEntry *	DiskImage_DirWalker_Next( sDiskImageDirWalker * apWalker )
+{
+	if( apWalker->mEntryIndex + 1 > apWalker->mEntryCount )
+		return 0;
+	apWalker->mEntryCount++;
+	return( &apWalker->mpEntries[ apWalker->mEntryCount ] );
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_GetpBootSector( const sDiskImageST * apImage )
+* ACTION   : currently sDiskImageST is just a raw disk image, so first bytes are bootsector
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
+sBootSector * Disk_Image_ST_GetpBootSector( const sDiskImageST * apImage )
+{
+	return (sBootSector *)apImage;
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_GetClusterSize( const sDiskImageST * apImage )
+* ACTION   : retrieves the cluster size as defined in the bootsector
+			 typically clusters are 2 sectors, and sectors are 512 bytes
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
 
 U16	Disk_Image_ST_GetClusterSize( const sDiskImageST * apImage )
 {
@@ -50,11 +405,14 @@ U16	Disk_Image_ST_GetClusterSize( const sDiskImageST * apImage )
 	return secSize * boot->mSectorsPerCluster;
 }
 
-sBootSector * Disk_Image_ST_GetpBootSector( const sDiskImageST * apImage )
-{
-	return (sBootSector *)apImage;
-}
 
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : U8	* Disk_Image_ST_GetpFAT( const sDiskImageST * apImage )
+* ACTION   : gets the FAT from a disk image
+			 typically disks have 2 File Allocation Tables
+			 the first one begins immediately after the bootsector
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
 
 U8	* Disk_Image_ST_GetpFAT( const sDiskImageST * apImage )
 {
@@ -64,6 +422,15 @@ U8	* Disk_Image_ST_GetpFAT( const sDiskImageST * apImage )
 
 	return fat;
 }
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_GetpRootDirectory( const sDiskImageST * apImage )
+* ACTION   : gets the root directory from a disk image
+			 the root directory follows the bootsector and FAT(s)
+			 typically a bootsector holds 112 files (7 sectors)
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
 
 sDiskImageDirEntry	* Disk_Image_ST_GetpRootDirectory( const sDiskImageST * apImage )
 {
@@ -76,6 +443,14 @@ sDiskImageDirEntry	* Disk_Image_ST_GetpRootDirectory( const sDiskImageST * apIma
 	return (sDiskImageDirEntry*)dir;
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_GetpData( const sDiskImageST * apImage )
+* ACTION   : gets the first data sector from disk
+			 disk structure:
+			 bootsector(1)->FAT0(5)->FAT1(5)->Root(7)->DATA at sector 18
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
 
 U8	* Disk_Image_ST_GetpData( const sDiskImageST * apImage )
 {
@@ -91,6 +466,13 @@ U8	* Disk_Image_ST_GetpData( const sDiskImageST * apImage )
 }
 
 
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_GetpDataCluster( const sDiskImageST * apImage, U16 aCluster )
+* ACTION   : get pointer to a specific data cluster
+			 bootsector(1)->FAT0(5)->FAT1(5)->Root(7)->DATA + (aCluster * sectorSize * sectorsPerCluster)
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
 U8	* Disk_Image_ST_GetpDataCluster( const sDiskImageST * apImage, U16 aCluster )
 {
 	U32 clusterSize = Disk_Image_ST_GetClusterSize( apImage );
@@ -99,6 +481,13 @@ U8	* Disk_Image_ST_GetpDataCluster( const sDiskImageST * apImage, U16 aCluster )
 
 	return data;
 }
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : DiskImageDirEntry_FileNameEqual( const sDiskImageDirEntry * entry, const char * apFileName )
+* ACTION   : check to see if entry in directory has same filename as one passed in
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
 
 U8	DiskImageDirEntry_FileNameEqual( const sDiskImageDirEntry * entry, const char * apFileName )
 {
@@ -125,6 +514,28 @@ U8	DiskImageDirEntry_FileNameEqual( const sDiskImageDirEntry * entry, const char
 	}
 
 	return( 1 );
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : DiskImageDirEntry_Init( sDiskImageDirEntry * apEntry, const char * apFileName )
+* ACTION   : inits a diskimagedirentry
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	DiskImageDirEntry_Init( sDiskImageDirEntry * apEntry, const char * apFileName )
+{
+	U16 i;
+	Memory_Clear( sizeof(sDiskImageDirEntry), apEntry );
+
+	for( i=0; (i<8) && ('.'!=apFileName[i]) && (apFileName[i]); i++ )
+		apEntry->mFileName[i] = apFileName[i];
+	if( '.' == apFileName[i ])
+	{
+		apFileName = &apFileName[ i + 1 ];
+		for( i=0; (i<3) && apFileName[i]; i++)
+			apEntry->mExtension[i] = apFileName[i];
+	}
 }
 
 
@@ -158,6 +569,14 @@ U16		Disk_Image_ST_GetClusterNext( const sDiskImageST * apImage, U16 aCluster )
 	return next;
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_SetCluster( const sDiskImageST * apImage, U16 aCluster, U16 aValue )
+* ACTION   : sets a cluster index in FAT to specific value, used to link clusters of a file
+			 FAT[ aCluster ] = aValue
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
 void		Disk_Image_ST_SetCluster( const sDiskImageST * apImage, U16 aCluster, U16 aValue )
 {
 	sBootSector * boot = (sBootSector*)apImage;
@@ -179,6 +598,12 @@ void		Disk_Image_ST_SetCluster( const sDiskImageST * apImage, U16 aCluster, U16 
 	}
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_GetSectorFree( const sDiskImageST * apImage )
+* ACTION   : walks FAT looking for first free cluster (zero value)
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
 
 U16		Disk_Image_GetSectorFree( const sDiskImageST * apImage )
 {
@@ -206,8 +631,16 @@ U16		Disk_Image_GetSectorFree( const sDiskImageST * apImage )
 	return 0;
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_BootSector_Init( sBootSector * apBoot, const sDiskFormatParameters * apParams )
+* ACTION   : sets some initial values in the bootsector
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
 void	Disk_BootSector_Init( sBootSector * apBoot, const sDiskFormatParameters * apParams )
 {
+	/* get a pseudo random unique number for disk. used by TOS to detect media changes */
 	U32	pattern = Time_GetAbsTime();
 	U16 sectorCount = apParams->mSectorsPerTrackCount * apParams->mTrackCount * apParams->mSideCount;
 	Memory_Clear( sizeof( sBootSector ), apBoot );
@@ -223,6 +656,7 @@ void	Disk_BootSector_Init( sBootSector * apBoot, const sDiskFormatParameters * a
 	apBoot->mSectorsPerCluster = 2;
 	mDISK_IMAGE_U16_WRITE( apBoot->mReservedSectors, 1 );
 	apBoot->mNumberOfFATs = 2;
+	/* typical disk uses 7 sectors for root directory, so 112 entries on 512 byte/sector disks */
 	mDISK_IMAGE_U16_WRITE( apBoot->mNumberOfDirEntries, 0x70 );
 	mDISK_IMAGE_U16_WRITE( apBoot->mNumberOfSectors, sectorCount );
 	apBoot->mMediaDescriptor = 0xF9;	/* 3.5-inch double sided, 80 tracks per side, 9 sectors per track (720 KB) */
@@ -231,6 +665,13 @@ void	Disk_BootSector_Init( sBootSector * apBoot, const sDiskFormatParameters * a
 	mDISK_IMAGE_U16_WRITE( apBoot->mNumberOfSides, apParams->mSideCount );
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_Create( const sDiskFormatParameters * apParams )
+* ACTION   : creates a disk image based on parameters
+			allocates memory and inits bootsector
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
 
 sDiskImageST *	Disk_Image_ST_Create( const sDiskFormatParameters * apParams )
 {
@@ -252,6 +693,12 @@ sDiskImageST *	Disk_Image_ST_Create( const sDiskFormatParameters * apParams )
 }
 
 
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_Save( const sDiskImageST * apImage, const char * apFileName )
+* ACTION   : saves disk image to disk under specified filename
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
 void			Disk_Image_ST_Save( const sDiskImageST * apImage, const char * apFileName )
 {
 	U32 size = Disk_Image_ST_GetSizeBytes( apImage );
@@ -259,6 +706,12 @@ void			Disk_Image_ST_Save( const sDiskImageST * apImage, const char * apFileName
 	File_Save( apFileName, apImage, size );
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_GetSizeBytes( const sDiskImageST * apImage )
+* ACTION   : gets the size in bytes of the disk images (sector size * number of sectors)
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
 
 U32				Disk_Image_ST_GetSizeBytes( const sDiskImageST * apImage )
 {
@@ -270,11 +723,24 @@ U32				Disk_Image_ST_GetSizeBytes( const sDiskImageST * apImage )
 }
 
 
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_Load( const char * apFileName )
+* ACTION   : loads a disk image from disk
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
 sDiskImageST *	Disk_Image_ST_Load( const char * apFileName )
 {
 	sDiskImageST * image = (sDiskImageST*)File_Load( apFileName );
 	return image;
 }
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_GetDirEntry_Internal( const sDiskImageST * apImage, const sDiskImageDirEntry * apDir, U16 aEntryCount, const char * apFileName )
+* ACTION   : retrieves an entry from a directory, if it exists and matches filename
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
 
 const sDiskImageDirEntry *			Disk_Image_ST_GetDirEntry_Internal( const sDiskImageST * apImage, const sDiskImageDirEntry * apDir, U16 aEntryCount, const char * apFileName )
 {
@@ -312,6 +778,12 @@ const sDiskImageDirEntry *			Disk_Image_ST_GetDirEntry_Internal( const sDiskImag
 }
 
 
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_GetDirEntry( const sDiskImageST * apImage, const char * apFileName )
+* ACTION   : retrieves an entry from a directory, if it exists and matches filename
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
 const sDiskImageDirEntry *			Disk_Image_ST_GetDirEntry( const sDiskImageST * apImage, const char * apFileName )
 {
 	sBootSector * boot = (sBootSector*)apImage;
@@ -322,6 +794,13 @@ const sDiskImageDirEntry *			Disk_Image_ST_GetDirEntry( const sDiskImageST * apI
 
 	return entry;
 }
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_FileLoad( const sDiskImageST * apImage, const char * apFileName )
+* ACTION   : loads a file from the disk image
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
 
 void *			Disk_Image_ST_FileLoad( const sDiskImageST * apImage, const char * apFileName )
 {
@@ -362,11 +841,24 @@ void *			Disk_Image_ST_FileLoad( const sDiskImageST * apImage, const char * apFi
 	return mem;
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_FileUnLoad( void * apFile )
+* ACTION   : frees memory associated with a file
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
 void			Disk_Image_ST_FileUnLoad( void * apFile )
 {
 	mMEMFREE( apFile );
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_FileDelete( sDiskImageST * apImage, const char * apFileName )
+* ACTION   : deletes a file from an image
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
 
 void 			Disk_Image_ST_FileDelete( sDiskImageST * apImage, const char * apFileName )
 {
@@ -390,11 +882,52 @@ void 			Disk_Image_ST_FileDelete( sDiskImageST * apImage, const char * apFileNam
 	}
 }
 
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Disk_Image_ST_CreateDirectory( sDiskImageST * apImage, sDiskImageDirEntry * apDir, U16 aDirCount, const char * apDirName )
+* ACTION   : creates a directory on an image
+* CREATION : 12-11-08 PNK
+*-----------------------------------------------------------------------------------*/
+
+sDiskImageDirEntry *	Disk_Image_ST_CreateDirectory( sDiskImageST * apImage, sDiskImageDirEntry * apDir, U16 aDirCount, const char * apDirName )
+{
+	U16 i;
+	for( i=0; i<aDirCount; i++ )
+	{
+		sDiskImageDirEntry * entry = &apDir[ i ];
+		if( DiskImageDirEntry_FileNameEqual( entry, apDirName ))
+			return entry;
+
+		if( 0 == entry->mFileName[0] )
+		{
+			sDiskImageDirEntry * subDir;
+
+			DiskImageDirEntry_Init( entry, apDirName );
+			entry->mAttribute = dGEMDOS_FA_DIR;
+			entry->mFirstCluster = Disk_Image_GetSectorFree( apImage );
+
+			subDir = (sDiskImageDirEntry*)Disk_Image_ST_GetpDataCluster( apImage, entry->mFirstCluster );
+
+			DiskImageDirEntry_Init( &subDir[0], "-" );
+			DiskImageDirEntry_Init( &subDir[1], "--" );
+
+			subDir[0].mFileName[0] = '.';
+			subDir[1].mFileName[0] = '.';
+			subDir[1].mFileName[1] = '.';
+		}
+	}
+	return 0;
+}
+
+
 U8				Disk_Image_ST_FileSave( sDiskImageST * apImage, void * apBuffer, U32 aSize, const char * apFileName ) 
 {
 	sDiskImageDirEntry * entry = (sDiskImageDirEntry *)Disk_Image_ST_GetDirEntry( apImage, apFileName );
 
 	if( entry )
+	{
+
+	}
+	else
 	{
 
 	}
@@ -407,6 +940,8 @@ U8				Disk_Image_ST_FileSave( sDiskImageST * apImage, void * apBuffer, U32 aSize
 
 	return  0;
 }
+
+
 void			Disk_Image_ST_UnLoad( sDiskImageST * apImage )
 {
 	mMEMFREE( apImage );
