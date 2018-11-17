@@ -38,6 +38,7 @@
 #define	mDISK_IMAGE_U16_READ( _var )          ((((U16)_var[1]) << 8) | _var[0])
 #define	mDISK_IMAGE_U16_WRITE( _var, _value ) { _var[0]=(_value>>8)&0xFF; _var[1]=_value&0xFF; }
 
+void	DiskImageDirEntry_Init( sDiskImageDirEntry * apEntry, const char * apFileName );
 U8	DiskImageDirEntry_FileNameEqual( const sDiskImageDirEntry * entry, const char * apFileName );
 
 void DiskImageFuncs_ST_Memory_Init( struct sDiskImage * apImage, const char * apFileName );
@@ -73,15 +74,61 @@ sDiskImageFuncs gfDiskImageFuncs_ST_Streamed =
 #  CODE
 ################################################################################### */
 
+
+void DiskImage_DirInit( sDiskImage * apImage, sDiskImageDirEntry * apDir, U16 aEntryCount )
+{
+	U16 i;
+
+	for( i=0; i<aEntryCount; i++ )
+	{
+		sDiskImageDirEntry * entry = &apDir[ aEntryCount ];
+		if( entry->mAttribute & dGEMDOS_FA_DIR )
+		{
+			U16	cluster = entry->mFirstCluster;
+			U16 clusterCount = DiskImage_FAT_GetLinkedClusterCount( apImage, cluster );
+			U32 size = clusterCount * apImage->mClusterSizeBytes;
+
+			entry->mpSubDirectory = mMEMCALLOC( size );
+			entry->mSubDirectoryEntryCount = (U16)( size / sizeof(sDiskImageDirEntry) );
+			apImage->mfFuncs->SectorsRead( apImage, entry->mpSubDirectory, cluster, (U16)( clusterCount * apImage->mSectorsPerCluster ) );
+			DiskImage_DirInit( apImage, entry->mpSubDirectory, entry->mSubDirectoryEntryCount );
+		}
+	}
+}
+
+void DiskImage_DirDeInit( sDiskImage * apImage, sDiskImageDirEntry * apDir, U16 aEntryCount )
+{
+	U16 i;
+
+	for( i=0; i<aEntryCount; i++ )
+	{
+		sDiskImageDirEntry * entry = &apDir[ aEntryCount ];
+		if( entry->mAttribute & dGEMDOS_FA_DIR )
+		{
+			if( entry->mpSubDirectory )
+			{
+				DiskImage_DirDeInit( apImage, entry->mpSubDirectory, entry->mSubDirectoryEntryCount );
+				mMEMFREE( entry->mpSubDirectory );
+				entry->mpSubDirectory = 0;
+			}
+		}
+	}
+}
+
 void			DiskImage_Init( sDiskImage * apImage, sDiskImageFuncs * apFuncs, const char * apFileName )
 {
 	apImage->mfFuncs = apFuncs;
 	apImage->mfFuncs->Init( apImage, apFileName );
+
+	apImage->mClusterTotalCount = mDISK_IMAGE_U16_READ( apImage->mpBootSector->mNumberOfSectors ) / apImage->mSectorsPerCluster;
+
+	DiskImage_DirInit( apImage, apImage->mpRootDirectory, apImage->mRootDirectoryEntryCount );
 }
 
 
 void			DiskImage_DeInit( sDiskImage * apImage )
 {
+	DiskImage_DirDeInit( apImage, apImage->mpRootDirectory, apImage->mRootDirectoryEntryCount );
 	apImage->mfFuncs->DeInit( apImage );
 }
 
@@ -91,7 +138,7 @@ U16				DiskImage_FAT_GetLinkedClusterNext( sDiskImage * apImage, U16 aClusterInd
 	U8 * fat = apImage->mpFAT;
 	U16 next = 0;
 
-	fat += (aClusterIndex*3);
+	fat += (aClusterIndex>>1)*3;
 
 	if( aClusterIndex & 1 )
 	{
@@ -125,6 +172,396 @@ U16				DiskImage_FAT_GetLinkedClusterCount(  sDiskImage * apImage, U16 aClusterI
 }
 
 
+U16						DiskImage_FAT_GetFreeCluster( sDiskImage * apImage )
+{
+	U16	clusterCount = apImage->mClusterTotalCount;
+	U8 * fat = apImage->mpFAT;
+	U16 i;
+
+	for( i = 2; i < clusterCount; i++ )
+	{
+		U8	val = *fat++;
+		if( i & 1 )
+		{
+			val &= 0xF0;
+			val |= *fat++;
+		}
+		else if( i & 1 )
+		{
+			val |= ( *fat ) & 0xF;
+		}
+		if( !val )
+			return i;
+	}
+	return 0;
+}
+
+U16						DiskImage_FAT_GetFreeClusterCount( sDiskImage * apImage )
+{
+	U16	clusterCount = apImage->mClusterTotalCount;
+	U8 * fat = apImage->mpFAT;
+	U16 count =0;
+	U16 i;
+
+	for( i = 2; i < clusterCount; i++ )
+	{
+		U8	val = *fat++;
+		if( i & 1 )
+		{
+			val &= 0xF0;
+			val |= *fat++;
+		}
+		else if( i & 1 )
+		{
+			val |= ( *fat ) & 0xF;
+		}
+		if( !val )
+			count++;
+	}
+	return count;
+
+}
+
+
+void					DiskImage_FAT_SetNextClusterIndex( sDiskImage * apImage, U16 aClusterSrc, U16 aClusterNext )
+{
+	U8 * fat = apImage->mpFAT;
+
+	fat += (aClusterSrc>>1)*3;
+
+	if( aClusterSrc & 1 )
+	{
+		fat[ 2 ] = (U8)((aClusterNext>>4) & 0xFF);
+		fat[ 1 ] &= 0xF;
+		fat[ 1 ] |= ( aClusterNext & 0xF ) << 4;
+	}
+	else
+	{
+		fat[ 1 ] &= 0xF0;
+		fat[ 1 ] |= (( aClusterNext >> 8 ) & 0xF);
+		fat[ 0 ] = (U8)(aClusterNext & 0xFF);
+	}
+}
+
+sDiskImageDirEntry *	DiskImage_GetDirectory( sDiskImage * apImage, const char * apFileName, U16 * apEntryCount )
+{
+	sStringPath path;
+	char * folder;
+	sDiskImageDirEntry * entries = apImage->mpRootDirectory;
+	*apEntryCount = apImage->mRootDirectoryEntryCount;
+
+	StringPath_SetNT( &path, apFileName );
+
+	folder=StringPath_GetFolderFirst( &path );
+	while( folder )
+	{
+		U16 i;
+		U16 cnt = *apEntryCount;
+		for( i=0; i<cnt; i++ )
+		{
+			sDiskImageDirEntry * entry = &entries[ i ];
+
+			if( DiskImageDirEntry_FileNameEqual( entry, folder))
+			{
+				if( entry->mAttribute & dGEMDOS_FA_DIR )
+				{
+					entries = entry->mpSubDirectory;
+					*apEntryCount = entry->mSubDirectoryEntryCount;
+					break;
+				}
+			}
+		}
+		if( i == cnt )
+			return 0;
+
+		folder = StringPath_GetFolderNext( &path, folder );
+	}
+
+	return entries;
+}
+
+sDiskImageDirEntry *	DiskImage_GetDirEntry( sDiskImage * apImage, const char * apFileName )
+{
+	sStringPath	path;
+	sDiskImageDirEntry * entries;
+	U16 entryCount = 0;
+
+	StringPath_GetDirectory( &path, apFileName );
+	entries = DiskImage_GetDirectory( apImage, apFileName, &entryCount );
+	if( entries )
+	{
+		U16 i;
+		StringPath_SetFileName( &path, apFileName );
+		for( i=0; i<entryCount; i++ )
+		{
+			sDiskImageDirEntry * entry = &entries[i];
+			if( DiskImageDirEntry_FileNameEqual(entry,apFileName))
+				return entry;
+		}
+	}
+		
+	return 0;
+}
+
+void	DiskImage_DirWalker_Init( sDiskImage * apImage, const char * apDirName, sDiskImageDirWalker * apWalker )
+{
+	Memory_Clear( sizeof(sDiskImageDirWalker), apWalker );
+
+	apWalker->mpEntries = DiskImage_GetDirectory( apImage, apDirName, &apWalker->mEntryCount );
+	apWalker->mpDiskImage = apImage;
+}
+
+
+void	DiskImage_DirWalker_DeInit( sDiskImageDirWalker * apWalker )
+{
+	if( apWalker->mpEntries && apWalker->mpDiskImage->mpRootDirectory != apWalker->mpEntries )
+	{
+		mMEMFREE( apWalker->mpEntries );
+		apWalker->mpEntries = 0;
+	}
+}
+
+
+sDiskImageDirEntry *	DiskImage_DirWalker_Next( sDiskImageDirWalker * apWalker )
+{	
+	sDiskImageDirEntry * entry = &apWalker->mpEntries[ apWalker->mEntryIndex ];
+	if( apWalker->mEntryIndex > apWalker->mEntryCount )
+		return 0;
+	apWalker->mEntryIndex++;
+	return( entry );
+}
+
+
+
+
+U8	DiskImage_File_Exists( sDiskImage * apImage, const char * apFileName )
+{
+	sDiskImageDirEntry * entry = DiskImage_GetDirEntry( apImage, apFileName );
+
+	return entry ? 1 : 0;
+}
+
+
+U32						DiskImage_File_GetSize( sDiskImage * apImage, const char * apFileName )
+{
+	sDiskImageDirEntry * entry = DiskImage_GetDirEntry( apImage, apFileName );
+	U32 size = 0;
+
+	if( entry )
+	{
+		Endian_ReadLittleU32( &size, entry->mSize );
+	}
+
+	return size;
+}
+
+
+void			DiskImage_File_Load_Internal( sDiskImage * apImage, sDiskImageDirEntry * apEntry, void * apBuffer )
+{
+	U32 size;
+	U16 clusterIndex;
+
+	U8 * dst = (U8*)apBuffer;
+
+	Endian_ReadLittleU16( &apEntry->mFirstCluster, clusterIndex );
+	Endian_ReadLittleU32( &apEntry->mSize, size );
+
+	while( size )
+	{
+		U32 readSize = apImage->mClusterSizeBytes;
+
+		if( size >= readSize )
+		{
+			apImage->mfFuncs->SectorsRead( apImage, dst, clusterIndex, apImage->mSectorsPerCluster );
+		}
+		else
+		{
+			U8 * sector = mMEMCALLOC( apImage->mClusterSizeBytes );
+
+			apImage->mfFuncs->SectorsRead( apImage, sector, clusterIndex, apImage->mSectorsPerCluster );
+			readSize = size;
+			Memory_Copy( size, sector, dst );
+			mMEMFREE( sector );
+		}
+
+		dst += readSize;
+		size -= readSize;
+
+		clusterIndex = DiskImage_FAT_GetLinkedClusterNext( apImage, clusterIndex );
+	}
+}
+
+
+void *					DiskImage_File_Load( sDiskImage * apImage, const char * apFileName )
+{
+	U8 * mem = 0;
+	sDiskImageDirEntry * entry = DiskImage_GetDirEntry( apImage, apFileName );
+
+	if( entry )
+	{
+		U32 size = 0;
+		
+		Endian_ReadLittleU32( &size, entry->mSize );
+		mem = mMEMCALLOC( size );
+		DiskImage_File_Load_Internal( apImage, entry, mem );
+	}
+
+	return mem;
+}
+
+
+U8						DiskImage_File_LoadAt( sDiskImage * apImage, const char * apFileName, void * apBuffer )
+{
+	sDiskImageDirEntry * entry = DiskImage_GetDirEntry( apImage, apFileName );
+
+	if( entry )
+	{
+		DiskImage_File_Load_Internal( apImage, entry, apBuffer );
+		return 1;
+	}
+
+	return 0;
+}
+
+
+sDiskImageDirEntry *	DiskImage_DirEntry_GetFree(sDiskImageDirEntry * apEntries, const char * apFileName, U16 aEntryCount )
+{
+	U16 i;
+	for( i=0; i<aEntryCount; i++ )
+	{
+		if( DiskImageDirEntry_FileNameEqual(&apEntries[i],apFileName))
+			return( &apEntries[i]);
+	}
+
+	for( i=0; i<aEntryCount; i++ )
+	{
+		if( 0 == apEntries[i].mFileName[0])
+			return( &apEntries[i]);
+	}
+
+	return 0;
+}
+
+sDiskImageDirEntry *	DiskImage_Directory_Create(sDiskImage * apImage, const char * apFileName, U16 * apEntryCount )
+{
+	sStringPath path;
+	char * folder;
+	sDiskImageDirEntry * entries = apImage->mpRootDirectory;
+	*apEntryCount = apImage->mRootDirectoryEntryCount;
+
+	StringPath_SetNT( &path, apFileName );
+
+	folder=StringPath_GetFolderFirst( &path );
+	for
+	( 
+		folder=StringPath_GetFolderFirst( &path );		
+		folder;
+		folder = StringPath_GetFolderNext( &path, folder )
+	)
+	{
+		U16 i;
+		U16 cnt = *apEntryCount;
+		for( i=0; i<cnt; i++ )
+		{
+			sDiskImageDirEntry * entry = &entries[ i ];
+
+			if( DiskImageDirEntry_FileNameEqual( entry, folder))
+			{
+				if( entry->mAttribute & dGEMDOS_FA_DIR )
+				{
+					entries = entry->mpSubDirectory;
+					*apEntryCount = entry->mSubDirectoryEntryCount;
+					continue;
+				}
+			}
+		}
+
+		/* if we get here we didn't find directory */
+		for( i=0;i<cnt;i++)
+		{
+			sDiskImageDirEntry * entry = &entries[ i ];
+			if( 0 == entry->mFileName[0] )
+				break;
+		}
+
+		if( i < cnt )
+		{
+			
+		}
+		else
+		{
+		/* 2D0 - handle case when we are out of dir entries */
+			return 0;
+		}
+	}
+
+	return entries;
+}
+
+
+U8		DiskImage_File_Save( sDiskImage * apImage, const char * apFileName, void * apBuffer, U32 aBytes )
+{
+	sStringPath	path;
+	sDiskImageDirEntry * directory;
+	U16 entryCount = 0;
+	U32 freeSpace = DiskImage_FAT_GetFreeClusterCount( apImage );
+	freeSpace *= apImage->mClusterSizeBytes;
+
+	if( freeSpace < aBytes )
+		return 0;
+
+	StringPath_GetDirectory( &path, apFileName );
+
+	directory = DiskImage_Directory_Create( apImage, path.mChars, &entryCount );
+	if( directory )
+	{
+		sDiskImageDirEntry * entry;
+		const char * fileName = StringPath_GetpFileName(apFileName);
+
+		entry = DiskImage_DirEntry_GetFree( directory, fileName, entryCount );
+
+		if( entry )
+		{
+			U8 * src = (U8*)apBuffer;
+			U32	size = aBytes;
+			U16 clusterNext = 0;
+			U16	clusterIndex = DiskImage_FAT_GetFreeCluster( apImage );
+
+			DiskImageDirEntry_Init( entry, fileName );
+			Endian_WriteLittleU32( &entry->mSize, aBytes );
+
+
+			while( clusterIndex && size )
+			{
+				U32 writeSize = apImage->mClusterSizeBytes;
+
+				if( size >= writeSize )
+				{
+					apImage->mfFuncs->SectorsWrite( apImage, src, clusterIndex, 1 );
+				}
+				else
+				{
+					U8 * sector = mMEMCALLOC( apImage->mSectorSizeBytes );
+
+					Memory_Copy( size, src, sector );
+					apImage->mfFuncs->SectorsWrite( apImage, src, clusterIndex, 1 );
+					mMEMFREE( sector );
+					writeSize = size;
+				}
+				clusterNext = DiskImage_FAT_GetFreeCluster( apImage );
+				DiskImage_FAT_SetNextClusterIndex( apImage, clusterIndex, clusterNext );
+				clusterIndex = clusterNext;
+
+				size -= writeSize;
+			}
+
+			DiskImage_FAT_SetNextClusterIndex( apImage, clusterIndex, 0xFF7 );
+		}
+	}
+	return 1;
+}
+
+
 /*
 	Functions for memory based ST disk image
 */
@@ -134,6 +571,7 @@ U16				DiskImage_FAT_GetLinkedClusterCount(  sDiskImage * apImage, U16 aClusterI
 * ACTION   : 
 * CREATION : 12-11-08 PNK
 *-----------------------------------------------------------------------------------*/
+
 
 void DiskImageFuncs_ST_Memory_Init( struct sDiskImage * apImage, const char * apFileName )
 {
@@ -314,68 +752,6 @@ void DiskImageFuncs_ST_Streamed_SectorsWrite(  struct sDiskImage * apImage, void
 	}
 }
 
-
-void	DiskImage_DirWalker_Init( sDiskImage * apImage, const char * apDirName, sDiskImageDirWalker * apWalker )
-{
-	sStringPath path;
-	char * folder;
-
-	Memory_Clear( sizeof(sDiskImageDirWalker), apWalker );
-	apWalker->mEntryCount = apImage->mRootDirectoryEntryCount;
-	apWalker->mpEntries = apImage->mpRootDirectory;	
-	apWalker->mpEntries[ apWalker->mEntryCount ];
-	apWalker->mpDiskImage = apImage;
-
-	if( apDirName && *apDirName )
-	{
-		StringPath_SetNT( &path, apDirName );
-
-		folder=StringPath_GetFolderFirst( &path );
-		while( folder )
-		{
-			U16 i;
-			for( i=0; i<apWalker->mEntryCount; i++ )
-			{
-				sDiskImageDirEntry * entry = &apWalker->mpEntries[ i ];
-				if( DiskImageDirEntry_FileNameEqual( entry, folder))
-				{
-					U16	cluster = entry->mFirstCluster;
-					U16 clusterCount = DiskImage_FAT_GetLinkedClusterCount( apImage, cluster );
-					U32 size = clusterCount * apImage->mClusterSizeBytes;
-
-					if( apWalker->mpEntries && apImage->mpRootDirectory != apWalker->mpEntries )
-					{
-						mMEMFREE( apWalker->mpEntries );
-					}
-
-					apWalker->mpEntries = mMEMCALLOC( size );
-					apImage->mfFuncs->SectorsRead( apImage, apWalker->mpEntries, cluster, clusterCount / apImage->mSectorsPerCluster );
-					apWalker->mEntryCount = (U16)( size / sizeof(sDiskImageDirEntry) );
-				}
-			}
-			folder = StringPath_GetFolderNext(&path, folder);
-		}
-	}
-}
-
-
-void	DiskImage_DirWalker_DeInit( sDiskImageDirWalker * apWalker )
-{
-	if( apWalker->mpEntries && apWalker->mpDiskImage->mpRootDirectory != apWalker->mpEntries )
-	{
-		mMEMFREE( apWalker->mpEntries );
-		apWalker->mpEntries = 0;
-	}
-}
-
-
-sDiskImageDirEntry *	DiskImage_DirWalker_Next( sDiskImageDirWalker * apWalker )
-{
-	if( apWalker->mEntryIndex + 1 > apWalker->mEntryCount )
-		return 0;
-	apWalker->mEntryCount++;
-	return( &apWalker->mpEntries[ apWalker->mEntryCount ] );
-}
 
 
 /*-----------------------------------------------------------------------------------*
