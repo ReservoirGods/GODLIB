@@ -287,16 +287,16 @@ U32		sTagValue_GetID(    const U32 aValue, const sTagValue * apTagValues, const 
 #define	Endian_ReadLittleU32( apU32, aValue )			( aValue = *apU32 )
 
 #define	Endian_WriteLittleU16( apU16, aValue )			( *apU16 = aValue )
-#define	Endian_WriteLittleU32( apU16, aValue )			( *apU32 = aValue )
+#define	Endian_WriteLittleU32( apU32, aValue )			( *apU32 = aValue )
 
 #define	Endian_ReadBigU16( apU16, aValue )				( aValue = (U16)((((*apU16)>>8) & 0xFF) | ((*apU16)<<8)))
-#define	Endian_ReadBigU32( apU16, aValue )				( aValue = (((*apU16)>>24) & 0xFFL) | (((*apU16)>>8)&0xFF00L) | (((*apU16)<<8)&0xFF0000L) | (((*apU16)<<24)&0xFF000000L) )
+#define	Endian_ReadBigU32( apU32, aValue )				( aValue = (((*apU32)>>24) & 0xFFL) | (((*apU32)>>8)&0xFF00L) | (((*apU32)<<8)&0xFF0000L) | (((*apU32)<<24)&0xFF000000L) )
 
 #define	Endian_ReadBigU16_Unaligned( apU16, aValue )	( aValue = ((U16)(((U8*)apU32)[0])<<8)  | ((U16)(((U8*)apU32)[1])) )
 #define	Endian_ReadBigU32_Unaligned( apU32, aValue )	( aValue = ((U32)(((U8*)apU32)[0])<<24) | ((U32)(((U8*)apU32)[1])<<16) | ((U32)(((U8*)apU32)[2])<<8)  | ((U32)(((U8*)apU32)[3])) )
 
 #define	Endian_WriteBigU16( apU16, aValue )				( *apU16 = (U16)((((aValue)>>8) & 0xFF) | ((aValue)<<8)) )
-#define	Endian_WriteBigU32( apU16, aValue )				( *apU16 = (((aValue)>>24L) & 0xFFL) | (((aValue)>>8L)&0xFF00L) | (((aValue)<<8L)&0xFF0000L) | (((aValue)<<24L)&0xFF000000L) )
+#define	Endian_WriteBigU32( apU32, aValue )				( *apU32 = (((aValue)>>24L) & 0xFFL) | (((aValue)>>8L)&0xFF00L) | (((aValue)<<8L)&0xFF0000L) | (((aValue)<<24L)&0xFF000000L) )
 
 
 #else
@@ -317,10 +317,10 @@ U32		sTagValue_GetID(    const U32 aValue, const sTagValue * apTagValues, const 
 #define	Endian_WriteBigU32( apU32, aValue )			( *apU32 = aValue )
 
 #define	Endian_ReadLittleU16( apU16, aValue )				( aValue = (((*apU16)>>8) & 0xFF) | ((*apU16)<<8) )
-#define	Endian_ReadLittleU32( apU16, aValue )				( aValue = (((*apU16)>>24) & 0xFFL) | (((*apU16)>>8)&0xFF00L) | (((*apU16)<<8)&0xFF0000L) | (((*apU16)<<24)&0xFF000000L) )
+#define	Endian_ReadLittleU32( apU32, aValue )				( aValue = (((*apU32)>>24) & 0xFFL) | (((*apU32)>>8)&0xFF00L) | (((*apU32)<<8)&0xFF0000L) | (((*apU32)<<24)&0xFF000000L) )
 
 #define	Endian_WriteLittleU16( apU16, aValue )				( *apU16 = (((aValue)>>8) & 0xFF) | ((aValue)<<8) )
-#define	Endian_WriteLittleU32( apU16, aValue )				( *apU16 = (((*aValue)>>24) & 0xFFL) | (((*aValue)>>8)&0xFF00L) | (((*aValue)<<8)&0xFF0000L) | (((*aValue)<<24)&0xFF000000L) )
+#define	Endian_WriteLittleU32( apU32, aValue )				( *apU32 = (((*aValue)>>24) & 0xFFL) | (((*aValue)>>8)&0xFF00L) | (((*aValue)<<8)&0xFF0000L) | (((*aValue)<<24)&0xFF000000L) )
 
 #endif
 
