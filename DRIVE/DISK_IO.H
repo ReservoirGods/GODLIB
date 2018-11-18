@@ -34,18 +34,21 @@ typedef struct sBootSector
 	U8	mLoadSectorCount[ 2 ];		/* 0x24 */
 	U8	mLoadAddress[ 4 ];			/* 0x26 */
 	U8	mFATAddress[ 4 ];			/* 0x2A */
-	U8	mFileName[ 2 ];				/* 0x2E */
+	U8	mFileName[ 11 ];			/* 0x2E */
 	U8	mReserved;					/* 0x39 */
-	U8	mSpace[ 0x200 - 0x42 ];		/* 0x40 */
+	U8	mSpace[ 0x200 - 0x3C ];		/* 0x3A */
 	U8	mChecksum[2];
 } sBootSector;
 
 typedef struct sDiskFormatParameters
 {
-	U16	mSideCount;
-	U16	mTrackCount;
+	U16	mRootDirectorySectorCount;
+	U16	mSectorsPerCluster;
+	U16	mSectorsPerFAT;
 	U16	mSectorsPerTrackCount;
 	U16	mSectorByteCount;
+	U16	mSideCount;
+	U16	mTrackCount;
 }sDiskFormatParameters;
 
 typedef struct sDiskImageDirEntry
@@ -65,22 +68,22 @@ typedef struct sDiskImageDirEntry
 
 typedef struct sDiskImage
 {
-	U16							mSectorsPerCluster;
-	U16							mSectorSizeBytes;
 	U16							mClusterSizeBytes;
 	U16							mClusterTotalCount;
-	U16							mRootDirectoryEntryCount;
 	U16							mDataSectorOffset;
+	U16							mRootDirectoryEntryCount;
+	U16							mSectorsPerCluster;
+	U16							mSectorSizeBytes;
+	sFileHandle					mFileHandle;
+	struct sDiskImageFuncs *	mfFuncs;
 	sBootSector *				mpBootSector;
 	U8 *						mpFAT;
 	sDiskImageDirEntry *		mpRootDirectory;
-	sFileHandle					mFileHandle;
-	struct sDiskImageFuncs *	mfFuncs;
 } sDiskImage;
 
 typedef struct sDiskImageFuncs
 {
-	void (* Init )( 		struct sDiskImage * apImage, const char * apFileName );
+	U8   (* Init )( 		struct sDiskImage * apImage, const char * apFileName );
 	void (* DeInit )( 		struct sDiskImage * apImage );
 
 	void (*	SectorsRead )(   struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount );
@@ -107,8 +110,13 @@ typedef struct sBootSector sDiskImageST;
 #  PROTOTYPES
 ################################################################################### */
 
-void					DiskImage_Init( sDiskImage * apImage, sDiskImageFuncs * apFuncs, const char * apFileName );
-void					DiskImage_DeInit( sDiskImage * apImage );
+						/* sets default parameters for disk format */
+void					DiskFormatParameters_Init(sDiskFormatParameters * apParams );
+
+U8						DiskImage_Create( const sDiskFormatParameters * apParams, const char * apFileName );
+
+U8						DiskImage_Load( sDiskImage * apImage, sDiskImageFuncs * apFuncs, const char * apFileName );
+void					DiskImage_UnLoad( sDiskImage * apImage );
 
 U8						DiskImage_File_Exists( sDiskImage * apImage, const char * apFileName );
 U32						DiskImage_File_GetSize( sDiskImage * apImage, const char * apFileName );
@@ -117,6 +125,7 @@ U8						DiskImage_File_LoadAt( sDiskImage * apImage, const char * apFileName, vo
 
 sDiskImageDirEntry *	DiskImage_Directory_Create(sDiskImage * apImage, const char * apFileName, U16 * apEntryCount );
 U8						DiskImage_File_Save( sDiskImage * apImage, const char * apFileName, void * apBuffer, U32 aBytes );
+U8						DiskImage_File_Delete( sDiskImage * apImage, const char * apFileName, void * apBuffer, U32 aBytes );
 
 void					DiskImage_DirWalker_Init( sDiskImage * apImage, const char * apDirName, sDiskImageDirWalker * apWalker );
 void					DiskImage_DirWalker_DeInit( sDiskImageDirWalker * apWalker );
