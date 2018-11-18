@@ -74,6 +74,7 @@ typedef struct sDiskImage
 	U16							mRootDirectoryEntryCount;
 	U16							mSectorsPerCluster;
 	U16							mSectorSizeBytes;
+	U32							mTotalSizeBytes;
 	sFileHandle					mFileHandle;
 	struct sDiskImageFuncs *	mfFuncs;
 	sBootSector *				mpBootSector;
@@ -88,6 +89,9 @@ typedef struct sDiskImageFuncs
 
 	void (*	SectorsRead )(   struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount );
 	void (*	SectorsWrite )(  struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount );
+
+	U8 (* Commit )( 		struct sDiskImage * apImage, const char * apFileName );
+
 } sDiskImageFuncs;
 
 
@@ -117,6 +121,7 @@ U8						DiskImage_Create( const sDiskFormatParameters * apParams, const char * a
 
 U8						DiskImage_Load( sDiskImage * apImage, sDiskImageFuncs * apFuncs, const char * apFileName );
 void					DiskImage_UnLoad( sDiskImage * apImage );
+U8						DiskImage_Save( sDiskImage * apImage, const char * apFileName );
 
 U8						DiskImage_File_Exists( sDiskImage * apImage, const char * apFileName );
 U32						DiskImage_File_GetSize( sDiskImage * apImage, const char * apFileName );
@@ -134,7 +139,7 @@ sDiskImageDirEntry *	DiskImage_DirWalker_Next( sDiskImageDirWalker * apWalker );
 
 U16						DiskImage_FAT_GetLinkedClusterNext( sDiskImage * apImage, U16 aClusterIndex );
 U16						DiskImage_FAT_GetLinkedClusterCount(  sDiskImage * apImage, U16 aClusterIndex );
-U16						DiskImage_FAT_GetFreeCluster( sDiskImage * apImage );
+U16						DiskImage_FAT_GetFreeCluster( sDiskImage * apImage, U16 aStartCluster );
 U16						DiskImage_FAT_GetFreeClusterCount( sDiskImage * apImage );
 void					DiskImage_FAT_SetNextClusterIndex( sDiskImage * apImage, U16 aClusterSrc, U16 aClusterNext );
 
