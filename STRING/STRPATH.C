@@ -284,10 +284,13 @@ void			StringPath_GetDirectory( sStringPath * apDst, const char * apSrc )
 		*lpDst++ = *apSrc++;
 	}
 
+	if( lpDst < lpEnd )
+		*lpDst = 0;
+
 	if( lpSep )
 		*lpSep = 0;
 	else
-		*lpDst = 0;
+		apDst->mChars[0] = 0;
 }
 
 
