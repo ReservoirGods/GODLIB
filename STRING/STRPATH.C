@@ -366,7 +366,8 @@ char *	StringPath_GetFolder_Internal( sStringPath * apPath, char * apStart )
 	for( ;StringPath_IsSeperator(*apStart); apStart++ );
 	begin = apStart;
 	for( ;*apStart && !StringPath_IsSeperator(*apStart); apStart++ );
-	if( !*apStart)
+/*	if( !*apStart)*/
+	if( begin == apStart )
 		return 0;
 	apPath->mChars[255]=*apStart;
 	*apStart=0;
@@ -382,9 +383,27 @@ char *	StringPath_GetFolderFirst( sStringPath * apPath )
 
 char *	StringPath_GetFolderNext( sStringPath * apPath, char * apPrevous )
 {
-	for( ;*apPrevous; apPrevous++)	
-		apPrevous[0]=apPath->mChars[255];
+	for( ;*apPrevous; apPrevous++);	
+	apPrevous[0]=apPath->mChars[255];
 	return StringPath_GetFolder_Internal( apPath, (char*)apPrevous+1 );
+}
+
+void			StringPathSplitter_Init( sStringPathSplitter * apSpliter, const char * apPath )
+{
+	apSpliter->mpPath = apPath;
+}
+
+const char *	StringPathSplitter_Next( sStringPathSplitter * apSpliter )
+{
+	U16 i;
+
+	for( ; *apSpliter->mpPath && StringPath_IsSeperator(*apSpliter->mpPath); apSpliter->mpPath++ );
+
+	for( i=0; i<12 && *apSpliter->mpPath && !StringPath_IsSeperator(*apSpliter->mpPath); i++ )
+		apSpliter->mFileName[i] = *apSpliter->mpPath++;
+	apSpliter->mFileName[i] =0;
+
+	return i ? &apSpliter->mFileName[0] : 0;
 }
 
 

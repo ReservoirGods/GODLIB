@@ -17,6 +17,12 @@ typedef	struct	sStringPath
 	char	mChars[ 256 ];
 } sStringPath;
 
+typedef struct sStringPathSplitter
+{
+	const char * mpPath;
+	char 		 mFileName[ 14 ];
+} sStringPathSplitter;
+
 struct sString;
 
 /* ###################################################################################
@@ -53,6 +59,9 @@ void			StringPath_Compact( sStringPath * apDst, const char * apSrc );
 
 char *	StringPath_GetFolderFirst( sStringPath * apPath );
 char *	StringPath_GetFolderNext( sStringPath * apPath, char * apPrevous );
+
+void			StringPathSplitter_Init( sStringPathSplitter * apSpliter, const char * apPath );
+const char *	StringPathSplitter_Next( sStringPathSplitter * apSpliter );
 
 
 #define			StringPath_IsSeperator( _aChar )	( ('\\' ==(_aChar)) || ('/'==(_aChar)) )
