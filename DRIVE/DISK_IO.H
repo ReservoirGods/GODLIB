@@ -128,9 +128,10 @@ U32						DiskImage_File_GetSize( sDiskImage * apImage, const char * apFileName )
 void *					DiskImage_File_Load( sDiskImage * apImage, const char * apFileName );
 U8						DiskImage_File_LoadAt( sDiskImage * apImage, const char * apFileName, void * apBuffer );
 
-sDiskImageDirEntry *	DiskImage_Directory_Create(sDiskImage * apImage, const char * apFileName, U16 * apEntryCount );
 U8						DiskImage_File_Save( sDiskImage * apImage, const char * apFileName, void * apBuffer, U32 aBytes );
 U8						DiskImage_File_Delete( sDiskImage * apImage, const char * apFileName, void * apBuffer, U32 aBytes );
+
+U8						DiskImage_Directory_Create( sDiskImage * apImage, const char * apDirName );
 
 void					DiskImage_DirWalker_Init( sDiskImage * apImage, const char * apDirName, sDiskImageDirWalker * apWalker );
 void					DiskImage_DirWalker_DeInit( sDiskImageDirWalker * apWalker );
@@ -143,23 +144,6 @@ U16						DiskImage_FAT_GetFreeCluster( sDiskImage * apImage, U16 aStartCluster )
 U16						DiskImage_FAT_GetFreeClusterCount( sDiskImage * apImage );
 void					DiskImage_FAT_SetNextClusterIndex( sDiskImage * apImage, U16 aClusterSrc, U16 aClusterNext );
 
-/* old api */
-
-
-void			Disk_BootSector_Init( sBootSector * apBoot, const sDiskFormatParameters * apParams );
-
-sDiskImageST *	Disk_Image_ST_Create( const sDiskFormatParameters * apParams );
-U32				Disk_Image_ST_GetSizeBytes( const sDiskImageST * apImage );
-
-void			Disk_Image_ST_Save( const sDiskImageST * apImage, const char * apFileName );
-sDiskImageST *	Disk_Image_ST_Load( const char * apFileName );
-void			Disk_Image_ST_UnLoad( sDiskImageST * );
-
-void *			Disk_Image_ST_FileLoad( const sDiskImageST * apImage, const char * apFileName );
-void			Disk_Image_ST_FileUnLoad( void * apFile );
-
-void 			Disk_Image_ST_FileDelete( sDiskImageST * apImage, const char * apFileName );
-U8				Disk_Image_ST_FileSave( sDiskImageST * apImage, void * apBuffer, U32 aSize, const char * apFileName );
 
 /* ################################################################################ */
 
