@@ -930,6 +930,9 @@ void	File_FindDataToDTA( const _finddata_t * apFindData,sGemDosDTA * apDTA )
 
 
 	lpTime = localtime( &apFindData->time_write );
+	if( !lpTime )
+		return;
+
 	apDTA->mTime  = 0;
 	apDTA->mTime |= (lpTime->tm_sec>>1) & 31;
 	apDTA->mTime |= (lpTime->tm_min & 63) << 5;
