@@ -144,6 +144,8 @@ U16						DiskImage_FAT_GetFreeCluster( sDiskImage * apImage, U16 aStartCluster )
 U16						DiskImage_FAT_GetFreeClusterCount( sDiskImage * apImage );
 void					DiskImage_FAT_SetNextClusterIndex( sDiskImage * apImage, U16 aClusterSrc, U16 aClusterNext );
 
+#define					DiskImage_DirEntry_IsSpecialDirectory( apEntry )	( '.' == apEntry->mFileName[0] && (( apEntry->mFileName[1] <= ' ' ) || (('.'==apEntry->mFileName[1])  && (apEntry->mFileName[2]<=' ' )) ) )
+#define					DiskImage_DirEntry_IsNormal( apEntry )				( 0xE5 != apEntry->mFileName[0] && !DiskImage_DirEntry_IsSpecialDirectory(apEntry))
 
 /* ################################################################################ */
 
