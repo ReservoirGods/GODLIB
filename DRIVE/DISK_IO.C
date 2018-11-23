@@ -28,6 +28,7 @@
 
 #include	"DISK_IO.H"
 
+#include	<GODLIB\ASSERT\ASSERT.H>
 #include	<GODLIB\CLOCK\CLOCK.H>
 #include	<GODLIB\GEMDOS\GEMDOS.H>
 #include	<GODLIB\MEMORY\MEMORY.H>
@@ -342,15 +343,31 @@ U16				DiskImage_FAT_GetLinkedClusterCount(  sDiskImage * apImage, U16 aClusterI
 
 U16						DiskImage_FAT_GetFreeCluster( sDiskImage * apImage, U16 aStartIndex )
 {
-	U16	clusterCount = apImage->mClusterTotalCount;
+	U16	clusterCount = apImage->mClusterTotalCount - 1;
 	U8 * fat = apImage->mpFAT;
 	U16 i;
 
 	fat += 3;
+
+	(void)aStartIndex;
+
+	for( i = 2; i < clusterCount; i += 2 )
+	{
+		if( !fat[ 0 ] && !(fat[ 1 ] & 0x0F) )
+			return i;
+		if( !fat[ 2 ] && !(fat[ 1 ] & 0xF0) )
+			return i+1;
+		fat += 3;
+	}
+
+/*
 	for( i = 2; i < clusterCount; i++ )
 	{
+
 		if( i==aStartIndex )
 			continue;
+		(void)base;
+		GODLIB_ASSERT( ( ((U32)fat - (U32)( apImage->mpFAT )) / 3 ) == (U32)i/2 );
 
 		U8	val = *fat++;
 		if( i & 1 )
@@ -358,13 +375,14 @@ U16						DiskImage_FAT_GetFreeCluster( sDiskImage * apImage, U16 aStartIndex )
 			val &= 0xF0;
 			val |= *fat++;
 		}
-		else if( i & 1 )
+		else
 		{
 			val |= ( *fat ) & 0xF;
 		}
 		if( !val )
 			return i;
 	}
+*/
 	return 0;
 }
 
@@ -383,6 +401,7 @@ U16						DiskImage_FAT_GetFreeClusterCount( sDiskImage * apImage )
 	U16 count =0;
 	U16 i;
 
+	fat += 3;
 	for( i = 2; i < clusterCount; i++ )
 	{
 		U8	val = *fat++;
@@ -867,11 +886,19 @@ U8		DiskImage_File_Save( sDiskImage * apImage, const char * apFileName, void * a
 			U16 clusterLast = 0;
 			U16 clusterNext = 0;
 			U16	clusterIndex = DiskImage_FAT_GetFreeCluster( apImage, 0 );
+			U8 cls[ 4096 ];
+
+			Memory_Clear( sizeof( cls ), cls );
 
 			DiskImageDirEntry_Init( entry, fileName );
 			Endian_WriteLittleU32( &entry->mSize, aBytes );
 			Endian_WriteLittleU16( &entry->mFirstCluster, clusterIndex );
 
+			/* mark first cluster so we don't reallocate it*/
+			if( clusterIndex && size )
+			{
+				DiskImage_FAT_SetNextClusterIndex( apImage, clusterIndex, 0xFFF );
+			}
 
 			while( clusterIndex && size )
 			{
@@ -886,18 +913,23 @@ U8		DiskImage_File_Save( sDiskImage * apImage, const char * apFileName, void * a
 					U8 * block = mMEMCALLOC( apImage->mClusterSizeBytes );
 
 					Memory_Copy( size, src, block );
-					DiskImage_Cluster_Write( apImage, src, clusterIndex );
+					DiskImage_Cluster_Write( apImage, block, clusterIndex );
 					mMEMFREE( block );
 					writeSize = size;
 				}
 				DiskImage_FAT_SetNextClusterIndex( apImage, clusterIndex, 0xFFF );
 
+				cls[ clusterIndex ] = 1;
 				clusterNext = DiskImage_FAT_GetFreeCluster( apImage, clusterIndex );
+				GODLIB_ASSERT( !cls[clusterNext] );
+				GODLIB_ASSERT( clusterNext != clusterIndex );
 				if( clusterLast )
 					DiskImage_FAT_SetNextClusterIndex( apImage, clusterLast, clusterIndex );
 
 				clusterLast = clusterIndex;
 				clusterIndex = clusterNext;
+
+				src += writeSize;
 
 				size -= writeSize;
 			}
@@ -995,8 +1027,8 @@ void DiskImageFuncs_ST_Memory_SectorsRead(   struct sDiskImage * apImage, void *
 void DiskImageFuncs_ST_Memory_SectorsWrite(  struct sDiskImage * apImage, void * apBuffer, U16 aSectorIndex, U16 aSectorCount )
 {
 	U8 *	mem = (U8*)apImage->mpBootSector;
-	U32 	size = apImage->mClusterSizeBytes;
-	U32 	offset = apImage->mClusterSizeBytes;
+	U32 	size = apImage->mSectorSizeBytes;
+	U32 	offset = apImage->mSectorSizeBytes;
 	offset *= aSectorIndex;
 	offset += apImage->mDataSectorOffset;
 	size *= aSectorCount;
