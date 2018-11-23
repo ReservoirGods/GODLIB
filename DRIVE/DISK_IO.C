@@ -360,29 +360,6 @@ U16						DiskImage_FAT_GetFreeCluster( sDiskImage * apImage, U16 aStartIndex )
 		fat += 3;
 	}
 
-/*
-	for( i = 2; i < clusterCount; i++ )
-	{
-
-		if( i==aStartIndex )
-			continue;
-		(void)base;
-		GODLIB_ASSERT( ( ((U32)fat - (U32)( apImage->mpFAT )) / 3 ) == (U32)i/2 );
-
-		U8	val = *fat++;
-		if( i & 1 )
-		{
-			val &= 0xF0;
-			val |= *fat++;
-		}
-		else
-		{
-			val |= ( *fat ) & 0xF;
-		}
-		if( !val )
-			return i;
-	}
-*/
 	return 0;
 }
 
@@ -886,19 +863,10 @@ U8		DiskImage_File_Save( sDiskImage * apImage, const char * apFileName, void * a
 			U16 clusterLast = 0;
 			U16 clusterNext = 0;
 			U16	clusterIndex = DiskImage_FAT_GetFreeCluster( apImage, 0 );
-			U8 cls[ 4096 ];
-
-			Memory_Clear( sizeof( cls ), cls );
 
 			DiskImageDirEntry_Init( entry, fileName );
 			Endian_WriteLittleU32( &entry->mSize, aBytes );
 			Endian_WriteLittleU16( &entry->mFirstCluster, clusterIndex );
-
-			/* mark first cluster so we don't reallocate it*/
-			if( clusterIndex && size )
-			{
-				DiskImage_FAT_SetNextClusterIndex( apImage, clusterIndex, 0xFFF );
-			}
 
 			while( clusterIndex && size )
 			{
@@ -919,10 +887,7 @@ U8		DiskImage_File_Save( sDiskImage * apImage, const char * apFileName, void * a
 				}
 				DiskImage_FAT_SetNextClusterIndex( apImage, clusterIndex, 0xFFF );
 
-				cls[ clusterIndex ] = 1;
 				clusterNext = DiskImage_FAT_GetFreeCluster( apImage, clusterIndex );
-				GODLIB_ASSERT( !cls[clusterNext] );
-				GODLIB_ASSERT( clusterNext != clusterIndex );
 				if( clusterLast )
 					DiskImage_FAT_SetNextClusterIndex( apImage, clusterLast, clusterIndex );
 
