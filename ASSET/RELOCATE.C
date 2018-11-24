@@ -11,6 +11,14 @@
 
 
 /* ###################################################################################
+#  PROTOTYPES
+################################################################################### */
+
+sRelocater *	Relocater_Create( const char * apExt, fReloc aIsType, fReloc aDoInit, fReloc aDoDeInit, fReloc aDoRelocate, fReloc aDoDelocate );
+void			Relocater_Destroy( sRelocater * apReloc );
+
+
+/* ###################################################################################
 #  DATA
 ################################################################################### */
 
