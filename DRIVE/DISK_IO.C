@@ -33,6 +33,7 @@
 #include	<GODLIB\GEMDOS\GEMDOS.H>
 #include	<GODLIB\MEMORY\MEMORY.H>
 #include	<GODLIB\RANDOM\RANDOM.H>
+#include	<GODLIB\STRING\STRING.H>
 #include	<GODLIB\STRING\STRPATH.H>
 
 
@@ -692,7 +693,7 @@ sDiskImageDirEntry *	DiskImage_DirEntry_GetFree(sDiskImageDirEntry * apEntries, 
 
 	for( i=0; i<aEntryCount; i++ )
 	{
-		if( apEntries[i].mFileName[0] == 0xE5 )
+		if( (U8)apEntries[i].mFileName[0] == 0xE5 )
 			return( &apEntries[i]);
 	}
 
@@ -865,7 +866,7 @@ U8		DiskImage_File_Save( sDiskImage * apImage, const char * apFileName, void * a
 			U16	clusterIndex = DiskImage_FAT_GetFreeCluster( apImage, 0 );
 
 			DiskImageDirEntry_Init( entry, fileName );
-			Endian_WriteLittleU32( &entry->mSize, aBytes );
+			Endian_WriteLittleU32( (&entry->mSize), aBytes );
 			Endian_WriteLittleU16( &entry->mFirstCluster, clusterIndex );
 
 			while( clusterIndex && size )
@@ -1258,7 +1259,7 @@ U8	DiskImageDirEntry_FileNameEqual( const sDiskImageDirEntry * entry, const char
 		fileName[i] = ' ';
 
 	if( '.' == *apFileName )
-		*apFileName++;
+		apFileName++;
 	
 	for( ; i<11 && *apFileName; i++ )
 		fileName[i] = *apFileName++;
