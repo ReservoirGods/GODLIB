@@ -13,7 +13,7 @@
 #  DATA
 ################################################################################### */
 
-sRelocater *	gpRelocator_SPLReloc;
+sRelocater 	gRelocator_SPLReloc;
 
 
 /* ###################################################################################
@@ -38,7 +38,7 @@ U32	Relocator_SPL_DoRelocate( void * apData, const U32 aSize, const U32 aID );
 
 void	Relocator_SPL_Init( void )
 {
-	gpRelocator_SPLReloc = Relocater_Create( "SPL", Relocator_SPL_IsType, Relocator_SPL_DoInit, 0, Relocator_SPL_DoRelocate, Relocator_SPL_DoDelocate );
+	Relocater_Init( &gRelocator_SPLReloc, "SPL", Relocator_SPL_IsType, Relocator_SPL_DoInit, 0, Relocator_SPL_DoRelocate, Relocator_SPL_DoDelocate );
 }
 
 
@@ -50,7 +50,7 @@ void	Relocator_SPL_Init( void )
 
 void	Relocator_SPL_DeInit( void )
 {
-	Relocater_Destroy( gpRelocator_SPLReloc );
+	Relocater_DeInit( &gRelocator_SPLReloc );
 }
 
 

@@ -12,7 +12,7 @@
 #  DATA
 ################################################################################### */
 
-sRelocater *	gpRelocator_GSMReloc;
+sRelocater 	gRelocator_GSMReloc;
 
 
 /* ###################################################################################
@@ -36,7 +36,7 @@ U32	Relocator_GSM_DoRelocate( void * apData, const U32 aSize, const U32 aID );
 
 void	Relocator_GSM_Init( void )
 {
-	gpRelocator_GSMReloc = Relocater_Create( "GSM", Relocator_GSM_IsType, 0, 0, Relocator_GSM_DoRelocate, Relocator_GSM_DoDelocate );
+	Relocater_Init( &gRelocator_GSMReloc, "GSM", Relocator_GSM_IsType, 0, 0, Relocator_GSM_DoRelocate, Relocator_GSM_DoDelocate );
 }
 
 
@@ -48,7 +48,7 @@ void	Relocator_GSM_Init( void )
 
 void	Relocator_GSM_DeInit( void )
 {
-	Relocater_Destroy( gpRelocator_GSMReloc );
+	Relocater_DeInit( &gRelocator_GSMReloc );
 }
 
 

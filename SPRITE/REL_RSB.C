@@ -12,7 +12,7 @@
 #  DATA
 ################################################################################### */
 
-sRelocater *	gpRelocator_RSBReloc;
+sRelocater 	gRelocator_RSBReloc;
 
 
 /* ###################################################################################
@@ -36,7 +36,7 @@ U32	Relocator_RSB_DoRelocate( void * apData, const U32 aSize, const U32 aID );
 
 void	Relocator_RSB_Init( void )
 {
-	gpRelocator_RSBReloc = Relocater_Create( "RSB", Relocator_RSB_IsType, 0, 0, Relocator_RSB_DoRelocate, Relocator_RSB_DoDelocate );
+	Relocater_Init( &gRelocator_RSBReloc, "RSB", Relocator_RSB_IsType, 0, 0, Relocator_RSB_DoRelocate, Relocator_RSB_DoDelocate );
 }
 
 
@@ -48,7 +48,7 @@ void	Relocator_RSB_Init( void )
 
 void	Relocator_RSB_DeInit( void )
 {
-	Relocater_Destroy( gpRelocator_RSBReloc );
+	Relocater_DeInit( &gRelocator_RSBReloc );
 }
 
 

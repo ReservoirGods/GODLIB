@@ -13,7 +13,7 @@
 #  DATA
 ################################################################################### */
 
-sRelocater *	gpRelocator_CUTReloc;
+sRelocater 	gRelocator_CUTReloc;
 
 
 /* ###################################################################################
@@ -39,7 +39,7 @@ U32	Relocator_CUT_OnUnLoad(   void * apData, const U32 aSize, const U32 aID );
 
 void	Relocator_CUT_Init( void )
 {
-	gpRelocator_CUTReloc = Relocater_Create( "CUT", Relocator_CUT_IsType, Relocator_CUT_OnLoad, Relocator_CUT_OnUnLoad, Relocator_CUT_DoRelocate, Relocator_CUT_DoDelocate );
+	Relocater_Init( &gRelocator_CUTReloc, "CUT", Relocator_CUT_IsType, Relocator_CUT_OnLoad, Relocator_CUT_OnUnLoad, Relocator_CUT_DoRelocate, Relocator_CUT_DoDelocate );
 }
 
 
@@ -51,7 +51,7 @@ void	Relocator_CUT_Init( void )
 
 void	Relocator_CUT_DeInit( void )
 {
-	Relocater_Destroy( gpRelocator_CUTReloc );
+	Relocater_DeInit( &gRelocator_CUTReloc );
 }
 
 

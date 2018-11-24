@@ -12,7 +12,7 @@
 #  DATA
 ################################################################################### */
 
-sRelocater *	gpRelocator_ASBReloc;
+sRelocater 	gRelocator_ASBReloc;
 
 
 /* ###################################################################################
@@ -36,7 +36,7 @@ U32	Relocator_ASB_DoRelocate( void * apData, const U32 aSize, const U32 aID );
 
 void	Relocator_ASB_Init( void )
 {
-	gpRelocator_ASBReloc = Relocater_Create( "ASB", Relocator_ASB_IsType, 0, 0, Relocator_ASB_DoRelocate, Relocator_ASB_DoDelocate );
+	Relocater_Init( &gRelocator_ASBReloc, "ASB", Relocator_ASB_IsType, 0, 0, Relocator_ASB_DoRelocate, Relocator_ASB_DoDelocate );
 }
 
 
@@ -48,7 +48,7 @@ void	Relocator_ASB_Init( void )
 
 void	Relocator_ASB_DeInit( void )
 {
-	Relocater_Destroy( gpRelocator_ASBReloc );
+	Relocater_DeInit( &gRelocator_ASBReloc );
 }
 
 

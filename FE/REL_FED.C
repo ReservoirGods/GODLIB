@@ -12,7 +12,7 @@
 #  DATA
 ################################################################################### */
 
-sRelocater *	gpRelocator_FEDReloc;
+sRelocater 	gRelocator_FEDReloc;
 
 /* ###################################################################################
 #  PROTOTYPES
@@ -37,7 +37,7 @@ U32	Relocator_FED_DoDeInit(   void * apData, const U32 aSize, const U32 aID );
 
 void	Relocator_FED_Init( void )
 {
-	gpRelocator_FEDReloc = Relocater_Create( "FED", Relocator_FED_IsType, Relocator_FED_DoInit, Relocator_FED_DoDeInit, Relocator_FED_DoRelocate, Relocator_FED_DoDelocate );
+	 Relocater_Init( &gRelocator_FEDReloc, "FED", Relocator_FED_IsType, Relocator_FED_DoInit, Relocator_FED_DoDeInit, Relocator_FED_DoRelocate, Relocator_FED_DoDelocate );
 }
 
 
@@ -49,7 +49,7 @@ void	Relocator_FED_Init( void )
 
 void	Relocator_FED_DeInit( void )
 {
-	Relocater_Destroy( gpRelocator_FEDReloc );
+	Relocater_DeInit( &gRelocator_FEDReloc );
 }
 
 

@@ -12,7 +12,7 @@
 #  DATA
 ################################################################################### */
 
-sRelocater *	gpRelocator_BFBReloc;
+sRelocater 	gRelocator_BFBReloc;
 
 
 /* ###################################################################################
@@ -36,7 +36,7 @@ U32	Relocator_BFB_DoRelocate( void * apData, const U32 aSize, const U32 aID );
 
 void	Relocator_BFB_Init( void )
 {
-	gpRelocator_BFBReloc = Relocater_Create( "BFB", Relocator_BFB_IsType, 0, 0, Relocator_BFB_DoRelocate, Relocator_BFB_DoDelocate );
+	Relocater_Init( &gRelocator_BFBReloc, "BFB", Relocator_BFB_IsType, 0, 0, Relocator_BFB_DoRelocate, Relocator_BFB_DoDelocate );
 }
 
 
@@ -48,7 +48,7 @@ void	Relocator_BFB_Init( void )
 
 void	Relocator_BFB_DeInit( void )
 {
-	Relocater_Destroy( gpRelocator_BFBReloc );
+	Relocater_DeInit( &gRelocator_BFBReloc );
 }
 
 
