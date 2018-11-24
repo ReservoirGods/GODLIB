@@ -73,18 +73,30 @@ sRelocater *	Relocater_Create( const char * apExt,fReloc aIsType,fReloc aDoInit,
 
 	if( lpReloc )
 	{
-		lpReloc->mExtID     = Asset_BuildHash( apExt );
-		lpReloc->DoInit     = aDoInit;
-		lpReloc->DoDeInit   = aDoDeInit;
-		lpReloc->DoDelocate = aDoDelocate;
-		lpReloc->DoRelocate = aDoRelocate;
-		lpReloc->IsType     = aIsType;
-		lpReloc->mpNext     = gpRelocaters;
-
-		gpRelocaters        = lpReloc;
+		Relocater_Init( lpReloc, apExt, aIsType, aDoInit, aDoDeInit, aDoRelocate, aDoDelocate );
 	}
 
 	return( lpReloc );
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Relocater_Init( sRelocater * apReloc )
+* ACTION   : Relocater_Init
+* CREATION : 24.11.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void			Relocater_Init( sRelocater * apReloc, const char * apExt, fReloc aIsType, fReloc aDoInit, fReloc aDoDeInit, fReloc aDoRelocate, fReloc aDoDelocate )
+{
+	apReloc->mExtID     = Asset_BuildHash( apExt );
+	apReloc->DoInit     = aDoInit;
+	apReloc->DoDeInit   = aDoDeInit;
+	apReloc->DoDelocate = aDoDelocate;
+	apReloc->DoRelocate = aDoRelocate;
+	apReloc->IsType     = aIsType;
+	apReloc->mpNext     = gpRelocaters;
+
+	gpRelocaters        = apReloc;
 }
 
 
@@ -95,6 +107,19 @@ sRelocater *	Relocater_Create( const char * apExt,fReloc aIsType,fReloc aDoInit,
 *-----------------------------------------------------------------------------------*/
 
 void	Relocater_Destroy( sRelocater * apReloc )
+{
+	Relocater_DeInit( apReloc );
+	mMEMFREE( apReloc );
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Relocater_DeInit( sRelocater * apReloc )
+* ACTION   : Relocater_DeInit
+* CREATION : 24.11.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void			Relocater_DeInit( sRelocater * apReloc )
 {
 	sRelocater *	lpReloc;
 	sRelocater *	lpRelocLast;
@@ -118,7 +143,6 @@ void	Relocater_Destroy( sRelocater * apReloc )
 		{
 			gpRelocaters = lpReloc->mpNext;
 		}
-		mMEMFREE( lpReloc );
 	}
 }
 

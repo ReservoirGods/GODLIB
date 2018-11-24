@@ -39,6 +39,9 @@ typedef	struct sRelocater
 sRelocater *	Relocater_Create( const char * apExt, fReloc aIsType, fReloc aDoInit, fReloc aDoDeInit, fReloc aDoRelocate, fReloc aDoDelocate );
 void			Relocater_Destroy( sRelocater * apReloc );
 
+void			Relocater_Init( sRelocater * apReloc, const char * apExt, fReloc aIsType, fReloc aDoInit, fReloc aDoDeInit, fReloc aDoRelocate, fReloc aDoDelocate );
+void			Relocater_DeInit( sRelocater * apReloc );
+
 sRelocater *	RelocaterManager_Find( sAsset * apAsset );
 
 U32				RelocaterManager_DoInit(     sAsset * apAsset );
