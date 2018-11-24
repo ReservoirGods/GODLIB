@@ -320,7 +320,7 @@ U32		sTagValue_GetID(    const U32 aValue, const sTagValue * apTagValues, const 
 #define	Endian_ReadLittleU32( apU32, aValue )				( aValue = (((*apU32)>>24) & 0xFFL) | (((*apU32)>>8)&0xFF00L) | (((*apU32)<<8)&0xFF0000L) | (((*apU32)<<24)&0xFF000000L) )
 
 #define	Endian_WriteLittleU16( apU16, aValue )				( *apU16 = (((aValue)>>8) & 0xFF) | ((aValue)<<8) )
-#define	Endian_WriteLittleU32( apU32, aValue )				( *apU32 = (((*aValue)>>24) & 0xFFL) | (((*aValue)>>8)&0xFF00L) | (((*aValue)<<8)&0xFF0000L) | (((*aValue)<<24)&0xFF000000L) )
+#define	Endian_WriteLittleU32( apU32, aValue )				( *apU32 = (((aValue)>>24) & 0xFFL) | (((aValue)>>8)&0xFF00L) | (((aValue)<<8)&0xFF0000L) | (((aValue)<<24)&0xFF000000L) )
 
 #endif
 
