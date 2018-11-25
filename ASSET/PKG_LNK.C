@@ -7,6 +7,7 @@
 #include	"ASSET.H"
 #include	"CONTEXT.H"
 
+#include	<GODLIB/ASSERT/ASSERT.H>
 #include	<GODLIB/ASSET/RELOCATE.H>
 #include	<GODLIB/CLI/CLI.H>
 #include	<GODLIB/DEBUG/DBGCHAN.H>
@@ -41,6 +42,8 @@ U32	PackageLnk_Load( sPackage * apPackage,const char * apDirName )
 	lRet = 0;
 
 	apPackage->mpLinkFile = LinkFile_InitToRAM( (char*)apDirName );
+
+	GODLIB_ASSERT( apPackage->mpLinkFile );
 
 	if( apPackage->mpLinkFile )
 	{
