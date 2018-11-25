@@ -15,12 +15,63 @@
 #  DATA
 ################################################################################### */
 
-sContext *	gpContexts;
+sContext *	gpContexts = 0;
 
 
 /* ###################################################################################
 #  CODE
 ################################################################################### */
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Context_Init( const char * apName )
+* ACTION   : Context_Init
+* CREATION : 24.11.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void				Context_Init( sContext * apContext, const char * apName )
+{
+	U16			i;
+
+	apContext->mID        = Asset_BuildHash( apName );
+	apContext->mpAssets   = 0;
+	apContext->mpNext     = gpContexts;
+	apContext->mpPackages = 0;
+	apContext->mRefCount  = 0;
+
+	i = 0;
+	while( (i<15) && (apName[i]) )
+	{
+		apContext->mName[ i ] = apName[ i ];
+		i++;
+	}
+	apContext->mName[ i ] = 0;
+
+	GOD_LL_INSERT( gpContexts, mpNext, apContext );
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Context_DeInit( const char * apName )
+* ACTION   : Context_DeInit
+* CREATION : 24.11.2003 PNK
+*-----------------------------------------------------------------------------------*/
+
+void				Context_DeInit( sContext * apContext )
+{
+	sAsset *	lpAsset;
+	sAsset *	lpAssetNext;
+
+	lpAsset = apContext->mpAssets;
+	while( lpAsset )
+	{
+		lpAssetNext = lpAsset->mpNext;
+		Asset_Destroy( lpAsset );
+		lpAsset     = lpAssetNext;
+	}
+
+	GOD_LL_REMOVE( sContext, gpContexts, mpNext, apContext );
+}
+
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : Context_Create( const char * apName )
@@ -31,27 +82,12 @@ sContext *	gpContexts;
 sContext *	Context_Create( const char * apName )
 {
 	sContext *	lpContext;
-	U32			i;
 
 	lpContext = (sContext*)mMEMCALLOC( sizeof( sContext ) );
 
 	if( lpContext )
 	{
-		lpContext->mID        = Asset_BuildHash( apName );
-		lpContext->mpAssets   = 0;
-		lpContext->mpNext     = gpContexts;
-		lpContext->mpPackages = 0;
-		lpContext->mRefCount  = 0;
-
-		i = 0;
-		while( (i<15) && (apName[i]) )
-		{
-			lpContext->mName[ i ] = apName[ i ];
-			i++;
-		}
-		lpContext->mName[ i ] = 0;
-
-		GOD_LL_INSERT( gpContexts, mpNext, lpContext );
+		Context_Init( lpContext, apName );
 	}
 
 	return( lpContext );
@@ -66,18 +102,7 @@ sContext *	Context_Create( const char * apName )
 
 void	Context_Destroy( sContext * apContext )
 {
-	sAsset *	lpAsset;
-	sAsset *	lpAssetNext;
-
-	lpAsset = apContext->mpAssets;
-	while( lpAsset )
-	{
-		lpAssetNext = lpAsset->mpNext;
-		Asset_Destroy( lpAsset );
-		lpAsset     = lpAssetNext;
-	}
-
-	GOD_LL_REMOVE( sContext, gpContexts, mpNext, apContext );
+	Context_DeInit( apContext );
 	mMEMFREE( apContext );
 }
 
@@ -142,7 +167,7 @@ void	Context_AssetUnRegister( sContext * apContext, sAsset * apAsset )
 
 void	ContextManager_Init( void )
 {
-	gpContexts = 0;
+	/* note - clients may have already registered contexts at this point */
 }
 
 

@@ -36,6 +36,9 @@ typedef	struct sContext
 #  PROTOTYPES
 ################################################################################### */
 
+void				Context_Init( sContext * apContext, const char * apName );
+void				Context_DeInit( sContext * apContext );
+
 sContext *			Context_Create(  const char * apName );
 void				Context_Destroy( sContext * apContext );
 struct sAsset *		Context_AssetRegister( sContext * apContext, const char * apName );
