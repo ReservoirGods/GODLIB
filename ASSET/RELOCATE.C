@@ -57,34 +57,11 @@ void	RelocaterManager_DeInit( void )
 	while( lpReloc )
 	{
 		lpRelocNext = lpReloc->mpNext;
-		mMEMFREE( lpReloc );
+		lpReloc->mpNext = 0;
 		lpReloc     = lpRelocNext;
 	}
 
 	gpRelocaters = 0;
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocater_Create( const char * apExt,fReloc aIsType,fReloc aDoInit,fReloc aDoDeInit,fReloc aDoRelocate,fReloc aDoDelocate )
-* ACTION   : Relocater_Create
-* CREATION : 30.11.2003 PNK
-*-----------------------------------------------------------------------------------*/
-
-sRelocater *	Relocater_Create( const char * apExt,fReloc aIsType,fReloc aDoInit,fReloc aDoDeInit,fReloc aDoRelocate,fReloc aDoDelocate )
-{
-	sRelocater *	lpReloc;
-
-	DebugLog_Printf1( "Relocater_Create() %s", apExt );
-
-	lpReloc = (sRelocater*)mMEMCALLOC( sizeof( sRelocater ) );
-
-	if( lpReloc )
-	{
-		Relocater_Init( lpReloc, apExt, aIsType, aDoInit, aDoDeInit, aDoRelocate, aDoDelocate );
-	}
-
-	return( lpReloc );
 }
 
 
@@ -105,19 +82,6 @@ void			Relocater_Init( sRelocater * apReloc, const char * apExt, fReloc aIsType,
 	apReloc->mpNext     = gpRelocaters;
 
 	gpRelocaters        = apReloc;
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocater_Destroy( sRelocater * apReloc )
-* ACTION   : Relocater_Destroy
-* CREATION : 30.11.2003 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	Relocater_Destroy( sRelocater * apReloc )
-{
-	Relocater_DeInit( apReloc );
-	mMEMFREE( apReloc );
 }
 
 
