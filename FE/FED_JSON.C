@@ -528,11 +528,11 @@ void	FedJSON_Build( const sObjectJSON * apObject, sFedJSON_Context * apContext )
 			{
 				sFedPageStyle * style = (sFedPageStyle*)FedJSON_ItemCreate(apContext, eFedItem_PageStyle);
 				sFedFontGroup * fontGroup = (sFedFontGroup*)FedJSON_ItemCreate(apContext, eFedItem_FontGroup);
+				sObjectJSON * pStyleObj = apObject->mpChildren;
 
 				if( style )
 					style->mpControlFonts = fontGroup;
 				
-				sObjectJSON * pStyleObj = apObject->mpChildren;
 				for( ; pStyleObj; pStyleObj=pStyleObj->mpSibling)
 				{				
 					const sTagString * styleTag = sTagString_GetFromString( &pStyleObj->mObjectName, gFedPageStyleTagStrings, eFedPageStyle_LIMIT );
