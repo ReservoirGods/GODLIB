@@ -60,15 +60,15 @@ enum
 
 typedef struct sAchieveShowClass
 {
-	sAssetClient *	mpLogoAss;
-	sAssetClient *	mpSmallFontAss;
-	sAssetClient *	mpFontAss;
-	sAssetClient *	mpBGAss;
-	sAssetClient *	mpPalAss;
-	sAssetClient *	mpButtonAss;
-	sAssetClient *	mpLockSymbolAss;
-	sAssetClient *	mpUnLockSymbolAss;
-	sAssetClient *	mpButtonSausageAss;
+	sAssetClient 	mLogoAss;
+	sAssetClient 	mSmallFontAss;
+	sAssetClient 	mFontAss;
+	sAssetClient 	mBGAss;
+	sAssetClient 	mPalAss;
+	sAssetClient 	mButtonAss;
+	sAssetClient 	mLockSymbolAss;
+	sAssetClient 	mUnLockSymbolAss;
+	sAssetClient 	mButtonSausageAss;
 	U16 *			mpPal;
 	sFont *			mpFont;
 	sFont *			mpSmallFont;
@@ -142,14 +142,14 @@ void	Achieve_Show_SymbolsDraw( sGraphicCanvas * apCanvas );
 void	Achieve_Show_AppInit( void )
 {
 	Memory_Clear( sizeof(sAchieveShowClass), &gAchieveShowClass );
-	gAchieveShowClass.mpFontAss          = AssetClient_Register( "FONTX.BFB",    "ACHIEVE", 0, 0, (void**)&gAchieveShowClass.mpFont                 );
-	gAchieveShowClass.mpSmallFontAss     = AssetClient_Register( "FONT6X6.BFB",  "ACHIEVE", 0, 0, (void**)&gAchieveShowClass.mpSmallFont            );
-	gAchieveShowClass.mpPalAss           = AssetClient_Register( "ACHNEW.PAL",   "ACHIEVE", 0, 0, (void**)&gAchieveShowClass.mpPal                  );
-	gAchieveShowClass.mpButtonAss        = AssetClient_Register( "ACH_BUTN.BSB", "ACHIEVE", 0, 0, (void**)&gAchieveShowClass.mpButtonSpr            );
-	gAchieveShowClass.mpLockSymbolAss    = AssetClient_Register( "ACH_LOCK.BSB", "ACHIEVE", 0, 0, (void**)&gAchieveShowClass.mpLockSymbolSpr        );
-	gAchieveShowClass.mpUnLockSymbolAss  = AssetClient_Register( "ACH_UNLK.BSB", "ACHIEVE", 0, 0, (void**)&gAchieveShowClass.mpUnLockSymbolSpr      );
-	gAchieveShowClass.mpButtonSausageAss = AssetClient_Register( "ACH_BSAS.BSB", "ACHIEVE", 0, 0, (void**)&gAchieveShowClass.mpButtonSausageSprites );
-	gAchieveShowClass.mpLogoAss          = AssetClient_Register( "AWARDZ.BSB",   "ACHIEVE", 0, 0, (void**)&gAchieveShowClass.mpLogoSprites          );
+	AssetClient_Init( &gAchieveShowClass.mFontAss,          "FONTX.BFB",    "ACHIEVE", (void**)&gAchieveShowClass.mpFont                 );
+	AssetClient_Init( &gAchieveShowClass.mSmallFontAss,     "FONT6X6.BFB",  "ACHIEVE", (void**)&gAchieveShowClass.mpSmallFont            );
+	AssetClient_Init( &gAchieveShowClass.mPalAss,           "ACHNEW.PAL",   "ACHIEVE", (void**)&gAchieveShowClass.mpPal                  );
+	AssetClient_Init( &gAchieveShowClass.mButtonAss,        "ACH_BUTN.BSB", "ACHIEVE", (void**)&gAchieveShowClass.mpButtonSpr            );
+	AssetClient_Init( &gAchieveShowClass.mLockSymbolAss,    "ACH_LOCK.BSB", "ACHIEVE", (void**)&gAchieveShowClass.mpLockSymbolSpr        );
+	AssetClient_Init( &gAchieveShowClass.mUnLockSymbolAss,  "ACH_UNLK.BSB", "ACHIEVE", (void**)&gAchieveShowClass.mpUnLockSymbolSpr      );
+	AssetClient_Init( &gAchieveShowClass.mButtonSausageAss, "ACH_BSAS.BSB", "ACHIEVE", (void**)&gAchieveShowClass.mpButtonSausageSprites );
+	AssetClient_Init( &gAchieveShowClass.mLogoAss,          "AWARDZ.BSB",   "ACHIEVE", (void**)&gAchieveShowClass.mpLogoSprites          );
 }
 
 
@@ -161,14 +161,14 @@ void	Achieve_Show_AppInit( void )
 
 void	Achieve_Show_AppDeInit( void )
 {
-	AssetClient_UnRegister( gAchieveShowClass.mpFontAss          );
-	AssetClient_UnRegister( gAchieveShowClass.mpSmallFontAss     );
-	AssetClient_UnRegister( gAchieveShowClass.mpPalAss           );
-	AssetClient_UnRegister( gAchieveShowClass.mpButtonAss        );
-	AssetClient_UnRegister( gAchieveShowClass.mpLockSymbolAss    );
-	AssetClient_UnRegister( gAchieveShowClass.mpUnLockSymbolAss  );
-	AssetClient_UnRegister( gAchieveShowClass.mpButtonSausageAss );
-	AssetClient_UnRegister( gAchieveShowClass.mpLogoAss          );
+	AssetClient_DeInit( &gAchieveShowClass.mFontAss          );
+	AssetClient_DeInit( &gAchieveShowClass.mSmallFontAss     );
+	AssetClient_DeInit( &gAchieveShowClass.mPalAss           );
+	AssetClient_DeInit( &gAchieveShowClass.mButtonAss        );
+	AssetClient_DeInit( &gAchieveShowClass.mLockSymbolAss    );
+	AssetClient_DeInit( &gAchieveShowClass.mUnLockSymbolAss  );
+	AssetClient_DeInit( &gAchieveShowClass.mButtonSausageAss );
+	AssetClient_DeInit( &gAchieveShowClass.mLogoAss          );
 }
 
 

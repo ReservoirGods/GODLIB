@@ -149,15 +149,15 @@ char	gAchieveSignInKeyboardCharacters[ eACH_SI_KEY_LIMIT ] =
 
 typedef struct sAchieveSignInClass
 {
-	sAssetClient *	mpFontAss;
-	sAssetClient *	mpSmallFontAss;
-	sAssetClient *	mpBGAss;
-	sAssetClient *	mpPalAss;
-	sAssetClient *	mpSignInAss;
-	sAssetClient *	mpBigSausageAss;
-	sAssetClient *	mpSmallSausageAss;
-	sAssetClient *	mpCursorAss;
-	sAssetClient *	mpSoftKeyAsses[ 2 ];
+	sAssetClient 	mFontAss;
+	sAssetClient 	mSmallFontAss;
+	sAssetClient 	mBGAss;
+	sAssetClient 	mPalAss;
+	sAssetClient 	mSignInAss;
+	sAssetClient 	mBigSausageAss;
+	sAssetClient 	mSmallSausageAss;
+	sAssetClient 	mCursorAss;
+	sAssetClient 	mSoftKeyAsses[ 2 ];
 	sFont *			mpFont;
 	sFont *			mpSmallFont;
 	sSpriteBlock *	mpBigSausageSprites;
@@ -267,15 +267,15 @@ void	Achieve_SignIn_BorderDraw( sGraphicCanvas * apCanvas, const sGraphicRect * 
 void	Achieve_SignIn_AppInit( void )
 {
 	Memory_Clear( sizeof(sAchieveSignInClass), &gAchieveSignInClass );
-	gAchieveSignInClass.mpFontAss           = AssetClient_Register( "FONTX.BFB",    "ACHIEVE", 0, 0, (void**)&gAchieveSignInClass.mpFont                );
-	gAchieveSignInClass.mpSmallFontAss      = AssetClient_Register( "FONT6X6.BFB",  "ACHIEVE", 0, 0, (void**)&gAchieveSignInClass.mpSmallFont           );
-	gAchieveSignInClass.mpPalAss            = AssetClient_Register( "ACH.PAL",      "ACHIEVE", 0, 0, (void**)&gAchieveSignInClass.mpPal                 );
-	gAchieveSignInClass.mpSignInAss         = AssetClient_Register( "SIGNIN.BSB",   "ACHIEVE", 0, 0, (void**)&gAchieveSignInClass.mpSignInSpr           );
-	gAchieveSignInClass.mpCursorAss         = AssetClient_Register( "ACH_CURS.BSB", "ACHIEVE", 0, 0, (void**)&gAchieveSignInClass.mpCursorSprites       );
-	gAchieveSignInClass.mpBigSausageAss     = AssetClient_Register( "ACH_NSAS.BSB", "ACHIEVE", 0, 0, (void**)&gAchieveSignInClass.mpBigSausageSprites   );
-	gAchieveSignInClass.mpSmallSausageAss   = AssetClient_Register( "ACH_USAS.BSB", "ACHIEVE", 0, 0, (void**)&gAchieveSignInClass.mpSmallSausageSprites );
-	gAchieveSignInClass.mpSoftKeyAsses[ 0 ] = AssetClient_Register( "SOFTKEY0.BSB", "ACHIEVE", 0, 0, (void**)&gAchieveSignInClass.mpSoftKeySprites[ 0 ] );
-	gAchieveSignInClass.mpSoftKeyAsses[ 1 ] = AssetClient_Register( "SOFTKEY1.BSB", "ACHIEVE", 0, 0, (void**)&gAchieveSignInClass.mpSoftKeySprites[ 1 ] );
+	AssetClient_Init( &gAchieveSignInClass.mFontAss,           "FONTX.BFB",    "ACHIEVE", (void**)&gAchieveSignInClass.mpFont                );
+	AssetClient_Init( &gAchieveSignInClass.mSmallFontAss,      "FONT6X6.BFB",  "ACHIEVE", (void**)&gAchieveSignInClass.mpSmallFont           );
+	AssetClient_Init( &gAchieveSignInClass.mPalAss,            "ACH.PAL",      "ACHIEVE", (void**)&gAchieveSignInClass.mpPal                 );
+	AssetClient_Init( &gAchieveSignInClass.mSignInAss,         "SIGNIN.BSB",   "ACHIEVE", (void**)&gAchieveSignInClass.mpSignInSpr           );
+	AssetClient_Init( &gAchieveSignInClass.mCursorAss,         "ACH_CURS.BSB", "ACHIEVE", (void**)&gAchieveSignInClass.mpCursorSprites       );
+	AssetClient_Init( &gAchieveSignInClass.mBigSausageAss,     "ACH_NSAS.BSB", "ACHIEVE", (void**)&gAchieveSignInClass.mpBigSausageSprites   );
+	AssetClient_Init( &gAchieveSignInClass.mSmallSausageAss,   "ACH_USAS.BSB", "ACHIEVE", (void**)&gAchieveSignInClass.mpSmallSausageSprites );
+	AssetClient_Init( &gAchieveSignInClass.mSoftKeyAsses[ 0 ], "SOFTKEY0.BSB", "ACHIEVE", (void**)&gAchieveSignInClass.mpSoftKeySprites[ 0 ] );
+	AssetClient_Init( &gAchieveSignInClass.mSoftKeyAsses[ 1 ], "SOFTKEY1.BSB", "ACHIEVE", (void**)&gAchieveSignInClass.mpSoftKeySprites[ 1 ] );
 	gAchieveSignInClass.mMode               = eACH_SI_MODE_ENTER;
 }
 
@@ -288,15 +288,15 @@ void	Achieve_SignIn_AppInit( void )
 
 void	Achieve_SignIn_AppDeInit( void )
 {
-	AssetClient_UnRegister( gAchieveSignInClass.mpFontAss         );
-	AssetClient_UnRegister( gAchieveSignInClass.mpSmallFontAss    );
-	AssetClient_UnRegister( gAchieveSignInClass.mpPalAss          );
-	AssetClient_UnRegister( gAchieveSignInClass.mpSignInAss       );
-	AssetClient_UnRegister( gAchieveSignInClass.mpCursorAss       );
-	AssetClient_UnRegister( gAchieveSignInClass.mpBigSausageAss   );
-	AssetClient_UnRegister( gAchieveSignInClass.mpSmallSausageAss );
-	AssetClient_UnRegister( gAchieveSignInClass.mpSoftKeyAsses[0] );
-	AssetClient_UnRegister( gAchieveSignInClass.mpSoftKeyAsses[1] );
+	AssetClient_DeInit( &gAchieveSignInClass.mFontAss         );
+	AssetClient_DeInit( &gAchieveSignInClass.mSmallFontAss    );
+	AssetClient_DeInit( &gAchieveSignInClass.mPalAss          );
+	AssetClient_DeInit( &gAchieveSignInClass.mSignInAss       );
+	AssetClient_DeInit( &gAchieveSignInClass.mCursorAss       );
+	AssetClient_DeInit( &gAchieveSignInClass.mBigSausageAss   );
+	AssetClient_DeInit( &gAchieveSignInClass.mSmallSausageAss );
+	AssetClient_DeInit( &gAchieveSignInClass.mSoftKeyAsses[0] );
+	AssetClient_DeInit( &gAchieveSignInClass.mSoftKeyAsses[1] );
 }
 
 

@@ -36,13 +36,13 @@
 
 typedef struct sAchieveUnLockedClass
 {
-	sAssetClient *	mpSmallFontAss;
-	sAssetClient *	mpFontAss;
-	sAssetClient *	mpBGAss;
-	sAssetClient *	mpPalAss;
-	sAssetClient *	mpUnLockSymbolAss;
-	sAssetClient *	mpButtonAss;
-	sAssetClient *	mpLogoAss;
+	sAssetClient 	mSmallFontAss;
+	sAssetClient 	mFontAss;
+	sAssetClient 	mBGAss;
+	sAssetClient 	mPalAss;
+	sAssetClient 	mUnLockSymbolAss;
+	sAssetClient 	mButtonAss;
+	sAssetClient 	mLogoAss;
 	sFont *			mpFont;
 	sFont *			mpSmallFont;
 	sSpriteBlock *	mpButtonSpr;
@@ -86,12 +86,12 @@ void	Achieve_UnLocked_BG_Update( void );
 void	Achieve_UnLocked_AppInit( void )
 {
 	Memory_Clear( sizeof(sAchieveUnLockedClass), &gAchieveUnLockedClass );
-	gAchieveUnLockedClass.mpFontAss         = AssetClient_Register( "FONTY.BFB",    "ACHIEVE", 0, 0, (void**)&gAchieveUnLockedClass.mpFont            );
-	gAchieveUnLockedClass.mpSmallFontAss    = AssetClient_Register( "FONT8X8.BFB",  "ACHIEVE", 0, 0, (void**)&gAchieveUnLockedClass.mpSmallFont       );
-	gAchieveUnLockedClass.mpPalAss          = AssetClient_Register( "ACHNEW.PAL",   "ACHIEVE", 0, 0, (void**)&gAchieveUnLockedClass.mpPal             );
-	gAchieveUnLockedClass.mpUnLockSymbolAss = AssetClient_Register( "ACH_UNLK.BSB", "ACHIEVE", 0, 0, (void**)&gAchieveUnLockedClass.mpUnLockSymbolSpr );
-	gAchieveUnLockedClass.mpButtonAss       = AssetClient_Register( "ACH_BUTN.BSB", "ACHIEVE", 0, 0, (void**)&gAchieveUnLockedClass.mpButtonSpr       );
-	gAchieveUnLockedClass.mpLogoAss         = AssetClient_Register( "AWADUNLK.BSB", "ACHIEVE", 0, 0, (void**)&gAchieveUnLockedClass.mpLogoSprites     );
+	AssetClient_Init( &gAchieveUnLockedClass.mFontAss,         "FONTY.BFB",    "ACHIEVE", (void**)&gAchieveUnLockedClass.mpFont            );
+	AssetClient_Init( &gAchieveUnLockedClass.mSmallFontAss,    "FONT8X8.BFB",  "ACHIEVE", (void**)&gAchieveUnLockedClass.mpSmallFont       );
+	AssetClient_Init( &gAchieveUnLockedClass.mPalAss,          "ACHNEW.PAL",   "ACHIEVE", (void**)&gAchieveUnLockedClass.mpPal             );
+	AssetClient_Init( &gAchieveUnLockedClass.mUnLockSymbolAss, "ACH_UNLK.BSB", "ACHIEVE", (void**)&gAchieveUnLockedClass.mpUnLockSymbolSpr );
+	AssetClient_Init( &gAchieveUnLockedClass.mButtonAss,       "ACH_BUTN.BSB", "ACHIEVE", (void**)&gAchieveUnLockedClass.mpButtonSpr       );
+	AssetClient_Init( &gAchieveUnLockedClass.mLogoAss,         "AWADUNLK.BSB", "ACHIEVE", (void**)&gAchieveUnLockedClass.mpLogoSprites     );
 }
 
 
@@ -103,12 +103,12 @@ void	Achieve_UnLocked_AppInit( void )
 
 void	Achieve_UnLocked_AppDeInit( void )
 {
-	AssetClient_UnRegister( gAchieveUnLockedClass.mpFontAss         );
-	AssetClient_UnRegister( gAchieveUnLockedClass.mpSmallFontAss    );
-	AssetClient_UnRegister( gAchieveUnLockedClass.mpPalAss          );
-	AssetClient_UnRegister( gAchieveUnLockedClass.mpUnLockSymbolAss );
-	AssetClient_UnRegister( gAchieveUnLockedClass.mpButtonAss       );
-	AssetClient_UnRegister( gAchieveUnLockedClass.mpLogoAss         );
+	AssetClient_DeInit( &gAchieveUnLockedClass.mFontAss         );
+	AssetClient_DeInit( &gAchieveUnLockedClass.mSmallFontAss    );
+	AssetClient_DeInit( &gAchieveUnLockedClass.mPalAss          );
+	AssetClient_DeInit( &gAchieveUnLockedClass.mUnLockSymbolAss );
+	AssetClient_DeInit( &gAchieveUnLockedClass.mButtonAss       );
+	AssetClient_DeInit( &gAchieveUnLockedClass.mLogoAss         );
 }
 
 
