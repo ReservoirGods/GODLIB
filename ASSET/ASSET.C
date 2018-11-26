@@ -269,7 +269,7 @@ void	AssetClient_UnRegister( sAssetClient * apClient )
 * ACTION   : AssetEntry_ArrayBuild
 * CREATION : 15.04.2004 PNK
 *-----------------------------------------------------------------------------------*/
-
+/*
 void	AssetEntry_ArrayBuild( sAssetEntry * apEntry,sAssetClient ** appArray )
 {
 	while( apEntry->mpContext )
@@ -278,6 +278,6 @@ void	AssetEntry_ArrayBuild( sAssetEntry * apEntry,sAssetClient ** appArray )
 		apEntry++;
 	}
 }
-
+*/
 
 /* ################################################################################ */

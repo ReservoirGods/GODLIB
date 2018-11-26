@@ -60,6 +60,7 @@ typedef	struct sAsset
 	struct sAsset *		mpNext;
 } sAsset;
 
+/*
 typedef	struct sAssetEntry
 {
 	U16		mIndex;
@@ -69,7 +70,7 @@ typedef	struct sAssetEntry
 	fAsset	mfOnLoad;
 	fAsset	mfOnUnLoad;
 } sAssetEntry;
-
+*/
 
 /* ###################################################################################
 #  PROTOTYPES
@@ -93,9 +94,9 @@ void			AssetClient_UnRegister( sAssetClient * apAsset );
 void			AssetClient_Init( sAssetClient * apClient, const char * apFileName, const char * apContextName, void ** appData );
 void			AssetClient_DeInit( sAssetClient * apClient );
 
-
+/*
 void			AssetEntry_ArrayBuild( sAssetEntry * apEntry, sAssetClient ** appArray );
-
+*/
 
 /* ################################################################################ */
 
