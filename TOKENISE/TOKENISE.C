@@ -2140,6 +2140,15 @@ void Tokeniser_Delocate(U8 * apData,sTokeniserInfo * apInfo)
 								*(U32*)&lpItems[ lpMember->mOffset ] -= (U32)apData;
 							}
 							break;
+						case eTOKENISER_TYPE_U16:
+						case eTOKENISER_TYPE_S16:
+							Endian_FromBigU16( &lpItems[ lpMember->mOffset ] );
+							break;
+						case eTOKENISER_TYPE_U32:
+						case eTOKENISER_TYPE_S32:
+						case eTOKENISER_TYPE_FP32:
+							Endian_FromBigU32( &lpItems[ lpMember->mOffset ] );
+							break;
 						default:
 							break;
 						}
