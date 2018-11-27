@@ -52,6 +52,7 @@ void	Platform_Init( void )
 {
 /*	DebugLog_Init( "PLAT.LOG" );*/
 	DebugChannel_Printf0( eDEBUGCHANNEL_GODLIB, "Platform_Init()" );
+	Memory_Init();
 
 #ifdef	dGODLIB_SYSTEM_SDL
 	SDL_Init(SDL_INIT_VIDEO);
@@ -135,6 +136,8 @@ void	Platform_DeInit( void )
 #ifdef	dGODLIB_SYSTEM_SDL
 	SDL_Quit();
 #endif
+
+	Memory_DeInit();
 }
 
 
