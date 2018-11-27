@@ -24,7 +24,8 @@ typedef	struct sContext
 {
 	char				mName[ 16 ];
 	U32					mID;
-	U32					mSlowRamFlag;
+	U16					mSlowRamFlag;
+	U16					mAllocFlag;
 	S32					mRefCount;
 	struct sPackage *	mpPackages;
 	struct sAsset *		mpAssets;
@@ -39,8 +40,11 @@ typedef	struct sContext
 void				Context_Init( sContext * apContext, const char * apName );
 void				Context_DeInit( sContext * apContext );
 
+/*
 sContext *			Context_Create(  const char * apName );
 void				Context_Destroy( sContext * apContext );
+*/
+
 struct sAsset *		Context_AssetRegister( sContext * apContext, const char * apName );
 void				Context_AssetUnRegister( sContext * apContext, struct sAsset * apAsset );
 

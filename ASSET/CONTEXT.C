@@ -7,8 +7,8 @@
 #include	"ASSET.H"
 #include	"PACKAGE.H"
 
+#include	<GODLIB/ASSERT/ASSERT.H>
 #include	<GODLIB/LINKLIST/GOD_LL.H>
-#include	<GODLIB/MEMORY/MEMORY.H>
 
 
 /* ###################################################################################
@@ -37,6 +37,7 @@ void				Context_Init( sContext * apContext, const char * apName )
 	apContext->mpNext     = gpContexts;
 	apContext->mpPackages = 0;
 	apContext->mRefCount  = 0;
+	apContext->mAllocFlag = 0;
 
 	i = 0;
 	while( (i<15) && (apName[i]) )
@@ -72,6 +73,7 @@ void				Context_DeInit( sContext * apContext )
 	GOD_LL_REMOVE( sContext, gpContexts, mpNext, apContext );
 }
 
+#if 0
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : Context_Create( const char * apName )
@@ -88,6 +90,7 @@ sContext *	Context_Create( const char * apName )
 	if( lpContext )
 	{
 		Context_Init( lpContext, apName );
+		lpContext->mAllocFlag = 1;
 	}
 
 	return( lpContext );
@@ -103,9 +106,13 @@ sContext *	Context_Create( const char * apName )
 void	Context_Destroy( sContext * apContext )
 {
 	Context_DeInit( apContext );
-	mMEMFREE( apContext );
+	if( apContext->mAllocFlag )
+	{
+		mMEMFREE( apContext );
+	}
 }
 
+#endif
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : Context_GetAsset( sContext * apContext,const char * apName )
@@ -187,7 +194,15 @@ void	ContextManager_DeInit( void )
 	while( lpContext )
 	{
 		lpContextNext = lpContext->mpNext;
-		mMEMFREE( lpContext );
+/*		mMEMFREE( lpContext );*/
+		lpContext->mpNext = 0;
+
+		/* we should have unregistered all assets at this point */
+		GODLIB_ASSERT( !lpContext->mpAssets );
+		lpContext->mpAssets = 0;
+
+		/* we should have unregistered all packages at this point */
+		lpContext->mpPackages = 0;
 		lpContext     = lpContextNext;
 	}
 
@@ -231,7 +246,10 @@ sContext *	ContextManager_ContextRegister( const char * apName )
 
 	if( !lpContext )
 	{
-		lpContext = Context_Create( apName );
+		/* we should now statically create all contexts, not dynamically */
+		/* client code should create static contexts and call context_init */
+		GODLIB_ASSERT( lpContext );
+/*		lpContext = Context_Create( apName ); */
 	}
 	if( lpContext )
 	{
@@ -253,13 +271,17 @@ void	ContextManager_ContextUnRegister( sContext * apContext )
 	if( apContext )
 	{
 		apContext->mRefCount--;
+
+		/* shouldn't unregister more than we register */
+		GODLIB_ASSERT( apContext->mRefCount >= 0 );
+/*		
 		if( apContext->mRefCount <= 0 )
 		{
 			Context_Destroy( apContext );
 		}
+*/		
 	}
 }
-
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : ContextManager_ShowAll( fContextPrint aPrint )
