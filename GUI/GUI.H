@@ -230,7 +230,7 @@ typedef	struct	sGuiRectPair
 
 typedef	struct	sGuiAsset
 {
-	sAssetClient *	mpAsset;
+	sAssetClient 	mAsset;
 	char *			mpFileName;
 	char *			mpContext;
 	void *			mpData;

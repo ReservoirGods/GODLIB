@@ -5,6 +5,8 @@
 #include	"GUIDATA.H"
 
 #include	"GUIEDIT.H"
+
+#include	<GODLIB/ASSERT/ASSERT.H>
 #include	<GODLIB/CLI/CLI.H>
 #include	<GODLIB/MEMORY/MEMORY.H>
 
@@ -44,7 +46,7 @@ void	GuiData_Init( sGuiData * apData,sHashTree * apTree )
 
 	for( i=0; i<apData->mAssetCount; i++ )
 	{
-		apData->mpAssets[ i ].mpAsset = AssetClient_Register( apData->mpAssets[ i ].mpFileName, apData->mpAssets[ i ].mpContext, 0, 0, (void**)&apData->mpAssets[ i ].mpData );
+		AssetClient_Init( &apData->mpAssets[ i ].mAsset, apData->mpAssets[ i ].mpFileName, apData->mpAssets[ i ].mpContext, (void**)&apData->mpAssets[ i ].mpData );
 	}
 
 	for( i=0; i<apData->mButtonCount; i++ )
@@ -75,7 +77,7 @@ void	GuiData_DeInit( sGuiData * apData, sHashTree * apTree )
 
 	for( i=0; i<apData->mAssetCount; i++ )
 	{
-		AssetClient_UnRegister( apData->mpAssets[ i ].mpAsset );
+		AssetClient_DeInit( &apData->mpAssets[ i ].mAsset );
 	}
 
 	for( i=0; i<apData->mButtonCount; i++ )
@@ -328,7 +330,7 @@ void			GuiData_Relocate( sGuiData * apData )
 * CREATION : 13.02.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-#define	mGUI_DELOC( _a )	if( apData->_a ) { *(U32*)&apData->_a -= (U32)apData; }
+#define	mGUI_DELOC( _a )	if( apData->_a ) { *(U32*)&apData->_a -= (U32)apData; Endian_FromBigU32( &apData->_a ); }
 
 void			GuiData_Delocate( sGuiData * apData )
 {
@@ -336,6 +338,9 @@ void			GuiData_Delocate( sGuiData * apData )
 
 	for( i=0; i<apData->mActionCount; i++ )
 	{
+		Endian_FromBigU16( &apData->mpActions[ i ].mAction );
+		Endian_FromBigU32( &apData->mpActions[ i ].mConstant );
+
 		mGUI_DELOC( mpActions[ i ].mpValue  );
 		mGUI_DELOC( mpActions[ i ].mpWindowClose );
 		mGUI_DELOC( mpActions[ i ].mpWindowOpen );
@@ -349,6 +354,14 @@ void			GuiData_Delocate( sGuiData * apData )
 
 	for( i=0; i<apData->mButtonCount; i++ )
 	{
+		Endian_FromBigU16( &apData->mpButtons[ i ].mString.mVar.mStructOffset );
+		Endian_FromBigU16( &apData->mpButtons[ i ].mString.mVar.mStructSize   );
+		Endian_FromBigU16( &apData->mpButtons[ i ].mString.mVar.mSize         );
+		Endian_FromBigU16( &apData->mpButtons[ i ].mString.mVar.mType         );
+
+		Endian_FromBigU16( &apData->mpButtons[ i ].mButtonType );
+		Endian_FromBigU16( &apData->mpButtons[ i ].mSubType );
+
 		mGUI_DELOC( mpButtons[ i ].mpOnLeftClick );
 		mGUI_DELOC( mpButtons[ i ].mpOnLeftHeld );
 		mGUI_DELOC( mpButtons[ i ].mpOnLeftRelease );
@@ -366,7 +379,10 @@ void			GuiData_Delocate( sGuiData * apData )
 		mGUI_DELOC( mpButtons[ i ].mString.mVar.mpName );
 		mGUI_DELOC( mpButtons[ i ].mString.mpTitle );
 
-		GuiInfo_Delocate( &apData->mpButtons[ i ].mInfo, apData );
+		GuiData_RectPairConvert( &apData->mpButtons[ i ].mSprite.mRectPair );
+		GuiData_RectPairConvert( &apData->mpButtons[ i ].mString.mRects );
+
+		GuiInfo_Delocate( &apData->mpButtons[ i ].mInfo, apData );		
 	}
 
 	for( i=0; i<apData->mButtonStyleCount; i++ )
@@ -390,6 +406,9 @@ void			GuiData_Delocate( sGuiData * apData )
 
 	for( i=0; i<apData->mFillCount; i++ )
 	{
+		Endian_FromBigU16( &apData->mpFills[ i ].mFillPattern );
+		Endian_FromBigU16( &apData->mpFills[ i ].mFillType );
+
 		for( j=0; j<eGUI_FILLCOLOUR_LIMIT; j++ )
 		{
 			mGUI_DELOC( mpFills[ i ].mpColours[ j ] );
@@ -419,6 +438,10 @@ void			GuiData_Delocate( sGuiData * apData )
 
 	for( i=0; i<apData->mSliderCount; i++ )
 	{
+		Endian_FromBigU16( &apData->mpSliders[ i ].mButtonSize );
+		Endian_FromBigU16( &apData->mpSliders[ i ].mSizeMin );
+		Endian_FromBigU16( &apData->mpSliders[ i ].mSliderType );
+
 		GuiInfo_Delocate( &apData->mpSliders[ i ].mInfo, apData );
 		for( j=0; j<eGUI_SLIDERBUT_LIMIT; j++ )
 		{
@@ -431,6 +454,9 @@ void			GuiData_Delocate( sGuiData * apData )
 
 	for( i=0; i<apData->mValueCount; i++ )
 	{
+		Endian_FromBigU32( &apData->mpValues[ i ].mMax );
+		Endian_FromBigU32( &apData->mpValues[ i ].mMin );
+
 		mGUI_DELOC( mpValues[ i ].mpVar );
 		mGUI_DELOC( mpValues[ i ].mpValueMin );
 		mGUI_DELOC( mpValues[ i ].mpValueMax );
@@ -438,6 +464,11 @@ void			GuiData_Delocate( sGuiData * apData )
 
 	for( i=0; i<apData->mVarCount; i++ )
 	{
+		Endian_FromBigU16( &apData->mpVars[ i ].mStructOffset );
+		Endian_FromBigU16( &apData->mpVars[ i ].mStructSize   );
+		Endian_FromBigU16( &apData->mpVars[ i ].mSize         );
+		Endian_FromBigU16( &apData->mpVars[ i ].mType         );
+
 		mGUI_DELOC( mpVars[ i ].mpName );
 	}
 
@@ -459,7 +490,26 @@ void			GuiData_Delocate( sGuiData * apData )
 		mGUI_DELOC( mpWindows[ i ].mppKeyActions );
 
 		GuiInfo_Delocate( &apData->mpWindows[ i ].mInfo, apData );
+
+		Endian_FromBigU16( &apData->mpWindows[ i ].mControlCount );
+		Endian_FromBigU16( &apData->mpWindows[ i ].mKeyActionCount );
 	}
+
+	Endian_FromBigU16( &apData->mAssetCount );
+	Endian_FromBigU16( &apData->mActionCount );
+	Endian_FromBigU16( &apData->mButtonCount );
+	Endian_FromBigU16( &apData->mButtonStyleCount );
+	Endian_FromBigU16( &apData->mColourCount );
+	Endian_FromBigU16( &apData->mCursorCount );
+	Endian_FromBigU16( &apData->mFillCount );
+	Endian_FromBigU16( &apData->mFontGroupCount );
+	Endian_FromBigU16( &apData->mKeyActionCount );
+	Endian_FromBigU16( &apData->mListCount );
+	Endian_FromBigU16( &apData->mLockCount );
+	Endian_FromBigU16( &apData->mSliderCount );
+	Endian_FromBigU16( &apData->mValueCount );
+	Endian_FromBigU16( &apData->mVarCount );
+	Endian_FromBigU16( &apData->mWindowCount );
 
 	mGUI_DELOC( mpActions );
 	mGUI_DELOC( mpAssets );
@@ -509,13 +559,20 @@ void	GuiInfo_Relocate( sGuiInfo * apInfo, const sGuiData * apData )
 * CREATION : 13.02.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-#define	mGUIINFO_DELOC( _a )	if( apInfo->_a ) { *(U32*)&apInfo->_a -= (U32)apData; }
+#define	mGUIINFO_DELOC( _a )	if( apInfo->_a ) { *(U32*)&apInfo->_a -= (U32)apData; Endian_FromBigU32( &apInfo->_a ); }
 
 void	GuiInfo_Delocate( sGuiInfo * apInfo, const sGuiData * apData )
 {
 	mGUIINFO_DELOC( mpValue );
 	mGUIINFO_DELOC( mpLock );
 	mGUIINFO_DELOC( mpName );
+
+	Endian_FromBigU16( &apInfo->mEvent.mEvent );
+	Endian_FromBigU32( &apInfo->mFlags );
+	Endian_FromBigU16( &apInfo->mHash );
+	Endian_FromBigU16( &apInfo->mType );
+
+	GuiData_RectPairConvert( &apInfo->mRectPair );
 }
 
 
@@ -662,7 +719,7 @@ sGuiData *	GuiData_Serialise( sGuiData * apData )
 	sGuiData *	lpData;
 	U32				lSize;
 	U32				lOff;
-	char *			lpStrings;
+	char *			lpStrings = 0;
 	U16				i,j;
 	U8 *			lpMem;
 
@@ -757,6 +814,8 @@ sGuiData *	GuiData_Serialise( sGuiData * apData )
 			mGUI_SERIALISE( mpButtons, mInfo.mpLock,        mpLocks );
 			mGUI_SERIALISE( mpButtons, mInfo.mpValue,       mpValues );
 
+			mGUI_STR_SERIALISE( mpButtons[ i ].mInfo.mpName );
+
 			mGUI_STR_SERIALISE( mpButtons[ i ].mString.mVar.mpName );
 			mGUI_STR_SERIALISE( mpButtons[ i ].mString.mpTitle );
 		}
@@ -792,81 +851,84 @@ sGuiData *	GuiData_Serialise( sGuiData * apData )
 		for( i=0; i<apData->mFontGroupCount; i++ )
 		{
 			Memory_Copy( sizeof(sGuiFontGroup), &apData->mpFontGroups[ i ], &lpData->mpFontGroups[ i ] );
-			mGUI_SERIALISE( mpFontGroups, mpNormal,   mpAssets );
-			mGUI_SERIALISE( mpFontGroups, mpLocked,   mpAssets );
+			mGUI_SERIALISE( mpFontGroups, mpNormal, mpAssets );
+			mGUI_SERIALISE( mpFontGroups, mpLocked, mpAssets );
 			mGUI_SERIALISE( mpFontGroups, mpSelected, mpAssets );
 		}
 
-		for( i=0; i<apData->mKeyActionCount; i++ )
+		for( i = 0; i < apData->mKeyActionCount; i++ )
 		{
-			Memory_Copy( sizeof(sGuiKeyAction), &apData->mpKeyActions[ i ], &lpData->mpKeyActions[ i ] );
-			mGUI_SERIALISE( mpKeyActions, mpAction,   mpActions );
+			Memory_Copy( sizeof( sGuiKeyAction ), &apData->mpKeyActions[ i ], &lpData->mpKeyActions[ i ] );
+			mGUI_SERIALISE( mpKeyActions, mpAction, mpActions );
 		}
 
-		for( i=0; i<apData->mListCount; i++ )
+		for( i = 0; i < apData->mListCount; i++ )
 		{
-			Memory_Copy( sizeof(sGuiList), &apData->mpLists[ i ], &lpData->mpLists[ i ] );
-			mGUI_SERIALISE( mpLists, mInfo.mpLock,  mpLocks   );
-			mGUI_SERIALISE( mpLists, mInfo.mpValue, mpValues  );
-			mGUI_SERIALISE( mpLists, mpButton,      mpButtons  );
-			mGUI_SERIALISE( mpLists, mpSlider,      mpSliders  );
-			mGUI_SERIALISE( mpLists, mpWindow,      mpWindows  );
+			Memory_Copy( sizeof( sGuiList ), &apData->mpLists[ i ], &lpData->mpLists[ i ] );
+			mGUI_SERIALISE( mpLists, mInfo.mpLock, mpLocks );
+			mGUI_SERIALISE( mpLists, mInfo.mpValue, mpValues );
+			mGUI_SERIALISE( mpLists, mpButton, mpButtons );
+			mGUI_SERIALISE( mpLists, mpSlider, mpSliders );
+			mGUI_SERIALISE( mpLists, mpWindow, mpWindows );
 
+			mGUI_STR_SERIALISE( mpLists[ i ].mInfo.mpName );
 		}
 
 
-		for( i=0; i<apData->mLockCount; i++ )
+		for( i = 0; i < apData->mLockCount; i++ )
 		{
-			Memory_Copy( sizeof(sGuiLock), &apData->mpLocks[ i ], &lpData->mpLocks[ i ] );
-			mGUI_SERIALISE( mpLocks, mpLockVar,   mpVars );
+			Memory_Copy( sizeof( sGuiLock ), &apData->mpLocks[ i ], &lpData->mpLocks[ i ] );
+			mGUI_SERIALISE( mpLocks, mpLockVar, mpVars );
 			mGUI_SERIALISE( mpLocks, mpLockValue, mpVars );
-			mGUI_SERIALISE( mpLocks, mpVisVar,    mpVars );
-			mGUI_SERIALISE( mpLocks, mpVisValue,  mpVars );
+			mGUI_SERIALISE( mpLocks, mpVisVar, mpVars );
+			mGUI_SERIALISE( mpLocks, mpVisValue, mpVars );
 		}
 
-		for( i=0; i<apData->mSliderCount; i++ )
+		for( i = 0; i < apData->mSliderCount; i++ )
 		{
-			Memory_Copy( sizeof(sGuiSlider), &apData->mpSliders[ i ], &lpData->mpSliders[ i ] );
-			for( j=0; j<eGUI_SLIDERBUT_LIMIT; j++ )
+			Memory_Copy( sizeof( sGuiSlider ), &apData->mpSliders[ i ], &lpData->mpSliders[ i ] );
+			for( j = 0; j < eGUI_SLIDERBUT_LIMIT; j++ )
 			{
 				mGUI_SERIALISE( mpSliders, mpButtons[ j ], mpButtons );
 			}
-			mGUI_SERIALISE( mpSliders, mInfo.mpLock,  mpLocks   );
-			mGUI_SERIALISE( mpSliders, mInfo.mpValue, mpValues  );
-			mGUI_SERIALISE( mpSliders, mpLineSize,    mpVars    );
-			mGUI_SERIALISE( mpSliders, mpPageSize,    mpVars    );
-			mGUI_SERIALISE( mpSliders, mpWindow,      mpWindows );
+			mGUI_SERIALISE( mpSliders, mInfo.mpLock, mpLocks );
+			mGUI_SERIALISE( mpSliders, mInfo.mpValue, mpValues );
+			mGUI_SERIALISE( mpSliders, mpLineSize, mpVars );
+			mGUI_SERIALISE( mpSliders, mpPageSize, mpVars );
+			mGUI_SERIALISE( mpSliders, mpWindow, mpWindows );
+
+			mGUI_STR_SERIALISE( mpSliders[ i ].mInfo.mpName );
 		}
 
-		for( i=0; i<apData->mValueCount; i++ )
+		for( i = 0; i < apData->mValueCount; i++ )
 		{
-			Memory_Copy( sizeof(sGuiValue), &apData->mpValues[ i ], &lpData->mpValues[ i ] );
-			mGUI_SERIALISE( mpValues, mpVar,      mpVars );
+			Memory_Copy( sizeof( sGuiValue ), &apData->mpValues[ i ], &lpData->mpValues[ i ] );
+			mGUI_SERIALISE( mpValues, mpVar, mpVars );
 			mGUI_SERIALISE( mpValues, mpValueMin, mpVars );
 			mGUI_SERIALISE( mpValues, mpValueMax, mpVars );
 		}
 
-		for( i=0; i<apData->mVarCount; i++ )
+		for( i = 0; i < apData->mVarCount; i++ )
 		{
-			Memory_Copy( sizeof(sGuiVar), &apData->mpVars[ i ], &lpData->mpVars[ i ] );
+			Memory_Copy( sizeof( sGuiVar ), &apData->mpVars[ i ], &lpData->mpVars[ i ] );
 			mGUI_STR_SERIALISE( mpVars[ i ].mpName );
 		}
 
-		for( i=0; i<apData->mWindowCount; i++ )
+		for( i = 0; i < apData->mWindowCount; i++ )
 		{
-			Memory_Copy( sizeof(sGuiWindow), &apData->mpWindows[ i ], &lpData->mpWindows[ i ] );
-			mGUI_SERIALISE( mpWindows, mInfo.mpLock,  mpLocks  );
+			Memory_Copy( sizeof( sGuiWindow ), &apData->mpWindows[ i ], &lpData->mpWindows[ i ] );
+			mGUI_SERIALISE( mpWindows, mInfo.mpLock, mpLocks );
 			mGUI_SERIALISE( mpWindows, mInfo.mpValue, mpValues );
 
-			mGUI_SERIALISE( mpWindows, mpFontGroup,		mpFontGroups   );
-			mGUI_SERIALISE( mpWindows, mpButtonStyle,	mpButtonStyles  );
-			mGUI_SERIALISE( mpWindows, mpFill,			mpFills  );
-			mGUI_SERIALISE( mpWindows, mpOnIKBD,		mpVars  );
+			mGUI_SERIALISE( mpWindows, mpFontGroup, mpFontGroups );
+			mGUI_SERIALISE( mpWindows, mpButtonStyle, mpButtonStyles );
+			mGUI_SERIALISE( mpWindows, mpFill, mpFills );
+			mGUI_SERIALISE( mpWindows, mpOnIKBD, mpVars );
 
 			lpData->mpWindows[ i ].mppControls = (sGuiInfo**)&lpMem[ lOff ];
-			lOff += (lpData->mpWindows[ i ].mControlCount * 4 );
+			lOff += ( lpData->mpWindows[ i ].mControlCount * 4 );
 
-			for( j=0; j<lpData->mpWindows[ i ].mControlCount; j++ )
+			for( j = 0; j < lpData->mpWindows[ i ].mControlCount; j++ )
 			{
 				switch( apData->mpWindows[ i ].mppControls[ j ]->mType )
 				{
@@ -883,14 +945,20 @@ sGuiData *	GuiData_Serialise( sGuiData * apData )
 			}
 
 			lpData->mpWindows[ i ].mppKeyActions = (sGuiKeyAction**)&lpMem[ lOff ];
-			lOff += (lpData->mpWindows[ i ].mKeyActionCount * 4 );
+			lOff += ( lpData->mpWindows[ i ].mKeyActionCount * 4 );
 
-			for( j=0; j<lpData->mpWindows[ i ].mKeyActionCount; j++ )
+			for( j = 0; j < lpData->mpWindows[ i ].mKeyActionCount; j++ )
 			{
 				mGUI_SERIALISE( mpWindows, mppKeyActions[ j ], mpKeyActions );
 			}
+			mGUI_STR_SERIALISE( mpWindows[ i ].mInfo.mpName );
 
 		}
+	}
+	{
+		char * begin = (char*)lpData;
+		char * end = begin + lSize;
+		GODLIB_ASSERT( lpStrings == end );
 	}
 
 	return( lpData );
