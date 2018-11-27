@@ -97,7 +97,7 @@ enum
 
 typedef	struct	sFedAsset
 {
-	sAssetClient *	mpAsset;
+	sAssetClient 	mAsset;
 	char *			mpFileName;
 	char *			mpContext;
 	void *			mpData;
