@@ -210,7 +210,7 @@ void	AssetClient_Init( sAssetClient * apClient, const char * apFileName, const c
 	}
 }
 
-
+#if 0
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : AssetClient_Register( const char * apFileName,const char * apContextName,fAsset aOnLoad,fAsset aOnUnload,void ** appData )
 * ACTION   : AssetClient_Register
@@ -230,6 +230,19 @@ sAssetClient *	AssetClient_Register( const char * apFileName,const char * apCont
 	return( lpClient );
 }
 
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : AssetClient_UnRegister( sAssetClient * apClient )
+* ACTION   : AssetClient_UnRegister
+* CREATION : 30.11.2003 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	AssetClient_UnRegister( sAssetClient * apClient )
+{
+	AssetClient_DeInit( apClient );
+	mMEMFREE( apClient );
+}
+
+#endif
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : AssetClient_DeInit( sAssetClient * apClient )
@@ -251,17 +264,6 @@ void			AssetClient_DeInit( sAssetClient * apClient )
 
 }
 
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : AssetClient_UnRegister( sAssetClient * apClient )
-* ACTION   : AssetClient_UnRegister
-* CREATION : 30.11.2003 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	AssetClient_UnRegister( sAssetClient * apClient )
-{
-	AssetClient_DeInit( apClient );
-	mMEMFREE( apClient );
-}
 
 
 /*-----------------------------------------------------------------------------------*

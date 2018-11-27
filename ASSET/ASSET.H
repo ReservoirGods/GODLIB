@@ -60,17 +60,6 @@ typedef	struct sAsset
 	struct sAsset *		mpNext;
 } sAsset;
 
-/*
-typedef	struct sAssetEntry
-{
-	U16		mIndex;
-	char *	mpFileName;
-	char *	mpContext;
-	void **	mppData;
-	fAsset	mfOnLoad;
-	fAsset	mfOnUnLoad;
-} sAssetEntry;
-*/
 
 /* ###################################################################################
 #  PROTOTYPES
@@ -84,19 +73,9 @@ void			Asset_Destroy( sAsset * apAsset );
 U32				Asset_OnLoad( sAsset * apAsset );
 U32				Asset_OnUnLoad( sAsset * apAsset );
 
-/* legacy API, asset system manages client memory */
-
-sAssetClient *	AssetClient_Register( const char * apFileName, const char * apContextName, fAsset aOnLoad, fAsset aOnUnload, void ** appData );
-void			AssetClient_UnRegister( sAssetClient * apAsset );
-
-/* new API, callee manages asset client memory */
-
 void			AssetClient_Init( sAssetClient * apClient, const char * apFileName, const char * apContextName, void ** appData );
 void			AssetClient_DeInit( sAssetClient * apClient );
 
-/*
-void			AssetEntry_ArrayBuild( sAssetEntry * apEntry, sAssetClient ** appArray );
-*/
 
 /* ################################################################################ */
 
