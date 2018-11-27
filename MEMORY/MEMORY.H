@@ -35,6 +35,9 @@
 #  PROTOTYPES
 ################################################################################### */
 
+void	Memory_Init( void );
+void	Memory_DeInit( void );
+
 void * 	Memory_Alloc(  const U32 aSize );
 void *	Memory_Calloc( const U32 aSize );
 

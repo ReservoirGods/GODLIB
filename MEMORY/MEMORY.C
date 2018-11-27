@@ -16,6 +16,7 @@
 
 #include	"MEMORY.H"
 
+#include	<GODLIB/ASSERT/ASSERT.H>
 #include	<GODLIB/GEMDOS/GEMDOS.H>
 #include	<GODLIB/DEBUG/DEBUG.H>
 #include	<GODLIB/DEBUG/DBGCHAN.H>
@@ -84,6 +85,7 @@ U8	gMemoryTrailer[ dMEMORY_TRAILER_SIZE ] =
 };
 
 U32	gMemoryAllocCount    = 0;
+U32	gMemoryDeAllocCount  = 0;
 U32	gMemoryAllocatedSize = 0;
 U32	gMemoryFailedSize    = 0;
 U32	gMemoryHighTide      = 0;
@@ -104,6 +106,7 @@ sMemoryTrackRecord	gMemoryRecord[ dMEMORY_RECORD_LIMIT ];
 ################################################################################### */
 
 void					Memory_TrackInit( void );
+void					Memory_TrackDeInit( void );
 void					Memory_TrackAlloc( const void * apMem, const U32 aSize, const char * apFileName, const U32 aLine );
 void					Memory_TrackFree( const void * apMem );
 sMemoryTrackRecord *	Memory_TrackGetFreeRecord( void );
@@ -113,6 +116,20 @@ sMemoryTrackRecord *	Memory_TrackFindRecord( const void * apMem );
 /* ###################################################################################
 #  CODE
 ################################################################################### */
+
+void	Memory_Init()
+{
+#ifdef dMEMORY_TRACK
+	Memory_TrackInit();
+#endif	
+}
+
+void	Memory_DeInit()
+{
+#ifdef dMEMORY_TRACK
+	Memory_TrackDeInit();
+#endif	
+}
 
 #ifdef dMEMORY_TRACK
 
@@ -127,6 +144,7 @@ void	Memory_TrackInit()
 	U32	i;
 
 	gMemoryAllocCount    = 0;
+	gMemoryDeAllocCount  = 0;
 	gMemoryAllocatedSize = 0;
 	gMemoryHighTide      = 0;
 	gMemoryLargestAlloc  = 0;
@@ -142,6 +160,14 @@ void	Memory_TrackInit()
 	gMemoryTrackInitialised = 1;
 }
 
+void	Memory_TrackDeInit()
+{
+	if( gMemoryAllocCount != gMemoryDeAllocCount )
+	{
+		Memory_ShowCurrentRecords();
+		GODLIB_ASSERT( gMemoryAllocCount == gMemoryDeAllocCount );
+	}
+}
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : Memory_TrackGetFreeRecord()
@@ -223,6 +249,8 @@ void	Memory_TrackAlloc( const void * apMem,const U32 aSize,const char * apFileNa
 		gMemoryHighTide = gMemoryAllocatedSize;
 	}
 
+	/* GODLIB_ASSERT( 2 != gMemoryTrackIndex ); */
+
 	lpRecord = Memory_TrackGetFreeRecord();
 	if( lpRecord )
 	{
@@ -254,9 +282,10 @@ void	Memory_TrackFree( const void * apMem )
 		return;
 
 
-	gMemoryAllocCount--;
+	gMemoryDeAllocCount++;
 
 	lpRecord = Memory_TrackFindRecord( apMem );
+	GODLIB_ASSERT( lpRecord );
 	if( lpRecord )
 	{
 		gMemoryAllocatedSize -= lpRecord->mSize;
@@ -843,7 +872,8 @@ void	Memory_ShowCurrentRecords( void )
 		if( gMemoryRecord[ i ].mpMem )
 		{
 /*			DebugChannel_Printf4( eDEBUGCHANNEL_MEMORY, "mem %08p : (%ld) %s : %ld\n",*/
-			DebugLog_Printf5( "mem [%08ld] %08p : (%ld) %s : %ld\n",
+/*			DebugLog_Printf5( "mem [%08ld] %08p : (%ld) %s : %ld\n",*/
+			printf( "mem [%08ld] %08p : (%ld) %s : %ld\n",
 				gMemoryRecord[ i ].mIndex,
 				gMemoryRecord[ i ].mpMem,
 				gMemoryRecord[ i ].mSize,
