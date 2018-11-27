@@ -73,46 +73,6 @@ void				Context_DeInit( sContext * apContext )
 	GOD_LL_REMOVE( sContext, gpContexts, mpNext, apContext );
 }
 
-#if 0
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : Context_Create( const char * apName )
-* ACTION   : Context_Create
-* CREATION : 30.11.2003 PNK
-*-----------------------------------------------------------------------------------*/
-
-sContext *	Context_Create( const char * apName )
-{
-	sContext *	lpContext;
-
-	lpContext = (sContext*)mMEMCALLOC( sizeof( sContext ) );
-
-	if( lpContext )
-	{
-		Context_Init( lpContext, apName );
-		lpContext->mAllocFlag = 1;
-	}
-
-	return( lpContext );
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : Context_Destroy( sContext * apContext )
-* ACTION   : Context_Destroy
-* CREATION : 30.11.2003 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	Context_Destroy( sContext * apContext )
-{
-	Context_DeInit( apContext );
-	if( apContext->mAllocFlag )
-	{
-		mMEMFREE( apContext );
-	}
-}
-
-#endif
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : Context_GetAsset( sContext * apContext,const char * apName )
@@ -193,8 +153,10 @@ void	ContextManager_DeInit( void )
 
 	while( lpContext )
 	{
+		/* nothing should be referring to this context now */
+		GODLIB_ASSERT( 0 == lpContext->mRefCount );
+
 		lpContextNext = lpContext->mpNext;
-/*		mMEMFREE( lpContext );*/
 		lpContext->mpNext = 0;
 
 		/* we should have unregistered all assets at this point */
@@ -202,6 +164,7 @@ void	ContextManager_DeInit( void )
 		lpContext->mpAssets = 0;
 
 		/* we should have unregistered all packages at this point */
+		GODLIB_ASSERT( !lpContext->mpPackages );
 		lpContext->mpPackages = 0;
 		lpContext     = lpContextNext;
 	}
