@@ -616,6 +616,7 @@ void	HashTree_VarUnRegister( sHashTree * apTree, sHashTreeVar * apVar )
 
 sHashTreeVarClient *	HashTree_VarClientRegister( sHashTree * apTree,const char * apName,fHashTreeVarCB aOnWrite,fHashTreeVarCB aOnInit,fHashTreeVarCB aOnDeInit, const U32 aUserData )
 {
+/*	
 	sHashTreeVarClient *	lpClient;
 	sHashTreeVar *			lpVar;
 
@@ -627,17 +628,31 @@ sHashTreeVarClient *	HashTree_VarClientRegister( sHashTree * apTree,const char *
 	{
 		lpClient = (sHashTreeVarClient*)mMEMCALLOC( sizeof(sHashTreeVarClient) );
 		if( lpClient )
-		{
+		{			
 			lpClient->mfOnDeInit = aOnDeInit;
 			lpClient->mfOnInit   = aOnInit;
+			lpClient->mUserData  = aUserData;
+
+
 			lpClient->mfOnWrite  = aOnWrite;
 			lpClient->mpVar      = lpVar;
 			lpClient->mpNext     = lpVar->mpClients;
-			lpClient->mUserData  = aUserData;
 			lpVar->mpClients     = lpClient;
 		}
 	}
 	return( lpClient );
+*/
+
+	sHashTreeVarClient *	lpClient;
+	lpClient = (sHashTreeVarClient*)mMEMCALLOC( sizeof(sHashTreeVarClient) );
+	if( lpClient )
+	{			
+		lpClient->mfOnDeInit = aOnDeInit;
+		lpClient->mfOnInit   = aOnInit;
+		lpClient->mUserData  = aUserData;
+		HashTree_VarClient_Init( lpClient, apTree, apName, aOnWrite );
+	}
+	return lpClient;
 }
 
 
@@ -675,6 +690,36 @@ void	HashTree_VarClientUnRegister( sHashTree * apTree, sHashTreeVarClient * apCl
 			HashTree_VarUnRegister( apTree, apClient->mpVar );
 		}
 		mMEMFREE( apClient );
+	}
+}
+
+
+void	HashTree_VarClient_Init( sHashTreeVarClient * apClient, sHashTree * apTree, const char * apName, fHashTreeVarCB aOnWrite )
+{
+	sHashTreeVar *			lpVar;
+
+	lpVar    = HashTree_VarRegister( apTree, apName );
+
+	if( lpVar )
+	{
+		apClient->mfOnWrite  = aOnWrite;
+		apClient->mpVar      = lpVar;
+		apClient->mpNext     = lpVar->mpClients;
+		lpVar->mpClients     = apClient;
+	}
+}
+
+
+void	HashTree_VarClient_DeInit( sHashTreeVarClient * apClient, sHashTree * apTree )
+{
+	if( apClient )
+	{
+		if( apClient->mpVar )
+		{
+			GOD_LL_REMOVE( sHashTreeVarClient, apClient->mpVar->mpClients, mpNext, apClient );
+		}
+		HashTree_VarUnRegister( apTree, apClient->mpVar );
+		apClient->mpVar = 0;
 	}
 }
 
