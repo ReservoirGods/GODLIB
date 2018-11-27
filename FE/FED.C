@@ -1086,7 +1086,6 @@ void Fed_Init(sFedHeader * apHeader)
 
 	for( i=0; i<apHeader->mAssetCount; i++ )
 	{
-/*		apHeader->mpAssets[ i ].mpAsset = AssetClient_Register( apHeader->mpAssets[ i ].mpFileName, apHeader->mpAssets[ i ].mpContext, 0, 0, (void**)&apHeader->mpAssets[ i ].mpData );*/
 		AssetClient_Init(  &apHeader->mpAssets[ i ].mAsset, apHeader->mpAssets[ i ].mpFileName, apHeader->mpAssets[ i ].mpContext, (void**)&apHeader->mpAssets[ i ].mpData );
 	}
 
@@ -1114,7 +1113,6 @@ void	Fed_DeInit( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mAssetCount; i++ )
 	{
-/*		AssetClient_UnRegister( apHeader->mpAssets[ i ].mpAsset );*/
 		AssetClient_DeInit( &apHeader->mpAssets[ i ].mAsset );
 	}
 

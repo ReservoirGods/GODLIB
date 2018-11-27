@@ -92,7 +92,7 @@ U32	Relocator_CUT_OnLoad( void * apData,const U32 aSize,const U32 aID )
 		for( i=0; i<lpCut->mAssetCount; i++ )
 		{
 			lpAss           = &lpCut->mpAssets[ i ];
-			lpAss->mpClient = AssetClient_Register( lpAss->mpFileName, lpAss->mpContext, 0, 0, (void**)&lpAss->mpData );
+			AssetClient_Init( &lpAss->mClient, lpAss->mpFileName, lpAss->mpContext, (void**)&lpAss->mpData );
 		}
 		for( i=0; i<lpCut->mVarCount; i++ )
 		{
@@ -128,7 +128,7 @@ U32	Relocator_CUT_OnUnLoad( void * apData,const U32 aSize,const U32 aID )
 		for( i=0; i<lpCut->mAssetCount; i++ )
 		{
 			lpAss           = &lpCut->mpAssets[ i ];
-			AssetClient_UnRegister( lpAss->mpClient );
+			AssetClient_DeInit( &lpAss->mClient );
 		}
 		for( i=0; i<lpCut->mVarCount; i++ )
 		{

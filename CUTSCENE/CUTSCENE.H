@@ -103,7 +103,7 @@ typedef struct	sCutAsset
 	char *			mpFileName;
 	char *			mpContext;
 	void *			mpData;
-	sAssetClient *	mpClient;
+	sAssetClient 	mClient;
 } sCutAsset;
 
 typedef struct	sCutAnimation
