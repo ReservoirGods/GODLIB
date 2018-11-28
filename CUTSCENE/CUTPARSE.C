@@ -529,6 +529,7 @@ sCutScene * CutSceneParse_ChunkItemsSerialise(sCutChunkItem * apItems)
 
 		lpMem   = (U8*)mMEMCALLOC( lSize );
 		lpScene = (sCutScene*)lpMem;
+		lpScene->mVersion = dCUTSCENE_VERSION;
 		lOff    = sizeof(sCutScene);
 
 		lpScene->mpAnimations = (sCutAnimation*)&lpMem[ lOff ];

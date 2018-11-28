@@ -4,6 +4,7 @@
 
 #include	"CUTSCENE.H"
 
+#include	<GODLIB/ASSERT/ASSERT.H>
 #include	<GODLIB/STRING/STRING.H>
 
 
@@ -235,6 +236,8 @@ void	CutScene_Relocate( sCutScene * apCutScene )
 
 	Endian_FromBigU32( &apCutScene->mID      );
 	Endian_FromBigU32( &apCutScene->mVersion );
+
+	GODLIB_ASSERT( dCUTSCENE_VERSION == apCutScene->mVersion );
 
 	Endian_FromBigU16( &apCutScene->mAnimationCount );
 	Endian_FromBigU16( &apCutScene->mAssetCount     );
