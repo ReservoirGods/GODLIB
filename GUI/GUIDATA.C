@@ -124,6 +124,11 @@ void			GuiData_Relocate( sGuiData * apData )
 {
 	U16	i,j;
 
+	Endian_FromBigU32( &apData->mID );
+	Endian_FromBigU32( &apData->mVersion );
+
+	GODLIB_ASSERT( apData->mVersion == dGUIDATA_VERSION );
+
 	mGUI_RELOC( mpActions );
 	mGUI_RELOC( mpAssets );
 	mGUI_RELOC( mpButtons );
@@ -335,6 +340,11 @@ void			GuiData_Relocate( sGuiData * apData )
 void			GuiData_Delocate( sGuiData * apData )
 {
 	U16	i,j;
+
+	apData->mID = mSTRING_TO_U32( 'G', 'U', 'D', 'A' );
+	apData->mVersion = dGUIDATA_VERSION;
+	Endian_FromBigU32( &apData->mID );
+	Endian_FromBigU32( &apData->mVersion );
 
 	for( i=0; i<apData->mActionCount; i++ )
 	{
