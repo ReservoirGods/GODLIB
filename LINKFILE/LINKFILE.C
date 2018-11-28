@@ -15,6 +15,8 @@
 #include	"LINKFILE.H"
 
 #include	<STRING.H>
+
+#include	<GODLIB/ASSERT/ASSERT.H>
 #include	<GODLIB/CLI/CLI.H>
 #include	<GODLIB/DRIVE/DRIVE.H>
 #include	<GODLIB/DEBUG/DBGCHAN.H>
@@ -32,7 +34,7 @@
 ################################################################################### */
 
 #define	dLINKFILE_ID		0x12345678L
-#define	dLINKFILE_VERSION	0x0L
+
 
 
 /* ###################################################################################
@@ -647,8 +649,11 @@ void	LinkFile_DelocateFolder( sLinkFileFolder * apFolder, U32 aBase )
 
 void	LinkFile_Relocate( sLinkFile * apLinkFile )
 {
-	Endian_FromBigU32( &apLinkFile->mFatSize );
 	Endian_FromBigU32( &apLinkFile->mVersion );
+
+	GODLIB_ASSERT( dLINKFILE_VERSION == apLinkFile->mVersion );
+
+	Endian_FromBigU32( &apLinkFile->mFatSize );
 	Endian_FromBigU16( &apLinkFile->mInRamFlag );
 	Endian_FromBigU16( &apLinkFile->mTotalFolderCount );
 	Endian_FromBigU32( &apLinkFile->mTotalFileCount );
