@@ -27,6 +27,101 @@ U32	PackageLnk_FolderUnLoad( sPackage * apPackage,sLinkFileFolder * apFolder, ch
 #  CODE
 ################################################################################### */
 
+#if 1
+
+U32		PackageLnk_FolderLoad( sPackage * apPackage, sLinkFileFolder * apFolder, char * apParentName )
+{
+	U32 lRet = 1;
+	U16 i;
+
+	(void)apParentName;
+	for( i=0; i<apFolder->mFileCount; i++ )
+	{
+		sLinkFileFile * pFile = &apFolder->mpFiles[ i ];
+		sAsset * ass = Context_AssetRegister( apPackage->mpContext, pFile->mpFileName );
+		pFile->mpAsset = ass;
+		if( ass )
+		{
+			ass->mStatus = eASSET_STATUS_LOADED;
+			ass->mpData  = (void*)pFile->mOffset;
+			ass->mSize   = pFile->mSize;
+
+			RelocaterManager_DoRelocate( ass );
+			RelocaterManager_DoInit( ass );
+			lRet &= Asset_OnLoad( ass );
+
+		}
+	}
+
+	return lRet;
+}
+
+U32		PackageLnk_LoadFromLinkFile( sPackage * apPackage, sLinkFile * apLinkFile )
+{
+	apPackage->mpLinkFile = apLinkFile;
+
+	if( !apLinkFile )
+		return 0;
+
+	return PackageLnk_FolderLoad( apPackage, apPackage->mpLinkFile->mpRoot, 0 );
+}
+
+U32		PackageLnk_Load( sPackage * apPackage, const char * apDirName )
+{
+	sLinkFile * linkfile;
+	linkfile = LinkFile_InitToRAM( (char*)apDirName );
+	return PackageLnk_LoadFromLinkFile( apPackage, linkfile );
+}
+
+U32	PackageLnk_FolderUnLoad( sPackage * apPackage,sLinkFileFolder * apFolder, char * apParentName )
+{
+	U32 lRet = 1;
+	U16 i;
+
+	(void)apPackage;
+	(void)apParentName;
+	for( i=0; i<apFolder->mFileCount; i++ )
+	{
+		sLinkFileFile * pFile = &apFolder->mpFiles[ i ];
+		sAsset * ass = (sAsset*)pFile->mpAsset;
+		if( ass )
+		{
+			RelocaterManager_DoDeInit( ass );
+			RelocaterManager_DoDelocate( ass );
+/*			lRet &= Asset_OnUnLoad( ass ); */
+
+			ass->mStatus = eASSET_STATUS_NOTLOADED;
+			ass->mpData  = 0;
+			ass->mSize   = 0;
+		}
+	}
+
+	return lRet;
+}
+
+U32		PackageLnk_UnLoad( sPackage * apPackage )
+{
+	PackageLnk_FolderUnLoad( apPackage, apPackage->mpLinkFile->mpRoot, 0 );
+
+	LinkFile_DeInit( apPackage->mpLinkFile );
+	mMEMFREE( apPackage->mpItems );
+
+	apPackage->mpLinkFile = 0;
+	apPackage->mpItems    = 0;
+	apPackage->mFileCount = 0;
+
+	return 0;
+}
+
+
+void	PackageLnk_Destroy( sPackage * apPackage )
+{
+	PackageLnk_UnLoad( apPackage );
+}
+
+
+#else
+
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : PackageLnk_Load( sPackage * apPackage,const char * apDirName )
 * ACTION   : PackageLnk_Load
@@ -250,5 +345,5 @@ U32	PackageLnk_FolderUnLoad( sPackage * apPackage,sLinkFileFolder * apFolder,cha
 	return( lRet );
 }
 
-
+#endif
 /* ################################################################################ */

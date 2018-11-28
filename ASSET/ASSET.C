@@ -189,6 +189,7 @@ U32	Asset_OnUnLoad( sAsset * apAsset )
 
 void	AssetClient_Init( sAssetClient * apClient, const char * apFileName, const char * apContextName, void ** appData )
 {
+	U16 i;
 	sContext * lpContext = ContextManager_ContextRegister( apContextName );
 	sAsset * lpAsset     = Context_AssetRegister( lpContext, apFileName );
 
@@ -198,7 +199,14 @@ void	AssetClient_Init( sAssetClient * apClient, const char * apFileName, const c
 	apClient->mppData  = appData;
 	apClient->mpNext   = lpAsset->mpClients;
 
+	apClient->mpData = 0;
+	apClient->mSize = 0;
+
 	lpAsset->mpClients = apClient;
+	for( i=0; i<12 && apFileName[i]; i++ )
+		lpAsset->mFileName[i] = apFileName[i];
+	for( i=0; i<12 && apFileName[i]; i++ )
+		lpAsset->mFileName[i] = 0;
 
 	if( lpAsset->mStatus == eASSET_STATUS_LOADED )
 	{

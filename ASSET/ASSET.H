@@ -35,6 +35,11 @@ enum
 
 typedef	struct sAssetClient
 {
+	char	mFileName[ 12 ];
+	U32		mSize;
+	void *	mpData;
+
+
 	fAsset	OnLoad;
 	fAsset	OnUnLoad;
 	void **					mppData;

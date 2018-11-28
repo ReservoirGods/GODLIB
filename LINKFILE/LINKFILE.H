@@ -14,7 +14,7 @@
 ################################################################################### */
 
 #define	dLINKFILE_SENTINEL	0x10FFEB0DL
-#define	dLINKFILE_VERSION	0x1L
+#define	dLINKFILE_VERSION	0x2L
 
 /* ###################################################################################
 #  STRUCTS
@@ -28,6 +28,7 @@ typedef	struct sLinkFileFile
 	U32		mOffset;
 	U16		mPackedFlag;
 	U16		mLoadedFlag;
+	void *	mpAsset;
 	char *	mpFileName;
 } sLinkFileFile;
 
