@@ -35,10 +35,11 @@ enum
 
 typedef	struct sAssetClient
 {
+	/* start to consolidate this into a single structure */
 	char	mFileName[ 12 ];
 	U32		mSize;
 	void *	mpData;
-
+	struct sContext * mpContext;
 
 	fAsset	OnLoad;
 	fAsset	OnUnLoad;

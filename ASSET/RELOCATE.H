@@ -13,12 +13,24 @@
 #  DEFINES
 ################################################################################### */
 
-typedef	U32	(*fReloc)( void * apData, const U32 aSize, const U32 aID );
+/*typedef	U32	(*fReloc)( void * apData, const U32 aSize, const U32 aID );*/
+typedef	U32	(*fReloc)( sAsset * apAsset );
 
 
 /* ###################################################################################
 #  STRUCTS
 ################################################################################### */
+
+enum
+{
+	eRELOC_FUNCTION_IsType,
+	eRELOC_FUNCTION_DoInit,
+	eRELOC_FUNCTION_DoDeInit,
+	eRELOC_FUNCTION_DoRelocate,
+	eRELOC_FUNCTION_DoDelocate,
+
+	eRELOC_FUNCTION_LIMIT
+};
 
 typedef	struct sRelocater
 {
@@ -28,6 +40,7 @@ typedef	struct sRelocater
 	fReloc				DoDeInit;
 	fReloc				DoRelocate;
 	fReloc				DoDelocate;
+	fReloc				mFunctions[ eRELOC_FUNCTION_LIMIT ];
 	struct sRelocater *	mpNext;
 } sRelocater;
 

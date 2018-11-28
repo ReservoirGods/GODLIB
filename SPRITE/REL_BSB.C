@@ -19,9 +19,9 @@ sRelocater 	gRelocator_BSBReloc;
 #  PROTOTYPES
 ################################################################################### */
 
-U32	Relocator_BSB_IsType(     void * apData, const U32 aSize, const U32 aID );
-U32	Relocator_BSB_DoDelocate( void * apData, const U32 aSize, const U32 aID );
-U32	Relocator_BSB_DoRelocate( void * apData, const U32 aSize, const U32 aID );
+U32	Relocator_BSB_IsType(     sAsset * apAsset );
+U32	Relocator_BSB_DoDelocate( sAsset * apAsset );
+U32	Relocator_BSB_DoRelocate( sAsset * apAsset );
 
 
 /* ###################################################################################
@@ -53,46 +53,40 @@ void	Relocator_BSB_DeInit( void )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_BSB_IsType( void * apData,const U32 aSize,const U32 aID )
+* FUNCTION : Relocator_BSB_IsType( sAsset * apAsset )
 * ACTION   : Relocator_BSB_IsType
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_BSB_IsType( void * apData,const U32 aSize,const U32 aID )
+U32	Relocator_BSB_IsType( sAsset * apAsset )
 {
-	(void)apData;
-	(void)aSize;
-	(void)aID;
+	(void)apAsset;
 	return( 1 );
 }
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_BSB_DoDelocate( void * apData,const U32 aSize,const U32 aID )
+* FUNCTION : Relocator_BSB_DoDelocate( sAsset * apAsset )
 * ACTION   : Relocator_BSB_DoDelocate
 * CREATION : 19.03.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_BSB_DoDelocate( void * apData,const U32 aSize,const U32 aID )
+U32	Relocator_BSB_DoDelocate( sAsset * apAsset )
 {
-	(void)aSize;
-	(void)aID;
-	Sprite_BlockDelocate( (sSpriteBlock*)apData );
+	Sprite_BlockDelocate( (sSpriteBlock*)apAsset->mpData );
 	return( 1 );
 }
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_BSB_DoRelocate( void * apData,const U32 aSize,const U32 aID )
+* FUNCTION : Relocator_BSB_DoRelocate( sAsset * apAsset )
 * ACTION   : Relocator_BSB_DoRelocate
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_BSB_DoRelocate( void * apData,const U32 aSize,const U32 aID )
+U32	Relocator_BSB_DoRelocate( sAsset * apAsset )
 {
-	(void)aSize;
-	(void)aID;
-	Sprite_BlockRelocate( (sSpriteBlock*)apData );
+	Sprite_BlockRelocate( (sSpriteBlock*)apAsset->mpData );
 	return( 1 );
 }
 

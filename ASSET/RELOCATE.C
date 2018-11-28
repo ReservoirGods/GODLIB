@@ -74,6 +74,13 @@ void	RelocaterManager_DeInit( void )
 void			Relocater_Init( sRelocater * apReloc, const char * apExt, fReloc aIsType, fReloc aDoInit, fReloc aDoDeInit, fReloc aDoRelocate, fReloc aDoDelocate )
 {
 	apReloc->mExtID     = Asset_BuildHash( apExt );
+
+	apReloc->mFunctions[ eRELOC_FUNCTION_IsType ]      = aIsType;
+	apReloc->mFunctions[ eRELOC_FUNCTION_DoInit ]      = aDoInit;
+	apReloc->mFunctions[ eRELOC_FUNCTION_DoDeInit ]    = aDoDeInit;
+	apReloc->mFunctions[ eRELOC_FUNCTION_DoDelocate ]  = aDoDelocate;
+	apReloc->mFunctions[ eRELOC_FUNCTION_DoRelocate ]  = aDoRelocate;
+
 	apReloc->DoInit     = aDoInit;
 	apReloc->DoDeInit   = aDoDeInit;
 	apReloc->DoDelocate = aDoDelocate;
@@ -137,7 +144,8 @@ sRelocater *	RelocaterManager_Find( sAsset * apAsset )
 		if( lpReloc->mExtID == apAsset->mExtID )
 		{
 			DebugLog_Printf3( "RelocaterManager_Find(): %p %lX %lX", lpReloc, lpReloc->mExtID, apAsset->mExtID );
-			if( lpReloc->IsType( apAsset->mpData, apAsset->mSize, apAsset->mID ) )
+/*			if( lpReloc->IsType( apAsset->mpData, apAsset->mSize, apAsset->mID ) ) */
+			if( lpReloc->mFunctions[ eRELOC_FUNCTION_IsType ]( apAsset ) )
 			{
 				return( lpReloc );
 			}
@@ -171,7 +179,8 @@ U32	RelocaterManager_DoInit( sAsset * apAsset )
 		{
 			if( lpReloc->DoInit )
 			{
-				lRet = lpReloc->DoInit( apAsset->mpData, apAsset->mSize, apAsset->mID );
+/*				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoInit ]( apAsset->mpData, apAsset->mSize, apAsset->mID ); */
+				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoInit ]( apAsset );
 				if( lRet )
 				{
 					apAsset->mInitFlag = 1;
@@ -205,7 +214,8 @@ U32	RelocaterManager_DoDeInit( sAsset * apAsset )
 		{
 			if( lpReloc->DoDeInit )
 			{
-				lRet = lpReloc->DoDeInit( apAsset->mpData, apAsset->mSize, apAsset->mID );
+/*				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoDeInit ]( apAsset->mpData, apAsset->mSize, apAsset->mID ); */
+				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoDeInit ]( apAsset );
 				if( lRet )
 				{
 					apAsset->mInitFlag = 0;
@@ -246,7 +256,8 @@ U32	RelocaterManager_DoDelocate( sAsset * apAsset )
 		{
 			if( lpReloc->DoDelocate )
 			{
-				lRet = lpReloc->DoDelocate( apAsset->mpData, apAsset->mSize, apAsset->mID );
+/*				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoDelocate ]( apAsset->mpData, apAsset->mSize, apAsset->mID ); */
+				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoDelocate ]( apAsset );
 				if( lRet )
 				{
 					apAsset->mRelocFlag = 0;
@@ -287,7 +298,8 @@ U32	RelocaterManager_DoRelocate( sAsset * apAsset )
 		{
 			if( lpReloc->DoRelocate )
 			{
-				lRet = lpReloc->DoRelocate( apAsset->mpData, apAsset->mSize, apAsset->mID );
+/*				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoRelocate ]( apAsset->mpData, apAsset->mSize, apAsset->mID ); */
+				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoRelocate ]( apAsset );
 				if( lRet )
 				{
 					apAsset->mRelocFlag = 1;

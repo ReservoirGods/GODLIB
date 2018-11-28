@@ -20,10 +20,10 @@ sRelocater 	gRelocator_SPLReloc;
 #  PROTOTYPES
 ################################################################################### */
 
-U32	Relocator_SPL_IsType(     void * apData, const U32 aSize, const U32 aID );
-U32	Relocator_SPL_DoInit(     void * apData, const U32 aSize, const U32 aID );
-U32	Relocator_SPL_DoDelocate( void * apData, const U32 aSize, const U32 aID );
-U32	Relocator_SPL_DoRelocate( void * apData, const U32 aSize, const U32 aID );
+U32	Relocator_SPL_IsType(     sAsset * apAsset );
+U32	Relocator_SPL_DoInit(     sAsset * apAsset );
+U32	Relocator_SPL_DoDelocate( sAsset * apAsset );
+U32	Relocator_SPL_DoRelocate( sAsset * apAsset );
 
 
 /* ###################################################################################
@@ -55,46 +55,40 @@ void	Relocator_SPL_DeInit( void )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_SPL_IsType( void * apData,const U32 aSize,const U32 aID )
+* FUNCTION : Relocator_SPL_IsType( sAsset * apAsset )
 * ACTION   : Relocator_SPL_IsType
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_SPL_IsType( void * apData,const U32 aSize,const U32 aID )
+U32	Relocator_SPL_IsType( sAsset * apAsset )
 {
-	(void)apData;
-	(void)aSize;
-	(void)aID;
+	(void)apAsset;
 	return( 1 );
 }
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_SPL_DoDelocate( void * apData,const U32 aSize,const U32 aID )
+* FUNCTION : Relocator_SPL_DoDelocate( sAsset * apAsset )
 * ACTION   : Relocator_SPL_DoDelocate
 * CREATION : 19.03.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_SPL_DoDelocate( void * apData,const U32 aSize,const U32 aID )
+U32	Relocator_SPL_DoDelocate( sAsset * apAsset )
 {
-	(void)aSize;
-	(void)aID;
-	Audio_DmaSound_Delocate( (sAudioDmaSound*)apData );
+	Audio_DmaSound_Delocate( (sAudioDmaSound*)apAsset->mpData );
 	return( 1 );
 }
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_SPL_DoRelocate( void * apData,const U32 aSize,const U32 aID )
+* FUNCTION : Relocator_SPL_DoRelocate( sAsset * apAsset )
 * ACTION   : Relocator_SPL_DoRelocate
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_SPL_DoRelocate( void * apData,const U32 aSize,const U32 aID )
+U32	Relocator_SPL_DoRelocate( sAsset * apAsset )
 {
-	(void)aSize;
-	(void)aID;
-	Audio_DmaSound_Relocate( (sAudioDmaSound*)apData );
+	Audio_DmaSound_Relocate( (sAudioDmaSound*)apAsset->mpData );
 	return( 1 );
 }
 
@@ -105,16 +99,13 @@ U32	Relocator_SPL_DoRelocate( void * apData,const U32 aSize,const U32 aID )
 * CREATION : 27.03.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_SPL_DoInit( void * apData,const U32 aSize,const U32 aID )
+U32	Relocator_SPL_DoInit( sAsset * apAsset )
 {
 	U32	i;
 	sAudioDmaSound *	lpSpl;
 	S8 *				lpSnd;
 
-	(void)aSize;
-	(void)aID;
-
-	lpSpl = (sAudioDmaSound*)apData;
+	lpSpl = (sAudioDmaSound*)apAsset->mpData;
 	lpSnd = (S8*)lpSpl->mpSound;
 
 	if( MCH_FALCON == System_GetMCH() )

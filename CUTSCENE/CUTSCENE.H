@@ -15,7 +15,7 @@
 #  ENUMS
 ################################################################################### */
 
-#define	dCUTSCENE_VERSION	1
+#define	dCUTSCENE_VERSION	2
 
 enum
 {
