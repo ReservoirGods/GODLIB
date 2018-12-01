@@ -19,9 +19,9 @@ sRelocater 	gRelocator_BSBReloc;
 #  PROTOTYPES
 ################################################################################### */
 
-U32	Relocator_BSB_IsType(     sAsset * apAsset );
-U32	Relocator_BSB_DoDelocate( sAsset * apAsset );
-U32	Relocator_BSB_DoRelocate( sAsset * apAsset );
+U32	Relocator_BSB_IsType(     sAssetItem * apAsset );
+U32	Relocator_BSB_DoDelocate( sAssetItem * apAsset );
+U32	Relocator_BSB_DoRelocate( sAssetItem * apAsset );
 
 
 /* ###################################################################################
@@ -53,12 +53,12 @@ void	Relocator_BSB_DeInit( void )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_BSB_IsType( sAsset * apAsset )
+* FUNCTION : Relocator_BSB_IsType( sAssetItem * apAsset )
 * ACTION   : Relocator_BSB_IsType
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_BSB_IsType( sAsset * apAsset )
+U32	Relocator_BSB_IsType( sAssetItem * apAsset )
 {
 	(void)apAsset;
 	return( 1 );
@@ -66,12 +66,12 @@ U32	Relocator_BSB_IsType( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_BSB_DoDelocate( sAsset * apAsset )
+* FUNCTION : Relocator_BSB_DoDelocate( sAssetItem * apAsset )
 * ACTION   : Relocator_BSB_DoDelocate
 * CREATION : 19.03.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_BSB_DoDelocate( sAsset * apAsset )
+U32	Relocator_BSB_DoDelocate( sAssetItem * apAsset )
 {
 	Sprite_BlockDelocate( (sSpriteBlock*)apAsset->mpData );
 	return( 1 );
@@ -79,12 +79,12 @@ U32	Relocator_BSB_DoDelocate( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_BSB_DoRelocate( sAsset * apAsset )
+* FUNCTION : Relocator_BSB_DoRelocate( sAssetItem * apAsset )
 * ACTION   : Relocator_BSB_DoRelocate
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_BSB_DoRelocate( sAsset * apAsset )
+U32	Relocator_BSB_DoRelocate( sAssetItem * apAsset )
 {
 	Sprite_BlockRelocate( (sSpriteBlock*)apAsset->mpData );
 	return( 1 );

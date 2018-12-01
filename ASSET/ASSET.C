@@ -18,18 +18,18 @@
 ################################################################################### */
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Asset_BuildHash( const char * apString )
+* FUNCTION : Asset_BuildHash( const char * apString, U16 aStringLength )
 * ACTION   : Asset_BuildHash
 * CREATION : 30.11.2003 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Asset_BuildHash( const char * apString )
+U32	Asset_BuildHash( const char * apString, U16 aStringLength )
 {
 	U32	lHash;
 	U32	lTemp;
 
 	lHash = 0;
-	while ( *apString )
+	while ( *apString && aStringLength )
 	{
 		lHash = ( lHash << 4L ) + *apString++;
 		lTemp = lHash & 0xF0000000L;
@@ -38,9 +38,54 @@ U32	Asset_BuildHash( const char * apString )
 			lHash ^= lTemp >> 24L;
 		}
 		lHash &= ~lTemp;
+		aStringLength--;
 	}
 
 	return( lHash );
+}
+
+void	Asset_Init( sAsset * apAsset, const char * apFileName )
+{
+	char		lExtString[ 16 ];
+	U32			i,j;
+
+	i = strlen( apFileName );
+	if( i )
+	{
+		do
+		{
+			i--;
+		} while( (i) && (apFileName[i]!='.') );
+		if( i )
+		{
+			j = 0;
+			do
+			{
+				i++;
+				lExtString[ j ] = apFileName[ i ];
+				j++;
+			} while( (j<15) && (apFileName[ i ]) );
+		}
+	}
+
+	apAsset->mExtID     = Asset_BuildHash( lExtString, sizeof(lExtString) );
+	apAsset->mID        = Asset_BuildHash( apFileName, sizeof(apAsset->mFileName) );
+	apAsset->mpClients  = 0;
+	apAsset->mpData     = 0;
+	apAsset->mpNext     = 0;
+	apAsset->mInitFlag  = 0;
+	apAsset->mRelocFlag = 0;
+	apAsset->mSize      = 0;
+	apAsset->mStatus    = eASSET_STATUS_NOTLOADED;
+
+	i = 0;
+	while( (i<15) && (apFileName[i]) )
+	{
+		apAsset->mFileName[ i ] = apFileName[ i ];
+		i++;
+	}
+	apAsset->mFileName[ i ] = 0;
+
 }
 
 
@@ -53,50 +98,12 @@ U32	Asset_BuildHash( const char * apString )
 sAsset *	Asset_Create( const char * apFileName )
 {
 	sAsset *	lpAsset;
-	char		lExtString[ 16 ];
-	U32			i,j;
 
 	lpAsset = (sAsset*)mMEMCALLOC( sizeof(sAsset) );
 
 	if( lpAsset )
 	{
-		i = strlen( apFileName );
-		if( i )
-		{
-			do
-			{
-				i--;
-			} while( (i) && (apFileName[i]!='.') );
-			if( i )
-			{
-				j = 0;
-				do
-				{
-					i++;
-					lExtString[ j ] = apFileName[ i ];
-					j++;
-				} while( (j<15) && (apFileName[ i ]) );
-			}
-		}
-
-		lpAsset->mExtID     = Asset_BuildHash( lExtString );
-		lpAsset->mID        = Asset_BuildHash( apFileName );
-		lpAsset->mpClients  = 0;
-		lpAsset->mpData     = 0;
-		lpAsset->mpNext     = 0;
-		lpAsset->mInitFlag  = 0;
-		lpAsset->mRelocFlag = 0;
-		lpAsset->mSize      = 0;
-		lpAsset->mStatus    = eASSET_STATUS_NOTLOADED;
-
-		i = 0;
-		while( (i<15) && (apFileName[i]) )
-		{
-			lpAsset->mFileName[ i ] = apFileName[ i ];
-			i++;
-		}
-		lpAsset->mFileName[ i ] = 0;
-
+		Asset_Init( lpAsset, apFileName );
 	}
 
 	return( lpAsset );
@@ -112,6 +119,55 @@ sAsset *	Asset_Create( const char * apFileName )
 void	Asset_Destroy( sAsset * apAsset )
 {
 	mMEMFREE( apAsset );
+}
+
+U32			AssetClients_OnLoad( sAssetClient * apClient, struct sAssetItem * apAsset )
+{
+	U32 ret = 1;
+	sAssetClient * client;
+
+	for( client = apClient; client; client=client->mpNext )
+	{
+		client->mpAsset = apAsset;
+
+		if( apAsset )
+		{
+			if( client->mppData )
+			{
+				*client->mppData = apClient->mpAsset->mpData;
+			}
+			if( client->OnLoad )
+			{
+				ret    &= client->OnLoad( apClient->mpAsset->mpData, apClient->mpAsset->mSize, client->mUserData );
+			}
+		}
+	}
+
+	return ret;
+}
+
+U32			AssetClients_OnUnLoad( sAssetClient * apClient )
+{
+	U32 ret = 1;
+	sAssetClient * client;
+
+	for( client = apClient; client; client=client->mpNext )
+	{
+		if( client->mpAsset )
+		{
+			if( client->OnUnLoad )
+			{
+				ret    &= client->OnUnLoad( apClient->mpAsset->mpData, apClient->mpAsset->mSize, client->mUserData );
+			}
+		}
+		if( client->mppData )
+		{
+			*client->mppData = 0;
+		}
+
+		client->mpAsset = 0;
+	}
+	return ret;
 }
 
 
@@ -189,9 +245,41 @@ U32	Asset_OnUnLoad( sAsset * apAsset )
 
 void	AssetClient_Init( sAssetClient * apClient, const char * apFileName, const char * apContextName, void ** appData )
 {
+#if 1
+	U16 i;
+	sContext * lpContext = ContextManager_ContextRegister( apContextName );
+	sAssetClient * parent;
+
+	for( i=0; i<12 && apFileName[i]; i++ )
+	{
+		apClient->mFileName[i] = apFileName[i];
+	}
+	for( ; i<12 ; i++ )
+	{
+		apClient->mFileName[i] = 0;
+	}
+
+	apClient->mHashKey = Asset_BuildHash( apFileName, sizeof(apClient->mFileName) );
+
+	apClient->mppData = appData;
+
+	parent = Context_AssetClient_Add( lpContext, apClient );
+	if( parent && parent->mpAsset )
+	{
+		if( apClient->mppData )
+			*apClient->mppData = parent->mpAsset->mpData;
+
+		if( apClient->OnLoad )
+			apClient->OnLoad( parent->mpAsset->mpData, parent->mpAsset->mSize, apClient->mUserData );			
+	}
+
+
+#else	
 	U16 i;
 	sContext * lpContext = ContextManager_ContextRegister( apContextName );
 	sAsset * lpAsset     = Context_AssetRegister( lpContext, apFileName );
+
+	Context_AssetClient_Add( lpContext, apClient );
 
 	lpAsset->mpContext = lpContext;
 
@@ -204,9 +292,15 @@ void	AssetClient_Init( sAssetClient * apClient, const char * apFileName, const c
 
 	lpAsset->mpClients = apClient;
 	for( i=0; i<12 && apFileName[i]; i++ )
+	{
 		lpAsset->mFileName[i] = apFileName[i];
-	for( i=0; i<12 && apFileName[i]; i++ )
+		apClient->mFileName[i] = apFileName[i];
+	}
+	for( ; i<12 ; i++ )
+	{
 		lpAsset->mFileName[i] = 0;
+		apClient->mFileName[i] = 0;
+	}
 
 	if( lpAsset->mStatus == eASSET_STATUS_LOADED )
 	{
@@ -216,6 +310,7 @@ void	AssetClient_Init( sAssetClient * apClient, const char * apFileName, const c
 		if( apClient->OnLoad )
 			apClient->OnLoad( lpAsset->mpData, lpAsset->mSize, apClient->mUserData );
 	}
+#endif	
 }
 
 #if 0
@@ -260,16 +355,20 @@ void	AssetClient_UnRegister( sAssetClient * apClient )
 
 void			AssetClient_DeInit( sAssetClient * apClient )
 {
-	sAsset *		lpAsset;
-	sContext *		lpContext;
+/*	sAsset *		lpAsset;*/
 
+	Context_AssetClient_Remove( apClient );
+#if 0
 	lpAsset   = apClient->mpAsset;
-	lpContext = lpAsset->mpContext;
+	if( lpAsset )
+	{
+		sContext *		lpContext = lpAsset->mpContext;
 
-	GOD_LL_REMOVE( sAssetClient, lpAsset->mpClients, mpNext, apClient );
-	Context_AssetUnRegister( lpContext, lpAsset );
-	ContextManager_ContextUnRegister( lpContext );
-
+		GOD_LL_REMOVE( sAssetClient, lpAsset->mpClients, mpNext, apClient );
+		Context_AssetUnRegister( lpContext, lpAsset );
+		ContextManager_ContextUnRegister( lpContext );
+	}
+#endif
 }
 
 

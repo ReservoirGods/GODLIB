@@ -82,8 +82,9 @@ U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 					}
 					lpAsset->mStatus = eASSET_STATUS_LOADED;
 				}
-				RelocaterManager_DoRelocate( lpAsset );
-				RelocaterManager_DoInit( lpAsset );
+				/* 2d0 fix */
+				RelocaterManager_DoRelocate( 0 );
+				RelocaterManager_DoInit( 0 );
 				Asset_OnLoad( lpAsset );
 
 				lIndex++;
@@ -153,8 +154,9 @@ void	PackageDir_Destroy( sPackage * apPackage )
 	{
 		lpAsset = apPackage->mpItems[ i ].mpAsset;
 
-		RelocaterManager_DoDeInit( lpAsset );
-		RelocaterManager_DoDelocate( lpAsset );
+		/* 2do fix */
+		RelocaterManager_DoDeInit( 0 );
+		RelocaterManager_DoDelocate( 0 );
 		File_UnLoad( lpAsset->mpData );
 
 		lpAsset->mpData  = 0;
@@ -168,5 +170,11 @@ void	PackageDir_Destroy( sPackage * apPackage )
 	apPackage->mFileCount = 0;
 }
 
+U8		PackageDir_AssetLoad( sPackage * apPackage, struct sAssetClient * apClient )
+{
+	(void)apPackage;
+	(void)apClient;
+	return 0;
+}
 
 /* ################################################################################ */

@@ -19,9 +19,9 @@ sRelocater 	gRelocator_ASBReloc;
 #  PROTOTYPES
 ################################################################################### */
 
-U32	Relocator_ASB_IsType(     sAsset * apAsset );
-U32	Relocator_ASB_DoDelocate( sAsset * apAsset );
-U32	Relocator_ASB_DoRelocate( sAsset * apAsset );
+U32	Relocator_ASB_IsType(     sAssetItem * apAsset );
+U32	Relocator_ASB_DoDelocate( sAssetItem * apAsset );
+U32	Relocator_ASB_DoRelocate( sAssetItem * apAsset );
 
 
 /* ###################################################################################
@@ -53,12 +53,12 @@ void	Relocator_ASB_DeInit( void )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_ASB_IsType( sAsset * apAsset )
+* FUNCTION : Relocator_ASB_IsType( sAssetItem * apAsset )
 * ACTION   : Relocator_ASB_IsType
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_ASB_IsType( sAsset * apAsset )
+U32	Relocator_ASB_IsType( sAssetItem * apAsset )
 {
 	(void)apAsset;
 	return( 1 );
@@ -66,12 +66,12 @@ U32	Relocator_ASB_IsType( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_ASB_DoDelocate( sAsset * apAsset )
+* FUNCTION : Relocator_ASB_DoDelocate( sAssetItem * apAsset )
 * ACTION   : Relocator_ASB_DoDelocate
 * CREATION : 19.03.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_ASB_DoDelocate( sAsset * apAsset )
+U32	Relocator_ASB_DoDelocate( sAssetItem * apAsset )
 {
 	AsmSpriteBlock_Delocate( (sAsmSpriteBlock*)apAsset->mpData );
 	return( 1 );
@@ -84,7 +84,7 @@ U32	Relocator_ASB_DoDelocate( sAsset * apAsset )
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_ASB_DoRelocate( sAsset * apAsset )
+U32	Relocator_ASB_DoRelocate( sAssetItem * apAsset )
 {
 	AsmSpriteBlock_Relocate( (sAsmSpriteBlock*)apAsset->mpData );
 	return( 1 );

@@ -19,9 +19,9 @@ sRelocater 	gRelocator_BFBReloc;
 #  PROTOTYPES
 ################################################################################### */
 
-U32	Relocator_BFB_IsType(     sAsset * apAsset );
-U32	Relocator_BFB_DoDelocate( sAsset * apAsset );
-U32	Relocator_BFB_DoRelocate( sAsset * apAsset );
+U32	Relocator_BFB_IsType(     sAssetItem * apAsset );
+U32	Relocator_BFB_DoDelocate( sAssetItem * apAsset );
+U32	Relocator_BFB_DoRelocate( sAssetItem * apAsset );
 
 
 /* ###################################################################################
@@ -53,12 +53,12 @@ void	Relocator_BFB_DeInit( void )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_BFB_IsType( sAsset * apAsset )
+* FUNCTION : Relocator_BFB_IsType( sAssetItem * apAsset )
 * ACTION   : Relocator_BFB_IsType
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_BFB_IsType( sAsset * apAsset )
+U32	Relocator_BFB_IsType( sAssetItem * apAsset )
 {
 	(void)apAsset;
 	return( 1 );
@@ -66,12 +66,12 @@ U32	Relocator_BFB_IsType( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_BFB_DoDelocate( sAsset * apAsset )
+* FUNCTION : Relocator_BFB_DoDelocate( sAssetItem * apAsset )
 * ACTION   : Relocator_BFB_DoDelocate
 * CREATION : 19.03.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_BFB_DoDelocate( sAsset * apAsset )
+U32	Relocator_BFB_DoDelocate( sAssetItem * apAsset )
 {
 	Font_Delocate( (sFont*)apAsset->mpData );
 	return( 1 );
@@ -79,12 +79,12 @@ U32	Relocator_BFB_DoDelocate( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_BFB_DoRelocate( sAsset * apAsset )
+* FUNCTION : Relocator_BFB_DoRelocate( sAssetItem * apAsset )
 * ACTION   : Relocator_BFB_DoRelocate
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_BFB_DoRelocate( sAsset * apAsset )
+U32	Relocator_BFB_DoRelocate( sAssetItem * apAsset )
 {
 	Font_Relocate( (sFont*)apAsset->mpData );
 	return( 1 );

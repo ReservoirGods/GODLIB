@@ -73,7 +73,7 @@ void	RelocaterManager_DeInit( void )
 
 void			Relocater_Init( sRelocater * apReloc, const char * apExt, fReloc aIsType, fReloc aDoInit, fReloc aDoDeInit, fReloc aDoRelocate, fReloc aDoDelocate )
 {
-	apReloc->mExtID     = Asset_BuildHash( apExt );
+	apReloc->mExtID     = Asset_BuildHash( apExt, 4 );
 
 	apReloc->mFunctions[ eRELOC_FUNCTION_IsType ]      = aIsType;
 	apReloc->mFunctions[ eRELOC_FUNCTION_DoInit ]      = aDoInit;
@@ -127,12 +127,12 @@ void			Relocater_DeInit( sRelocater * apReloc )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : RelocaterManager_Find( sAsset * apAsset )
+* FUNCTION : RelocaterManager_Find( sAssetItem * apAsset )
 * ACTION   : RelocaterManager_Find
 * CREATION : 08.12.2003 PNK
 *-----------------------------------------------------------------------------------*/
 
-sRelocater *	RelocaterManager_Find( sAsset * apAsset )
+sRelocater *	RelocaterManager_Find( sAssetItem * apAsset )
 {
 	sRelocater *	lpReloc;
 
@@ -141,9 +141,9 @@ sRelocater *	RelocaterManager_Find( sAsset * apAsset )
 
 	while( lpReloc )
 	{
-		if( lpReloc->mExtID == apAsset->mExtID )
+		if( lpReloc->mExtID == apAsset->mExtension )
 		{
-			DebugLog_Printf3( "RelocaterManager_Find(): %p %lX %lX", lpReloc, lpReloc->mExtID, apAsset->mExtID );
+			DebugLog_Printf3( "RelocaterManager_Find(): %p %lX %lX", lpReloc, lpReloc->mExtID, apAsset->mExtension );
 /*			if( lpReloc->IsType( apAsset->mpData, apAsset->mSize, apAsset->mID ) ) */
 			if( lpReloc->mFunctions[ eRELOC_FUNCTION_IsType ]( apAsset ) )
 			{
@@ -158,12 +158,12 @@ sRelocater *	RelocaterManager_Find( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : RelocaterManager_DoInit( sAsset * apAsset )
+* FUNCTION : RelocaterManager_DoInit( sAssetItem * apAsset )
 * ACTION   : RelocaterManager_DoInit
 * CREATION : 08.12.2003 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	RelocaterManager_DoInit( sAsset * apAsset )
+U32	RelocaterManager_DoInit( sAssetItem * apAsset )
 {
 	sRelocater *	lpReloc;
 	U32				lRet;
@@ -171,7 +171,7 @@ U32	RelocaterManager_DoInit( sAsset * apAsset )
 	DebugLog_Printf0( "RelocaterManager_DoInit()" );
 	lRet    = 0;
 
-	if( !apAsset->mInitFlag )
+	if( !(apAsset->mStatusBits & eASSET_STATUS_BIT_INITED) )
 	{
 		lpReloc = RelocaterManager_Find( apAsset );
 
@@ -183,7 +183,7 @@ U32	RelocaterManager_DoInit( sAsset * apAsset )
 				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoInit ]( apAsset );
 				if( lRet )
 				{
-					apAsset->mInitFlag = 1;
+					apAsset->mStatusBits |= eASSET_STATUS_BIT_INITED;
 				}
 			}
 		}
@@ -194,19 +194,19 @@ U32	RelocaterManager_DoInit( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : RelocaterManager_DoDeInit( sAsset * apAsset )
+* FUNCTION : RelocaterManager_DoDeInit( sAssetItem * apAsset )
 * ACTION   : RelocaterManager_DoDeInit
 * CREATION : 08.12.2003 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	RelocaterManager_DoDeInit( sAsset * apAsset )
+U32	RelocaterManager_DoDeInit( sAssetItem * apAsset )
 {
 	sRelocater *	lpReloc;
 	U32				lRet;
 
 	lRet    = 0;
 
-	if( apAsset->mInitFlag )
+	if( apAsset->mStatusBits & eASSET_STATUS_BIT_INITED )
 	{
 		lpReloc = RelocaterManager_Find( apAsset );
 
@@ -216,20 +216,9 @@ U32	RelocaterManager_DoDeInit( sAsset * apAsset )
 			{
 /*				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoDeInit ]( apAsset->mpData, apAsset->mSize, apAsset->mID ); */
 				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoDeInit ]( apAsset );
-				if( lRet )
-				{
-					apAsset->mInitFlag = 0;
-				}
-			}
-			else
-			{
-				apAsset->mInitFlag = 0;
 			}
 		}
-		else
-		{
-			apAsset->mInitFlag = 0;
-		}
+		apAsset->mStatusBits &= ~eASSET_STATUS_BIT_INITED;
 	}
 
 	return( lRet );
@@ -237,18 +226,18 @@ U32	RelocaterManager_DoDeInit( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : RelocaterManager_DoDelocate( sAsset * apAsset )
+* FUNCTION : RelocaterManager_DoDelocate( sAssetItem * apAsset )
 * ACTION   : RelocaterManager_DoDelocate
 * CREATION : 08.12.2003 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	RelocaterManager_DoDelocate( sAsset * apAsset )
+U32	RelocaterManager_DoDelocate( sAssetItem * apAsset )
 {
 	sRelocater *	lpReloc;
 	U32				lRet;
 
 	lRet = 0;
-	if( apAsset->mRelocFlag )
+	if( apAsset->mStatusBits & eASSET_STATUS_BIT_RELOCATED )
 	{
 		lpReloc = RelocaterManager_Find( apAsset );
 
@@ -258,39 +247,28 @@ U32	RelocaterManager_DoDelocate( sAsset * apAsset )
 			{
 /*				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoDelocate ]( apAsset->mpData, apAsset->mSize, apAsset->mID ); */
 				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoDelocate ]( apAsset );
-				if( lRet )
-				{
-					apAsset->mRelocFlag = 0;
-				}
-			}
-			else
-			{
-				apAsset->mRelocFlag = 0;
 			}
 		}
-		else
-		{
-			apAsset->mRelocFlag = 0;
-		}
+		apAsset->mStatusBits &= ~eASSET_STATUS_BIT_RELOCATED;
 	}
 	return( lRet );
 }
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : RelocaterManager_DoRelocate( sAsset * apAsset )
+* FUNCTION : RelocaterManager_DoRelocate( sAssetItem * apAsset )
 * ACTION   : RelocaterManager_DoRelocate
 * CREATION : 08.12.2003 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	RelocaterManager_DoRelocate( sAsset * apAsset )
+U32	RelocaterManager_DoRelocate( sAssetItem * apAsset )
 {
 	sRelocater *	lpReloc;
 	U32				lRet;
 
 	DebugLog_Printf0( "RelocaterManager_DoRelocate()" );
 	lRet = 0;
-	if( !apAsset->mRelocFlag )
+	if( !(apAsset->mStatusBits & eASSET_STATUS_BIT_RELOCATED) )
 	{
 		lpReloc = RelocaterManager_Find( apAsset );
 
@@ -302,7 +280,7 @@ U32	RelocaterManager_DoRelocate( sAsset * apAsset )
 				lRet = lpReloc->mFunctions[ eRELOC_FUNCTION_DoRelocate ]( apAsset );
 				if( lRet )
 				{
-					apAsset->mRelocFlag = 1;
+					apAsset->mStatusBits |= eASSET_STATUS_BIT_RELOCATED;
 				}
 			}
 		}

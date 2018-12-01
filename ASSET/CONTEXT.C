@@ -9,6 +9,7 @@
 
 #include	<GODLIB/ASSERT/ASSERT.H>
 #include	<GODLIB/LINKLIST/GOD_LL.H>
+#include	<GODLIB/STRING/STRING.H>
 
 
 /* ###################################################################################
@@ -32,8 +33,9 @@ void				Context_Init( sContext * apContext, const char * apName )
 {
 	U16			i;
 
-	apContext->mID        = Asset_BuildHash( apName );
+	apContext->mID        = Asset_BuildHash( apName, sizeof(apContext->mName) );
 	apContext->mpAssets   = 0;
+	apContext->mpAssetClients = 0;
 	apContext->mpNext     = gpContexts;
 	apContext->mpPackages = 0;
 	apContext->mRefCount  = 0;
@@ -85,7 +87,7 @@ sAsset *	Context_AssetRegister( sContext * apContext,const char * apName )
 	sAsset *	lpAsset;
 	U32			lHash;
 
-	lHash   = Asset_BuildHash( apName );
+	lHash   = Asset_BuildHash( apName, sizeof(apContext->mName) );
 
 	GOD_LL_FIND( apContext->mpAssets, mpNext, mID, lHash, lpAsset );
 
@@ -125,6 +127,64 @@ void	Context_AssetUnRegister( sContext * apContext, sAsset * apAsset )
 	}
 }
 
+struct sAssetClient* Context_AssetClient_Find( const sContext * apContext, U32 aHashKey )
+{
+	sAssetClient * client;
+
+	for( client = apContext->mpAssetClients; client; client = client->mpContextNext )
+	{
+		if( client->mHashKey == aHashKey )
+			break;
+	}
+	return client;
+}
+
+sAssetClient *	Context_AssetClient_Add( sContext * apContext, struct sAssetClient * apClient )
+{
+	sAssetClient * client = Context_AssetClient_Find( apContext, apClient->mHashKey );
+	if( client )
+	{
+		GOD_LL_INSERT( client->mpNext, mpNext, apClient );
+	}
+	else
+	{
+		/* need to find dangling assets in package here */
+		/*		
+		sPackage * package;
+		for( package=apContext->mpPackages; package; package=package->mpContextNext )
+		{
+			if( PackageManager_AssetLoad( package, apClient ) )
+				break;
+		}
+		*/
+
+		GOD_LL_INSERT( apContext->mpAssetClients, mpContextNext, apClient );
+	}
+	apClient->mpContext = apContext;
+
+	return client;
+}
+
+void	Context_AssetClient_Remove( struct sAssetClient * apClient )
+{
+	sAssetClient * client = Context_AssetClient_Find( apClient->mpContext, apClient->mHashKey );
+
+	if( client == apClient )
+	{
+		client = apClient->mpNext;
+		GOD_LL_REMOVE( sAssetClient, apClient->mpContext->mpAssetClients, mpContextNext, apClient );
+		if( client )
+		{
+			GOD_LL_INSERT( apClient->mpContext->mpAssetClients, mpContextNext, client );
+		}
+	}
+	else if( client )
+	{
+		GOD_LL_REMOVE( sAssetClient, client->mpNext, mpContextNext, apClient );
+	}
+	apClient->mpNext = 0;
+	apClient->mpContext = 0;
+}
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : ContextManager_Init( void )
@@ -203,7 +263,7 @@ sContext *	ContextManager_ContextRegister( const char * apName )
 	U32			lHash;
 	sContext *	lpContext;
 
-	lHash = Asset_BuildHash( apName );
+	lHash = Asset_BuildHash( apName, sizeof(lpContext->mName) );
 
 	GOD_LL_FIND( gpContexts, mpNext, mID, lHash, lpContext );
 

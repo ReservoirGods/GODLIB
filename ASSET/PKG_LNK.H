@@ -18,6 +18,7 @@ U32		PackageLnk_Load( sPackage * apPackage, const char * apDirName );
 U32		PackageLnk_UnLoad( sPackage * apPackage );
 void	PackageLnk_Destroy( sPackage * apPackage );
 
+U8		PackageLnk_AssetLoad( sPackage * apPackage, struct sAssetClient * apClient );
 
 /* ################################################################################ */
 

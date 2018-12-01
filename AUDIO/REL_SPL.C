@@ -20,10 +20,10 @@ sRelocater 	gRelocator_SPLReloc;
 #  PROTOTYPES
 ################################################################################### */
 
-U32	Relocator_SPL_IsType(     sAsset * apAsset );
-U32	Relocator_SPL_DoInit(     sAsset * apAsset );
-U32	Relocator_SPL_DoDelocate( sAsset * apAsset );
-U32	Relocator_SPL_DoRelocate( sAsset * apAsset );
+U32	Relocator_SPL_IsType(     sAssetItem * apAsset );
+U32	Relocator_SPL_DoInit(     sAssetItem * apAsset );
+U32	Relocator_SPL_DoDelocate( sAssetItem * apAsset );
+U32	Relocator_SPL_DoRelocate( sAssetItem * apAsset );
 
 
 /* ###################################################################################
@@ -55,12 +55,12 @@ void	Relocator_SPL_DeInit( void )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_SPL_IsType( sAsset * apAsset )
+* FUNCTION : Relocator_SPL_IsType( sAssetItem * apAsset )
 * ACTION   : Relocator_SPL_IsType
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_SPL_IsType( sAsset * apAsset )
+U32	Relocator_SPL_IsType( sAssetItem * apAsset )
 {
 	(void)apAsset;
 	return( 1 );
@@ -68,12 +68,12 @@ U32	Relocator_SPL_IsType( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_SPL_DoDelocate( sAsset * apAsset )
+* FUNCTION : Relocator_SPL_DoDelocate( sAssetItem * apAsset )
 * ACTION   : Relocator_SPL_DoDelocate
 * CREATION : 19.03.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_SPL_DoDelocate( sAsset * apAsset )
+U32	Relocator_SPL_DoDelocate( sAssetItem * apAsset )
 {
 	Audio_DmaSound_Delocate( (sAudioDmaSound*)apAsset->mpData );
 	return( 1 );
@@ -81,12 +81,12 @@ U32	Relocator_SPL_DoDelocate( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_SPL_DoRelocate( sAsset * apAsset )
+* FUNCTION : Relocator_SPL_DoRelocate( sAssetItem * apAsset )
 * ACTION   : Relocator_SPL_DoRelocate
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_SPL_DoRelocate( sAsset * apAsset )
+U32	Relocator_SPL_DoRelocate( sAssetItem * apAsset )
 {
 	Audio_DmaSound_Relocate( (sAudioDmaSound*)apAsset->mpData );
 	return( 1 );
@@ -99,7 +99,7 @@ U32	Relocator_SPL_DoRelocate( sAsset * apAsset )
 * CREATION : 27.03.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_SPL_DoInit( sAsset * apAsset )
+U32	Relocator_SPL_DoInit( sAssetItem * apAsset )
 {
 	U32	i;
 	sAudioDmaSound *	lpSpl;

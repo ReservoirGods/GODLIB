@@ -20,11 +20,11 @@ sRelocater 	gRelocator_CUTReloc;
 #  PROTOTYPES
 ################################################################################### */
 
-U32	Relocator_CUT_IsType(     sAsset * apAsset );
-U32	Relocator_CUT_DoDelocate( sAsset * apAsset );
-U32	Relocator_CUT_DoRelocate( sAsset * apAsset );
-U32	Relocator_CUT_OnLoad(     sAsset * apAsset );
-U32	Relocator_CUT_OnUnLoad(   sAsset * apAsset );
+U32	Relocator_CUT_IsType(     sAssetItem * apAsset );
+U32	Relocator_CUT_DoDelocate( sAssetItem * apAsset );
+U32	Relocator_CUT_DoRelocate( sAssetItem * apAsset );
+U32	Relocator_CUT_OnLoad(     sAssetItem * apAsset );
+U32	Relocator_CUT_OnUnLoad(   sAssetItem * apAsset );
 
 
 /* ###################################################################################
@@ -56,12 +56,12 @@ void	Relocator_CUT_DeInit( void )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_CUT_IsType( sAsset * apAsset )
+* FUNCTION : Relocator_CUT_IsType( sAssetItem * apAsset )
 * ACTION   : Relocator_CUT_IsType
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_CUT_IsType( sAsset * apAsset )
+U32	Relocator_CUT_IsType( sAssetItem * apAsset )
 {
 	(void)apAsset;
 	return( 1 );
@@ -69,12 +69,12 @@ U32	Relocator_CUT_IsType( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_CUT_OnLoad( sAsset * apAsset )
+* FUNCTION : Relocator_CUT_OnLoad( sAssetItem * apAsset )
 * ACTION   : Relocator_CUT_OnLoad
 * CREATION : 26.04.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_CUT_OnLoad( sAsset * apAsset )
+U32	Relocator_CUT_OnLoad( sAssetItem * apAsset )
 {
 	sCutAsset *	lpAss;
 	sCutScene *	lpCut;
@@ -102,12 +102,12 @@ U32	Relocator_CUT_OnLoad( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_CUT_OnUnLoad( sAsset * apAsset )
+* FUNCTION : Relocator_CUT_OnUnLoad( sAssetItem * apAsset )
 * ACTION   : Relocator_CUT_OnUnLoad
 * CREATION : 26.04.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_CUT_OnUnLoad( sAsset * apAsset )
+U32	Relocator_CUT_OnUnLoad( sAssetItem * apAsset )
 {
 	sCutAsset *	lpAss;
 	sCutScene *	lpCut;
@@ -134,12 +134,12 @@ U32	Relocator_CUT_OnUnLoad( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_CUT_DoDelocate( sAsset * apAsset )
+* FUNCTION : Relocator_CUT_DoDelocate( sAssetItem * apAsset )
 * ACTION   : Relocator_CUT_DoDelocate
 * CREATION : 19.03.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_CUT_DoDelocate( sAsset * apAsset )
+U32	Relocator_CUT_DoDelocate( sAssetItem * apAsset )
 {
 	CutScene_Delocate( (sCutScene*)apAsset->mpData );
 	return( 1 );
@@ -147,12 +147,12 @@ U32	Relocator_CUT_DoDelocate( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_CUT_DoRelocate( sAsset * apAsset )
+* FUNCTION : Relocator_CUT_DoRelocate( sAssetItem * apAsset )
 * ACTION   : Relocator_CUT_DoRelocate
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_CUT_DoRelocate( sAsset * apAsset )
+U32	Relocator_CUT_DoRelocate( sAssetItem * apAsset )
 {
 	CutScene_Relocate( (sCutScene*)apAsset->mpData );
 	return( 1 );

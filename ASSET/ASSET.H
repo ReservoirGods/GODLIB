@@ -6,7 +6,6 @@
 ################################################################################### */
 
 #include	<GODLIB/BASE/BASE.H>
-#include	<GODLIB/ASSET/CONTEXT.H>
 
 
 /* ###################################################################################
@@ -28,25 +27,42 @@ enum
 	eASSET_STATUS_UNLOADED,
 };
 
+enum
+{
+	eASSET_STATUS_BIT_LOADED    = (1<<0),
+	eASSET_STATUS_BIT_INITED    = (1<<1),
+	eASSET_STATUS_BIT_RELOCATED = (1<<2),
+};
+
 
 /* ###################################################################################
 #  STRUCTS
 ################################################################################### */
 
+typedef struct sAssetItem
+{
+	void *	mpData;
+	U32		mSize;
+	U32		mHashKey;
+	U32		mExtension;
+	U32		mStatusBits;
+} sAssetItem;
+
+
 typedef	struct sAssetClient
 {
 	/* start to consolidate this into a single structure */
 	char	mFileName[ 12 ];
-	U32		mSize;
-	void *	mpData;
+	U32		mHashKey;
 	struct sContext * mpContext;
 
 	fAsset	OnLoad;
 	fAsset	OnUnLoad;
 	void **					mppData;
 	U32						mUserData;
-	struct	sAsset *		mpAsset;
+	struct	sAssetItem *	mpAsset;
 	struct	sAssetClient *	mpNext;
+	struct	sAssetClient *	mpContextNext;
 } sAssetClient;
 
 
@@ -67,11 +83,14 @@ typedef	struct sAsset
 } sAsset;
 
 
+
 /* ###################################################################################
 #  PROTOTYPES
 ################################################################################### */
 
-U32				Asset_BuildHash( const char * apString );
+U32				Asset_BuildHash( const char * apString, U16 aStringLength );
+
+void			Asset_Init( sAsset * apAsset, const char * apFileName );
 
 sAsset *		Asset_Create( const char * apFileName );
 void			Asset_Destroy( sAsset * apAsset );
@@ -82,6 +101,8 @@ U32				Asset_OnUnLoad( sAsset * apAsset );
 void			AssetClient_Init( sAssetClient * apClient, const char * apFileName, const char * apContextName, void ** appData );
 void			AssetClient_DeInit( sAssetClient * apClient );
 
+U32				AssetClients_OnLoad( sAssetClient * apClient, struct sAssetItem * apAsset );
+U32				AssetClients_OnUnLoad( sAssetClient * apClient );
 
 /* ################################################################################ */
 

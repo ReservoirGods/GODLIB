@@ -7,6 +7,7 @@
 
 #include	<GODLIB/BASE/BASE.H>
 #include	<GODLIB/FILE/FILE.H>
+#include	<GODLIB/ASSET/PACKAGE.H>
 
 
 /* ###################################################################################
@@ -14,7 +15,7 @@
 ################################################################################### */
 
 #define	dLINKFILE_SENTINEL	0x10FFEB0DL
-#define	dLINKFILE_VERSION	0x2L
+#define	dLINKFILE_VERSION	0x9L
 
 /* ###################################################################################
 #  STRUCTS
@@ -23,7 +24,8 @@
 
 typedef	struct sLinkFileFile
 {
-	U32		mSize;
+	sAssetItem	mAsset;
+/*	U32		mSize;*/
 	U32		mUnPackedSize;
 	U32		mOffset;
 	U16		mPackedFlag;

@@ -38,6 +38,25 @@ U32		PackageLnk_FolderLoad( sPackage * apPackage, sLinkFileFolder * apFolder, ch
 	for( i=0; i<apFolder->mFileCount; i++ )
 	{
 		sLinkFileFile * pFile = &apFolder->mpFiles[ i ];
+#if 1		
+		sAssetClient * client = Context_AssetClient_Find( apPackage->mpContext, pFile->mAsset.mHashKey );
+		U16 size = 0;
+		U32 lKey;
+		
+		for( size=0; pFile->mpFileName[size]; size++);
+		lKey = Asset_BuildHash( pFile->mpFileName, (U16)size);
+
+		GODLIB_ASSERT( pFile->mAsset.mHashKey == lKey );
+		pFile->mAsset.mpData = (void*)pFile->mOffset;
+
+		if( client )
+		{
+			client->mpAsset = &pFile->mAsset;
+			RelocaterManager_DoRelocate( &pFile->mAsset );
+			RelocaterManager_DoInit( &pFile->mAsset );
+			lRet &= AssetClients_OnLoad( client, &pFile->mAsset );
+		}
+#else
 		sAsset * ass = Context_AssetRegister( apPackage->mpContext, pFile->mpFileName );
 		pFile->mpAsset = ass;
 		if( ass )
@@ -49,21 +68,53 @@ U32		PackageLnk_FolderLoad( sPackage * apPackage, sLinkFileFolder * apFolder, ch
 			RelocaterManager_DoRelocate( ass );
 			RelocaterManager_DoInit( ass );
 			lRet &= Asset_OnLoad( ass );
-
 		}
+#endif		
 	}
+
 
 	return lRet;
 }
 
+U32		PackageLnk_FolderLoad2( sPackage * apPackage, sLinkFileFolder * apFolder )
+{
+	U16 i;
+	U32 ret = 1;
+
+	sAssetClient * client = apPackage->mpContext->mpAssetClients;
+	for( ; client; client=client->mpContextNext)
+	{
+		if( !client->mpAsset )
+		{
+			for( i=0; i<apFolder->mFileCount; i++ )
+			{
+				sLinkFileFile * pFile = &apFolder->mpFiles[ i ];
+				if( pFile->mAsset.mHashKey == client->mHashKey )
+				{
+					RelocaterManager_DoRelocate( &pFile->mAsset );
+					RelocaterManager_DoInit( &pFile->mAsset );
+					ret &= AssetClients_OnLoad( client, &pFile->mAsset );
+					break;
+				}
+			}
+		}
+	}
+	return ret;
+}
+
+
 U32		PackageLnk_LoadFromLinkFile( sPackage * apPackage, sLinkFile * apLinkFile )
 {
+	U32 ret = 1;
 	apPackage->mpLinkFile = apLinkFile;
 
 	if( !apLinkFile )
 		return 0;
 
-	return PackageLnk_FolderLoad( apPackage, apPackage->mpLinkFile->mpRoot, 0 );
+	ret &= PackageLnk_FolderLoad( apPackage, apPackage->mpLinkFile->mpRoot, 0 );
+	ret &= PackageLnk_FolderLoad2( apPackage, apPackage->mpLinkFile->mpRoot );
+
+	return ret;
 }
 
 U32		PackageLnk_Load( sPackage * apPackage, const char * apDirName )
@@ -83,6 +134,15 @@ U32	PackageLnk_FolderUnLoad( sPackage * apPackage,sLinkFileFolder * apFolder, ch
 	for( i=0; i<apFolder->mFileCount; i++ )
 	{
 		sLinkFileFile * pFile = &apFolder->mpFiles[ i ];
+#if 1	
+		sAssetClient * client = Context_AssetClient_Find( apPackage->mpContext, pFile->mAsset.mHashKey );
+		if( client )
+		{
+			RelocaterManager_DoDeInit( &pFile->mAsset );
+			RelocaterManager_DoDelocate( &pFile->mAsset );
+			AssetClients_OnUnLoad( client );
+		}
+#else	
 		sAsset * ass = (sAsset*)pFile->mpAsset;
 		if( ass )
 		{
@@ -94,6 +154,7 @@ U32	PackageLnk_FolderUnLoad( sPackage * apPackage,sLinkFileFolder * apFolder, ch
 			ass->mpData  = 0;
 			ass->mSize   = 0;
 		}
+#endif		
 	}
 
 	return lRet;
@@ -346,4 +407,40 @@ U32	PackageLnk_FolderUnLoad( sPackage * apPackage,sLinkFileFolder * apFolder,cha
 }
 
 #endif
+
+U8		PackageLnk_AssetFolderLoad( sPackage * apPackage, sLinkFileFolder * apFolder, sAssetClient * apClient )
+{
+	U16 i;
+
+	for( i=0; i<apFolder->mFileCount; i++ )
+	{
+		sLinkFileFile * pFile = &apFolder->mpFiles[ i ];
+		if( pFile->mAsset.mHashKey == apClient->mHashKey )
+		{
+			RelocaterManager_DoRelocate( &pFile->mAsset );
+			RelocaterManager_DoInit( &pFile->mAsset );
+			AssetClients_OnLoad( apClient, &pFile->mAsset );
+
+			return 1;
+		}
+	}
+
+	for( i=0; i<apFolder->mFolderCount; i++ )
+	{
+		if( PackageLnk_AssetFolderLoad(apPackage, &apFolder->mpFolders[i], apClient))
+			return 1;
+	}
+
+	return 0;
+}
+
+U8		PackageLnk_AssetLoad( sPackage * apPackage, struct sAssetClient * apClient )
+{
+	sLinkFile * linkFile = apPackage->mpLinkFile;
+	if( !linkFile )
+		return 0;
+
+	return PackageLnk_AssetFolderLoad( apPackage, linkFile->mpRoot, apClient );
+}
+
 /* ################################################################################ */

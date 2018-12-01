@@ -10,6 +10,7 @@
 #include	"PKG_LNK.H"
 
 #include	<GODLIB/DEBUGLOG/DEBUGLOG.H>
+#include	<GODLIB/LINKLIST/GOD_LL.H>
 #include	<GODLIB/MEMORY/MEMORY.H>
 #include	<STRING.H>
 
@@ -326,7 +327,7 @@ void	Package_Init( sPackage * apPackage,const char * apName,const char * apConte
 
 	if( apPackage )
 	{
-		apPackage->mID         = Asset_BuildHash( apName );
+		apPackage->mID         = Asset_BuildHash( apName, sizeof(apPackage->mName) );
 		apPackage->mFileCount  = 0;
 		apPackage->mLoaderType = ePACKAGELOADER_NONE;
 		apPackage->mpContext   = ContextManager_ContextRegister( apContext );
@@ -341,6 +342,8 @@ void	Package_Init( sPackage * apPackage,const char * apName,const char * apConte
 			i++;
 		}
 		apPackage->mName[ i ] = 0;
+
+		GOD_LL_INSERT( apPackage->mpContext->mpPackages, mpContextNext, apPackage );
 
 		gpPackages           = apPackage;
 	}
@@ -379,6 +382,9 @@ void	Package_DeInit( sPackage * apPackage )
 		}
 	}
 	ContextManager_ContextUnRegister( apPackage->mpContext );
+
+	GOD_LL_REMOVE( sPackage, apPackage->mpContext->mpPackages, mpContextNext, apPackage );
+
 }
 
 
@@ -487,6 +493,21 @@ U32	PackageManager_OpQueueIsEmpty( void )
 	return( gPackageOpQueueHead == gPackageOpQueueTail );
 }
 
+U8			PackageManager_AssetLoad( sPackage * apPackage, struct sAssetClient * apClient )
+{
+	U8 ret = 0;
+
+	if( gPackageLinkEnableFlag )
+	{
+		ret = PackageLnk_AssetLoad( apPackage, apClient );
+	}
+	else
+	{
+		ret = PackageDir_AssetLoad( apPackage, apClient );
+	}
+
+	return ret;
+}
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : PackageManager_ShowAll( fPackagePrint aPrint )

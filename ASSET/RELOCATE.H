@@ -14,7 +14,7 @@
 ################################################################################### */
 
 /*typedef	U32	(*fReloc)( void * apData, const U32 aSize, const U32 aID );*/
-typedef	U32	(*fReloc)( sAsset * apAsset );
+typedef	U32	(*fReloc)( sAssetItem * apAsset );
 
 
 /* ###################################################################################
@@ -52,12 +52,12 @@ typedef	struct sRelocater
 void			Relocater_Init( sRelocater * apReloc, const char * apExt, fReloc aIsType, fReloc aDoInit, fReloc aDoDeInit, fReloc aDoRelocate, fReloc aDoDelocate );
 void			Relocater_DeInit( sRelocater * apReloc );
 
-sRelocater *	RelocaterManager_Find( sAsset * apAsset );
+sRelocater *	RelocaterManager_Find( sAssetItem * apAsset );
 
-U32				RelocaterManager_DoInit(     sAsset * apAsset );
-U32				RelocaterManager_DoDeInit(   sAsset * apAsset );
-U32				RelocaterManager_DoDelocate( sAsset * apAsset );
-U32				RelocaterManager_DoRelocate( sAsset * apAsset );
+U32				RelocaterManager_DoInit(     sAssetItem * apAsset );
+U32				RelocaterManager_DoDeInit(   sAssetItem * apAsset );
+U32				RelocaterManager_DoDelocate( sAssetItem * apAsset );
+U32				RelocaterManager_DoRelocate( sAssetItem * apAsset );
 
 void			RelocaterManager_Init( void );
 void			RelocaterManager_DeInit( void );

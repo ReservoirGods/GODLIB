@@ -18,11 +18,11 @@ sRelocater 	gRelocator_FEDReloc;
 #  PROTOTYPES
 ################################################################################### */
 
-U32	Relocator_FED_IsType(     sAsset * apAsset );
-U32	Relocator_FED_DoDelocate( sAsset * apAsset );
-U32	Relocator_FED_DoRelocate( sAsset * apAsset );
-U32	Relocator_FED_DoInit(     sAsset * apAsset );
-U32	Relocator_FED_DoDeInit(   sAsset * apAsset );
+U32	Relocator_FED_IsType(     sAssetItem * apAsset );
+U32	Relocator_FED_DoDelocate( sAssetItem * apAsset );
+U32	Relocator_FED_DoRelocate( sAssetItem * apAsset );
+U32	Relocator_FED_DoInit(     sAssetItem * apAsset );
+U32	Relocator_FED_DoDeInit(   sAssetItem * apAsset );
 
 
 /* ###################################################################################
@@ -54,12 +54,12 @@ void	Relocator_FED_DeInit( void )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_FED_IsType( sAsset * apAsset )
+* FUNCTION : Relocator_FED_IsType( sAssetItem * apAsset )
 * ACTION   : Relocator_FED_IsType
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_FED_IsType( sAsset * apAsset )
+U32	Relocator_FED_IsType( sAssetItem * apAsset )
 {
 	(void)apAsset;
 	return( 1 );
@@ -67,12 +67,12 @@ U32	Relocator_FED_IsType( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_FED_DoRelocate( sAsset * apAsset )
+* FUNCTION : Relocator_FED_DoRelocate( sAssetItem * apAsset )
 * ACTION   : Relocator_FED_DoRelocate
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_FED_DoRelocate( sAsset * apAsset )
+U32	Relocator_FED_DoRelocate( sAssetItem * apAsset )
 {
 	Fed_Relocate( (sFedHeader*)apAsset->mpData );
 	return( 1 );
@@ -80,12 +80,12 @@ U32	Relocator_FED_DoRelocate( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_FED_DoDelocate( sAsset * apAsset )
+* FUNCTION : Relocator_FED_DoDelocate( sAssetItem * apAsset )
 * ACTION   : Relocator_FED_DoDelocate
 * CREATION : 19.03.2005 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_FED_DoDelocate( sAsset * apAsset )
+U32	Relocator_FED_DoDelocate( sAssetItem * apAsset )
 {
 	(void)apAsset;
 
@@ -95,12 +95,12 @@ U32	Relocator_FED_DoDelocate( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_FED_DoInit( sAsset * apAsset )
+* FUNCTION : Relocator_FED_DoInit( sAssetItem * apAsset )
 * ACTION   : Relocator_FED_DoInit
 * CREATION : 21.03.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_FED_DoInit( sAsset * apAsset )
+U32	Relocator_FED_DoInit( sAssetItem * apAsset )
 {
 	Fed_Init( (sFedHeader*)apAsset->mpData );
 	Fed_Begin( (sFedHeader*)apAsset->mpData, "MAIN" );
@@ -109,12 +109,12 @@ U32	Relocator_FED_DoInit( sAsset * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_FED_DoDeInit( sAsset * apAsset )
+* FUNCTION : Relocator_FED_DoDeInit( sAssetItem * apAsset )
 * ACTION   : Relocator_FED_DoDeInit
 * CREATION : 21.03.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-U32	Relocator_FED_DoDeInit( sAsset * apAsset )
+U32	Relocator_FED_DoDeInit( sAssetItem * apAsset )
 {
 	Fed_DeInit( (sFedHeader*)apAsset->mpData );
 	return( 1 );

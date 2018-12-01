@@ -6,7 +6,6 @@
 ################################################################################### */
 
 #include	<GODLIB/BASE/BASE.H>
-#include	<GODLIB/LINKFILE/LINKFILE.H>
 #include	<GODLIB/ASSET/ASSET.H>
 #include	<GODLIB/ASSET/CONTEXT.H>
 
@@ -36,9 +35,10 @@ typedef	struct sPackage
 	U16					mStatus;
 	U16					mLoaderType;
 	struct	sContext *	mpContext;
-	sLinkFile *			mpLinkFile;
+	struct sLinkFile *	mpLinkFile;
 	sPackageItem *		mpItems;
 	struct sPackage *	mpNext;
+	struct sPackage *	mpContextNext;
 } sPackage;
 
 
@@ -66,6 +66,8 @@ void		Package_DeInit(sPackage * apPackage );
 void		PackageManager_ShowAll( fPackagePrint aPrint );
 void		PackageManager_ShowStatus( fPackagePrint aPrint );
 void		PackageManager_ShowUnused( fPackagePrint aPrint );
+
+U8			PackageManager_AssetLoad( sPackage * apPackage, struct sAssetClient * apClient );
 
 
 /* ################################################################################ */

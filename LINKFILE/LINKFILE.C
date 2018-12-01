@@ -296,7 +296,7 @@ void *		LinkFile_FileLoad(     sLinkFile * apLinkFile, char * apFileName, const 
 		}
 		else
 		{
-			lSize = lpFile->mSize;
+			lSize = lpFile->mAsset.mSize;
 		}
 
 		if( lSize )
@@ -316,7 +316,7 @@ void *		LinkFile_FileLoad(     sLinkFile * apLinkFile, char * apFileName, const 
 			}
 
 			File_SeekFromStart( apLinkFile->mFileHandle, lpFile->mOffset );
-			File_Read( apLinkFile->mFileHandle, lpFile->mSize, lpMem );
+			File_Read( apLinkFile->mFileHandle, lpFile->mAsset.mSize, lpMem );
 
 			if( aDepackFlag )
 			{
@@ -355,7 +355,7 @@ U8		LinkFile_FileLoadAt(   sLinkFile * apLinkFile, char * apFileName, void * apB
 
 	if( apLinkFile->mInRamFlag )
 	{
-		Memory_Copy( lpFile->mSize, (void*)lpFile->mOffset, apBuffer );
+		Memory_Copy( lpFile->mAsset.mSize, (void*)lpFile->mOffset, apBuffer );
 	}
 	else
 	{
@@ -364,7 +364,7 @@ U8		LinkFile_FileLoadAt(   sLinkFile * apLinkFile, char * apFileName, void * apB
 			return( 0 );
 		}
 		File_SeekFromStart( apLinkFile->mFileHandle, lpFile->mOffset );
-		File_Read( apLinkFile->mFileHandle, lpFile->mSize, apBuffer );
+		File_Read( apLinkFile->mFileHandle, lpFile->mAsset.mSize, apBuffer );
 	}
 
 	if( aDepackFlag )
@@ -402,7 +402,7 @@ S32			LinkFile_FileGetSize(  sLinkFile * apLinkFile, char * apFileName, const U1
 	}
 	else
 	{
-		lSize = (S32)lpFile->mSize;
+		lSize = (S32)lpFile->mAsset.mSize;
 	}
 
 	return( lSize );
@@ -545,12 +545,16 @@ U8		LinkFile_FileCreate( sLinkFileFolder * apFolder, char * apFileName )
 	}
 	apFolder->mpFiles = lpFiles;
 
+	lpFiles[ apFolder->mFileCount ].mAsset.mHashKey = Asset_BuildHash( lpFileName, (U16)strlen( lpFileName ) );
+	lpFiles[ apFolder->mFileCount ].mAsset.mSize  = 0;
+	lpFiles[ apFolder->mFileCount ].mAsset.mpData = 0;
+
 
 	lpFiles[ apFolder->mFileCount ].mLoadedFlag   = 0;
 	lpFiles[ apFolder->mFileCount ].mOffset       = 0;
 	lpFiles[ apFolder->mFileCount ].mPackedFlag   = 0;
 	lpFiles[ apFolder->mFileCount ].mpFileName    = lpFileName;
-	lpFiles[ apFolder->mFileCount ].mSize         = 0;
+/*	lpFiles[ apFolder->mFileCount ].mSize         = 0;*/
 	lpFiles[ apFolder->mFileCount ].mUnPackedSize = 0;
 	apFolder->mFileCount++;
 
@@ -585,8 +589,11 @@ void	LinkFile_RelocateFolder( sLinkFileFolder * apFolder, sLinkFile * apLinkFile
 	}
 	for( i=0; i<apFolder->mFileCount; i++ )
 	{
+		Endian_FromBigU32( &apFolder->mpFiles[ i ].mAsset.mHashKey );
+		Endian_FromBigU32( &apFolder->mpFiles[ i ].mAsset.mSize    );
+
 		Endian_FromBigU32( &apFolder->mpFiles[ i ].mOffset       );
-		Endian_FromBigU32( &apFolder->mpFiles[ i ].mSize         );
+/*		Endian_FromBigU32( &apFolder->mpFiles[ i ].mSize         );*/
 		Endian_FromBigU32( &apFolder->mpFiles[ i ].mUnPackedSize );
 		Endian_FromBigU16( &apFolder->mpFiles[ i ].mPackedFlag   );
 		Endian_FromBigU16( &apFolder->mpFiles[ i ].mLoadedFlag   );
@@ -620,8 +627,13 @@ void	LinkFile_DelocateFolder( sLinkFileFolder * apFolder, U32 aBase )
 	{
 		*(U32*)&apFolder->mpFiles[ i ].mpFileName -= aBase;
 
+		GODLIB_ASSERT( apFolder->mpFiles[ i ].mAsset.mHashKey );
+
+		Endian_FromBigU32( &apFolder->mpFiles[ i ].mAsset.mHashKey );
+		Endian_FromBigU32( &apFolder->mpFiles[ i ].mAsset.mSize    );
+
 		Endian_FromBigU32( &apFolder->mpFiles[ i ].mOffset       );
-		Endian_FromBigU32( &apFolder->mpFiles[ i ].mSize         );
+/*		Endian_FromBigU32( &apFolder->mpFiles[ i ].mSize         );*/
 		Endian_FromBigU32( &apFolder->mpFiles[ i ].mUnPackedSize );
 		Endian_FromBigU16( &apFolder->mpFiles[ i ].mPackedFlag   );
 		Endian_FromBigU16( &apFolder->mpFiles[ i ].mLoadedFlag   );
@@ -768,7 +780,7 @@ sLinkFileFile *	LinkFile_GetpFile( sLinkFile * apLinkFile, char * apFileName )
 				DebugChannel_Printf3( eDEBUGCHANNEL_ASSET, "file found %s off %ld size %ld",
 					lpFolder->mpFiles[ i ].mpFileName,
 					lpFolder->mpFiles[ i ].mOffset,
-					lpFolder->mpFiles[ i ].mSize );
+					lpFolder->mpFiles[ i ].mAsset.mSize );
 				return( &lpFolder->mpFiles[ i ] );
 			}
 		}
@@ -840,7 +852,7 @@ U32	LinkFile_GetDataSize( sLinkFileFolder * apFolder )
 
 	for( i=0; i<apFolder->mFileCount; i++ )
 	{
-		lSize += apFolder->mpFiles[ i ].mSize;
+		lSize += apFolder->mpFiles[ i ].mAsset.mSize;
 	}
 	for( i=0; i<apFolder->mFolderCount; i++ )
 	{
@@ -951,7 +963,7 @@ char *	LinkFile_StringCopy( char * apDst, char * apSrc )
 
 char *	LinkFile_SerialiseStrings( sLinkFileFolder * apDstFolder, sLinkFileFolder * apSrcFolder, char * apMem )
 {
-	U16				i;
+	U16				i,j;
 
 	apDstFolder->mpFolderName = apMem;
 	apMem                     = LinkFile_StringCopy( apMem, apSrcFolder->mpFolderName );
@@ -959,6 +971,11 @@ char *	LinkFile_SerialiseStrings( sLinkFileFolder * apDstFolder, sLinkFileFolder
 	for( i=0; i<apDstFolder->mFileCount; i++ )
 	{
 		apDstFolder->mpFiles[ i ].mpFileName = apMem;
+		apDstFolder->mpFiles[ i ].mAsset.mHashKey = Asset_BuildHash( apSrcFolder->mpFiles[ i ].mpFileName, (U16)strlen( apSrcFolder->mpFiles[ i ].mpFileName ) );
+		for( j = 0; apSrcFolder->mpFiles[ i ].mpFileName[ j ] && '.' != apSrcFolder->mpFiles[ i ].mpFileName[ j ]; j++ );
+		if( '.' == apSrcFolder->mpFiles[ i ].mpFileName[ j ] )
+			j++;
+		apDstFolder->mpFiles[ i ].mAsset.mExtension = Asset_BuildHash( &apSrcFolder->mpFiles[ i ].mpFileName[j], 4 );
 		apMem = LinkFile_StringCopy( apMem, apSrcFolder->mpFiles[ i ].mpFileName );
 	}
 
@@ -1091,7 +1108,7 @@ U32	LinkFile_SetFileOffsets( sLinkFileFolder * apFolder,U32 aOffset,char * apSrc
 			lSize = 0;
 		}
 
-		apFolder->mpFiles[ i ].mSize         = lSize;
+		apFolder->mpFiles[ i ].mAsset.mSize  = lSize;
 		apFolder->mpFiles[ i ].mOffset       = aOffset;
 		apFolder->mpFiles[ i ].mLoadedFlag   = 0;
 		apFolder->mpFiles[ i ].mPackedFlag   = 0;
@@ -1144,7 +1161,7 @@ void	LinkFile_SaveData( sLinkFileFolder * apFolder,sFileHandle aHandle,char * ap
 		lpFile = File_Load( lString );
 		if( lpFile )
 		{
-			File_Write( aHandle, ((apFolder->mpFiles[ i ].mSize+3L)&0xFFFFFFFCL), lpFile );
+			File_Write( aHandle, ((apFolder->mpFiles[ i ].mAsset.mSize+3L)&0xFFFFFFFCL), lpFile );
 			mMEMFREE( lpFile );
 		}
 	}
