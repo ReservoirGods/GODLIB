@@ -7,6 +7,8 @@
 #ifdef	dGODLIB_DEBUGCHANNELS
 #include	<GODLIB/DEBUG/DBGCHAN.H>
 #endif
+
+#include	<GODLIB/FILE/FILE.H>
 #include	<GODLIB/IKBD/IKBD_DI.H>
 #include	<GODLIB/KERNEL/KERNEL.H>
 #include	<GODLIB/VIDEO/VID_D3D.H>

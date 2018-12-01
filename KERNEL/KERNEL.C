@@ -7,6 +7,7 @@
 #include	<GODLIB/ACHIEVE/ACH_MAIN.H>
 #include	<GODLIB/ASSERT/ASSERT.H>
 #include	<GODLIB/CLI/CLI.H>
+#include	<GODLIB/FILE/FILE.H>
 #include	<GODLIB/FONT/FONT.H>
 #include	<GODLIB/IKBD/IKBD.H>
 #include	<GODLIB/MEMORY/MEMORY.H>

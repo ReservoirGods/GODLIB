@@ -7,6 +7,7 @@
 #include	"ACH_MAIN.H"
 
 #include	<GODLIB/ASSERT/ASSERT.H>
+#include	<GODLIB/FILE/FILE.H>
 #include	<GODLIB/MEMORY/MEMORY.H>
 #include	<GODLIB/STRING/STRING.H>
 #include	<GODLIB/THREAD/THREAD.H>
