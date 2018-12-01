@@ -4,6 +4,7 @@
 
 #include	"DBGCHAN.H"
 #include	<GODLIB\CLI\CLI.H>
+#include	<GODLIB\DRIVE\DRIVE.H>
 #include	<GODLIB\FILE\FILE.H>
 #include	<STRING.H>
 
@@ -21,12 +22,12 @@ typedef struct	sDebugChannel
 
 char * gDebugChannelFileNames[ eDEBUGCHANNEL_LIMIT ] =
 {
-	"..\\LOGS\\ASSET.LOG",
-	"..\\LOGS\\GAME.LOG",
-	"..\\LOGS\\GODLIB.LOG",
-	"..\\LOGS\\MEMORY.LOG",
-	"..\\LOGS\\TOOL.LOG",
-	"..\\LOGS\\USER.LOG",
+	"LOGS\\ASSET.LOG",
+	"LOGS\\GAME.LOG",
+	"LOGS\\GODLIB.LOG",
+	"LOGS\\MEMORY.LOG",
+	"LOGS\\TOOL.LOG",
+	"LOGS\\USER.LOG",
 };
 
 char gDebugChannelString[ 1024 ];
@@ -134,6 +135,7 @@ void	DebugChannel_DeActivate( U16 aChannel )
 
 void	DebugChannel_FileOpen( U16 aChannel, char * apFileName )
 {
+	Drive_CreateDirectory( "LOGS");
 	gDebugChannels[ aChannel ].mFileHandle = File_Create( apFileName );
 }
 
@@ -162,7 +164,7 @@ void	DebugChannel_FileWrite( U16 aChannel, const char * apString )
 {
 	S32	lLen;
 
-	if( apString && gDebugChannels[ aChannel ].mFileHandle )
+	if( apString && File_HandleIsValid(gDebugChannels[ aChannel ].mFileHandle) )
 	{
 		lLen = strlen( apString );
 		File_Write( gDebugChannels[ aChannel ].mFileHandle, lLen, apString );

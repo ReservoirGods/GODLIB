@@ -871,9 +871,10 @@ void	Memory_ShowCurrentRecords( void )
 	{
 		if( gMemoryRecord[ i ].mpMem )
 		{
-/*			DebugChannel_Printf4( eDEBUGCHANNEL_MEMORY, "mem %08p : (%ld) %s : %ld\n",*/
-/*			DebugLog_Printf5( "mem [%08ld] %08p : (%ld) %s : %ld\n",*/
-			printf( "mem [%08ld] %08p : (%ld) %s : %ld\n",
+			DebugChannel_Printf5( eDEBUGCHANNEL_MEMORY,
+/*			DebugLog_Printf5( */
+/*			printf( */
+				"mem [%08ld] %08p : (%ld) %s : %ld\n",
 				gMemoryRecord[ i ].mIndex,
 				gMemoryRecord[ i ].mpMem,
 				gMemoryRecord[ i ].mSize,
