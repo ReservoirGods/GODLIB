@@ -67,8 +67,6 @@ void		PackageManager_ShowAll( fPackagePrint aPrint );
 void		PackageManager_ShowStatus( fPackagePrint aPrint );
 void		PackageManager_ShowUnused( fPackagePrint aPrint );
 
-U8			PackageManager_AssetLoad( sPackage * apPackage, struct sAssetClient * apClient );
-
 
 /* ################################################################################ */
 

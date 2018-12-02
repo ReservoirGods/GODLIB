@@ -34,6 +34,11 @@ sGemDosDTA	gPackageDirDTA;
 
 U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 {
+	(void)apPackage;
+	(void)apDirName;
+	return 0;
+
+#if 0
 	sAsset *	lpAsset;
 	sContext *	lpContext;
 	U32			lIndex;
@@ -93,6 +98,7 @@ U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 	}
 
 	return( apPackage->mFileCount );
+#endif	
 }
 
 
@@ -104,6 +110,9 @@ U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 
 U32	PackageDir_UnLoad( sPackage * apPackage )
 {
+	(void)apPackage;
+	return 0;
+#if 0
 	U32			i;
 	U32			lRet;
 	sAsset *	lpAsset;
@@ -134,6 +143,7 @@ U32	PackageDir_UnLoad( sPackage * apPackage )
 	}
 
 	return( lRet );
+#endif	
 }
 
 
@@ -145,6 +155,8 @@ U32	PackageDir_UnLoad( sPackage * apPackage )
 
 void	PackageDir_Destroy( sPackage * apPackage )
 {
+	(void)apPackage;
+#if 0
 	U32			i;
 	sAsset *	lpAsset;
 
@@ -168,6 +180,7 @@ void	PackageDir_Destroy( sPackage * apPackage )
 	mMEMFREE( apPackage->mpItems );
 	apPackage->mpItems = 0;
 	apPackage->mFileCount = 0;
+#endif	
 }
 
 U8		PackageDir_AssetLoad( sPackage * apPackage, struct sAssetClient * apClient )

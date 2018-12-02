@@ -40,8 +40,10 @@ typedef	struct sContext
 void				Context_Init( sContext * apContext, const char * apName );
 void				Context_DeInit( sContext * apContext );
 
+#if 0
 struct sAsset *		Context_AssetRegister( sContext * apContext, const char * apName );
 void				Context_AssetUnRegister( sContext * apContext, struct sAsset * apAsset );
+#endif
 
 struct sAssetClient* Context_AssetClient_Find( const sContext * apContext, U32 aHashKey );
 

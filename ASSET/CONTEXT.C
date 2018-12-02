@@ -61,71 +61,15 @@ void				Context_Init( sContext * apContext, const char * apName )
 
 void				Context_DeInit( sContext * apContext )
 {
-	sAsset *	lpAsset;
-	sAsset *	lpAssetNext;
-
-	lpAsset = apContext->mpAssets;
-	while( lpAsset )
-	{
-		lpAssetNext = lpAsset->mpNext;
-		Asset_Destroy( lpAsset );
-		lpAsset     = lpAssetNext;
-	}
-
 	GOD_LL_REMOVE( sContext, gpContexts, mpNext, apContext );
 }
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Context_GetAsset( sContext * apContext,const char * apName )
-* ACTION   : Context_GetAsset
-* CREATION : 30.11.2003 PNK
+* FUNCTION : Context_AssetClient_Find( const sContext * apContext, U32 aHashKey )
+* ACTION   : Finds assetclient with specific filename hash in context
+* CREATION : 01.12.2018 PNK
 *-----------------------------------------------------------------------------------*/
-
-sAsset *	Context_AssetRegister( sContext * apContext,const char * apName )
-{
-	sAsset *	lpAsset;
-	U32			lHash;
-
-	lHash   = Asset_BuildHash( apName, sizeof(apContext->mName) );
-
-	GOD_LL_FIND( apContext->mpAssets, mpNext, mID, lHash, lpAsset );
-
-	if( !lpAsset )
-	{
-		lpAsset = Asset_Create( apName );
-		if( lpAsset )
-		{
-			GOD_LL_INSERT( apContext->mpAssets, mpNext, lpAsset );
-		}
-	}
-	if( lpAsset )
-	{
-		lpAsset->mRefCount++;
-	}
-
-	return( lpAsset );
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : Context_AssetUnRegister( sContext * apContext,struct sAsset * apAsset )
-* ACTION   : Context_AssetUnRegister
-* CREATION : 02.02.2005 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	Context_AssetUnRegister( sContext * apContext, sAsset * apAsset )
-{
-	if( apAsset )
-	{
-		apAsset->mRefCount--;
-		if( apAsset->mRefCount <= 0 )
-		{
-			GOD_LL_REMOVE( sAsset, apContext->mpAssets, mpNext, apAsset );
-			Asset_Destroy( apAsset );
-		}
-	}
-}
 
 struct sAssetClient* Context_AssetClient_Find( const sContext * apContext, U32 aHashKey )
 {
@@ -139,6 +83,14 @@ struct sAssetClient* Context_AssetClient_Find( const sContext * apContext, U32 a
 	return client;
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Context_AssetClient_Add( sContext * apContext, struct sAssetClient * apClient )
+* ACTION   : Adds an asset client to a context.
+             return parent client (if exists)
+* CREATION : 01.12.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
 sAssetClient *	Context_AssetClient_Add( sContext * apContext, struct sAssetClient * apClient )
 {
 	sAssetClient * client = Context_AssetClient_Find( apContext, apClient->mHashKey );
@@ -148,22 +100,19 @@ sAssetClient *	Context_AssetClient_Add( sContext * apContext, struct sAssetClien
 	}
 	else
 	{
-		/* need to find dangling assets in package here */
-		/*		
-		sPackage * package;
-		for( package=apContext->mpPackages; package; package=package->mpContextNext )
-		{
-			if( PackageManager_AssetLoad( package, apClient ) )
-				break;
-		}
-		*/
-
 		GOD_LL_INSERT( apContext->mpAssetClients, mpContextNext, apClient );
 	}
 	apClient->mpContext = apContext;
 
 	return client;
 }
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Context_AssetClient_Remove( struct sAssetClient * apClient )
+* ACTION   : Removes an asset client from a context.
+* CREATION : 01.12.2018 PNK
+*-----------------------------------------------------------------------------------*/
 
 void	Context_AssetClient_Remove( struct sAssetClient * apClient )
 {
@@ -185,6 +134,7 @@ void	Context_AssetClient_Remove( struct sAssetClient * apClient )
 	apClient->mpNext = 0;
 	apClient->mpContext = 0;
 }
+
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : ContextManager_Init( void )
@@ -314,6 +264,8 @@ void	ContextManager_ContextUnRegister( sContext * apContext )
 
 void	ContextManager_ShowAll( fContextPrint aPrint )
 {
+	(void)aPrint;
+#if 0	
 	sContext *	lpContext;
 	sPackage *	lpPackage;
 	sAsset *	lpAsset;
@@ -353,6 +305,7 @@ void	ContextManager_ShowAll( fContextPrint aPrint )
 
 		lpContext = lpContext->mpNext;
 	}
+#endif	
 }
 
 

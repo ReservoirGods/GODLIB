@@ -443,15 +443,19 @@ U32	Package_Load( sPackage * apPackage )
 
 U32	Package_UnLoad( sPackage * apPackage )
 {
-	U32			i;
 	U32			lRet;
+/*	
+	U32			i;
 	sAsset *	lpAsset;
-
+*/
 	lRet = 1;
 
 	if( (apPackage->mStatus != ePACKAGESTATUS_UNLOADED) || (apPackage->mStatus != ePACKAGESTATUS_NOTLOADED) )
 	{
 		apPackage->mStatus = ePACKAGESTATUS_UNLOADING;
+#if 1
+		apPackage->mStatus = ePACKAGESTATUS_UNLOADED;
+#else
 		for( i=0; i<apPackage->mFileCount; i++ )
 		{
 			lpAsset = apPackage->mpItems[ i ].mpAsset;
@@ -476,6 +480,7 @@ U32	Package_UnLoad( sPackage * apPackage )
 		{
 			apPackage->mStatus = ePACKAGESTATUS_UNLOADED;
 		}
+#endif		
 	}
 
 	return( lRet );
@@ -493,21 +498,6 @@ U32	PackageManager_OpQueueIsEmpty( void )
 	return( gPackageOpQueueHead == gPackageOpQueueTail );
 }
 
-U8			PackageManager_AssetLoad( sPackage * apPackage, struct sAssetClient * apClient )
-{
-	U8 ret = 0;
-
-	if( gPackageLinkEnableFlag )
-	{
-		ret = PackageLnk_AssetLoad( apPackage, apClient );
-	}
-	else
-	{
-		ret = PackageDir_AssetLoad( apPackage, apClient );
-	}
-
-	return ret;
-}
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : PackageManager_ShowAll( fPackagePrint aPrint )
@@ -517,6 +507,8 @@ U8			PackageManager_AssetLoad( sPackage * apPackage, struct sAssetClient * apCli
 
 void	PackageManager_ShowAll( fPackagePrint aPrint )
 {
+	(void)aPrint;
+#if 0	
 	sPackage *	lpPackage;
 	sAsset *	lpAsset;
 	sAssetClient *	lpClient;
@@ -546,6 +538,7 @@ void	PackageManager_ShowAll( fPackagePrint aPrint )
 		}
 		lpPackage =lpPackage->mpNext;
 	}
+#endif	
 }
 
 
@@ -557,6 +550,8 @@ void	PackageManager_ShowAll( fPackagePrint aPrint )
 
 void	PackageManager_ShowUnused( fPackagePrint aPrint )
 {
+	(void)aPrint;
+#if 0	
 	sPackage *	lpPackage;
 	sAsset *	lpAsset;
 	sAssetClient *	lpClient;
@@ -589,6 +584,7 @@ void	PackageManager_ShowUnused( fPackagePrint aPrint )
 		}
 		lpPackage =lpPackage->mpNext;
 	}
+#endif	
 }
 
 
