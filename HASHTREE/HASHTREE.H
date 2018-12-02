@@ -95,8 +95,8 @@ U32						HashTree_BuildHash( const char * apName );
 void					HashTree_Init( sHashTree * apTree );
 void					HashTree_DeInit( sHashTree * apTree );
 
-sHashTreeVar *			HashTree_VarInit( sHashTree * apTree, const char * apName, const U32 aSize, void * apData );
-void					HashTree_VarDeInit( sHashTree * apTree, sHashTreeVar * apVar );
+sHashTreeVar *			HashTree_Var_Create( sHashTree * apTree, const char * apName, const U32 aSize, void * apData );
+void					HashTree_Var_Destroy( sHashTree * apTree, sHashTreeVar * apVar );
 
 sHashTreeVar *			HashTree_VarRegister(   sHashTree * apTree, const char * apName );
 void					HashTree_VarUnRegister( sHashTree * apTree, sHashTreeVar * apVar );

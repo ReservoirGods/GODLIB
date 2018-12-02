@@ -115,7 +115,7 @@ GOD_UNIT_TEST( HashTree )
 
 	for( i = 0; i < mARRAY_COUNT( gHashTreeVarDef ); i++ )
 	{
-		gHashTreeVarDef[ i ].mpVar = HashTree_VarInit( &gHashTreeUT, gHashTreeVarDef[i].mpName, gHashTreeVarDef[ i ].mSize, gHashTreeVarDef[ i ].mpData );
+		gHashTreeVarDef[ i ].mpVar = HashTree_Var_Create( &gHashTreeUT, gHashTreeVarDef[i].mpName, gHashTreeVarDef[ i ].mSize, gHashTreeVarDef[ i ].mpData );
 		GOD_UNIT_TEST_ASSERT( gHashTreeVarDef[ i ].mpVar, "couldn't init has tree var" );
 	}
 
@@ -177,7 +177,7 @@ GOD_UNIT_TEST( HashTree )
 	for( i = 0; i < mARRAY_COUNT( gHashTreeVarDef ); i++ )
 	{
 		U16 lCountOld = gHashTreeVarTracks[ i ].mDeInitCount;
-		HashTree_VarDeInit( &gHashTreeUT, gHashTreeVarDef[ i ].mpVar );
+		HashTree_Var_Destroy( &gHashTreeUT, gHashTreeVarDef[ i ].mpVar );
 		GOD_UNIT_TEST_EXPECT( lCountOld + 1 == gHashTreeVarTracks[ i ].mDeInitCount, "deinit callback not triggered" );
 	}
 

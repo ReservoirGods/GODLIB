@@ -146,13 +146,13 @@ void	GuiFS_Init( sHashTree * apTree )
 	for( i = 0; i < eGUIFS_STRING_LIMIT; i++ )
 		gGuiFS.mpStrings[ i ] = &gGuiFS.mStrings[ i ];
 
-	gGuiFS.mpVars[ eGUIFS_VAR_DRIVE    ] = HashTree_VarInit( apTree, "GUI\\FS\\DRIVE",		sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_DRIVE    ]  );
-	gGuiFS.mpVars[ eGUIFS_VAR_FILE     ] = HashTree_VarInit( apTree, "GUI\\FS\\FILE",		sizeof(sGuiEvent), 0  );
-	gGuiFS.mpVars[ eGUIFS_VAR_FILEMASK ] = HashTree_VarInit( apTree, "GUI\\FS\\FILEMASK",	sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_FILEMASK ]  );
-	gGuiFS.mpVars[ eGUIFS_VAR_FILENAME ] = HashTree_VarInit( apTree, "GUI\\FS\\FILENAME",	sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_FILENAME ]  );
-	gGuiFS.mpVars[ eGUIFS_VAR_FILEPATH ] = HashTree_VarInit( apTree, "GUI\\FS\\FILEPATH",	sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_FILEPATH ]  );
-	gGuiFS.mpVars[ eGUIFS_VAR_TITLE    ] = HashTree_VarInit( apTree, "GUI\\FS\\TITLE",		sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_TITLE    ]  );
-	gGuiFS.mpVars[ eGUIFS_VAR_FOLDER   ] = HashTree_VarInit( apTree, "GUI\\FS\\FOLDER",		sizeof(sGuiEvent), 0  );
+	gGuiFS.mpVars[ eGUIFS_VAR_DRIVE    ] = HashTree_Var_Create( apTree, "GUI\\FS\\DRIVE",		sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_DRIVE    ]  );
+	gGuiFS.mpVars[ eGUIFS_VAR_FILE     ] = HashTree_Var_Create( apTree, "GUI\\FS\\FILE",		sizeof(sGuiEvent), 0  );
+	gGuiFS.mpVars[ eGUIFS_VAR_FILEMASK ] = HashTree_Var_Create( apTree, "GUI\\FS\\FILEMASK",	sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_FILEMASK ]  );
+	gGuiFS.mpVars[ eGUIFS_VAR_FILENAME ] = HashTree_Var_Create( apTree, "GUI\\FS\\FILENAME",	sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_FILENAME ]  );
+	gGuiFS.mpVars[ eGUIFS_VAR_FILEPATH ] = HashTree_Var_Create( apTree, "GUI\\FS\\FILEPATH",	sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_FILEPATH ]  );
+	gGuiFS.mpVars[ eGUIFS_VAR_TITLE    ] = HashTree_Var_Create( apTree, "GUI\\FS\\TITLE",		sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_TITLE    ]  );
+	gGuiFS.mpVars[ eGUIFS_VAR_FOLDER   ] = HashTree_Var_Create( apTree, "GUI\\FS\\FOLDER",		sizeof(sGuiEvent), 0  );
 
 	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_OK         ], apTree, "GUI\\BUTTONS\\BUTT_FS_OK",		GuiFS_OnOK     );
 	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_CANCEL     ], apTree, "GUI\\BUTTONS\\BUTT_FS_CANCEL",	GuiFS_OnCancel );
@@ -182,7 +182,7 @@ void	GuiFS_DeInit( sHashTree * apTree )
 
 	for( i=0; i<eGUIFS_VAR_LIMIT; i++ )
 	{
-		HashTree_VarDeInit( apTree, gGuiFS.mpVars[ i ] );
+		HashTree_Var_Destroy( apTree, gGuiFS.mpVars[ i ] );
 	}
 
 	for( i=0; i<eGUIFS_VARCLIENT_LIMIT; i++ )

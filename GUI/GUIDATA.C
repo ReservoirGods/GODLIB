@@ -1009,28 +1009,28 @@ void	GuiData_EventsRegister( sGuiData * apData,sHashTree * apTree )
 		sprintf( lString, "GUI\\BUTTONS\\%s", apData->mpButtons[ i ].mInfo.mpName );
 		apData->mpButtons[ i ].mInfo.mEvent.mpInfo = &apData->mpButtons[ i ];
 		apData->mpButtons[ i ].mInfo.mEvent.mEvent = 0;
-		apData->mpButtons[ i ].mInfo.mpEventVar    = HashTree_VarInit( apTree, lString, sizeof(sGuiEvent), &apData->mpButtons[ i ].mInfo.mEvent );
+		apData->mpButtons[ i ].mInfo.mpEventVar    = HashTree_Var_Create( apTree, lString, sizeof(sGuiEvent), &apData->mpButtons[ i ].mInfo.mEvent );
 	}
 	for( i=0; i<apData->mListCount; i++ )
 	{
 		sprintf( lString, "GUI\\LISTS\\%s", apData->mpLists[ i ].mInfo.mpName );
 		apData->mpLists[ i ].mInfo.mEvent.mpInfo = &apData->mpLists[ i ];
 		apData->mpLists[ i ].mInfo.mEvent.mEvent = 0;
-		apData->mpLists[ i ].mInfo.mpEventVar    = HashTree_VarInit( apTree, lString, sizeof(sGuiEvent), &apData->mpLists[ i ].mInfo.mEvent );
+		apData->mpLists[ i ].mInfo.mpEventVar    = HashTree_Var_Create( apTree, lString, sizeof(sGuiEvent), &apData->mpLists[ i ].mInfo.mEvent );
 	}
 	for( i=0; i<apData->mSliderCount; i++ )
 	{
 		sprintf( lString, "GUI\\SLIDERS\\%s", apData->mpSliders[ i ].mInfo.mpName );
 		apData->mpSliders[ i ].mInfo.mEvent.mpInfo = &apData->mpSliders[ i ];
 		apData->mpSliders[ i ].mInfo.mEvent.mEvent = 0;
-		apData->mpSliders[ i ].mInfo.mpEventVar    = HashTree_VarInit( apTree, lString, sizeof(sGuiEvent), &apData->mpSliders[ i ].mInfo.mEvent );
+		apData->mpSliders[ i ].mInfo.mpEventVar    = HashTree_Var_Create( apTree, lString, sizeof(sGuiEvent), &apData->mpSliders[ i ].mInfo.mEvent );
 	}
 	for( i=0; i<apData->mWindowCount; i++ )
 	{
 		sprintf( lString, "GUI\\WINDOWS\\%s", apData->mpWindows[ i ].mInfo.mpName );
 		apData->mpWindows[ i ].mInfo.mEvent.mpInfo = &apData->mpWindows[ i ];
 		apData->mpWindows[ i ].mInfo.mEvent.mEvent = 0;
-		apData->mpWindows[ i ].mInfo.mpEventVar    = HashTree_VarInit( apTree, lString, sizeof(sGuiEvent), &apData->mpWindows[ i ].mInfo.mEvent );
+		apData->mpWindows[ i ].mInfo.mpEventVar    = HashTree_Var_Create( apTree, lString, sizeof(sGuiEvent), &apData->mpWindows[ i ].mInfo.mEvent );
 	}
 }
 

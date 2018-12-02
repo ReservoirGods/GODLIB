@@ -384,7 +384,7 @@ void	HashTree_SubNodesDestroy( sHashTree * apTree, sHashTreeNode * apNode )
 * CREATION : 04.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-sHashTreeVar *	HashTree_VarInit( sHashTree * apTree,const char * apName,const U32 aSize,void * apData )
+sHashTreeVar *	HashTree_Var_Create( sHashTree * apTree,const char * apName,const U32 aSize,void * apData )
 {
 	sHashTreeVar *			lpVar;
 	sHashTreeVarClient *	lpClient;
@@ -430,7 +430,7 @@ sHashTreeVar *	HashTree_VarInit( sHashTree * apTree,const char * apName,const U3
 * CREATION : 04.01.2004 PNK
 *-----------------------------------------------------------------------------------*/
 
-void	HashTree_VarDeInit( sHashTree * apTree, sHashTreeVar * apVar )
+void	HashTree_Var_Destroy( sHashTree * apTree, sHashTreeVar * apVar )
 {
 	sHashTreeVarClient *	lpClient;
 
