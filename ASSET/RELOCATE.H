@@ -35,11 +35,6 @@ enum
 typedef	struct sRelocater
 {
 	U32					mExtID;
-	fReloc				IsType;
-	fReloc				DoInit;
-	fReloc				DoDeInit;
-	fReloc				DoRelocate;
-	fReloc				DoDelocate;
 	fReloc				mFunctions[ eRELOC_FUNCTION_LIMIT ];
 	struct sRelocater *	mpNext;
 } sRelocater;
