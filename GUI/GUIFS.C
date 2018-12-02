@@ -74,7 +74,7 @@ typedef	struct sGuiFSClass
 {
 	sHashTree *				mpTree;
 	sHashTreeVar *			mpVars[ eGUIFS_VAR_LIMIT ];
-	sHashTreeVarClient *	mpVarClients[ eGUIFS_VARCLIENT_LIMIT ];
+	sHashTreeVarClient		mVarClients[ eGUIFS_VARCLIENT_LIMIT ];
 	sString	*				mpStrings[ eGUIFS_STRING_LIMIT ];
 	sString					mStrings[ eGUIFS_STRING_LIMIT ];
 	U16						mFileCount;
@@ -154,17 +154,17 @@ void	GuiFS_Init( sHashTree * apTree )
 	gGuiFS.mpVars[ eGUIFS_VAR_TITLE    ] = HashTree_VarInit( apTree, "GUI\\FS\\TITLE",		sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_TITLE    ]  );
 	gGuiFS.mpVars[ eGUIFS_VAR_FOLDER   ] = HashTree_VarInit( apTree, "GUI\\FS\\FOLDER",		sizeof(sGuiEvent), 0  );
 
-	gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_OK         ] = HashTree_VarClientRegister( apTree, "GUI\\BUTTONS\\BUTT_FS_OK",		GuiFS_OnOK,			0, 0, 0 );
-	gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_CANCEL     ] = HashTree_VarClientRegister( apTree, "GUI\\BUTTONS\\BUTT_FS_CANCEL",	GuiFS_OnCancel,		0, 0, 0 );
-	gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_DRIVE      ] = HashTree_VarClientRegister( apTree, "GUI\\BUTTONS\\BUTT_DRIVE",		GuiFS_OnDrive,		0, 0, 0 );
-	gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_FILE       ] = HashTree_VarClientRegister( apTree, "GUI\\FS\\FILE",					GuiFS_OnFile,		0, 0, 0 );
-	gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_FILEWINDOW ] = HashTree_VarClientRegister( apTree, "GUI\\WINDOWS\\WND_FILELIST",		GuiFS_OnFileWindow, 0, 0, 0 );
-	gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_FILEMASK   ] = HashTree_VarClientRegister( apTree, "GUI\\BUTTONS\\BUTT_FILEMASK",		GuiFS_OnFilePath,   0, 0, 0 );
-	gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_FILENAME   ] = HashTree_VarClientRegister( apTree, "GUI\\BUTTONS\\BUTT_FILENAME",		0,					0, 0, 0 );
-	gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_FILEPATH   ] = HashTree_VarClientRegister( apTree, "GUI\\BUTTONS\\BUTT_FILEPATH",		GuiFS_OnFilePath,   0, 0, 0 );
-	gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_FOLDER     ] = HashTree_VarClientRegister( apTree, "GUI\\FS\\FOLDER",					GuiFS_OnFolder,		0, 0, 0 );
-	gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_FOLDERBACK ] = HashTree_VarClientRegister( apTree, "GUI\\BUTTONS\\BUTT_FOLDERBACK",	GuiFS_OnFolderBack, 0, 0, 0 );
-	gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_WINDOW     ] = HashTree_VarClientRegister( apTree, "GUI\\WINDOWS\\WND_FS",			0, 0, 0, 0 );
+	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_OK         ], apTree, "GUI\\BUTTONS\\BUTT_FS_OK",		GuiFS_OnOK     );
+	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_CANCEL     ], apTree, "GUI\\BUTTONS\\BUTT_FS_CANCEL",	GuiFS_OnCancel );
+	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_DRIVE      ], apTree, "GUI\\BUTTONS\\BUTT_DRIVE",		GuiFS_OnDrive  );
+	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_FILE       ], apTree, "GUI\\FS\\FILE",					GuiFS_OnFile   );
+	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_FILEWINDOW ], apTree, "GUI\\WINDOWS\\WND_FILELIST",		GuiFS_OnFileWindow);
+	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_FILEMASK   ], apTree, "GUI\\BUTTONS\\BUTT_FILEMASK",		GuiFS_OnFilePath);
+	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_FILENAME   ], apTree, "GUI\\BUTTONS\\BUTT_FILENAME",		0);
+	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_FILEPATH   ], apTree, "GUI\\BUTTONS\\BUTT_FILEPATH",		GuiFS_OnFilePath);
+	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_FOLDER     ], apTree, "GUI\\FS\\FOLDER",					GuiFS_OnFolder);
+	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_FOLDERBACK ], apTree, "GUI\\BUTTONS\\BUTT_FOLDERBACK",	GuiFS_OnFolderBack );
+	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_WINDOW     ], apTree, "GUI\\WINDOWS\\WND_FS",			0 );
 
 	gGuiFS.mAllocFlag = 0;
 }
@@ -187,7 +187,7 @@ void	GuiFS_DeInit( sHashTree * apTree )
 
 	for( i=0; i<eGUIFS_VARCLIENT_LIMIT; i++ )
 	{
-		HashTree_VarClientUnRegister( apTree, gGuiFS.mpVarClients[ i ] );
+		HashTree_VarClient_DeInit( &gGuiFS.mVarClients[ i ], apTree );
 	}
 
 	for( i=0; i<eGUIFS_STRING_LIMIT; i++ )
@@ -462,7 +462,7 @@ void	GuiFS_OnFilePath( sHashTreeVarClient  * apClient )
 		if( eGUIEVENT_BUTTON_UPDATE == lpEvent->mEvent )
 		{
 			DebugLog_Printf0( "GuiFS_OnFilePath() eGUIEVENT_BUTTON_UPDATE" );
-			lpVar = gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_FILEWINDOW ]->mpVar;
+			lpVar = gGuiFS.mVarClients[ eGUIFS_VARCLIENT_FILEWINDOW ].mpVar;
 			if( lpVar )
 			{
 				lpEvent = (sGuiEvent*)lpVar->mpData;
@@ -499,7 +499,7 @@ void	GuiFS_OnDrive( sHashTreeVarClient  * apClient )
 		if( eGUIEVENT_BUTTON_UPDATE == lpEvent->mEvent )
 		{
 			DebugLog_Printf0( "GuiFS_OnDrive()" );
-			lpVar = gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_FILEWINDOW ]->mpVar;
+			lpVar = gGuiFS.mVarClients[ eGUIFS_VARCLIENT_FILEWINDOW ].mpVar;
 			if( lpVar )
 			{
 				lpEvent = (sGuiEvent*)lpVar->mpData;
@@ -569,7 +569,7 @@ void	GuiFS_OnFolderBack( sHashTreeVarClient  * apClient )
 						}
 					}
 */
-					lpVar = gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_FILEWINDOW ]->mpVar;
+					lpVar = gGuiFS.mVarClients[ eGUIFS_VARCLIENT_FILEWINDOW ].mpVar;
 					if( lpVar )
 					{
 						lpEvent = (sGuiEvent*)lpVar->mpData;
@@ -680,7 +680,7 @@ void	GuiFS_OnFolder( sHashTreeVarClient  * apClient )
 					}
 				}
 */
-				lpVar = gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_FILEWINDOW ]->mpVar;
+				lpVar = gGuiFS.mVarClients[ eGUIFS_VARCLIENT_FILEWINDOW ].mpVar;
 				if( lpVar )
 				{
 					lpEvent = (sGuiEvent*)lpVar->mpData;
@@ -714,7 +714,7 @@ void	GuiFS_Open( sGuiFSInfo * apInfo )
 	sGuiEvent		lEvent;
 
 	gGuiFS.mpInfo = apInfo;
-	lpVar =gGuiFS.mpVarClients[ eGUIFS_VARCLIENT_WINDOW ]->mpVar;
+	lpVar =gGuiFS.mVarClients[ eGUIFS_VARCLIENT_WINDOW ].mpVar;
 	if( lpVar )
 	{
 		lpEvent = (sGuiEvent*)lpVar->mpData;

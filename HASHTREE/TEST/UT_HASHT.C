@@ -30,7 +30,7 @@ typedef struct sHashTreeVarDef
 	U32			mSize;
 	void *		mpData;
 	sHashTreeVar *	mpVar;
-	sHashTreeVarClient * mpClient;
+	sHashTreeVarClient  mClient;
 }sHashTreeVarDef;
 
 
@@ -146,7 +146,11 @@ GOD_UNIT_TEST( HashTree )
 		gHashTreeVarTracks[ i ].mWriteCount = 0;
 		gHashTreeVarTracks[ i ].mWriteValue = 0;
 
-		gHashTreeVarDef[ i ].mpClient = HashTree_VarClientRegister( &gHashTreeUT, gHashTreeVarDef[ i ].mpName, HashTreeUT_OnWrite, HashTreeUT_OnInit, HashTreeUT_OnDeInit, i );
+		gHashTreeVarDef[ i ].mClient.mfOnDeInit = HashTreeUT_OnDeInit;
+		gHashTreeVarDef[ i ].mClient.mfOnInit = HashTreeUT_OnInit;
+		gHashTreeVarDef[ i ].mClient.mUserData = i;
+
+		HashTree_VarClient_Init( &gHashTreeVarDef[ i ].mClient, &gHashTreeUT, gHashTreeVarDef[ i ].mpName, HashTreeUT_OnWrite );
 	}
 
 
@@ -181,7 +185,7 @@ GOD_UNIT_TEST( HashTree )
 
 	for( i = 0; i < mARRAY_COUNT( gHashTreeVarTracks ); i++ )
 	{
-		HashTree_VarClientUnRegister( &gHashTreeUT, gHashTreeVarDef[ i ].mpClient );
+		HashTree_VarClient_DeInit( &gHashTreeVarDef[ i ].mClient, &gHashTreeUT );
 	}
 
 	/* destroy tree */

@@ -325,7 +325,8 @@ void	Gui_DataAdd( sGuiData * apHeader )
 	{
 		if( apHeader->mpButtons[ i ].mString.mVar.mpName )
 		{
-			apHeader->mpButtons[ i ].mString.mVar.mpVarClient = HashTree_VarClientRegister( gGuiClass.mpTree, apHeader->mpButtons[ i ].mString.mVar.mpName, Gui_OnStringVarWrite, 0, 0, (U32)&apHeader->mpButtons[ i ] );
+			apHeader->mpButtons[ i ].mString.mVar.mVarClient.mUserData = (U32)&apHeader->mpButtons[ i ];
+			HashTree_VarClient_Init( &apHeader->mpButtons[ i ].mString.mVar.mVarClient, gGuiClass.mpTree, apHeader->mpButtons[ i ].mString.mVar.mpName, Gui_OnStringVarWrite  );
 		}
 	}
 
@@ -358,9 +359,9 @@ void	Gui_DataRemove( sGuiData * apHeader )
 
 	for( i=0; i<apHeader->mButtonCount; i++ )
 	{
-		if( apHeader->mpButtons[ i ].mString.mVar.mpVarClient )
+		if( apHeader->mpButtons[ i ].mString.mVar.mpName )
 		{
-			HashTree_VarClientUnRegister( gGuiClass.mpTree, apHeader->mpButtons[ i ].mString.mVar.mpVarClient );
+			HashTree_VarClient_DeInit( &apHeader->mpButtons[ i ].mString.mVar.mVarClient, gGuiClass.mpTree );
 		}
 	}
 
@@ -2738,7 +2739,7 @@ void	Gui_OnStringVarWrite( sHashTreeVarClient * apClient )
 	lpButton = (sGuiButton*)apClient->mUserData;
 	if( lpButton )
 	{
-		if( lpButton->mString.mVar.mpVarClient == apClient )
+		if( &lpButton->mString.mVar.mVarClient == apClient )
 		{
 			lpButton->mInfo.mRedrawFlag = 2;
 		}

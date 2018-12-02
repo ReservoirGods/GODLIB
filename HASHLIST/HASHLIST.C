@@ -23,7 +23,7 @@ void	HashList_Init( sHashList * apList,const U32 aItemSize,fHashListItemCB aInit
 	apList->mItemSize  = aItemSize;
 	apList->mpItems    = 0;
 	apList->mInitCB    = aInitCB;
-	apList->mInitCB    = aDeInitCB;
+	apList->mDeInitCB    = aDeInitCB;
 }
 
 

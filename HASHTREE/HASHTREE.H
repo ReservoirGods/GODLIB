@@ -101,8 +101,10 @@ void					HashTree_VarDeInit( sHashTree * apTree, sHashTreeVar * apVar );
 sHashTreeVar *			HashTree_VarRegister(   sHashTree * apTree, const char * apName );
 void					HashTree_VarUnRegister( sHashTree * apTree, sHashTreeVar * apVar );
 
+#if 0
 sHashTreeVarClient *	HashTree_VarClientRegister( sHashTree * apTree, const char * apName, fHashTreeVarCB aOnWrite, fHashTreeVarCB aOnInit, fHashTreeVarCB onDeInit, const U32 aUserData );
 void					HashTree_VarClientUnRegister( sHashTree * apTree, sHashTreeVarClient * apClient );
+#endif
 
 void					HashTree_VarClient_Init( sHashTreeVarClient * apClient, sHashTree * apTree, const char * apName, fHashTreeVarCB aOnWrite );
 void					HashTree_VarClient_DeInit( sHashTreeVarClient * apClient, sHashTree * apTree );

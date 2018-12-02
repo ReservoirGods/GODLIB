@@ -13,7 +13,7 @@
 #  STRUCTS
 ################################################################################### */
 
-#define dGUIDATA_VERSION	1
+#define dGUIDATA_VERSION	2
 
 typedef	struct	sGuiData
 {

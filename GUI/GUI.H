@@ -278,7 +278,7 @@ typedef	struct	sGuiVar
 {
 	char *					mpName;
 	sHashTreeVar *			mpVar;
-	sHashTreeVarClient *	mpVarClient;
+	sHashTreeVarClient 		mVarClient;
 	U16						mStructOffset;
 	U16						mStructSize;
 	U16						mSize;
