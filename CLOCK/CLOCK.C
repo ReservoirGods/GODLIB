@@ -398,7 +398,7 @@ void	Time_Sub( sTime * apSrc0,sTime * apSrc1,sTime * apDst )
 U32	Time_GetAbsTime( void )
 {
 	U32	lCombine;
-#ifdef	dGODLIB_PLATFORM_WIN
+#ifdef	dGODLIB_PLATFORM_WIN2
 	lCombine = 0;
 #else
 	time_t		lTimeT;
