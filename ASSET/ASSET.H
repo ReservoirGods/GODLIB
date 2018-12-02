@@ -19,13 +19,6 @@ typedef	U32	(*fAsset)( void * apData, const U32 aSize, const U32 aUserData );
 #  ENUMS
 ################################################################################### */
 
-enum
-{
-	eASSET_STATUS_NOTLOADED,
-	eASSET_STATUS_LOADED,
-	eASSET_STATUS_UNLOADING,
-	eASSET_STATUS_UNLOADED,
-};
 
 enum
 {

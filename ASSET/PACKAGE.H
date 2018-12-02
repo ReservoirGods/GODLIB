@@ -21,12 +21,6 @@ typedef	void	(*fPackagePrint)( const char * apString );
 #  STRUCTS
 ################################################################################### */
 
-typedef	struct	sPackageItem
-{
-	struct	sAsset *		mpAsset;
-} sPackageItem;
-
-
 typedef	struct sPackage
 {
 	char				mName[ 16 ];
@@ -36,7 +30,7 @@ typedef	struct sPackage
 	U16					mLoaderType;
 	struct	sContext *	mpContext;
 	struct sLinkFile *	mpLinkFile;
-	sPackageItem *		mpItems;
+	struct sAssetItem *	mpItems;
 	struct sPackage *	mpNext;
 	struct sPackage *	mpContextNext;
 } sPackage;

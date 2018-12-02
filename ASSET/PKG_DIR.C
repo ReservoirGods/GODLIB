@@ -11,6 +11,7 @@
 #include	<GODLIB/DEBUG/DBGCHAN.H>
 #include	<GODLIB/CLI/CLI.H>
 #include	<GODLIB/FILE/FILE.H>
+#include	<GODLIB/FILE/FILE_PTN.H>
 #include	<GODLIB/GEMDOS/GEMDOS.H>
 #include	<GODLIB/MEMORY/MEMORY.H>
 
@@ -34,9 +35,69 @@ sGemDosDTA	gPackageDirDTA;
 
 U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 {
-	(void)apPackage;
-	(void)apDirName;
-	return 0;
+	sFilePattern pattern;
+
+	apPackage->mFileCount = 0;
+	if( FilePattern_Init( &pattern, apDirName ) )
+	{
+		while( FilePattern_Next( &pattern ) )
+			apPackage->mFileCount++;
+	}
+
+	if( FilePattern_Init( &pattern, apDirName ) )
+	{
+		U16 itemIndex = 0;
+		apPackage->mpItems = (sAssetItem*)mMEMCALLOC( sizeof(sAssetItem) * apPackage->mFileCount );
+		for( ;FilePattern_Next( &pattern ) && (itemIndex<apPackage->mFileCount); itemIndex++ )
+		{
+			sAssetItem * item = &apPackage->mpItems[ itemIndex ];
+			sAssetClient * client;
+			const char * pExt = StringPath_GetpExt(pattern.mPath.mChars);
+
+			item->mSize = File_GetSize( pattern.mPath.mChars );
+			item->mpData = File_Load( pattern.mPath.mChars );
+			item->mHashKey = Asset_BuildHash( StringPath_GetpFileName(pattern.mPath.mChars), 12 );
+			item->mStatusBits = eASSET_STATUS_BIT_LOADED;
+			if( pExt )
+			{
+				if( '.' == *pExt )
+					pExt++;
+				item->mExtension = Asset_BuildHash( pExt, 4 );
+			}
+
+			client = Context_AssetClient_Find( apPackage->mpContext, item->mHashKey );
+			if( client )
+			{
+				RelocaterManager_DoRelocate( item );
+				RelocaterManager_DoInit( item );
+				AssetClients_OnUnLoad( client );
+			}
+		}
+
+		{
+			sAssetClient * client = apPackage->mpContext->mpAssetClients;
+			for( ; client; client=client->mpContextNext)
+			{
+				if( !client->mpAsset )
+				{
+					for( itemIndex=0; itemIndex<apPackage->mFileCount; itemIndex++ )
+					{
+						sAssetItem * item = &apPackage->mpItems[ itemIndex ];
+						if( item->mHashKey == client->mHashKey )
+						{
+							RelocaterManager_DoRelocate( item );
+							RelocaterManager_DoInit( item );
+							AssetClients_OnLoad( client, item );
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return 1;
+
 
 #if 0
 	sAsset *	lpAsset;
@@ -53,7 +114,7 @@ U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 
 	File_SetDTA( &gPackageDirDTA );
 
-	if( !File_ReadFirst( lString, 1 ) )
+	if( !File_ReadFirst( lString, dGEMDOS_FA_READONLY | dGEMDOS_FA_ARCHIVE | dGEMDOS_FA_DIR ) )
 	{
 		do
 		{
@@ -63,10 +124,10 @@ U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 
 	if( apPackage->mFileCount )
 	{
-		apPackage->mpItems = (sPackageItem*)mMEMCALLOC( sizeof(sPackageItem) * apPackage->mFileCount );
+		apPackage->mpItems = (sAssetItem*)mMEMCALLOC( sizeof(sAssetItem) * apPackage->mFileCount );
 
 		lIndex = 0;
-		if( !File_ReadFirst( lString, 1 ) )
+		if( !File_ReadFirst( lString, dGEMDOS_FA_READONLY | dGEMDOS_FA_ARCHIVE | dGEMDOS_FA_DIR ) )
 		{
 			do
 			{
@@ -110,8 +171,21 @@ U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 
 U32	PackageDir_UnLoad( sPackage * apPackage )
 {
-	(void)apPackage;
-	return 0;
+	U16 i;
+
+	for( i=0; i<apPackage->mFileCount; i++ )
+	{
+		sAssetItem * item = &apPackage->mpItems[ i ];
+		sAssetClient * client = Context_AssetClient_Find( apPackage->mpContext, item->mHashKey );
+		if( client )
+		{
+			RelocaterManager_DoDeInit( item );
+			RelocaterManager_DoDelocate( item );
+			AssetClients_OnUnLoad( client );
+		}
+	}
+
+	return 1;
 #if 0
 	U32			i;
 	U32			lRet;
@@ -155,6 +229,13 @@ U32	PackageDir_UnLoad( sPackage * apPackage )
 
 void	PackageDir_Destroy( sPackage * apPackage )
 {
+	PackageDir_UnLoad( apPackage );
+	if( apPackage->mpItems )
+	{
+		mMEMFREE( apPackage->mpItems );
+	}
+	apPackage->mFileCount = 0;
+
 	(void)apPackage;
 #if 0
 	U32			i;
