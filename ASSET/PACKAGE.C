@@ -12,7 +12,7 @@
 #include	<GODLIB/DEBUGLOG/DEBUGLOG.H>
 #include	<GODLIB/LINKLIST/GOD_LL.H>
 #include	<GODLIB/MEMORY/MEMORY.H>
-#include	<STRING.H>
+#include	<GODLIB/STRING/STRPATH.H>
 
 
 /* ###################################################################################
@@ -68,8 +68,8 @@ typedef	struct
 #  DATA
 ################################################################################### */
 
-char		gPackageManagerFilePath[ 256 ];
-char		gPackageManagerLinkPath[ 256 ];
+const char *		gpPackageManagerFilePath = "UNLINK";
+const char *		gpPackageManagerLinkPath = "DATA";
 sPackage *	gpPackages;
 sPackageOp	gPackageOpQueue[ dPACKAGE_OPQ_LIMIT ];
 S32			gPackageOpQueueHead;
@@ -83,8 +83,6 @@ U16			gPackageLinkEnableFlag;
 
 U32			Package_Load( sPackage * apPackage );
 U32			Package_UnLoad( sPackage * apPackage );
-
-void		PackageManager_AppendSlash( char * apString );
 
 
 /* ###################################################################################
@@ -103,9 +101,6 @@ void	PackageManager_Init( void )
 	gPackageOpQueueHead = 0;
 	gPackageOpQueueTail = 0;
 	gPackageLinkEnableFlag = 1;
-
-	gPackageManagerFilePath[ 0 ] = 0;
-	gPackageManagerLinkPath[ 0 ] = 0;
 
 	ContextManager_Init();
 }
@@ -256,28 +251,6 @@ void	PackageManager_ReLoad( sPackage * apPackage )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : PackageManager_AppendSlash( char * apString )
-* ACTION   : PackageManager_AppendSlash
-* CREATION : 05.12.2003 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	PackageManager_AppendSlash( char * apString )
-{
-	S32	lLen;
-
-	lLen = strlen( apString );
-	if( lLen )
-	{
-		if( (apString[ lLen - 1 ] != '\\') && (apString[ lLen - 1 ] != '/') )
-		{
-			apString[ lLen + 0 ] = '\\';
-			apString[ lLen + 1 ] = 0;
-		}
-	}
-}
-
-
-/*-----------------------------------------------------------------------------------*
 * FUNCTION : PackageManager_SetLinkPath( const char * apPath )
 * ACTION   : PackageManager_SetLinkPath
 * CREATION : 02.12.2003 PNK
@@ -285,8 +258,7 @@ void	PackageManager_AppendSlash( char * apString )
 
 void	PackageManager_SetLinkPath( const char * apPath )
 {
-	strcpy( gPackageManagerLinkPath, apPath );
-	PackageManager_AppendSlash( gPackageManagerLinkPath );
+	gpPackageManagerLinkPath = apPath;
 }
 
 
@@ -298,8 +270,7 @@ void	PackageManager_SetLinkPath( const char * apPath )
 
 void	PackageManager_SetFilePath( const char * apPath )
 {
-	strcpy( gPackageManagerFilePath, apPath );
-	PackageManager_AppendSlash( gPackageManagerFilePath );
+	gpPackageManagerFilePath = apPath;
 }
 
 
@@ -397,7 +368,7 @@ void	Package_DeInit( sPackage * apPackage )
 U32	Package_Load( sPackage * apPackage )
 {
 	U32		lRet;
-	char	lFullName[ 256 ];
+	sStringPath path;
 
 
 	if( apPackage->mStatus != ePACKAGESTATUS_LOADED )
@@ -407,8 +378,9 @@ U32	Package_Load( sPackage * apPackage )
 
 		if( gPackageLinkEnableFlag )
 		{
-			sprintf( lFullName, "%s%s.LNK", gPackageManagerLinkPath, apPackage->mName );
-			lRet = PackageLnk_Load( apPackage, lFullName );
+			StringPath_Combine( &path, gpPackageManagerLinkPath, apPackage->mName );
+			StringPath_SetExt( &path, ".LNK");
+			lRet = PackageLnk_Load( apPackage, path.mChars );
 
 			if( lRet )
 			{
@@ -417,8 +389,8 @@ U32	Package_Load( sPackage * apPackage )
 		}
 		else
 		{
-			sprintf( lFullName, "%s%s", gPackageManagerFilePath, apPackage->mName );
-			lRet = PackageDir_Load( apPackage, lFullName );
+			StringPath_Combine( &path, gpPackageManagerFilePath, apPackage->mName );
+			lRet = PackageDir_Load( apPackage, path.mChars );
 
 			if( lRet )
 			{

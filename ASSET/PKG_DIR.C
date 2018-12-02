@@ -85,69 +85,6 @@ U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 	}
 
 	return 1;
-
-
-#if 0
-	sAsset *	lpAsset;
-	sContext *	lpContext;
-	U32			lIndex;
-	char		lString[ 128 ];
-
-	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "PackageDir_Load(): %s", apPackage->mName );
-
-	sprintf( lString, "%s\\*.*", apDirName );
-
-	apPackage->mFileCount = 0;
-	lpContext             = apPackage->mpContext;
-
-	File_SetDTA( &gPackageDirDTA );
-
-	if( !File_ReadFirst( lString, dGEMDOS_FA_READONLY | dGEMDOS_FA_ARCHIVE | dGEMDOS_FA_DIR ) )
-	{
-		do
-		{
-			apPackage->mFileCount++;
-		} while( !File_ReadNext() );
-	}
-
-	if( apPackage->mFileCount )
-	{
-		apPackage->mpItems = (sAssetItem*)mMEMCALLOC( sizeof(sAssetItem) * apPackage->mFileCount );
-
-		lIndex = 0;
-		if( !File_ReadFirst( lString, dGEMDOS_FA_READONLY | dGEMDOS_FA_ARCHIVE | dGEMDOS_FA_DIR ) )
-		{
-			do
-			{
-				sprintf( lString, "%s\\%s", apDirName, gPackageDirDTA.mFileName );
-
-				lpAsset = Context_AssetRegister( lpContext, gPackageDirDTA.mFileName );
-				apPackage->mpItems[ lIndex ].mpAsset = lpAsset;
-				if( lpAsset )
-				{
-					lpAsset->mSize  = gPackageDirDTA.mLength;
-					if( lpContext->mSlowRamFlag )
-					{
-						lpAsset->mpData = File_LoadSlowRam( lString );
-					}
-					else
-					{
-						lpAsset->mpData = File_Load( lString );
-					}
-					lpAsset->mStatus = eASSET_STATUS_LOADED;
-				}
-				/* 2d0 fix */
-				RelocaterManager_DoRelocate( 0 );
-				RelocaterManager_DoInit( 0 );
-				Asset_OnLoad( lpAsset );
-
-				lIndex++;
-			} while( (!File_ReadNext()) && (lIndex<apPackage->mFileCount) );
-		}
-	}
-
-	return( apPackage->mFileCount );
-#endif	
 }
 
 
@@ -188,39 +125,6 @@ U32	PackageDir_UnLoad( sPackage * apPackage )
 	}
 
 	return 1;
-
-#if 0
-	U32			i;
-	U32			lRet;
-	sAsset *	lpAsset;
-
-	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "PackageDir_UnLoad(): %s", apPackage->mName );
-
-	lRet = 1;
-
-	for( i=0; i<apPackage->mFileCount; i++ )
-	{
-		lpAsset = apPackage->mpItems[ i ].mpAsset;
-
-		switch( lpAsset->mStatus )
-		{
-		case	eASSET_STATUS_LOADED:
-		case	eASSET_STATUS_UNLOADING:
-			if( Asset_OnUnLoad( lpAsset ) )
-			{
-				lpAsset->mStatus = eASSET_STATUS_UNLOADED;
-			}
-			else
-			{
-				lpAsset->mStatus = eASSET_STATUS_UNLOADING;
-				lRet = 0;
-			}
-			break;
-		}
-	}
-
-	return( lRet );
-#endif	
 }
 
 
@@ -238,40 +142,7 @@ void	PackageDir_Destroy( sPackage * apPackage )
 		mMEMFREE( apPackage->mpItems );
 	}
 	apPackage->mFileCount = 0;
-
-	(void)apPackage;
-#if 0
-	U32			i;
-	sAsset *	lpAsset;
-
-	DebugChannel_Printf1( eDEBUGCHANNEL_ASSET, "PackageDir_Destroy(): %s", apPackage->mName );
-
-	for( i=0; i<apPackage->mFileCount; i++ )
-	{
-		lpAsset = apPackage->mpItems[ i ].mpAsset;
-
-		/* 2do fix */
-		RelocaterManager_DoDeInit( 0 );
-		RelocaterManager_DoDelocate( 0 );
-		File_UnLoad( lpAsset->mpData );
-
-		lpAsset->mpData  = 0;
-		lpAsset->mSize   = 0;
-		lpAsset->mStatus = eASSET_STATUS_NOTLOADED;
-		Context_AssetUnRegister( apPackage->mpContext, lpAsset );
-	}
-
-	mMEMFREE( apPackage->mpItems );
-	apPackage->mpItems = 0;
-	apPackage->mFileCount = 0;
-#endif	
 }
 
-U8		PackageDir_AssetLoad( sPackage * apPackage, struct sAssetClient * apClient )
-{
-	(void)apPackage;
-	(void)apClient;
-	return 0;
-}
 
 /* ################################################################################ */

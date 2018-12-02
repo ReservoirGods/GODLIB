@@ -7,7 +7,6 @@
 #include	"ASSET.H"
 
 #include	<GODLIB/DEBUGLOG/DEBUGLOG.H>
-#include	<GODLIB/MEMORY/MEMORY.H>
 
 
 /* ###################################################################################

@@ -9,7 +9,6 @@
 
 #include	<GODLIB/ASSERT/ASSERT.H>
 #include	<GODLIB/ASSET/RELOCATE.H>
-#include	<GODLIB/CLI/CLI.H>
 #include	<GODLIB/DEBUG/DBGCHAN.H>
 #include	<GODLIB/LINKFILE/LINKFILE.H>
 #include	<GODLIB/MEMORY/MEMORY.H>
@@ -131,30 +130,12 @@ U32	PackageLnk_FolderUnLoad( sPackage * apPackage,sLinkFileFolder * apFolder, ch
 	for( i=0; i<apFolder->mFileCount; i++ )
 	{
 		sLinkFileFile * pFile = &apFolder->mpFiles[ i ];
-		pFile->mAsset.mpData = 0;
 		RelocaterManager_DoDeInit( &pFile->mAsset );
 		RelocaterManager_DoDelocate( &pFile->mAsset );
+		pFile->mAsset.mpData = 0;
 	}
 
 
-#if 0
-	U32 lRet = 1;
-	U16 i;
-
-	(void)apPackage;
-	(void)apParentName;
-	for( i=0; i<apFolder->mFileCount; i++ )
-	{
-		sLinkFileFile * pFile = &apFolder->mpFiles[ i ];
-		sAssetClient * client = Context_AssetClient_Find( apPackage->mpContext, pFile->mAsset.mHashKey );
-		if( client )
-		{
-			RelocaterManager_DoDeInit( &pFile->mAsset );
-			RelocaterManager_DoDelocate( &pFile->mAsset );
-			AssetClients_OnUnLoad( client );
-		}
-	}
-#endif
 	return lRet;
 }
 
