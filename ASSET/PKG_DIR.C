@@ -51,7 +51,6 @@ U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 		for( ;FilePattern_Next( &pattern ) && (itemIndex<apPackage->mFileCount); itemIndex++ )
 		{
 			sAssetItem * item = &apPackage->mpItems[ itemIndex ];
-			sAssetClient * client;
 			const char * pExt = StringPath_GetpExt(pattern.mPath.mChars);
 
 			item->mSize = File_GetSize( pattern.mPath.mChars );
@@ -65,35 +64,24 @@ U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 				item->mExtension = Asset_BuildHash( pExt, 4 );
 			}
 
-			client = Context_AssetClient_Find( apPackage->mpContext, item->mHashKey );
+			RelocaterManager_DoRelocate( item );
+			RelocaterManager_DoInit( item );
+		}
+
+
+		/* pass two - service clients */
+		/* techinically this should iterate until no more clients need to be services, as deps could be multiple levels deep */
+
+		for( itemIndex=0; itemIndex<apPackage->mFileCount; itemIndex++ )
+		{
+			sAssetItem * item = &apPackage->mpItems[ itemIndex ];
+			sAssetClient * client = Context_AssetClient_Find( apPackage->mpContext, item->mHashKey );
 			if( client )
 			{
-				RelocaterManager_DoRelocate( item );
-				RelocaterManager_DoInit( item );
-				AssetClients_OnUnLoad( client );
+				AssetClients_OnLoad( client, item);
 			}
 		}
 
-		{
-			sAssetClient * client = apPackage->mpContext->mpAssetClients;
-			for( ; client; client=client->mpContextNext)
-			{
-				if( !client->mpAsset )
-				{
-					for( itemIndex=0; itemIndex<apPackage->mFileCount; itemIndex++ )
-					{
-						sAssetItem * item = &apPackage->mpItems[ itemIndex ];
-						if( item->mHashKey == client->mHashKey )
-						{
-							RelocaterManager_DoRelocate( item );
-							RelocaterManager_DoInit( item );
-							AssetClients_OnLoad( client, item );
-							break;
-						}
-					}
-				}
-			}
-		}
 	}
 
 	return 1;
@@ -173,19 +161,34 @@ U32	PackageDir_UnLoad( sPackage * apPackage )
 {
 	U16 i;
 
+	/* pass one - invoke unloads */
+
 	for( i=0; i<apPackage->mFileCount; i++ )
 	{
 		sAssetItem * item = &apPackage->mpItems[ i ];
 		sAssetClient * client = Context_AssetClient_Find( apPackage->mpContext, item->mHashKey );
 		if( client )
 		{
-			RelocaterManager_DoDeInit( item );
-			RelocaterManager_DoDelocate( item );
 			AssetClients_OnUnLoad( client );
 		}
 	}
 
+	/* pass two - invoke relocators */
+	for( i=0; i<apPackage->mFileCount; i++ )
+	{
+		sAssetItem * item = &apPackage->mpItems[ i ];
+		
+		RelocaterManager_DoDeInit( item );
+		RelocaterManager_DoDelocate( item );
+
+		File_UnLoad( item->mpData );
+
+		item->mpData = 0;
+		item->mSize = 0;
+	}
+
 	return 1;
+
 #if 0
 	U32			i;
 	U32			lRet;
