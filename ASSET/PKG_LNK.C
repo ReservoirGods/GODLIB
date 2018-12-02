@@ -37,6 +37,7 @@ U32		PackageLnk_FolderLoad( sPackage * apPackage, sLinkFileFolder * apFolder, ch
 {
 	U32 lRet = 1;
 	U16 i;
+	U16	resolved =0;
 
 	(void)apParentName;
 
@@ -52,15 +53,33 @@ U32		PackageLnk_FolderLoad( sPackage * apPackage, sLinkFileFolder * apFolder, ch
 	/* pass two - service clients */
 	/* techinically this should iterate until no more clients need to be services, as deps could be multiple levels deep */
 
-	for( i=0; i<apFolder->mFileCount; i++ )
+	do
 	{
-		sLinkFileFile * pFile = &apFolder->mpFiles[ i ];
-		sAssetClient * client = Context_AssetClient_Find( apPackage->mpContext, pFile->mAsset.mHashKey );
-		if( client )
+		resolved = 0;
+
+		for( i=0; i<apFolder->mFileCount; i++ )
 		{
-			lRet &= AssetClients_OnLoad( client, &pFile->mAsset );
+			sLinkFileFile * pFile = &apFolder->mpFiles[ i ];
+			sAssetClient * client = Context_AssetClient_Find( apPackage->mpContext, pFile->mAsset.mHashKey );
+			sAssetClient * c;
+			U8 needLoad = 0;
+
+			for( c=client; c; c=c->mpNext )
+			{
+				if( !c->mpAsset )
+				{
+					needLoad = 1;
+					break;
+				}
+			}
+
+			if( needLoad )
+			{
+				lRet &= AssetClients_OnLoad( client, &pFile->mAsset );
+				resolved = 1;
+			}
 		}
-	}
+	} while (resolved);
 
 	return lRet;
 }

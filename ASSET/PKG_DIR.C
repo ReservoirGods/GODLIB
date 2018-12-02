@@ -36,6 +36,7 @@ sGemDosDTA	gPackageDirDTA;
 U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 {
 	sFilePattern pattern;
+	U16 resolved = 0;
 
 	apPackage->mFileCount = 0;
 	if( FilePattern_Init( &pattern, apDirName ) )
@@ -81,6 +82,36 @@ U32	PackageDir_Load( sPackage * apPackage, const char * apDirName )
 				AssetClients_OnLoad( client, item);
 			}
 		}
+
+
+	do
+	{
+		resolved = 0;
+
+		for( itemIndex=0; itemIndex<apPackage->mFileCount; itemIndex++ )
+		{
+			sAssetItem * item = &apPackage->mpItems[ itemIndex ];
+			sAssetClient * client = Context_AssetClient_Find( apPackage->mpContext, item->mHashKey );
+			sAssetClient * c;
+			U8 needLoad = 0;
+
+			for( c=client; c; c=c->mpNext )
+			{
+				if( !c->mpAsset )
+				{
+					needLoad = 1;
+					break;
+				}
+			}
+
+			if( needLoad )
+			{
+				AssetClients_OnLoad( client, item );
+				resolved = 1;
+			}
+		}
+	} while (resolved);
+
 
 	}
 
