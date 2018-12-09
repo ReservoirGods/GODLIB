@@ -1096,7 +1096,8 @@ void Fed_Init(sFedHeader * apHeader)
 
 	for( i=0; i<apHeader->mVarCount; i++ )
 	{
-		apHeader->mpVars[ i ].mpVar = HashTree_VarRegister( gpFedHashTree, apHeader->mpVars[ i ].mpName );
+/*		apHeader->mpVars[ i ].mpVar = HashTree_VarRegister( gpFedHashTree, apHeader->mpVars[ i ].mpName );*/
+		HashTree_VarClient_Init( &apHeader->mpVars[ i ].mVarClient, gpFedHashTree, apHeader->mpVars[ i ].mpName, 0 );
 	}
 }
 
@@ -1118,7 +1119,8 @@ void	Fed_DeInit( sFedHeader * apHeader )
 
 	for( i=0; i<apHeader->mVarCount; i++ )
 	{
-		HashTree_VarUnRegister( gpFedHashTree, apHeader->mpVars[ i ].mpVar );
+/*		HashTree_VarUnRegister( gpFedHashTree, apHeader->mpVars[ i ].mpVar );*/
+		HashTree_VarClient_DeInit( &apHeader->mpVars[ i ].mVarClient, gpFedHashTree );
 	}
 
 	gpFedPage = 0;
@@ -1288,7 +1290,7 @@ U8	Fed_Update( const sInput * apInput )
 				{
 					if( lpControl->mpSetVar )
 					{
-						HashTree_VarWrite( lpControl->mpSetVar->mpVar, &lpControl->mSetValue );
+						HashTree_VarWrite( lpControl->mpSetVar->mVarClient.mpVar, &lpControl->mSetValue );
 					}
 
 					switch( lpControl->mControlType )
@@ -1308,7 +1310,7 @@ U8	Fed_Update( const sInput * apInput )
 						lpCall = lpControl->mpCall;
 						if( lpCall )
 						{
-							HashTree_VarWrite( lpCall->mpCallVar->mpVar, &lpCall->mCallValue );
+							HashTree_VarWrite( lpCall->mpCallVar->mVarClient.mpVar, &lpCall->mCallValue );
 							lExitFlag = 1;
 						}
 						break;
@@ -1347,9 +1349,9 @@ void	Fed_ListMove( sFedList * apList,const S32 aDir )
 
 	DebugLog_Printf1( "Fed_ListMove() dir:%ld", aDir );
 
-	if( (apList->mpVar) && (apList->mpVar->mpVar) )
+	if( (apList->mpVar) && (apList->mpVar->mVarClient.mpVar) )
 	{
-		lpData = (S32*)apList->mpVar->mpVar->mpData;
+		lpData = (S32*)apList->mpVar->mVarClient.mpVar->mpData;
 		if( lpData )
 		{
 			lIndex  =  *lpData;
@@ -1371,7 +1373,7 @@ void	Fed_ListMove( sFedList * apList,const S32 aDir )
 				}
 				Fed_LockEvaluate( apList->mppItems[ lIndex ]->mpLock, &lLockStatus );
 			} while( (lLockStatus.mLockedFlag || (!lLockStatus.mVisFlag)) && (lOld != lIndex) );
-			HashTree_VarWrite( apList->mpVar->mpVar, &lIndex );
+			HashTree_VarWrite( apList->mpVar->mVarClient.mpVar, &lIndex );
 			Fed_SampleMovePlay();
 		}
 	}
@@ -1407,9 +1409,9 @@ void	Fed_SliderMove( sFedSlider * apSlider,const S32 aDir )
 
 	if( apSlider->mpVar )
 	{
-		if( apSlider->mpVar->mpVar )
+		if( apSlider->mpVar->mVarClient.mpVar )
 		{
-			lpData  = (S32*)apSlider->mpVar->mpVar->mpData;
+			lpData  = (S32*)apSlider->mpVar->mVarClient.mpVar->mpData;
 			lVal    = *lpData;
 
 			lVal   += lValAdd;
@@ -1421,7 +1423,7 @@ void	Fed_SliderMove( sFedSlider * apSlider,const S32 aDir )
 			{
 				lVal = lValMin;
 			}
-			HashTree_VarWrite( apSlider->mpVar->mpVar, &lVal );
+			HashTree_VarWrite( apSlider->mpVar->mVarClient.mpVar, &lVal );
 		}
 	}
 }
@@ -1544,9 +1546,9 @@ void	Fed_LockEvaluate( sFedLock * apLock,sFedLockStatus * apRFL )
 	{
 		if( apLock->mpLockVar )
 		{
-			if( apLock->mpLockVar->mpVar )
+			if( apLock->mpLockVar->mVarClient.mpVar )
 			{
-				lpData = (S32*)apLock->mpLockVar->mpVar->mpData;
+				lpData = (S32*)apLock->mpLockVar->mVarClient.mpVar->mpData;
 				lVal   = *lpData;
 
 				switch( apLock->mLockCompare )
@@ -1578,9 +1580,9 @@ void	Fed_LockEvaluate( sFedLock * apLock,sFedLockStatus * apRFL )
 
 		if( apLock->mpVisVar )
 		{
-			if( apLock->mpVisVar->mpVar )
+			if( apLock->mpVisVar->mVarClient.mpVar )
 			{
-				lpData = (S32*)apLock->mpVisVar->mpVar->mpData;
+				lpData = (S32*)apLock->mpVisVar->mVarClient.mpVar->mpData;
 				lVal   = *lpData;
 
 				switch( apLock->mVisCompare )

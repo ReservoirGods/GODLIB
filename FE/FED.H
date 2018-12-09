@@ -21,7 +21,7 @@
 
 #define	dFED_ID			mSTRING_TO_U32( 'F','E', 'D', 'S' )
 #define	dFED_VERSION_OLD	0
-#define	dFED_VERSION_NEW	1
+#define	dFED_VERSION_NEW	2
 
 enum
 {
@@ -117,8 +117,9 @@ typedef	struct	sFedSize
 
 typedef	struct	sFedVar
 {
-	char *			mpName;
-	sHashTreeVar *	mpVar;
+	char *				mpName;
+/*	sHashTreeVar *		mpVar; */
+	sHashTreeVarClient	mVarClient;
 } sFedVar;
 
 typedef	struct	sFedBox

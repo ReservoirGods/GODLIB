@@ -424,9 +424,9 @@ void	RenderFed_ListDraw( sFedList * apList,sGraphicCanvas * apCanvas,const sFedB
 		if( apList->mpVar )
 		{
 			lVal = 0;
-			if( apList->mpVar->mpVar )
+			if( apList->mpVar->mVarClient.mpVar )
 			{
-				lpData = (S32*)apList->mpVar->mpVar->mpData;
+				lpData = (S32*)apList->mpVar->mVarClient.mpVar->mpData;
 				if( lpData )
 				{
 					lVal   = *lpData;
@@ -587,9 +587,9 @@ void	RenderFed_SliderDraw( sFedSlider * apSlider,sGraphicCanvas * apCanvas,const
 
 		if( apSlider->mpVar )
 		{
-			if( apSlider->mpVar->mpVar )
+			if( apSlider->mpVar->mVarClient.mpVar )
 			{
-				lpData = (S32*)apSlider->mpVar->mpVar->mpData;
+				lpData = (S32*)apSlider->mpVar->mVarClient.mpVar->mpData;
 				if( lpData )
 				{
 					lVal = *lpData;
@@ -862,9 +862,9 @@ void	RenderFed_LockEvaluate( sFedLock * apLock,sRenderFedLock * apRFL )
 	{
 		if( apLock->mpLockVar )
 		{
-			if( apLock->mpLockVar->mpVar )
+			if( apLock->mpLockVar->mVarClient.mpVar )
 			{
-				lpData = (S32*)apLock->mpLockVar->mpVar->mpData;
+				lpData = (S32*)apLock->mpLockVar->mVarClient.mpVar->mpData;
 				lVal   = *lpData;
 
 				switch( apLock->mLockCompare )
@@ -896,9 +896,9 @@ void	RenderFed_LockEvaluate( sFedLock * apLock,sRenderFedLock * apRFL )
 
 		if( apLock->mpVisVar )
 		{
-			if( apLock->mpVisVar->mpVar )
+			if( apLock->mpVisVar->mVarClient.mpVar )
 			{
-				lpData = (S32*)apLock->mpVisVar->mpVar->mpData;
+				lpData = (S32*)apLock->mpVisVar->mVarClient.mpVar->mpData;
 				lVal   = *lpData;
 
 				switch( apLock->mVisCompare )
