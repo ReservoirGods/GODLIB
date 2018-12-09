@@ -93,7 +93,7 @@ U32	Relocator_CUT_OnLoad( sAssetItem * apAsset )
 		{
 			lpVar = &lpCut->mpVars[ i ];
 
-			lpVar->mpVar = HashTree_VarRegister( CutScene_System_GetpHashTree(), lpVar->mpVarName );
+			HashTree_VarClient_Init( &lpVar->mVarClient, CutScene_System_GetpHashTree(), lpVar->mpVarName, 0 );
 		}
 	}
 
@@ -125,7 +125,7 @@ U32	Relocator_CUT_OnUnLoad( sAssetItem * apAsset )
 		for( i=0; i<lpCut->mVarCount; i++ )
 		{
 			lpVar = &lpCut->mpVars[ i ];
-			HashTree_VarUnRegister( CutScene_System_GetpHashTree(), lpVar->mpVar );
+			HashTree_VarClient_DeInit( &lpVar->mVarClient, CutScene_System_GetpHashTree() );
 		}
 	}
 

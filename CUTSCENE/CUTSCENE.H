@@ -15,7 +15,7 @@
 #  ENUMS
 ################################################################################### */
 
-#define	dCUTSCENE_VERSION	2
+#define	dCUTSCENE_VERSION	3
 
 enum
 {
@@ -210,7 +210,7 @@ typedef	struct	sCutVar
 {
 	char *			mpName;
 	char *			mpVarName;
-	sHashTreeVar *	mpVar;
+	sHashTreeVarClient	mVarClient;
 } sCutVar;
 
 typedef	struct	sCutScene

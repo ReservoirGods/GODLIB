@@ -394,7 +394,7 @@ U32	CutSceneThread_Update( sCutSceneThread * apThread )
 
 				case	eCUT_CMD_VAR_SET:
 					lpVar                     = (sCutVar*)lpCmd->mArg0;
-					HashTree_VarWrite( lpVar->mpVar, &lpCmd->mArg1 );
+					HashTree_VarWrite( lpVar->mVarClient.mpVar, &lpCmd->mArg1 );
 					break;
 
 				case	eCUT_CMD_WAIT:
