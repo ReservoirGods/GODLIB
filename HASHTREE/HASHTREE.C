@@ -14,6 +14,9 @@
 #  DEFINES
 ################################################################################### */
 
+#define dHASHTREE_BLOCK_ID 		mSTRING_TO_U32( 'H', 'T', 'B', 'K' )
+#define dHASHTREE_BLOCK_VERSION 0
+
 #define	dHASHTREE_STR_LIMIT	256
 #define	dHASHTREE_TOK_LIMIT	32
 
@@ -1627,5 +1630,122 @@ void	HashTree_SaveNodeRelocate( sHashTreeSaveNode * apNode )
 	}
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : HashTree_VarBlock_GetSize( sHashTree * apTree, U32 aFilterFlags )
+* ACTION   : determine size of varblock that contains all filtered variables
+* CREATION : 28.03.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+U32						HashTree_VarBlock_GetSize( sHashTree * apTree, U32 aFilterFlags )
+{
+	U32 size = sizeof(sHashTreeVarBlock);
+	U32 elementSize = sizeof(U32) + sizeof(U16);
+	sHashTreeVar * var;
+
+	for( var = apTree->mpVars; var; var = var->mpVarNext )
+	{
+		if( var->mFilterFlags & aFilterFlags )
+			size += ( elementSize + var->mDataSize );
+	}
+
+	return size;
+}
+
+
+void					HashTree_VarBlock_Init( sHashTreeVarBlock * apBlock, sHashTree * apTree, U32 aFilterFlags )
+{
+	U8 * mem = (U8*)apBlock;
+	U16 index = 0;
+	sHashTreeVar * var;
+
+	apBlock->mID = dHASHTREE_BLOCK_ID;
+	apBlock->mVersion = dHASHTREE_BLOCK_VERSION;
+
+	apBlock->mVarCount = 0;
+	for( var = apTree->mpVars; var; var = var->mpVarNext )
+	{
+		if( var->mFilterFlags & aFilterFlags )
+			apBlock->mVarCount++;
+	}
+
+	mem += sizeof(sHashTreeVarBlock);
+	apBlock->mpHashes = (U32*)mem;
+	mem += sizeof(U32) * apBlock->mVarCount;
+	apBlock->mpDataSizes = (U16*)mem;
+	mem += sizeof(U16) * apBlock->mVarCount;
+	apBlock->mpData = mem;
+
+	apBlock->mTotalDataSize = 0;
+
+	for( var = apTree->mpVars; var; var = var->mpVarNext )
+	{
+		if( var->mFilterFlags & aFilterFlags )
+		{
+			apBlock->mpHashes[ index ] = var->mHashKey;
+			apBlock->mpDataSizes[ index ] = (U16)var->mDataSize;
+			apBlock->mTotalDataSize += var->mDataSize;
+
+			Memory_Copy( var->mDataSize, var->mpData, mem );
+			mem += var->mDataSize;
+
+			index++;
+		}
+	}
+}
+
+void					HashTree_VarBlock_DeInit( sHashTreeVarBlock * apBlock )
+{
+	(void)apBlock;
+}
+
+void					HashTree_VarBlock_Delocate( sHashTreeVarBlock * apBlock )
+{
+	Endian_FromBigU32( &apBlock->mID );
+	Endian_FromBigU32( &apBlock->mVersion );
+	Endian_FromBigU32( &apBlock->mTotalDataSize );
+	Endian_FromBigU32( &apBlock->mVarCount );
+
+	*(U32*)&apBlock->mpData -= (U32)apBlock;
+	*(U32*)&apBlock->mpDataSizes -= (U32)apBlock;
+	*(U32*)&apBlock->mpHashes -= (U32)apBlock;
+}
+
+void					HashTree_VarBlock_Relocate( sHashTreeVarBlock * apBlock )
+{
+	*(U32*)&apBlock->mpData += (U32)apBlock;
+	*(U32*)&apBlock->mpDataSizes += (U32)apBlock;
+	*(U32*)&apBlock->mpHashes += (U32)apBlock;
+
+	Endian_FromBigU32( &apBlock->mID );
+	Endian_FromBigU32( &apBlock->mVersion );
+	Endian_FromBigU32( &apBlock->mTotalDataSize );
+	Endian_FromBigU32( &apBlock->mVarCount );
+}
+
+void	HashTree_VarBlock_Apply( sHashTreeVarBlock * apBlock, sHashTree * apTree )
+{
+	U32 count = apBlock->mVarCount;
+	U32 * pHashes = apBlock->mpHashes;
+	U16 * pSizes = apBlock->mpDataSizes;
+	U8 * pData = apBlock->mpData;
+
+	if( (apBlock->mVersion != dHASHTREE_BLOCK_VERSION) || (apBlock->mID != dHASHTREE_BLOCK_ID) )
+		return;
+
+	while( count )
+	{
+		sHashTreeVar * var = HashTree_Var_Find( apTree, *pHashes );
+		GODLIB_ASSERT( var );
+		if( var )
+		{
+			HashTree_VarWrite( var, pData );
+		}
+		pData += *pSizes;
+		pHashes++;
+		pSizes++;
+		count--;
+	}
+}
 
 /* ################################################################################ */

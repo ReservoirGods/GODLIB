@@ -100,6 +100,16 @@ typedef	struct	sHashTreeSaveNode
 	struct sHashTreeSaveNode *	mpNext;
 } sHashTreeSaveNode;
 
+typedef struct sHashTreeVarBlock
+{
+	U32		mID;
+	U32 	mVersion;
+	U32		mVarCount;
+	U32		mTotalDataSize;
+	U32 *	mpHashes;
+	U16 *	mpDataSizes;
+	U8 *	mpData;
+} sHashTreeVarBlock;
 
 /* ###################################################################################
 #  PROTOTYPES
@@ -139,6 +149,15 @@ void					HashTree_SaveNodeUnLoad( sHashTree * apTree, const char * apNodeName, c
 U32						HashTree_SaveNodeGetSize( const sHashTreeSaveNode * apSaveNode );
 void					HashTree_SaveNodeDelocate( sHashTreeSaveNode * apNode );
 void					HashTree_SaveNodeRelocate( sHashTreeSaveNode * apNode );
+
+U32						HashTree_VarBlock_GetSize( sHashTree * apTree, U32 aFilterFlags );
+void					HashTree_VarBlock_Init( sHashTreeVarBlock * apBlock, sHashTree * apTree, U32 aFilterFlags );
+void					HashTree_VarBlock_DeInit( sHashTreeVarBlock * apBlock );
+
+void					HashTree_VarBlock_Delocate( sHashTreeVarBlock * apBlock );
+void					HashTree_VarBlock_Relocate( sHashTreeVarBlock * apBlock );
+
+void					HashTree_VarBlock_Apply( sHashTreeVarBlock * apBlock, sHashTree * apTree );
 
 
 /* ################################################################################ */
