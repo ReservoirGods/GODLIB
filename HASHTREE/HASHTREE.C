@@ -17,49 +17,21 @@
 #define dHASHTREE_BLOCK_ID 		mSTRING_TO_U32( 'H', 'T', 'B', 'K' )
 #define dHASHTREE_BLOCK_VERSION 0
 
-#define	dHASHTREE_STR_LIMIT	256
-#define	dHASHTREE_TOK_LIMIT	32
-
 
 /* ###################################################################################
 #  STRUCTS
 ################################################################################### */
-
-typedef struct
-{
-	U16		mTokenCount;
-	U32		mGlobalHash[ dHASHTREE_TOK_LIMIT ];
-	U32		mLocalHash[ dHASHTREE_TOK_LIMIT ];
-} sHashTreeTokeniser;
 
 
 /* ###################################################################################
 #  PROTOTYPES
 ################################################################################### */
 
-sHashTreeNode *	HashTree_NodeRegister( sHashTree * apTree, const char * apName );
-void			HashTree_NodeUnRegister( sHashTree * apTree, sHashTreeNode * apNode );
-
-void			HashTree_Tokenise( sHashTreeTokeniser * apToken, const char * apString );
-
-void			HashTree_SubNodesDestroy( sHashTree * apTree, sHashTreeNode * apNode );
-
-sHashTreeNode *	HashTree_NodeTokReg( sHashTree * apTree, sHashTreeTokeniser * apToken );
-
-sHashTreeNode *	HashTree_NodeCreate( sHashTree * apTree, const U32 aGlobalID, const U32 aLocalID );
-void			HashTree_NodeDestroy( sHashTree * apTree, sHashTreeNode * apNode );
-
-sHashTreeVar *	HashTree_NodeVarReg( sHashTreeNode * apNode, const U32 aGlobalID, const U32 aLocalID );
-
 
 #ifdef dGODLIB_PLATFORM_ATARI
 #define			HashTree_Validate( _a )
 #else
 void			HashTree_Validate( sHashTree * apTree );
-#endif
-#if 1
-sHashTreeVar *			HashTree_VarRegister(   sHashTree * apTree, const char * apName );
-void					HashTree_VarUnRegister( sHashTree * apTree, sHashTreeVar * apVar );
 #endif
 
 /* ###################################################################################
@@ -111,9 +83,8 @@ U32	HashTree_BuildHash( const char * apName )
 
 void	HashTree_Init( sHashTree * apTree )
 {
-	apTree->mNodeCount     = 0;
 	apTree->mVariableCount = 0;
-	apTree->mpNodes        = 0;
+	apTree->mpVars = 0;
 }
 
 
@@ -125,399 +96,15 @@ void	HashTree_Init( sHashTree * apTree )
 
 void	HashTree_DeInit( sHashTree * apTree )
 {
-	if( apTree->mpNodes )
-	{
-		HashTree_NodeUnRegister( apTree, apTree->mpNodes );
-	}
+	(void)apTree;
 }
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_NodeCreate( sHashTree * apTree, const U32 aGlobalID,const U32 aLocalID )
-* ACTION   : HashTree_NodeCreate
-* CREATION : 05.01.2004 PNK
+* FUNCTION : HashTree_Var_Find( sHashTree * apTree, U32 aKey )
+* ACTION   : finds a var based on a hash key
+* CREATION : 09.12.2018 PNK
 *-----------------------------------------------------------------------------------*/
-
-sHashTreeNode *	HashTree_NodeCreate( sHashTree * apTree, const U32 aGlobalID,const U32 aLocalID )
-{
-	sHashTreeNode *	lpNode;
-
-	lpNode = (sHashTreeNode*)mMEMCALLOC( sizeof(sHashTreeNode) );
-
-	if( lpNode )
-	{
-		lpNode->mGlobalID = aGlobalID;
-		lpNode->mLocalID  = aLocalID;
-		if( apTree )
-		{
-			apTree->mNodeCount++;
-		}
-	}
-
-	HashTree_Validate( apTree );
-
-
-	return( lpNode );
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_NodeDestroy( sHashTree * apTree, sHashTreeNode * apNode )
-* ACTION   : HashTree_NodeDestroy
-* CREATION : 05.01.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	HashTree_NodeDestroy( sHashTree * apTree, sHashTreeNode * apNode )
-{
-	if( apTree )
-	{
-		if( apNode->mpParent )
-		{
-			GOD_LL_REMOVE( sHashTreeNode, apNode->mpParent->mpChild, mpNext, apNode );
-		}
-		else
-		{
-			GOD_LL_REMOVE( sHashTreeNode, apTree->mpNodes, mpNext, apNode );
-		}
-/*
-		if( apTree->mpNodes == apNode )
-		{
-			apTree->mpNodes = 0;
-		}
-*/
-		apTree->mNodeCount--;
-	}
-	mMEMFREE( apNode );
-/*
-	sHashTreeVar *	lpVar;
-
-	if( apNode )
-	{
-		lpVar = apNode->mpVars;
-		while( lpVar )
-		{
-			lpVar->mpNode = 0;
-			lpVar         = lpVar->mpNext;
-		}
-		mMEMFREE( apNode );
-	}
-*/
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_NodeRegister( sHashTree * apTree,const char * apName )
-* ACTION   : HashTree_NodeRegister
-* CREATION : 05.01.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-sHashTreeNode *	HashTree_NodeRegister( sHashTree * apTree,const char * apName )
-{
-	sHashTreeTokeniser	lTokeniser;
-	sHashTreeNode *		lpNode;
-
-	HashTree_Validate( apTree );
-
-	HashTree_Tokenise( &lTokeniser, apName );
-
-	lpNode = HashTree_NodeTokReg( apTree, &lTokeniser );
-
-	HashTree_Validate( apTree );
-
-	return( lpNode );
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_NodeTokReg( sHashTree * apTree,sHashTreeTokeniser * apToken )
-* ACTION   : HashTree_NodeTokReg
-* CREATION : 05.01.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-sHashTreeNode *	HashTree_NodeTokReg( sHashTree * apTree,sHashTreeTokeniser * apToken )
-{
-	sHashTreeNode *	lpNode;
-	sHashTreeNode *	lpParent;
-	U16				i;
-
-	lpNode = 0;
-
-	if( apToken->mTokenCount )
-	{
-		if( !apTree->mpNodes )
-		{
-			apTree->mpNodes = HashTree_NodeCreate( apTree, apToken->mGlobalHash[ 0 ], apToken->mLocalHash[ 0 ] );
-		}
-
-		i = 0;
-		lpNode = apTree->mpNodes;
-
-		while( i < apToken->mTokenCount )
-		{
-			lpParent = lpNode;
-			while( (lpNode) && (i < apToken->mTokenCount) )
-			{
-				if( lpNode->mLocalID == apToken->mLocalHash[ i ] )
-				{
-					i++;
-					if( i < apToken->mTokenCount )
-					{
-						if( lpNode->mpChild )
-						{
-							lpNode = lpNode->mpChild;
-						}
-						else
-						{
-							lpParent          = lpNode;
-							lpNode            = HashTree_NodeCreate( apTree, apToken->mGlobalHash[ i ], apToken->mLocalHash[ i ] );
-							lpNode->mpParent  = lpParent;
-							lpParent->mpChild = lpNode;
-							lpParent->mRefCount++;
-						}
-						lpParent = lpNode;
-					}
-				}
-				else
-				{
-					lpNode = lpNode->mpNext;
-				}
-			}
-			if( !lpNode )
-			{
-				lpNode = HashTree_NodeCreate( apTree, apToken->mGlobalHash[ i ], apToken->mLocalHash[ i ] );
-				lpNode->mpNext   = lpParent->mpNext;
-				lpParent->mpNext = lpNode;
-				lpNode->mpParent = lpParent->mpParent;
-			}
-		}
-	}
-
-	if( lpNode )
-	{
-		lpNode->mRefCount++;
-	}
-
-	return( lpNode );
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_NodeUnRegister( sHashTree * apTree, sHashTreeNode * apNode )
-* ACTION   : HashTree_NodeUnRegister
-* CREATION : 05.01.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	HashTree_NodeUnRegister( sHashTree * apTree, sHashTreeNode * apNode )
-{
-	sHashTreeNode *			lpNode;
-
-
-	HashTree_Validate( apTree );
-
-	if( apNode )
-	{
-		apNode->mRefCount--;
-		if( apNode->mRefCount <= 0 )
-		{
-			HashTree_SubNodesDestroy( apTree, apNode->mpChild );
-
-			if( apNode->mpParent )
-			{
-				lpNode = apNode->mpParent->mpChild;
-				if( lpNode )
-				{
-					if( lpNode == apNode )
-					{
-						apNode->mpParent->mpChild = apNode->mpNext;
-					}
-					else
-					{
-						while( (lpNode->mpNext) && (lpNode->mpNext != apNode) )
-						{
-							lpNode = lpNode->mpNext;
-						}
-						if( lpNode->mpNext == apNode )
-						{
-							lpNode->mpNext = apNode->mpNext;
-						}
-					}
-				}
-				HashTree_NodeUnRegister( apTree, apNode->mpParent );
-			}
-			HashTree_NodeDestroy( apTree, apNode );
-		}
-	}
-
-	HashTree_Validate( apTree );
-
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_SubNodesDestroy( sHashTree * apTree, sHashTreeNode * apNode )
-* ACTION   : HashTree_SubNodesDestroy
-* CREATION : 05.01.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	HashTree_SubNodesDestroy( sHashTree * apTree, sHashTreeNode * apNode )
-{
-	sHashTreeNode *			lpNode;
-	sHashTreeNode *			lpNodeNext;
-
-	HashTree_Validate( apTree );
-
-	lpNode = apNode;
-	while( lpNode )
-	{
-		HashTree_SubNodesDestroy( apTree, lpNode->mpChild );
-
-		lpNodeNext = lpNode->mpNext;
-		HashTree_NodeDestroy( apTree, lpNode );
-		lpNode     = lpNodeNext;
-	}
-
-	HashTree_Validate( apTree );
-
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_VarInit( sHashTree * apTree,const char * apName,const U32 aSize,void * apData )
-* ACTION   : HashTree_VarInit
-* CREATION : 04.01.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-sHashTreeVar *	HashTree_Var_Create( sHashTree * apTree,const char * apName,const U32 aSize,void * apData )
-{
-	sHashTreeVar *			lpVar;
-	sHashTreeVarClient *	lpClient;
-
-
-	lpVar = HashTree_VarRegister( apTree, apName );
-
-	if( lpVar )
-	{
-		lpVar->mDataSize = aSize;
-		if( aSize <= 4 )
-		{
-			lpVar->mpData = &lpVar->mDataSmall;
-			if( lpVar->mpData )
-			{
-				Memory_Copy( aSize, apData, lpVar->mpData );
-			}
-		}
-		else
-		{
-/*			DebugLog_Printf2( "HashTree_VarInit() : %s : %s", apName, apData );*/
-/*			lpVar->mpData    = mMEMCALLOC( aSize );*/
-/* optimised hashtree - doesn't memory allocate, assumes clients provides memory */
-
-			lpVar->mpData = apData;
-			GODLIB_ASSERT( apData );
-			
-		}
-	#if 0
-		if( lpVar->mpData )
-		{
-			Memory_Copy( aSize, apData, lpVar->mpData );
-		}
-	#endif
-		lpClient = lpVar->mpClients;
-		while( lpClient )
-		{
-			if( lpClient->mfOnInit )
-			{
-				lpClient->mfOnInit( lpClient );
-			}
-			lpClient = lpClient->mpNext;
-		}
-	}
-
-	return( lpVar );
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_VarDeInit( sHashTree * apTree, sHashTreeVar * apVar )
-* ACTION   : HashTree_VarDeInit
-* CREATION : 04.01.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	HashTree_Var_Destroy( sHashTree * apTree, sHashTreeVar * apVar )
-{
-	sHashTreeVarClient *	lpClient;
-
-
-	if( apVar )
-	{
-		lpClient = apVar->mpClients;
-		while( lpClient )
-		{
-			if( lpClient->mfOnDeInit )
-			{
-				lpClient->mfOnDeInit( lpClient );
-			}
-			lpClient = lpClient->mpNext;
-		}
-		if( apVar->mpData )
-		{
-/*			
-			if( apVar->mDataSize > 4 )
-			{
-				mMEMFREE( apVar->mpData );
-			}
-*/			
-			apVar->mpData    = 0;
-			apVar->mDataSize = 0;
-		}
-	}
-
-	HashTree_VarUnRegister( apTree, apVar );
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_NodeVarReg( sHashTreeNode * apNode,const U32 aGlobalID,const U32 aLocalID )
-* ACTION   : HashTree_NodeVarReg
-* CREATION : 28.03.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-sHashTreeVar *	HashTree_NodeVarReg( sHashTreeNode * apNode,const U32 aGlobalID,const U32 aLocalID )
-{
-	sHashTreeVar *		lpVar;
-
-	lpVar = apNode->mpVars;
-
-	while( (lpVar) && (lpVar->mLocalID != aLocalID) )
-	{
-		lpVar = lpVar->mpNext;
-	}
-
-	if( !lpVar )
-	{
-		lpVar = (sHashTreeVar*)mMEMCALLOC( sizeof(sHashTreeVar) );
-		if( lpVar )
-		{
-			lpVar->mGlobalID = aGlobalID;
-			lpVar->mLocalID  = aLocalID;
-			lpVar->mpNode    = apNode;
-			lpVar->mpNext    = apNode->mpVars;
-			apNode->mpVars   = lpVar;
-		}
-	}
-
-	if( apNode )
-	{
-		apNode->mRefCount++;
-	}
-
-	if( lpVar )
-	{
-		lpVar->mRefCount++;
-	}
-
-	return( lpVar );
-}
 
 sHashTreeVar * HashTree_Var_Find( sHashTree * apTree, U32 aKey )
 {
@@ -532,6 +119,13 @@ sHashTreeVar * HashTree_Var_Find( sHashTree * apTree, U32 aKey )
 	return 0;
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : HashTree_VarClient_Find( sHashTree * apTree, U32 aKey )
+* ACTION   : finds a var client based on a hash key
+* CREATION : 09.12.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
 sHashTreeVarClient * HashTree_VarClient_Find( sHashTree * apTree, U32 aKey )
 {
 	sHashTreeVarClient * client;
@@ -545,6 +139,12 @@ sHashTreeVarClient * HashTree_VarClient_Find( sHashTree * apTree, U32 aKey )
 	return 0;
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : HashTree_Var_Init( sHashTreeVar * apVar, sHashTree * apTree, const char * apName, const U32 aSize, void * apData )
+* ACTION   : inits a var and adds to hash tree
+* CREATION : 09.12.2018 PNK
+*-----------------------------------------------------------------------------------*/
 
 void	HashTree_Var_Init( sHashTreeVar * apVar, sHashTree * apTree, const char * apName, const U32 aSize, void * apData )
 {
@@ -573,6 +173,13 @@ void	HashTree_Var_Init( sHashTreeVar * apVar, sHashTree * apTree, const char * a
 
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : HashTree_Var_DeInit( sHashTreeVar * apVar, sHashTree * apTree )
+* ACTION   : deinits a var and removes from hash tree
+* CREATION : 09.12.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
 void	HashTree_Var_DeInit( sHashTreeVar * apVar, sHashTree * apTree )
 {
 	sHashTreeVarClient * client;
@@ -589,197 +196,10 @@ void	HashTree_Var_DeInit( sHashTreeVar * apVar, sHashTree * apTree )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_VarRegister( sHashTree * apTree,const char * apName )
-* ACTION   : HashTree_VarRegister
-* CREATION : 04.01.2004 PNK
+* FUNCTION : HashTree_VarClient_Init( sHashTreeVarClient * apClient, sHashTree * apTree, const char * apName, fHashTreeVarCB aOnWrite )
+* ACTION   : inits a varclient, links it to variable if found, otherwise attaches it to unbound client list in hashtree
+* CREATION : 09.12.2018 PNK
 *-----------------------------------------------------------------------------------*/
-
-sHashTreeVar *	HashTree_VarRegister( sHashTree * apTree,const char * apName )
-{
-	sHashTreeTokeniser	lTokeniser;
-	sHashTreeVar *		lpVar;
-	sHashTreeNode *		lpNode;
-	U32					lLocalHash;
-
-
-	HashTree_Tokenise( &lTokeniser, apName );
-
-	lpVar = 0;
-
-	if( lTokeniser.mTokenCount > 1 )
-	{
-		lTokeniser.mTokenCount--;
-		lpNode = HashTree_NodeTokReg( apTree, &lTokeniser );
-		if( lpNode )
-		{
-			lpVar = lpNode->mpVars;
-
-			lLocalHash = lTokeniser.mLocalHash[ lTokeniser.mTokenCount ];
-
-
-			while( (lpVar) && (lpVar->mLocalID != lLocalHash) )
-			{
-				lpVar = lpVar->mpNext;
-			}
-			if( !lpVar )
-			{
-				lpVar = (sHashTreeVar*)mMEMCALLOC( sizeof(sHashTreeVar) );
-				if( lpVar )
-				{
-					lpVar->mGlobalID = lTokeniser.mGlobalHash[ lTokeniser.mTokenCount ];
-					lpVar->mLocalID  = lLocalHash;
-					lpVar->mpNode    = lpNode;
-					lpVar->mpNext    = lpNode->mpVars;
-					lpNode->mpVars   = lpVar;
-
-					GOD_LL_INSERT( apTree->mpVars, mpVarNext, lpVar );
-				}
-			}
-			if( lpVar )
-			{
-				lpVar->mRefCount++;
-			}
-		}
-
-	}
-/*	DebugLog_Printf3( "HashTree_VarRegister() tree:%lX %s %lx", apTree, apName, lpVar );*/
-
-	return( lpVar );
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_VarUnRegister( sHashTree * apTree, sHashTreeVar * apVar )
-* ACTION   : HashTree_VarUnRegister
-* CREATION : 04.01.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	HashTree_VarUnRegister( sHashTree * apTree, sHashTreeVar * apVar )
-{
-	if( apVar )
-	{
-		sHashTreeNode *	lpNode;
-
-		lpNode = apVar->mpNode;
-		apVar->mRefCount--;
-
-		if( apVar->mRefCount <= 0 )
-		{
-			if( apVar->mpNode->mpVars == apVar )
-			{
-				apVar->mpNode->mpVars = apVar->mpNext;
-			}
-			else
-			{
-				sHashTreeVar *	lpVar;
-
-				lpVar = apVar->mpNode->mpVars;
-				while( lpVar->mpNext && (lpVar->mpNext!=apVar) )
-				{
-					lpVar = lpVar->mpNext;
-				}
-				lpVar->mpNext = apVar->mpNext;
-			}
-
-			GOD_LL_REMOVE( sHashTreeVar, apTree->mpVars, mpVarNext, apVar );
-
-			mMEMFREE( apVar );
-		}
-
-		if( lpNode )
-		{
-			HashTree_NodeUnRegister( apTree, lpNode );
-		}
-
-	}
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_VarClientRegister( sHashTree * apTree,const * apName,fHashTreeVarCB aOnWrite,fHashTreeVarCB aOnInit,fHashTreeVarCB onDeInit )
-* ACTION   : HashTree_VarClientRegister
-* CREATION : 04.01.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-sHashTreeVarClient *	HashTree_VarClientRegister( sHashTree * apTree,const char * apName,fHashTreeVarCB aOnWrite,fHashTreeVarCB aOnInit,fHashTreeVarCB aOnDeInit, const U32 aUserData )
-{
-/*	
-	sHashTreeVarClient *	lpClient;
-	sHashTreeVar *			lpVar;
-
-
-	lpClient = 0;
-	lpVar    = HashTree_VarRegister( apTree, apName );
-
-	if( lpVar )
-	{
-		lpClient = (sHashTreeVarClient*)mMEMCALLOC( sizeof(sHashTreeVarClient) );
-		if( lpClient )
-		{			
-			lpClient->mfOnDeInit = aOnDeInit;
-			lpClient->mfOnInit   = aOnInit;
-			lpClient->mUserData  = aUserData;
-
-
-			lpClient->mfOnWrite  = aOnWrite;
-			lpClient->mpVar      = lpVar;
-			lpClient->mpNext     = lpVar->mpClients;
-			lpVar->mpClients     = lpClient;
-		}
-	}
-	return( lpClient );
-*/
-
-	sHashTreeVarClient *	lpClient;
-	lpClient = (sHashTreeVarClient*)mMEMCALLOC( sizeof(sHashTreeVarClient) );
-	if( lpClient )
-	{			
-		lpClient->mfOnDeInit = aOnDeInit;
-		lpClient->mfOnInit   = aOnInit;
-		lpClient->mUserData  = aUserData;
-		HashTree_VarClient_Init( lpClient, apTree, apName, aOnWrite );
-	}
-	return lpClient;
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_VarClientUnRegister( sHashTree * apTree, sHashTreeVarClient * apClient )
-* ACTION   : HashTree_VarClientUnRegister
-* CREATION : 04.01.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	HashTree_VarClientUnRegister( sHashTree * apTree, sHashTreeVarClient * apClient )
-{
-	sHashTreeVarClient * lpClient;
-
-	if( apClient )
-	{
-		if( apClient->mpVar )
-		{
-			lpClient = apClient->mpVar->mpClients;
-
-			if( lpClient == apClient )
-			{
-				apClient->mpVar->mpClients = apClient->mpNext;
-			}
-			else
-			{
-				while( (lpClient->mpNext) && (lpClient->mpNext != apClient) )
-				{
-					lpClient = lpClient->mpNext;
-				}
-				if( lpClient->mpNext == apClient )
-				{
-					lpClient->mpNext = apClient->mpNext;
-				}
-			}
-			HashTree_VarUnRegister( apTree, apClient->mpVar );
-		}
-		mMEMFREE( apClient );
-	}
-}
-
 
 void	HashTree_VarClient_Init( sHashTreeVarClient * apClient, sHashTree * apTree, const char * apName, fHashTreeVarCB aOnWrite )
 {
@@ -799,6 +219,12 @@ void	HashTree_VarClient_Init( sHashTreeVarClient * apClient, sHashTree * apTree,
 	}
 }
 
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : HashTree_VarClient_DeInit( sHashTreeVarClient * apClient, sHashTree * apTree )
+* ACTION   : deinits a varclient, detaches from variables and tree
+* CREATION : 09.12.2018 PNK
+*-----------------------------------------------------------------------------------*/
 
 void	HashTree_VarClient_DeInit( sHashTreeVarClient * apClient, sHashTree * apTree )
 {
@@ -882,147 +308,6 @@ void		HashTree_VarRead( const sHashTreeVar * apVar, void * apDest, const U32 aSi
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : HashTree_Tokenise( sHashTreeTokeniser * apToken,const char * apString )
-* ACTION   : HashTree_Tokenise
-* CREATION : 04.01.2004 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	HashTree_Tokenise( sHashTreeTokeniser * apToken,const char * apString )
-{
-	U16	lSrcIndex;
-	U16	lDstIndex;
-	U16	lCurLen;
-	U16	lExitFlag;
-	char	lSrcString[ dHASHTREE_STR_LIMIT+1 ];
-	char	lString[ dHASHTREE_STR_LIMIT+1 ];
-
-	lSrcIndex = 0;
-
-	while( apString[ lSrcIndex ] == '/' || apString[ lSrcIndex ] == '\\' )
-	{
-		lSrcIndex++;
-	}
-
-	lDstIndex = 0;
-	lExitFlag = 0;
-
-	while( !lExitFlag )
-	{
-		switch( apString[ lSrcIndex ] )
-		{
-		case	'\\':
-		case	'/':
-			lSrcString[ lDstIndex ] = '\\';
-			lDstIndex++;
-			break;
-		case	0:
-			lExitFlag = 1;
-
-		default:
-			lSrcString[ lDstIndex ] = apString[ lSrcIndex ];
-			lDstIndex++;
-			break;
-		}
-		if( lDstIndex >= dHASHTREE_STR_LIMIT )
-		{
-			lExitFlag = 1;
-		}
-		lSrcIndex++;
-	}
-
-	if( lDstIndex )
-	{
-		if( lSrcString[ lDstIndex-1 ] == '\\' )
-		{
-			lSrcString[ lDstIndex-1 ] = 0;
-		}
-	}
-	lSrcString[ lDstIndex ] =0;
-
-
-	lExitFlag = 0;
-	lDstIndex = 0;
-	lSrcIndex = 0;
-	lCurLen   = 0;
-
-	apToken->mTokenCount   = 0;
-
-	while( !lExitFlag )
-	{
-		switch( lSrcString[ lSrcIndex ] )
-		{
-		case	'\\':
-		case	'/':
-			if( lCurLen )
-			{
-				lCurLen = 0;
-				lString[ lDstIndex ] = 0;
-
-				apToken->mLocalHash[ apToken->mTokenCount ] = HashTree_BuildHash( lString );
-				apToken->mTokenCount++;
-
-				lDstIndex = 0;
-			}
-			break;
-
-		case	0:
-			lExitFlag=1;
-			break;
-
-		default:
-			if( lDstIndex < dHASHTREE_STR_LIMIT )
-			{
-				if( !lCurLen )
-				{
-					apToken->mGlobalHash[ apToken->mTokenCount ] = HashTree_BuildHash( &lSrcString[ lSrcIndex ] );
-				}
-				lCurLen++;
-				lString[ lDstIndex ] = lSrcString[ lSrcIndex ];
-				lDstIndex++;
-			}
-			else
-			{
-				lExitFlag = 1;
-			}
-			break;
-		}
-
-		lSrcIndex++;
-	}
-
-	if( lCurLen )
-	{
-		lString[ lDstIndex ] = 0;
-		apToken->mLocalHash[ apToken->mTokenCount ] = HashTree_BuildHash( lString );
-		apToken->mTokenCount++;
-	}
-}
-
-void		HashTree_NodeValidate( sHashTreeNode * apNode )
-{
-	sHashTreeNode * node;
-
-	for( node=apNode; node; node =node->mpNext )
-	{
-		sHashTreeVar * var;
-
-		for( var=node->mpVars; var; var=var->mpNext)
-		{
-			GODLIB_ASSERT( var->mpNode == node );
-		}
-		HashTree_NodeValidate( node->mpChild);
-	}
-}
-
-#ifndef dGODLIB_PLATFORM_ATARI
-void		HashTree_Validate( sHashTree * apTree )
-{
-	HashTree_NodeValidate( apTree->mpNodes );
-}
-#endif
-
-
-/*-----------------------------------------------------------------------------------*
 * FUNCTION : HashTree_VarBlock_GetSize( sHashTree * apTree, U32 aFilterFlags )
 * ACTION   : determine size of varblock that contains all filtered variables
 * CREATION : 28.03.2018 PNK
@@ -1044,7 +329,13 @@ U32						HashTree_VarBlock_GetSize( sHashTree * apTree, U32 aFilterFlags )
 }
 
 
-void					HashTree_VarBlock_Init( sHashTreeVarBlock * apBlock, sHashTree * apTree, U32 aFilterFlags )
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : HashTree_VarBlock_Init( sHashTreeVarBlock * apBlock, sHashTree * apTree, U32 aFilterFlags )
+* ACTION   : inits a varblock, sets hashes, datasizes and data
+* CREATION : 28.03.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	HashTree_VarBlock_Init( sHashTreeVarBlock * apBlock, sHashTree * apTree, U32 aFilterFlags )
 {
 	U8 * mem = (U8*)apBlock;
 	U16 index = 0;
@@ -1085,12 +376,26 @@ void					HashTree_VarBlock_Init( sHashTreeVarBlock * apBlock, sHashTree * apTree
 	}
 }
 
-void					HashTree_VarBlock_DeInit( sHashTreeVarBlock * apBlock )
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : HashTree_VarBlock_DeInit( sHashTreeVarBlock * apBlock )
+* ACTION   : deinits a varblock, currently does nothing
+* CREATION : 28.03.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	HashTree_VarBlock_DeInit( sHashTreeVarBlock * apBlock )
 {
 	(void)apBlock;
 }
 
-void					HashTree_VarBlock_Delocate( sHashTreeVarBlock * apBlock )
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : HashTree_VarBlock_Delocate( sHashTreeVarBlock * apBlock )
+* ACTION   : delocates a varblock
+* CREATION : 28.03.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	HashTree_VarBlock_Delocate( sHashTreeVarBlock * apBlock )
 {
 	Endian_FromBigU32( &apBlock->mID );
 	Endian_FromBigU32( &apBlock->mVersion );
@@ -1102,7 +407,14 @@ void					HashTree_VarBlock_Delocate( sHashTreeVarBlock * apBlock )
 	*(U32*)&apBlock->mpHashes -= (U32)apBlock;
 }
 
-void					HashTree_VarBlock_Relocate( sHashTreeVarBlock * apBlock )
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : HashTree_VarBlock_Relocate( sHashTreeVarBlock * apBlock )
+* ACTION   : relocates a varblock
+* CREATION : 28.03.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	HashTree_VarBlock_Relocate( sHashTreeVarBlock * apBlock )
 {
 	*(U32*)&apBlock->mpData += (U32)apBlock;
 	*(U32*)&apBlock->mpDataSizes += (U32)apBlock;
@@ -1113,6 +425,13 @@ void					HashTree_VarBlock_Relocate( sHashTreeVarBlock * apBlock )
 	Endian_FromBigU32( &apBlock->mTotalDataSize );
 	Endian_FromBigU32( &apBlock->mVarCount );
 }
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : HashTree_VarBlock_Apply( sHashTreeVarBlock * apBlock, sHashTree * apTree )
+* ACTION   : writes to value of all variables referenced in varblock
+* CREATION : 28.03.2018 PNK
+*-----------------------------------------------------------------------------------*/
 
 void	HashTree_VarBlock_Apply( sHashTreeVarBlock * apBlock, sHashTree * apTree )
 {
@@ -1138,5 +457,6 @@ void	HashTree_VarBlock_Apply( sHashTreeVarBlock * apBlock, sHashTree * apTree )
 		count--;
 	}
 }
+
 
 /* ################################################################################ */

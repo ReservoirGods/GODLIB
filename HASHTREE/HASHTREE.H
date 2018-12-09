@@ -1,14 +1,6 @@
 #ifndef	INCLUDED_HASHTREE_H
 #define	INCLUDED_HASHTREE_H
 
-/*
-	idea -
-	get rid of nodes entirely
-	flatten structure
-	everything has a fullhash of full path name
-	filter flags field - can contain savability flag
-*/
-
 /* ###################################################################################
 #  INCLUDES
 ################################################################################### */
@@ -21,10 +13,8 @@
 ################################################################################### */
 
 struct	sHashTreeVarClient;
-struct	sHashTreeNode;
 
 typedef	void	(*fHashTreeVarCB)(  struct sHashTreeVarClient  * apClient );
-typedef	void	(*fHashTreeNodeCB)( struct sHashTreeNode * apNode );
 
 
 /* ###################################################################################
@@ -43,43 +33,25 @@ typedef	struct	sHashTreeVarClient
 	struct sHashTreeVarClient *	mpNext;
 } sHashTreeVarClient;
 
+
 typedef	struct	sHashTreeVar
 {
 	U32								mHashKey;
 	U32								mFilterFlags;
-
-	U32								mGlobalID;
-	U32								mLocalID;
-	S32								mRefCount;
 	U32								mDataSize;
 	void *							mpData;
 	U32								mDataSmall;
-	struct	sHashTreeNode *			mpNode;
 	struct	sHashTreeVarClient *	mpClients;
-	struct	sHashTreeVar *			mpNext;
 	struct	sHashTreeVar *			mpVarNext;
 } sHashTreeVar;
 
-typedef	struct	sHashTreeNode
-{
-	U32						mGlobalID;
-	U32						mLocalID;
-	S32						mRefCount;
-	sHashTreeVar *			mpVars;
-	struct	sHashTreeNode *	mpParent;
-	struct	sHashTreeNode *	mpChild;
-	struct	sHashTreeNode *	mpNext;
-} sHashTreeNode;
 
 typedef	struct sHashTree
 {
-	sHashTreeNode *			mpNodes;
-	U32						mNodeCount;
 	U32						mVariableCount;
 	sHashTreeVar *			mpVars;
 	sHashTreeVarClient *	mpUnboundClients;
 } sHashTree;
-
 
 
 typedef struct sHashTreeVarBlock
@@ -92,6 +64,7 @@ typedef struct sHashTreeVarBlock
 	U16 *	mpDataSizes;
 	U8 *	mpData;
 } sHashTreeVarBlock;
+
 
 /* ###################################################################################
 #  PROTOTYPES
