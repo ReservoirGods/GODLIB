@@ -695,4 +695,25 @@ const sTagString *	sTagString_GetFromString( const sString * apString, const sTa
 	return 0;
 }
 
+const char *	String_SubString( const char * apString, const char * apSubString )
+{
+	if( !apString || !apSubString )
+		return 0;
+
+	while( *apString )
+	{
+		U16 i;
+
+		for( i=0; apString[i] && apSubString[i] && (apString[i]==apSubString[i]); i++ );
+
+		if( 0 == apSubString[i] )
+			return apString;
+
+		apString++;
+	}
+
+	return 0;
+}
+
+
 /* ################################################################################ */

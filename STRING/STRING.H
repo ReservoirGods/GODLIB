@@ -76,6 +76,7 @@ void		String_CharRemove( sString * apString, const U16 aIndex );
 void		String_QuoteTrim( sString * apString );
 S32			String_ToS32( sString * apString );
 
+
 #define		String_Action( apString, aAction )	{ if((apString)->mpChars) { char old =(apString)->mpChars[ String_GetLength(apString)]; (apString)->mpChars[ String_GetLength(apString)] = 0; aAction(apString); (apString)->mpChars[ String_GetLength(apString)] = old; } }
 
 /*
@@ -96,6 +97,8 @@ U8			String_StrCmp( const char * apStr0, const char * apStr1 );
 U8			String_StrCmpi( const char * apStr0, const char * apStr1 );
 U32			String_StrLen( const char * apString );
 S32			String_ToValue( const char * apString );
+
+const char *	String_SubString( const char * apString, const char * apSubString );
 
 const sTagString *	sTagString_GetFromString( const sString * apString, const sTagString * apTagStrings, const U32 aLimit );
 
