@@ -81,24 +81,6 @@ typedef	struct sHashTree
 } sHashTree;
 
 
-typedef	struct	sHashTreeSaveVar
-{
-	U32		mGlobalID;
-	U32		mLocalID;
-	U32		mDataSize;
-	void *	mpData;
-} sHashTreeSaveVar;
-
-typedef	struct	sHashTreeSaveNode
-{
-	U32							mGlobalID;
-	U32							mLocalID;
-	U16							mVarCount;
-	U16							mPad;
-	sHashTreeSaveVar *			mpVars;
-	struct sHashTreeSaveNode *	mpChild;
-	struct sHashTreeSaveNode *	mpNext;
-} sHashTreeSaveNode;
 
 typedef struct sHashTreeVarBlock
 {
@@ -126,29 +108,11 @@ void					HashTree_Var_DeInit( sHashTreeVar * apVar, sHashTree * apTree );
 sHashTreeVar *			HashTree_Var_Create( sHashTree * apTree, const char * apName, const U32 aSize, void * apData );
 void					HashTree_Var_Destroy( sHashTree * apTree, sHashTreeVar * apVar );
 
-#if 0
-sHashTreeVar *			HashTree_VarRegister(   sHashTree * apTree, const char * apName );
-void					HashTree_VarUnRegister( sHashTree * apTree, sHashTreeVar * apVar );
-#endif
-
-#if 0
-sHashTreeVarClient *	HashTree_VarClientRegister( sHashTree * apTree, const char * apName, fHashTreeVarCB aOnWrite, fHashTreeVarCB aOnInit, fHashTreeVarCB onDeInit, const U32 aUserData );
-void					HashTree_VarClientUnRegister( sHashTree * apTree, sHashTreeVarClient * apClient );
-#endif
-
 void					HashTree_VarClient_Init( sHashTreeVarClient * apClient, sHashTree * apTree, const char * apName, fHashTreeVarCB aOnWrite );
 void					HashTree_VarClient_DeInit( sHashTreeVarClient * apClient, sHashTree * apTree );
 
 void					HashTree_VarWrite( sHashTreeVar * apVar, void * apData );
 void					HashTree_VarRead( const sHashTreeVar * apVar, void * apDest, const U32 aSize );
-
-sHashTreeSaveNode *		HashTree_SaveNodeBuild( sHashTree * apTree, const char * apNodeName );
-void					HashTree_SaveNodeDestroy( sHashTree * apTree, const char * apNodeName, sHashTreeSaveNode * apSaveNode );
-void					HashTree_SaveNodeLoad( sHashTree * apTree, const char * apNodeName, const sHashTreeSaveNode * apSaveNode );
-void					HashTree_SaveNodeUnLoad( sHashTree * apTree, const char * apNodeName, const sHashTreeSaveNode * apSaveNode );
-U32						HashTree_SaveNodeGetSize( const sHashTreeSaveNode * apSaveNode );
-void					HashTree_SaveNodeDelocate( sHashTreeSaveNode * apNode );
-void					HashTree_SaveNodeRelocate( sHashTreeSaveNode * apNode );
 
 U32						HashTree_VarBlock_GetSize( sHashTree * apTree, U32 aFilterFlags );
 void					HashTree_VarBlock_Init( sHashTreeVarBlock * apBlock, sHashTree * apTree, U32 aFilterFlags );

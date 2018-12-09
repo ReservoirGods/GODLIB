@@ -32,6 +32,24 @@ typedef struct
 	U32		mLocalHash[ dHASHTREE_TOK_LIMIT ];
 } sHashTreeTokeniser;
 
+typedef	struct	sHashTreeSaveVar
+{
+	U32		mGlobalID;
+	U32		mLocalID;
+	U32		mDataSize;
+	void *	mpData;
+} sHashTreeSaveVar;
+
+typedef	struct	sHashTreeSaveNode
+{
+	U32							mGlobalID;
+	U32							mLocalID;
+	U16							mVarCount;
+	U16							mPad;
+	sHashTreeSaveVar *			mpVars;
+	struct sHashTreeSaveNode *	mpChild;
+	struct sHashTreeSaveNode *	mpNext;
+} sHashTreeSaveNode;
 
 /* ###################################################################################
 #  PROTOTYPES
@@ -68,6 +86,15 @@ void			HashTree_Validate( sHashTree * apTree );
 
 sHashTreeVar *			HashTree_VarRegister(   sHashTree * apTree, const char * apName );
 void					HashTree_VarUnRegister( sHashTree * apTree, sHashTreeVar * apVar );
+
+
+sHashTreeSaveNode *		HashTree_SaveNodeBuild( sHashTree * apTree, const char * apNodeName );
+void					HashTree_SaveNodeDestroy( sHashTree * apTree, const char * apNodeName, sHashTreeSaveNode * apSaveNode );
+void					HashTree_SaveNodeLoad( sHashTree * apTree, const char * apNodeName, const sHashTreeSaveNode * apSaveNode );
+void					HashTree_SaveNodeUnLoad( sHashTree * apTree, const char * apNodeName, const sHashTreeSaveNode * apSaveNode );
+U32						HashTree_SaveNodeGetSize( const sHashTreeSaveNode * apSaveNode );
+void					HashTree_SaveNodeDelocate( sHashTreeSaveNode * apNode );
+void					HashTree_SaveNodeRelocate( sHashTreeSaveNode * apNode );
 
 /* ###################################################################################
 #  CODE
