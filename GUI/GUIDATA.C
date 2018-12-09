@@ -53,13 +53,13 @@ void	GuiData_Init( sGuiData * apData,sHashTree * apTree )
 	{
 		if( apData->mpButtons[ i ].mString.mVar.mpName )
 		{
-			apData->mpButtons[ i ].mString.mVar.mpVar = HashTree_VarRegister( apTree, apData->mpButtons[ i ].mString.mVar.mpName );
+			HashTree_VarClient_Init( &apData->mpButtons[ i ].mString.mVar.mVarClient, apTree, apData->mpButtons[ i ].mString.mVar.mpName, 0 );
 		}
 	}
 
 	for( i=0; i<apData->mVarCount; i++ )
 	{
-		apData->mpVars[ i ].mpVar = HashTree_VarRegister( apTree, apData->mpVars[ i ].mpName );
+		HashTree_VarClient_Init( &apData->mpVars[ i ].mVarClient, apTree, apData->mpVars[ i ].mpName, 0 );
 	}
 }
 
@@ -82,16 +82,16 @@ void	GuiData_DeInit( sGuiData * apData, sHashTree * apTree )
 
 	for( i=0; i<apData->mButtonCount; i++ )
 	{
-		if( apData->mpButtons[ i ].mString.mVar.mpVar )
+		if( apData->mpButtons[ i ].mString.mVar.mVarClient.mpVar )
 		{
-			HashTree_VarUnRegister( apTree, apData->mpButtons[ i ].mString.mVar.mpVar );
-			apData->mpButtons[ i ].mString.mVar.mpVar = 0;
+			HashTree_VarClient_DeInit( &apData->mpButtons[ i ].mString.mVar.mVarClient, apTree );
+			apData->mpButtons[ i ].mString.mVar.mVarClient.mpVar = 0;
 		}
 	}
 
 	for( i=0; i<apData->mVarCount; i++ )
 	{
-		HashTree_VarUnRegister( apTree, apData->mpVars[ i ].mpVar );
+		HashTree_VarClient_DeInit( &apData->mpVars[ i ].mVarClient, apTree );
 	}
 }
 
@@ -1009,28 +1009,28 @@ void	GuiData_EventsRegister( sGuiData * apData,sHashTree * apTree )
 		sprintf( lString, "GUI\\BUTTONS\\%s", apData->mpButtons[ i ].mInfo.mpName );
 		apData->mpButtons[ i ].mInfo.mEvent.mpInfo = &apData->mpButtons[ i ];
 		apData->mpButtons[ i ].mInfo.mEvent.mEvent = 0;
-		apData->mpButtons[ i ].mInfo.mpEventVar    = HashTree_Var_Create( apTree, lString, sizeof(sGuiEvent), &apData->mpButtons[ i ].mInfo.mEvent );
+		HashTree_Var_Init( &apData->mpButtons[ i ].mInfo.mEventVar, apTree, lString, sizeof(sGuiEvent), &apData->mpButtons[ i ].mInfo.mEvent );
 	}
 	for( i=0; i<apData->mListCount; i++ )
 	{
 		sprintf( lString, "GUI\\LISTS\\%s", apData->mpLists[ i ].mInfo.mpName );
 		apData->mpLists[ i ].mInfo.mEvent.mpInfo = &apData->mpLists[ i ];
 		apData->mpLists[ i ].mInfo.mEvent.mEvent = 0;
-		apData->mpLists[ i ].mInfo.mpEventVar    = HashTree_Var_Create( apTree, lString, sizeof(sGuiEvent), &apData->mpLists[ i ].mInfo.mEvent );
+		HashTree_Var_Init( &apData->mpLists[ i ].mInfo.mEventVar, apTree, lString, sizeof(sGuiEvent), &apData->mpLists[ i ].mInfo.mEvent );
 	}
 	for( i=0; i<apData->mSliderCount; i++ )
 	{
 		sprintf( lString, "GUI\\SLIDERS\\%s", apData->mpSliders[ i ].mInfo.mpName );
 		apData->mpSliders[ i ].mInfo.mEvent.mpInfo = &apData->mpSliders[ i ];
 		apData->mpSliders[ i ].mInfo.mEvent.mEvent = 0;
-		apData->mpSliders[ i ].mInfo.mpEventVar    = HashTree_Var_Create( apTree, lString, sizeof(sGuiEvent), &apData->mpSliders[ i ].mInfo.mEvent );
+		HashTree_Var_Init( &apData->mpSliders[ i ].mInfo.mEventVar, apTree, lString, sizeof(sGuiEvent), &apData->mpSliders[ i ].mInfo.mEvent );
 	}
 	for( i=0; i<apData->mWindowCount; i++ )
 	{
 		sprintf( lString, "GUI\\WINDOWS\\%s", apData->mpWindows[ i ].mInfo.mpName );
 		apData->mpWindows[ i ].mInfo.mEvent.mpInfo = &apData->mpWindows[ i ];
 		apData->mpWindows[ i ].mInfo.mEvent.mEvent = 0;
-		apData->mpWindows[ i ].mInfo.mpEventVar    = HashTree_Var_Create( apTree, lString, sizeof(sGuiEvent), &apData->mpWindows[ i ].mInfo.mEvent );
+		HashTree_Var_Init( &apData->mpWindows[ i ].mInfo.mEventVar, apTree, lString, sizeof(sGuiEvent), &apData->mpWindows[ i ].mInfo.mEvent );
 	}
 }
 
@@ -1047,19 +1047,19 @@ void	GuiData_EventsUnRegister( sGuiData * apData, sHashTree * apTree )
 
 	for( i=0; i<apData->mButtonCount; i++ )
 	{
-		HashTree_VarUnRegister( apTree, apData->mpButtons[ i ].mInfo.mpEventVar );
+		HashTree_Var_DeInit( &apData->mpButtons[ i ].mInfo.mEventVar, apTree );
 	}
 	for( i=0; i<apData->mListCount; i++ )
 	{
-		HashTree_VarUnRegister( apTree, apData->mpLists[ i ].mInfo.mpEventVar );
+		HashTree_Var_DeInit( &apData->mpLists[ i ].mInfo.mEventVar, apTree );
 	}
 	for( i=0; i<apData->mSliderCount; i++ )
 	{
-		HashTree_VarUnRegister( apTree, apData->mpSliders[ i ].mInfo.mpEventVar );
+		HashTree_Var_DeInit( &apData->mpSliders[ i ].mInfo.mEventVar, apTree );
 	}
 	for( i=0; i<apData->mWindowCount; i++ )
 	{
-		HashTree_VarUnRegister( apTree, apData->mpWindows[ i ].mInfo.mpEventVar );
+		HashTree_Var_DeInit( &apData->mpWindows[ i ].mInfo.mEventVar, apTree );
 	}
 }
 

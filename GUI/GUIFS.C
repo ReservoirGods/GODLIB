@@ -73,10 +73,12 @@ enum
 typedef	struct sGuiFSClass
 {
 	sHashTree *				mpTree;
-	sHashTreeVar *			mpVars[ eGUIFS_VAR_LIMIT ];
+	sHashTreeVar 			mVars[ eGUIFS_VAR_LIMIT ];
 	sHashTreeVarClient		mVarClients[ eGUIFS_VARCLIENT_LIMIT ];
 	sString	*				mpStrings[ eGUIFS_STRING_LIMIT ];
 	sString					mStrings[ eGUIFS_STRING_LIMIT ];
+	sGuiEvent				mFileEvent;
+	sGuiEvent				mFolderEvent;
 	U16						mFileCount;
 	U16						mFolderCount;
 	U32						mAllocFlag;
@@ -146,13 +148,13 @@ void	GuiFS_Init( sHashTree * apTree )
 	for( i = 0; i < eGUIFS_STRING_LIMIT; i++ )
 		gGuiFS.mpStrings[ i ] = &gGuiFS.mStrings[ i ];
 
-	gGuiFS.mpVars[ eGUIFS_VAR_DRIVE    ] = HashTree_Var_Create( apTree, "GUI\\FS\\DRIVE",		sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_DRIVE    ]  );
-	gGuiFS.mpVars[ eGUIFS_VAR_FILE     ] = HashTree_Var_Create( apTree, "GUI\\FS\\FILE",		sizeof(sGuiEvent), 0  );
-	gGuiFS.mpVars[ eGUIFS_VAR_FILEMASK ] = HashTree_Var_Create( apTree, "GUI\\FS\\FILEMASK",	sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_FILEMASK ]  );
-	gGuiFS.mpVars[ eGUIFS_VAR_FILENAME ] = HashTree_Var_Create( apTree, "GUI\\FS\\FILENAME",	sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_FILENAME ]  );
-	gGuiFS.mpVars[ eGUIFS_VAR_FILEPATH ] = HashTree_Var_Create( apTree, "GUI\\FS\\FILEPATH",	sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_FILEPATH ]  );
-	gGuiFS.mpVars[ eGUIFS_VAR_TITLE    ] = HashTree_Var_Create( apTree, "GUI\\FS\\TITLE",		sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_TITLE    ]  );
-	gGuiFS.mpVars[ eGUIFS_VAR_FOLDER   ] = HashTree_Var_Create( apTree, "GUI\\FS\\FOLDER",		sizeof(sGuiEvent), 0  );
+	HashTree_Var_Init( &gGuiFS.mVars[ eGUIFS_VAR_DRIVE    ], apTree, "GUI\\FS\\DRIVE",		sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_DRIVE    ]  );
+	HashTree_Var_Init( &gGuiFS.mVars[ eGUIFS_VAR_FILE     ], apTree, "GUI\\FS\\FILE",		sizeof(sGuiEvent), &gGuiFS.mFileEvent  );
+	HashTree_Var_Init( &gGuiFS.mVars[ eGUIFS_VAR_FILEMASK ], apTree, "GUI\\FS\\FILEMASK",	sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_FILEMASK ]  );
+	HashTree_Var_Init( &gGuiFS.mVars[ eGUIFS_VAR_FILENAME ], apTree, "GUI\\FS\\FILENAME",	sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_FILENAME ]  );
+	HashTree_Var_Init( &gGuiFS.mVars[ eGUIFS_VAR_FILEPATH ], apTree, "GUI\\FS\\FILEPATH",	sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_FILEPATH ]  );
+	HashTree_Var_Init( &gGuiFS.mVars[ eGUIFS_VAR_TITLE    ], apTree, "GUI\\FS\\TITLE",		sizeof(sString*), &gGuiFS.mpStrings[ eGUIFS_STRING_TITLE    ]  );
+	HashTree_Var_Init( &gGuiFS.mVars[ eGUIFS_VAR_FOLDER   ], apTree, "GUI\\FS\\FOLDER",		sizeof(sGuiEvent), &gGuiFS.mFolderEvent  );
 
 	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_OK         ], apTree, "GUI\\BUTTONS\\BUTT_FS_OK",		GuiFS_OnOK     );
 	HashTree_VarClient_Init( &gGuiFS.mVarClients[ eGUIFS_VARCLIENT_CANCEL     ], apTree, "GUI\\BUTTONS\\BUTT_FS_CANCEL",	GuiFS_OnCancel );
@@ -182,7 +184,7 @@ void	GuiFS_DeInit( sHashTree * apTree )
 
 	for( i=0; i<eGUIFS_VAR_LIMIT; i++ )
 	{
-		HashTree_Var_Destroy( apTree, gGuiFS.mpVars[ i ] );
+		HashTree_Var_DeInit( &gGuiFS.mVars[ i ], apTree );
 	}
 
 	for( i=0; i<eGUIFS_VARCLIENT_LIMIT; i++ )
@@ -283,7 +285,8 @@ void	GuiFS_FileListWindowBuild( sGuiWindow * apWindow )
 
 	for( i=0; i<apWindow->mControlCount; i++ )
 	{
-		HashTree_VarUnRegister( gGuiFS.mpTree, apWindow->mppControls[ i ]->mpEventVar );
+		/* HashTree_VarUnRegister( gGuiFS.mpTree, apWindow->mppControls[ i ]->mpEventVar ); */
+		HashTree_Var_DeInit( &apWindow->mppControls[ i ]->mEventVar, gGuiFS.mpTree );
 	}
 
 	if( apWindow->mppControls && gGuiFS.mAllocFlag )
@@ -384,15 +387,18 @@ void	GuiFS_FileListWindowBuild( sGuiWindow * apWindow )
 			lpButtons[ i ].mButtonType                    = eGUI_BUTTON_HOVER;
 			lpButtons[ i ].mString.mRects.mLocal.mX       = dGUIFS_BUTTON_STRINGX;
 			lpButtons[ i ].mString.mpTitle                = &gGuiFS.mpDTAs[ i ].mFileName[ 0 ];
+#if 0
+/* 2d0 - revisit this when new hastree var API is finished */
 			if( gGuiFS.mpDTAs[ i ].mAttrib & dGEMDOS_FA_DIR )
 			{
 				lpButtons[ i ].mString.mRects.mLocal.mX       = dGUIFS_BUTTON_STRINGX-6;
-				lpButtons[ i ].mInfo.mpEventVar = HashTree_VarRegister( gGuiFS.mpTree, "GUI\\FS\\FOLDER" );
+				HashTree_Var_Init( &lpButtons[ i ].mInfo.mEventVar, gGuiFS.mpTree, "GUI\\FS\\FOLDER" );
 			}
 			else
 			{
-				lpButtons[ i ].mInfo.mpEventVar = HashTree_VarRegister( gGuiFS.mpTree, "GUI\\FS\\FILE" );
+				HashTree_Var_Init( &lpButtons[ i ].mInfo.mEventVar, gGuiFS.mpTree, "GUI\\FS\\FILE" );
 			}
+#endif			
 			lY += dGUIFS_BUTTON_HEIGHT;
 		}
 
@@ -536,7 +542,7 @@ void	GuiFS_OnFolderBack( sHashTreeVarClient  * apClient )
 	lpEvent = (sGuiEvent*)apClient->mpVar->mpData;
 	if( eGUIEVENT_BUTTON_LEFTCLICK == lpEvent->mEvent )
 	{
-		lpVar    = gGuiFS.mpVars[ eGUIFS_VAR_FILEPATH ];
+		lpVar    = &gGuiFS.mVars[ eGUIFS_VAR_FILEPATH ];
 		DebugLog_Printf0( "GuiFS_OnFolderBack()" );
 
 		if( lpVar )
@@ -612,7 +618,7 @@ void	GuiFS_OnFile( sHashTreeVarClient  * apClient )
 			String_Set( &gGuiFS.mStrings[ eGUIFS_STRING_FILENAME ], lpButton->mString.mpTitle );
 
 
-			lpVar = gGuiFS.mpVars[ eGUIFS_VAR_FILENAME ];
+			lpVar = &gGuiFS.mVars[ eGUIFS_VAR_FILENAME ];
 			if( lpVar )
 			{
 				HashTree_VarWrite( lpVar, &gGuiFS.mStrings[ eGUIFS_STRING_FILENAME ] );
@@ -654,7 +660,7 @@ void	GuiFS_OnFolder( sHashTreeVarClient  * apClient )
 		DebugLog_Printf0( "GuiFS_OnFolder()" );
 		lpButton = (sGuiButton*)lpEvent->mpInfo;
 
-		lpVar    = gGuiFS.mpVars[ eGUIFS_VAR_FILEPATH ];
+		lpVar    = &gGuiFS.mVars[ eGUIFS_VAR_FILEPATH ];
 
 		if( lpVar && lpButton )
 		{

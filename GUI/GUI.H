@@ -277,7 +277,7 @@ typedef	struct	sGuiIKBD
 typedef	struct	sGuiVar
 {
 	char *					mpName;
-	sHashTreeVar *			mpVar;
+/*	sHashTreeVar *			mpVar;*/
 	sHashTreeVarClient 		mVarClient;
 	U16						mStructOffset;
 	U16						mStructSize;
@@ -331,7 +331,7 @@ typedef	struct	sGuiInfo
 	sGuiValue *		mpValue;
 	sGuiLock *		mpLock;
 	char *			mpName;
-	sHashTreeVar *	mpEventVar;
+	sHashTreeVar 	mEventVar;
 	sGuiEvent		mEvent;
 } sGuiInfo;
 

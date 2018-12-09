@@ -508,7 +508,7 @@ void	RenderGui_StringDraw( sGuiString * apString,sGraphicCanvas * apCanvas,sGuiF
 		lpString = 0;
 
 		lpVar = &apString->mVar;
-		if( lpVar->mpVar )
+		if( lpVar->mVarClient.mpVar )
 		{
 			if( apString->mVar.mpName )
 			{
@@ -518,49 +518,49 @@ void	RenderGui_StringDraw( sGuiString * apString,sGraphicCanvas * apCanvas,sGuiF
 			{
 
 			case	eGUI_VAR_S8:
-				HashTree_VarRead( lpVar->mpVar, &lS8, sizeof(lS8) );
+				HashTree_VarRead( lpVar->mVarClient.mpVar, &lS8, sizeof(lS8) );
 				sprintf( lChars, "%d", lS8 );
 				lpChars = &lChars[ 0 ];
 				break;
 
 			case	eGUI_VAR_S16:
-				HashTree_VarRead( lpVar->mpVar, &lS16, sizeof(lS16) );
+				HashTree_VarRead( lpVar->mVarClient.mpVar, &lS16, sizeof(lS16) );
 				sprintf( lChars, "%d", lS16 );
 				lpChars = &lChars[ 0 ];
 				break;
 
 			case	eGUI_VAR_S32:
-				HashTree_VarRead( lpVar->mpVar, &lS32, sizeof(lS32) );
+				HashTree_VarRead( lpVar->mVarClient.mpVar, &lS32, sizeof(lS32) );
 				sprintf( lChars, "%ld", lS32 );
 				lpChars = &lChars[ 0 ];
 				break;
 
 			case	eGUI_VAR_U8:
-				HashTree_VarRead( lpVar->mpVar, &lU8, sizeof(lU8) );
+				HashTree_VarRead( lpVar->mVarClient.mpVar, &lU8, sizeof(lU8) );
 				sprintf( lChars, "%d", lU8 );
 				lpChars = &lChars[ 0 ];
 				break;
 
 			case	eGUI_VAR_U16:
-				HashTree_VarRead( lpVar->mpVar, &lU16, sizeof(lU16) );
+				HashTree_VarRead( lpVar->mVarClient.mpVar, &lU16, sizeof(lU16) );
 				sprintf( lChars, "%d", lU16 );
 				lpChars = &lChars[ 0 ];
 				break;
 
 			case	eGUI_VAR_U32:
-				HashTree_VarRead( lpVar->mpVar, &lU32, sizeof(lU32) );
+				HashTree_VarRead( lpVar->mVarClient.mpVar, &lU32, sizeof(lU32) );
 				sprintf( lChars, "%ld", lU32 );
 				lpChars = &lChars[ 0 ];
 				break;
 
 			case	eGUI_VAR_FP32:
-				HashTree_VarRead( lpVar->mpVar, &lFP32, sizeof(lFP32) );
+				HashTree_VarRead( lpVar->mVarClient.mpVar, &lFP32, sizeof(lFP32) );
 				sprintf( lChars, "%f", lFP32 );
 				lpChars = &lChars[ 0 ];
 				break;
 
 			case	eGUI_VAR_STRING:
-				HashTree_VarRead( lpVar->mpVar, &lpString, sizeof( lpString ) );
+				HashTree_VarRead( lpVar->mVarClient.mpVar, &lpString, sizeof( lpString ) );
 				if( lpString )
 				{
 					lpChars = lpString->mpChars;

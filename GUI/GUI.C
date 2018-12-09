@@ -256,7 +256,7 @@ U8	Gui_Update( void )
 			{
 				lpData->mpFocusControl->mEvent.mEvent = eGUIEVENT_BUTTON_UPDATE;
 				DebugLog_Printf2( "Gui textline WRITEBACK %p %d", &lpData->mpFocusControl->mEvent, lpData->mpFocusControl->mEvent.mEvent );
-				HashTree_VarWrite( lpData->mpFocusControl->mpEventVar, &lpData->mpFocusControl->mEvent );
+				HashTree_VarWrite( &lpData->mpFocusControl->mEventVar, &lpData->mpFocusControl->mEvent );
 			}
 		case	eGUI_TEXTLINE_CANCEL:
 			gGuiClass.mMode = eGUI_MODE_NORMAL;
@@ -389,17 +389,17 @@ U8				GuiLock_IsLocked( sGuiLock * apLock )
 		lCheckVal = 0;
 		if( apLock->mpLockValue )
 		{
-			if( apLock->mpLockValue->mpVar )
+			if( apLock->mpLockValue->mVarClient.mpVar )
 			{
-				HashTree_VarRead( apLock->mpLockValue->mpVar, &lCheckVal, sizeof( lCheckVal ) );
+				HashTree_VarRead( apLock->mpLockValue->mVarClient.mpVar, &lCheckVal, sizeof( lCheckVal ) );
 			}
 		}
 
 		if( apLock->mpLockVar )
 		{
-			if( apLock->mpLockVar->mpVar )
+			if( apLock->mpLockVar->mVarClient.mpVar )
 			{
-				HashTree_VarRead( apLock->mpLockVar->mpVar, &lLockVal, sizeof( lLockVal ) );
+				HashTree_VarRead( apLock->mpLockVar->mVarClient.mpVar, &lLockVal, sizeof( lLockVal ) );
 				if( lLockVal <= lCheckVal )
 				{
 					lLockedFlag = 1;
@@ -431,17 +431,17 @@ U8				GuiLock_IsVisible( sGuiLock * apLock )
 		lCheckVal = 0;
 		if( apLock->mpVisValue )
 		{
-			if( apLock->mpVisValue->mpVar )
+			if( apLock->mpVisValue->mVarClient.mpVar )
 			{
-				HashTree_VarRead( apLock->mpVisValue->mpVar, &lCheckVal, sizeof( lCheckVal ) );
+				HashTree_VarRead( apLock->mpVisValue->mVarClient.mpVar, &lCheckVal, sizeof( lCheckVal ) );
 			}
 		}
 
 		if( apLock->mpVisVar )
 		{
-			if( apLock->mpVisVar->mpVar )
+			if( apLock->mpVisVar->mVarClient.mpVar )
 			{
-				HashTree_VarRead( apLock->mpVisVar->mpVar, &lVisVal, sizeof( lVisVal ) );
+				HashTree_VarRead( apLock->mpVisVar->mVarClient.mpVar, &lVisVal, sizeof( lVisVal ) );
 				if( lVisVal <= lCheckVal )
 				{
 					lVisFlag = 0;
@@ -491,7 +491,7 @@ void	GuiWindow_EventOpen( sGuiWindow * apWindow )
 	{
 		DebugLog_Printf2( "Window %p mEvent.mpInfo %p", apWindow, apWindow->mInfo.mEvent.mpInfo );
 		apWindow->mInfo.mEvent.mEvent = eGUIEVENT_WINDOW_OPEN;
-		HashTree_VarWrite( apWindow->mInfo.mpEventVar, &apWindow->mInfo.mEvent );
+		HashTree_VarWrite( &apWindow->mInfo.mEventVar, &apWindow->mInfo.mEvent );
 		for( i=0; i<apWindow->mControlCount; i++ )
 		{
 			lpWindow = (sGuiWindow*)apWindow->mppControls[ i ];
@@ -518,7 +518,7 @@ void	GuiWindow_EventClose( sGuiWindow * apWindow )
 	if( apWindow )
 	{
 		apWindow->mInfo.mEvent.mEvent = eGUIEVENT_WINDOW_CLOSE;
-		HashTree_VarWrite( apWindow->mInfo.mpEventVar, &apWindow->mInfo.mEvent );
+		HashTree_VarWrite( &apWindow->mInfo.mEventVar, &apWindow->mInfo.mEvent );
 		for( i=0; i<apWindow->mControlCount; i++ )
 		{
 			lpWindow = (sGuiWindow*)apWindow->mppControls[ i ];
@@ -640,7 +640,7 @@ void	Gui_WindowRefresh( sGuiClass * apData,sGuiWindow * apWindow )
 	apData->mMode = eGUI_MODE_NORMAL;
 
 	apWindow->mInfo.mEvent.mEvent = eGUIEVENT_WINDOW_REFRESH;
-	HashTree_VarWrite( apWindow->mInfo.mpEventVar, &apWindow->mInfo.mEvent );
+	HashTree_VarWrite( &apWindow->mInfo.mEventVar, &apWindow->mInfo.mEvent );
 	Gui_WorldPosUpdate();
 }
 
@@ -1374,7 +1374,7 @@ void	GuiInfo_HeldUpdate( sGuiInfo * apInfo,sGuiClass * apData )
 	if( (apInfo) && (apData) )
 	{
 		apInfo->mEvent.mEvent = eGUIEVENT_BUTTON_LEFTHELD;
-		HashTree_VarWrite( apInfo->mpEventVar, &apInfo->mEvent );
+		HashTree_VarWrite( &apInfo->mEventVar, &apInfo->mEvent );
 
 		switch( apInfo->mType )
 		{
@@ -2085,7 +2085,7 @@ void	GuiButton_FocusUpdate( sGuiButton * apButton,sGuiClass * apData )
 
 		if( apButton->mButtonType == eGUI_BUTTON_TEXTLINE )
 		{
-			if( GuiTextLine_Init( &apData->mTextLine, apButton->mString.mVar.mpVar ) )
+			if( GuiTextLine_Init( &apData->mTextLine, apButton->mString.mVar.mVarClient.mpVar ) )
 			{
 				apButton->mInfo.mFlags |= eGUIINFO_FLAG_SELECTED;
 				apButton->mInfo.mRedrawFlag = 2;
@@ -2107,10 +2107,10 @@ void	GuiButton_FocusUpdate( sGuiButton * apButton,sGuiClass * apData )
 			}
 		}
 
-		if( apButton->mInfo.mpEventVar )
+		/*if( apButton->mInfo.mEventVar )*/
 		{
 			apButton->mInfo.mEvent.mEvent = eGUIEVENT_BUTTON_LEFTCLICK;
-			HashTree_VarWrite( apButton->mInfo.mpEventVar, &apButton->mInfo.mEvent );
+			HashTree_VarWrite( &apButton->mInfo.mEventVar, &apButton->mInfo.mEvent );
 		}
 
 		if( apButton->mpOnLeftClick )
@@ -2121,10 +2121,10 @@ void	GuiButton_FocusUpdate( sGuiButton * apButton,sGuiClass * apData )
 
 	case	eGUI_MOUSEBUTTON_HELD:
 
-		if( apButton->mInfo.mpEventVar )
+		/*if( apButton->mInfo.mpEventVar )*/
 		{
 			apButton->mInfo.mEvent.mEvent = eGUIEVENT_BUTTON_LEFTHELD;
-			HashTree_VarWrite( apButton->mInfo.mpEventVar, &apButton->mInfo.mEvent );
+			HashTree_VarWrite( &apButton->mInfo.mEventVar, &apButton->mInfo.mEvent );
 		}
 
 		if( (apButton->mButtonType == eGUI_BUTTON_SPRING) ||
@@ -2156,10 +2156,10 @@ void	GuiButton_FocusUpdate( sGuiButton * apButton,sGuiClass * apData )
 
 	case	eGUI_MOUSEBUTTON_RELEASED:
 
-		if( apButton->mInfo.mpEventVar )
+		/*if( apButton->mInfo.mpEventVar )*/
 		{
 			apButton->mInfo.mEvent.mEvent = eGUIEVENT_BUTTON_LEFTRELEASE;
-			HashTree_VarWrite( apButton->mInfo.mpEventVar, &apButton->mInfo.mEvent );
+			HashTree_VarWrite( &apButton->mInfo.mEventVar, &apButton->mInfo.mEvent );
 		}
 
 		if( apButton->mButtonType == eGUI_BUTTON_SPRING )
@@ -2204,11 +2204,11 @@ void	GuiButton_FocusUpdate( sGuiButton * apButton,sGuiClass * apData )
 
 	if( apData->mIKBD.mCount && apButton->mpOnIKBD )
 	{
-		if( apButton->mpOnIKBD->mpVar )
+		if( apButton->mpOnIKBD->mVarClient.mpVar )
 		{
 			for( i=0; i<apData->mIKBD.mCount; i++ )
 			{
-				HashTree_VarWrite( apButton->mpOnIKBD->mpVar, &apData->mIKBD.mData[ i ] );
+				HashTree_VarWrite( apButton->mpOnIKBD->mVarClient.mpVar, &apData->mIKBD.mData[ i ] );
 			}
 			apData->mIKBD.mCount = 0;
 		}
@@ -2340,7 +2340,7 @@ void	GuiAction_Update( sGuiAction * apAction,sGuiMouse * apMouse,sGuiClass * apD
 			{
 				if( apAction->mpValue->mpValueMin )
 				{
-					HashTree_VarRead( apAction->mpValue->mpValueMin->mpVar, &lMin, sizeof(lMin) );
+					HashTree_VarRead( apAction->mpValue->mpValueMin->mVarClient.mpVar, &lMin, sizeof(lMin) );
 				}
 				else
 				{
@@ -2349,7 +2349,7 @@ void	GuiAction_Update( sGuiAction * apAction,sGuiMouse * apMouse,sGuiClass * apD
 
 				if( apAction->mpValue->mpValueMax )
 				{
-					HashTree_VarRead( apAction->mpValue->mpValueMax->mpVar, &lMax, sizeof(lMax) );
+					HashTree_VarRead( apAction->mpValue->mpValueMax->mVarClient.mpVar, &lMax, sizeof(lMax) );
 				}
 				else
 				{
@@ -2396,7 +2396,7 @@ void	GuiAction_Update( sGuiAction * apAction,sGuiMouse * apMouse,sGuiClass * apD
 				{
 					if( apAction->mpValue->mpVar )
 					{
-						HashTree_VarWrite( apAction->mpValue->mpVar->mpVar, apMouse );
+						HashTree_VarWrite( apAction->mpValue->mpVar->mVarClient.mpVar, apMouse );
 					}
 				}
 			}
@@ -2498,24 +2498,24 @@ S32	GuiVar_ReadS32( const sGuiVar * apVar )
 	lRes = 0;
 	if( apVar )
 	{
-		if( apVar->mpVar )
+		if( apVar->mVarClient.mpVar )
 		{
 			switch( apVar->mType )
 			{
 			case	eGUI_VAR_S8:
-				HashTree_VarRead( apVar->mpVar, &lS8, sizeof(lS8) );
+				HashTree_VarRead( apVar->mVarClient.mpVar, &lS8, sizeof(lS8) );
 				lRes = (S32)lS8;
 				break;
 			case	eGUI_VAR_S16:
-				HashTree_VarRead( apVar->mpVar, &lS16, sizeof(lS16) );
+				HashTree_VarRead( apVar->mVarClient.mpVar, &lS16, sizeof(lS16) );
 				lRes = (S32)lS16;
 				break;
 			case	eGUI_VAR_U8:
-				HashTree_VarRead( apVar->mpVar, &lU8, sizeof(lU8) );
+				HashTree_VarRead( apVar->mVarClient.mpVar, &lU8, sizeof(lU8) );
 				lRes = (S32)lU8;
 				break;
 			case	eGUI_VAR_U16:
-				HashTree_VarRead( apVar->mpVar, &lU16, sizeof(lU16) );
+				HashTree_VarRead( apVar->mVarClient.mpVar, &lU16, sizeof(lU16) );
 				lRes = (S32)lU16;
 				break;
 
@@ -2523,7 +2523,7 @@ S32	GuiVar_ReadS32( const sGuiVar * apVar )
 			case	eGUI_VAR_U32:
 			case	eGUI_VAR_FP32:
 			case	eGUI_VAR_STRING:
-				HashTree_VarRead( apVar->mpVar, &lRes, sizeof(lRes) );
+				HashTree_VarRead( apVar->mVarClient.mpVar, &lRes, sizeof(lRes) );
 				break;
 			default:
 				lRes = 0;
@@ -2552,25 +2552,25 @@ void	GuiVar_WriteS32( sGuiVar * apVar,const S32 aValue )
 
 	if( apVar )
 	{
-		if( apVar->mpVar )
+		if( apVar->mVarClient.mpVar )
 		{
 			switch( apVar->mType )
 			{
 			case	eGUI_VAR_S8:
 				lS8 = (S8)aValue;
-				HashTree_VarWrite( apVar->mpVar, &lS8 );
+				HashTree_VarWrite( apVar->mVarClient.mpVar, &lS8 );
 				break;
 			case	eGUI_VAR_S16:
 				lS16 = (S16)aValue;
-				HashTree_VarWrite( apVar->mpVar, &lS16 );
+				HashTree_VarWrite( apVar->mVarClient.mpVar, &lS16 );
 				break;
 			case	eGUI_VAR_U8:
 				lU8 = (U8)aValue;
-				HashTree_VarWrite( apVar->mpVar, &lU8 );
+				HashTree_VarWrite( apVar->mVarClient.mpVar, &lU8 );
 				break;
 			case	eGUI_VAR_U16:
 				lU16 = (U16)aValue;
-				HashTree_VarWrite( apVar->mpVar, &lU16 );
+				HashTree_VarWrite( apVar->mVarClient.mpVar, &lU16 );
 				break;
 
 			case	eGUI_VAR_S32:
@@ -2578,7 +2578,7 @@ void	GuiVar_WriteS32( sGuiVar * apVar,const S32 aValue )
 			case	eGUI_VAR_FP32:
 			case	eGUI_VAR_STRING:
 				lS32 = aValue;
-				HashTree_VarWrite( apVar->mpVar, &lS32 );
+				HashTree_VarWrite( apVar->mVarClient.mpVar, &lS32 );
 				break;
 			}
 		}
