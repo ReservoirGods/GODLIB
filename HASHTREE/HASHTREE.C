@@ -63,6 +63,9 @@ void			HashTree_NodesLoad( sHashTree * apTree, sHashTreeNode * apNode, const sHa
 void			HashTree_Validate( sHashTree * apTree );
 #endif
 
+sHashTreeVar *			HashTree_VarRegister(   sHashTree * apTree, const char * apName );
+void					HashTree_VarUnRegister( sHashTree * apTree, sHashTreeVar * apVar );
+
 /* ###################################################################################
 #  CODE
 ################################################################################### */
@@ -86,6 +89,10 @@ U32	HashTree_BuildHash( const char * apName )
 		if( (lC >= 'a') && (lC <='z') )
 		{
 			lC += ( 'A'-'a' );
+		}
+		if( '\\' == lC )
+		{
+			lC = '/';
 		}
 		lHash = ( lHash << 4L ) + lC;
 		lTemp = lHash & 0xF0000000L;
@@ -398,17 +405,27 @@ sHashTreeVar *	HashTree_Var_Create( sHashTree * apTree,const char * apName,const
 		if( aSize <= 4 )
 		{
 			lpVar->mpData = &lpVar->mDataSmall;
+			if( lpVar->mpData )
+			{
+				Memory_Copy( aSize, apData, lpVar->mpData );
+			}
 		}
 		else
 		{
 /*			DebugLog_Printf2( "HashTree_VarInit() : %s : %s", apName, apData );*/
-			lpVar->mpData    = mMEMCALLOC( aSize );
+/*			lpVar->mpData    = mMEMCALLOC( aSize );*/
+/* optimised hashtree - doesn't memory allocate, assumes clients provides memory */
+
+			lpVar->mpData = apData;
+			GODLIB_ASSERT( apData );
+			
 		}
+	#if 0
 		if( lpVar->mpData )
 		{
 			Memory_Copy( aSize, apData, lpVar->mpData );
 		}
-
+	#endif
 		lpClient = lpVar->mpClients;
 		while( lpClient )
 		{
@@ -448,10 +465,12 @@ void	HashTree_Var_Destroy( sHashTree * apTree, sHashTreeVar * apVar )
 		}
 		if( apVar->mpData )
 		{
+/*			
 			if( apVar->mDataSize > 4 )
 			{
 				mMEMFREE( apVar->mpData );
 			}
+*/			
 			apVar->mpData    = 0;
 			apVar->mDataSize = 0;
 		}
@@ -504,6 +523,74 @@ sHashTreeVar *	HashTree_NodeVarReg( sHashTreeNode * apNode,const U32 aGlobalID,c
 	return( lpVar );
 }
 
+sHashTreeVar * HashTree_Var_Find( sHashTree * apTree, U32 aKey )
+{
+	sHashTreeVar * var = apTree->mpVars;
+
+	for( var=apTree->mpVars;var;var=var->mpVarNext)
+	{
+		if( var->mHashKey == aKey )
+			return var;
+	}
+
+	return 0;
+}
+
+sHashTreeVarClient * HashTree_VarClient_Find( sHashTree * apTree, U32 aKey )
+{
+	sHashTreeVarClient * client;
+
+	for( client=apTree->mpUnboundClients; client; client=client->mpNext )
+	{
+		if( aKey == client->mHashKey )
+			return client;
+	}
+
+	return 0;
+}
+
+
+void	HashTree_Var_Init( sHashTreeVar * apVar, sHashTree * apTree, const char * apName, const U32 aSize, void * apData )
+{
+	sHashTreeVarClient * client;
+
+	apVar->mHashKey = HashTree_BuildHash( apName );
+	apVar->mDataSize = aSize;
+	apVar->mpData = apData;
+	if( apVar->mDataSize <= 4 )
+	{
+		apVar->mpData = &apVar->mDataSmall;
+	}
+
+	client = HashTree_VarClient_Find( apTree, apVar->mHashKey );
+	if( client )
+	{
+		GOD_LL_REMOVE( sHashTreeVarClient, apTree->mpUnboundClients, mpNext, client );
+		apVar->mpClients = client;
+		for( ;client;client=client->mpNext)
+		{
+			client->mfOnInit( client );
+		}
+	}
+
+	GOD_LL_INSERT( apTree->mpVars, mpVarNext, apVar );
+
+}
+
+void	HashTree_Var_DeInit( sHashTreeVar * apVar, sHashTree * apTree )
+{
+	sHashTreeVarClient * client;
+	sHashTreeVarClient * next;
+	for( client = apVar->mpClients; client; client=next)
+	{
+		next = client->mpNext;
+		client->mpNext = apTree->mpUnboundClients;
+		apTree->mpUnboundClients = client;
+	}
+
+	GOD_LL_REMOVE( sHashTreeVar, apTree->mpVars, mpVarNext, apVar );
+}
+
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : HashTree_VarRegister( sHashTree * apTree,const char * apName )
@@ -548,6 +635,8 @@ sHashTreeVar *	HashTree_VarRegister( sHashTree * apTree,const char * apName )
 					lpVar->mpNode    = lpNode;
 					lpVar->mpNext    = lpNode->mpVars;
 					lpNode->mpVars   = lpVar;
+
+					GOD_LL_INSERT( apTree->mpVars, mpVarNext, lpVar );
 				}
 			}
 			if( lpVar )
@@ -595,6 +684,8 @@ void	HashTree_VarUnRegister( sHashTree * apTree, sHashTreeVar * apVar )
 				}
 				lpVar->mpNext = apVar->mpNext;
 			}
+
+			GOD_LL_REMOVE( sHashTreeVar, apTree->mpVars, mpVarNext, apVar );
 
 			mMEMFREE( apVar );
 		}
@@ -696,16 +787,19 @@ void	HashTree_VarClientUnRegister( sHashTree * apTree, sHashTreeVarClient * apCl
 
 void	HashTree_VarClient_Init( sHashTreeVarClient * apClient, sHashTree * apTree, const char * apName, fHashTreeVarCB aOnWrite )
 {
-	sHashTreeVar *			lpVar;
+	apClient->mHashKey  = HashTree_BuildHash( apName );
+	apClient->mfOnWrite = aOnWrite;
+	apClient->mpNext    = 0;
+	apClient->mpVar     = HashTree_Var_Find( apTree, apClient->mHashKey );
 
-	lpVar    = HashTree_VarRegister( apTree, apName );
-
-	if( lpVar )
+	if( apClient->mpVar )
 	{
-		apClient->mfOnWrite  = aOnWrite;
-		apClient->mpVar      = lpVar;
-		apClient->mpNext     = lpVar->mpClients;
-		lpVar->mpClients     = apClient;
+		apClient->mpNext           = apClient->mpVar->mpClients;
+		apClient->mpVar->mpClients = apClient;
+	}
+	else
+	{
+		GOD_LL_INSERT( apTree->mpUnboundClients, mpNext, apClient );
 	}
 }
 
@@ -718,7 +812,11 @@ void	HashTree_VarClient_DeInit( sHashTreeVarClient * apClient, sHashTree * apTre
 		{
 			GOD_LL_REMOVE( sHashTreeVarClient, apClient->mpVar->mpClients, mpNext, apClient );
 		}
-		HashTree_VarUnRegister( apTree, apClient->mpVar );
+		else
+		{
+			GOD_LL_REMOVE( sHashTreeVarClient, apTree->mpUnboundClients, mpNext, apClient );
+		}
+/*		HashTree_VarUnRegister( apTree, apClient->mpVar );*/
 		apClient->mpVar = 0;
 	}
 }
@@ -735,8 +833,10 @@ void	HashTree_VarWrite( sHashTreeVar * apVar,void * apData )
 	sHashTreeVarClient *	lpClient;
 
 /*	DebugLog_Printf2( "HashTree_VarWrite: %lx %s", apVar, apData );*/
+	GODLIB_ASSERT( apVar );
 	if( apVar )
 	{
+		GODLIB_ASSERT( apVar->mDataSize && apVar->mpData );
 		if( (apVar->mDataSize) && (apVar->mpData) )
 		{
 			Memory_Copy( apVar->mDataSize, apData, apVar->mpData );

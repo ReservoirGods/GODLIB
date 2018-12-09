@@ -1,6 +1,14 @@
 #ifndef	INCLUDED_HASHTREE_H
 #define	INCLUDED_HASHTREE_H
 
+/*
+	idea -
+	get rid of nodes entirely
+	flatten structure
+	everything has a fullhash of full path name
+	filter flags field - can contain savability flag
+*/
+
 /* ###################################################################################
 #  INCLUDES
 ################################################################################### */
@@ -30,12 +38,16 @@ typedef	struct	sHashTreeVarClient
 	fHashTreeVarCB				mfOnInit;
 	fHashTreeVarCB				mfOnDeInit;
 	U32							mUserData;
+	U32							mHashKey;
 	struct	sHashTreeVar *		mpVar;
 	struct sHashTreeVarClient *	mpNext;
 } sHashTreeVarClient;
 
 typedef	struct	sHashTreeVar
 {
+	U32								mHashKey;
+	U32								mFilterFlags;
+
 	U32								mGlobalID;
 	U32								mLocalID;
 	S32								mRefCount;
@@ -45,6 +57,7 @@ typedef	struct	sHashTreeVar
 	struct	sHashTreeNode *			mpNode;
 	struct	sHashTreeVarClient *	mpClients;
 	struct	sHashTreeVar *			mpNext;
+	struct	sHashTreeVar *			mpVarNext;
 } sHashTreeVar;
 
 typedef	struct	sHashTreeNode
@@ -60,9 +73,11 @@ typedef	struct	sHashTreeNode
 
 typedef	struct sHashTree
 {
-	sHashTreeNode *	mpNodes;
-	U32				mNodeCount;
-	U32				mVariableCount;
+	sHashTreeNode *			mpNodes;
+	U32						mNodeCount;
+	U32						mVariableCount;
+	sHashTreeVar *			mpVars;
+	sHashTreeVarClient *	mpUnboundClients;
 } sHashTree;
 
 
@@ -95,11 +110,16 @@ U32						HashTree_BuildHash( const char * apName );
 void					HashTree_Init( sHashTree * apTree );
 void					HashTree_DeInit( sHashTree * apTree );
 
+void					HashTree_Var_Init( sHashTreeVar * apVar, sHashTree * apTree, const char * apName, const U32 aSize, void * apData );
+void					HashTree_Var_DeInit( sHashTreeVar * apVar, sHashTree * apTree );
+
 sHashTreeVar *			HashTree_Var_Create( sHashTree * apTree, const char * apName, const U32 aSize, void * apData );
 void					HashTree_Var_Destroy( sHashTree * apTree, sHashTreeVar * apVar );
 
+#if 0
 sHashTreeVar *			HashTree_VarRegister(   sHashTree * apTree, const char * apName );
 void					HashTree_VarUnRegister( sHashTree * apTree, sHashTreeVar * apVar );
+#endif
 
 #if 0
 sHashTreeVarClient *	HashTree_VarClientRegister( sHashTree * apTree, const char * apName, fHashTreeVarCB aOnWrite, fHashTreeVarCB aOnInit, fHashTreeVarCB onDeInit, const U32 aUserData );
