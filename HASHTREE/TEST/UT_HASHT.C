@@ -29,7 +29,7 @@ typedef struct sHashTreeVarDef
 	const char * mpName;
 	U32			mSize;
 	void *		mpData;
-	sHashTreeVar *	mpVar;
+	sHashTreeVar 	mVar;
 	sHashTreeVarClient  mClient;
 }sHashTreeVarDef;
 
@@ -115,8 +115,8 @@ GOD_UNIT_TEST( HashTree )
 
 	for( i = 0; i < mARRAY_COUNT( gHashTreeVarDef ); i++ )
 	{
-		gHashTreeVarDef[ i ].mpVar = HashTree_Var_Create( &gHashTreeUT, gHashTreeVarDef[i].mpName, gHashTreeVarDef[ i ].mSize, gHashTreeVarDef[ i ].mpData );
-		GOD_UNIT_TEST_ASSERT( gHashTreeVarDef[ i ].mpVar, "couldn't init has tree var" );
+		HashTree_Var_Init( &gHashTreeVarDef[ i ].mVar, &gHashTreeUT, gHashTreeVarDef[i].mpName, gHashTreeVarDef[ i ].mSize, gHashTreeVarDef[ i ].mpData );
+/*		GOD_UNIT_TEST_ASSERT( gHashTreeVarDef[ i ].mVar.mpVar, "couldn't init has tree var" );*/
 	}
 
 	/* test that reading/writing return same value */
@@ -124,13 +124,13 @@ GOD_UNIT_TEST( HashTree )
 	for( j = 0; j < 16; j++ )
 	{
 		i = 0;
-#define	GOD_UNIT_TEST_TYPE_ACTION( aType )														\
-		{																						\
-			aType lVal0 = (aType)GOD_UNIT_TEST_RAND32();										\
-			aType lVal1 = 0;																	\
-			HashTree_VarWrite( gHashTreeVarDef[ i ].mpVar, &lVal0 );							\
-			HashTree_VarRead( gHashTreeVarDef[ i ].mpVar, &lVal1, gHashTreeVarDef[ i ].mSize );	\
-			i++;																				\
+#define	GOD_UNIT_TEST_TYPE_ACTION( aType )															\
+		{																							\
+			aType lVal0 = (aType)GOD_UNIT_TEST_RAND32();											\
+			aType lVal1 = 0;																		\
+			HashTree_VarWrite( &gHashTreeVarDef[ i ].mVar, &lVal0 );								\
+			HashTree_VarRead( &gHashTreeVarDef[ i ].mVar, &lVal1, gHashTreeVarDef[ i ].mSize );		\
+			i++;																					\
 		}
 		GOD_UNIT_TEST_TYPES()
 #undef	GOD_UNIT_TEST_TYPE_ACTION
@@ -163,7 +163,7 @@ GOD_UNIT_TEST( HashTree )
 		{																														\
 			U16 lCountOld = gHashTreeVarTracks[ i ].mWriteCount;																\
 			aType lTemp = (aType)GOD_UNIT_TEST_RAND32();																		\
-			HashTree_VarWrite( gHashTreeVarDef[ i ].mpVar, &lTemp );															\
+			HashTree_VarWrite( &gHashTreeVarDef[ i ].mVar, &lTemp );															\
 			GOD_UNIT_TEST_EXPECT( lCountOld + 1 == gHashTreeVarTracks[ i ].mWriteCount, "write callback not triggered" );		\
 			GOD_UNIT_TEST_EXPECT( lTemp == (aType)gHashTreeVarTracks[ i ].mWriteValue, "write callback not getting value" );	\
 			i++;																												\
@@ -177,7 +177,7 @@ GOD_UNIT_TEST( HashTree )
 	for( i = 0; i < mARRAY_COUNT( gHashTreeVarDef ); i++ )
 	{
 		U16 lCountOld = gHashTreeVarTracks[ i ].mDeInitCount;
-		HashTree_Var_Destroy( &gHashTreeUT, gHashTreeVarDef[ i ].mpVar );
+		HashTree_Var_DeInit( &gHashTreeVarDef[ i ].mVar, &gHashTreeUT );
 		GOD_UNIT_TEST_EXPECT( lCountOld + 1 == gHashTreeVarTracks[ i ].mDeInitCount, "deinit callback not triggered" );
 	}
 
