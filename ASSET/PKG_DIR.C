@@ -8,18 +8,22 @@
 #include	"CONTEXT.H"
 #include	"RELOCATE.H"
 
+#include	<GODLIB/ASSET/ASSET.H>
 #include	<GODLIB/DEBUG/DBGCHAN.H>
 #include	<GODLIB/CLI/CLI.H>
 #include	<GODLIB/FILE/FILE.H>
 #include	<GODLIB/FILE/FILE_PTN.H>
 #include	<GODLIB/GEMDOS/GEMDOS.H>
+#include	<GODLIB/LINKFILE/LINKFILE.H>
 #include	<GODLIB/MEMORY/MEMORY.H>
+#include	<GODLIB/STRING/STRING.H>
 
 
 /* ###################################################################################
 #  DATA
 ################################################################################### */
 
+struct sAsset;
 sGemDosDTA	gPackageDirDTA;
 
 

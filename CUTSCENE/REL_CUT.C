@@ -6,6 +6,10 @@
 
 #include	"CUTSCENE.H"
 #include	"CUT_SYS.H"
+
+
+#include	<GODLIB/ASSET/ASSET.H>
+#include	<GODLIB/ASSET/CONTEXT.H>
 #include	<GODLIB/ASSET/RELOCATE.H>
 
 

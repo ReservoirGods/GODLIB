@@ -4,6 +4,7 @@
 
 #include	"CUT_SYS.H"
 
+#include	<GODLIB/ASSET/CONTEXT.H>
 #include	<GODLIB/CLI/CLI.H>
 #include	<GODLIB/FADE/FADE.H>
 #include	<GODLIB/FONT/FONT.H>
