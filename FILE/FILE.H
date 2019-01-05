@@ -49,6 +49,8 @@ void		File_DeInit( void );
 
 sFileHandle	File_Open(   const char * apFname);
 sFileHandle	File_Create( const char * apFname);
+sFileHandle	File_OpenRW(   const char * apFname);
+
 S32			File_Read(  sFileHandle aHandle, U32 aBytes, void * apBuffer );
 S32			File_Write( sFileHandle aHandle, U32 aBytes, const void * apBuffer );
 S32			File_WriteString( sFileHandle aHandle, const char * apString );

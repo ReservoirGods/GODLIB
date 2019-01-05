@@ -119,6 +119,16 @@ sFileHandle		File_Open( const char * apFname )
 #endif
 }
 
+sFileHandle	File_OpenRW(   const char * apFname)
+{
+#ifdef	dGODLIB_PLATFORM_ATARI
+	return( (sFileHandle)GemDos_Fopen( apFname, dGEMDOS_S_READWRITE ) );
+#else
+	sFileHandle	lHandle = (sFileHandle)fopen( apFname, "rb+" );
+	return( lHandle );
+#endif
+}
+
 
 /*-----------------------------------------------------------------------------------*
 * FUNCTION : File_Create( const char * apFname )
