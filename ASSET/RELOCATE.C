@@ -144,6 +144,8 @@ sRelocater *	RelocaterManager_Find( sAssetItem * apAsset )
 		lpReloc = lpReloc->mpNext;
 	}
 
+	DebugLog_Printf2( "relocator not found for asset %lX ext %lX\n", apAsset->mHashKey, apAsset->mExtension );
+
 	return( lpReloc );
 }
 
@@ -159,7 +161,7 @@ U32	RelocaterManager_DoInit( sAssetItem * apAsset )
 	sRelocater *	lpReloc;
 	U32				lRet;
 
-	DebugLog_Printf0( "RelocaterManager_DoInit()" );
+/*	DebugLog_Printf0( "RelocaterManager_DoInit()" );*/
 	lRet    = 0;
 
 	if( !(apAsset->mStatusBits & eASSET_STATUS_BIT_INITED) )
@@ -254,7 +256,7 @@ U32	RelocaterManager_DoRelocate( sAssetItem * apAsset )
 	sRelocater *	lpReloc;
 	U32				lRet;
 
-	DebugLog_Printf0( "RelocaterManager_DoRelocate()" );
+/*	DebugLog_Printf0( "RelocaterManager_DoRelocate()" );*/
 	lRet = 0;
 	if( !(apAsset->mStatusBits & eASSET_STATUS_BIT_RELOCATED) )
 	{
