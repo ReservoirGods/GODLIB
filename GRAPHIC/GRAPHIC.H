@@ -118,6 +118,9 @@ typedef	struct sGraphicCanvas
 void	Graphic_Init( void );
 void	Graphic_DeInit( void );
 
+void	Graphic_SetBlitterEnable( U8 aFlag );
+U8		Graphic_GetBlitterEnable( void );
+
 void	GraphicCanvas_Init(     sGraphicCanvas * apCanvas, const U16 aColourMode, const U16 aWidth, const U16 aHeight );
 void	GraphicCanvas_SetpVRAM( sGraphicCanvas * apCanvas, void * apVRAM );
 void	GraphicCanvas_CentringRender( sGraphicCanvas * apCanvas, const U16 aColour );

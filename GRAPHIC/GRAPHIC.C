@@ -32,6 +32,7 @@
 
 sGraphicFuncs	gGraphicFuncs[ eGRAPHIC_COLOURMODE_LIMIT ];
 sGraphicFuncs	gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_LIMIT ];
+U8				gGraphicBlitterEnableFlag = 0;
 
 
 /* ###################################################################################
@@ -92,6 +93,8 @@ extern	void Graphic_4BP_DrawQuad_Clip_BLT(     struct sGraphicCanvas * apCanvas,
 void	Graphic_Init( void )
 {
 	Blitter_Init();
+
+	Graphic_SetBlitterEnable( gGraphicBlitterEnableFlag );
 /*
 	if( BLT_BLITTER == System_GetBLT() )
 	{
@@ -111,21 +114,6 @@ void	Graphic_Init( void )
 	}
 	else
 */
-	{
-		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].Blit        = Graphic_4BP_Blit;
-		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].ClearScreen = Graphic_4BP_ClearScreen;
-		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].CopyScreen  = Graphic_4BP_CopyScreen;
-		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].DrawBox     = Graphic_4BP_DrawBox;
-		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].DrawPixel   = Graphic_4BP_DrawPixel;
-		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].DrawSprite  = Graphic_4BP_DrawSprite;
-
-		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].Blit        = Graphic_4BP_Blit_Clip;
-		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].ClearScreen = Graphic_4BP_ClearScreen;
-		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].CopyScreen  = Graphic_4BP_CopyScreen;
-		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].DrawBox     = Graphic_4BP_DrawBox_Clip;
-		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].DrawPixel   = Graphic_4BP_DrawPixel_Clip;
-		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].DrawSprite  = Graphic_4BP_DrawSprite_Clip;
-	}
 
 #ifdef dGODLIB_CHUNKY
 	gGraphicFuncs[ eGRAPHIC_COLOURMODE_8BPP ].Blit        = ChunkySurface_Blit;
@@ -170,6 +158,65 @@ void	Graphic_Init( void )
 void	Graphic_DeInit( void )
 {
 	Blitter_DeInit();
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Graphic_SetBlitterEnable( U8 aFlag )
+* ACTION   : sets graphics routines to either use blitter or CPU
+* CREATION : 05.01.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+void	Graphic_SetBlitterEnable( U8 aFlag )
+{
+	gGraphicBlitterEnableFlag = aFlag;
+
+	if(  aFlag && (BLT_BLITTER == System_GetBLT()) )
+	{
+		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].Blit        = Graphic_4BP_Blit;
+		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].ClearScreen = Graphic_4BP_ClearScreen_BLT;
+		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].CopyScreen  = Graphic_4BP_CopyScreen_BLT;
+		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].DrawBox     = Graphic_4BP_DrawBox_BLT;
+		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].DrawPixel   = Graphic_4BP_DrawPixel_BLT;
+		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].DrawSprite  = Graphic_4BP_DrawSprite_BLT;
+
+		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].Blit        = Graphic_4BP_Blit_Clip;
+		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].ClearScreen = Graphic_4BP_ClearScreen_BLT;
+		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].CopyScreen  = Graphic_4BP_CopyScreen_BLT;
+		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].DrawBox     = Graphic_4BP_DrawBox_Clip_BLT;
+		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].DrawPixel   = Graphic_4BP_DrawPixel_Clip_BLT;
+		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].DrawSprite  = Graphic_4BP_DrawSprite_Clip_BLT;
+	}
+	else
+	{
+		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].Blit        = Graphic_4BP_Blit;
+		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].ClearScreen = Graphic_4BP_ClearScreen;
+		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].CopyScreen  = Graphic_4BP_CopyScreen;
+		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].DrawBox     = Graphic_4BP_DrawBox;
+		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].DrawPixel   = Graphic_4BP_DrawPixel;
+		gGraphicFuncs[ eGRAPHIC_COLOURMODE_4PLANE ].DrawSprite  = Graphic_4BP_DrawSprite;
+
+		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].Blit        = Graphic_4BP_Blit_Clip;
+		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].ClearScreen = Graphic_4BP_ClearScreen;
+		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].CopyScreen  = Graphic_4BP_CopyScreen;
+		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].DrawBox     = Graphic_4BP_DrawBox_Clip;
+		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].DrawPixel   = Graphic_4BP_DrawPixel_Clip;
+		gGraphicFuncsClip[ eGRAPHIC_COLOURMODE_4PLANE ].DrawSprite  = Graphic_4BP_DrawSprite_Clip;
+
+		gGraphicBlitterEnableFlag = 0;
+	}
+}
+
+
+/*-----------------------------------------------------------------------------------*
+* FUNCTION : Graphic_GetBlitterEnable( void )
+* ACTION   : returns if blitter is enabled or not for graphic rendering
+* CREATION : 05.01.2018 PNK
+*-----------------------------------------------------------------------------------*/
+
+U8		Graphic_GetBlitterEnable( void )
+{
+	return( gGraphicBlitterEnableFlag );
 }
 
 
