@@ -54,7 +54,6 @@ U8		gLinkFileLoadingFlag;
 
 sLinkFile *			LinkFile_Serialise( sLinkFile * apLinkFile );
 void				LinkFile_RelocateFolder( sLinkFileFolder * apFolder, sLinkFile * apLinkFile);
-void				LinkFile_Relocate(   sLinkFile * apLinkFile );
 sLinkFileFile *		LinkFile_GetpFile(   sLinkFile * apLinkFile, char * apFileName );
 sLinkFileFolder *	LinkFile_GetpFolder( sLinkFileFolder * apFolder, char * apFileName );
 U32					LinkFile_GrabDirectory( char * apDst, char * apFileName );
@@ -590,6 +589,7 @@ void	LinkFile_RelocateFolder( sLinkFileFolder * apFolder, sLinkFile * apLinkFile
 	for( i=0; i<apFolder->mFileCount; i++ )
 	{
 		Endian_FromBigU32( &apFolder->mpFiles[ i ].mAsset.mHashKey );
+		Endian_FromBigU32( &apFolder->mpFiles[ i ].mAsset.mExtension );
 		Endian_FromBigU32( &apFolder->mpFiles[ i ].mAsset.mSize    );
 
 		Endian_FromBigU32( &apFolder->mpFiles[ i ].mOffset       );
@@ -630,6 +630,7 @@ void	LinkFile_DelocateFolder( sLinkFileFolder * apFolder, U32 aBase )
 		GODLIB_ASSERT( apFolder->mpFiles[ i ].mAsset.mHashKey );
 
 		Endian_FromBigU32( &apFolder->mpFiles[ i ].mAsset.mHashKey );
+		Endian_FromBigU32( &apFolder->mpFiles[ i ].mAsset.mExtension );
 		Endian_FromBigU32( &apFolder->mpFiles[ i ].mAsset.mSize    );
 
 		Endian_FromBigU32( &apFolder->mpFiles[ i ].mOffset       );

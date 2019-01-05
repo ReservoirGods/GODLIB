@@ -15,7 +15,7 @@
 ################################################################################### */
 
 #define	dLINKFILE_SENTINEL	0x10FFEB0DL
-#define	dLINKFILE_VERSION	0x9L
+#define	dLINKFILE_VERSION	0xAL
 
 /* ###################################################################################
 #  STRUCTS
@@ -70,6 +70,8 @@ U8			LinkFile_FileExists(   sLinkFile * apLinkFile, char * apFileName );
 void *		LinkFile_FileLoad(     sLinkFile * apLinkFile, char * apFileName, const U16 aDepackFlag, const U16 aSlowRamFlag );
 U8			LinkFile_FileLoadAt(   sLinkFile * apLinkFile, char * apFileName, void * apBuffer, const U16 aDepackFlag );
 S32			LinkFile_FileGetSize(  sLinkFile * apLinkFile, char * apFileName, const U16 aUnpackedSizeFlag );
+
+void		LinkFile_Relocate(   sLinkFile * apLinkFile );
 
 sLinkFile *	LinkFile_Create( void );
 U8			LinkFile_FileCreate( sLinkFileFolder * apFolder, char * apFileName );
