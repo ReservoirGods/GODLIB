@@ -35,7 +35,8 @@ U16		DebugLog_IsSTEEM( void );
 #  VARIABLES
 ################################################################################### */
 
-char 			gDebugLogString[ 1024 ];
+char 		gDebugLogString[ 1024 ];
+const char *	gpDebugLogFileName = 0;
 U32			gDebugLogTargets = 0;
 U16			gDebugLogCanWriteSTEEM = 0;
 sFileHandle	gDebugLogFileHandle = 0;
@@ -56,6 +57,7 @@ void	DebugLog_Init( U32 aTargets, const char * apFileName )
 {
 	GODLIB_ASSERT( 0 == gDebugLogFileHandle );
 
+	gpDebugLogFileName = apFileName;
 	gDebugLogTargets = aTargets;
 	gDebugLogCanWriteSTEEM = DebugLog_IsSTEEM();
 	if( aTargets & eDebugLog_File )
@@ -97,9 +99,12 @@ void	DebugLog_AddString( const char * apString )
 
 	if( lLen )
 	{
-		if( (gDebugLogTargets & eDebugLog_File) && gDebugLogFileHandle )
+		if( (gDebugLogTargets & eDebugLog_File) && File_HandleIsValid(gDebugLogFileHandle) )
 		{
 			File_Write( gDebugLogFileHandle, lLen, apString );
+			File_Close( gDebugLogFileHandle );
+			gDebugLogFileHandle = File_OpenRW( gpDebugLogFileName );
+			File_SeekFromEnd( gDebugLogFileHandle, 0 );
 		}
 		if( gDebugLogTargets & eDebugLog_Screen )
 		{
