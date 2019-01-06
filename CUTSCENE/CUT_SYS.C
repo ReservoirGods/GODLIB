@@ -4,7 +4,6 @@
 
 #include	"CUT_SYS.H"
 
-#include	<GODLIB/ASSET/CONTEXT.H>
 #include	<GODLIB/CLI/CLI.H>
 #include	<GODLIB/FADE/FADE.H>
 #include	<GODLIB/FONT/FONT.H>
@@ -668,11 +667,13 @@ void	CutScene_System_Render( void )
 				lpDegas = (sDegas*)gCutSceneSysClass.mpBGAsset->mpData;
 				if( 2 == gCutSceneSysClass.mBGRedrawFlag )
 				{
-					Memory_Copy( 32000, lpDegas->mPixels, lpBack->mpVRAM );
+/*					Memory_Copy( 32000, lpDegas->mPixels, lpBack->mpVRAM );*/
 /*					lpBack->mpFuncs->CopyScreen( lpBack, lpDegas->mPixels );*/
+					Screen_Back_CopyScreen( lpDegas->mPixels );
 				}
-				Memory_Copy( 32000, lpDegas->mPixels, lpLogic->mpVRAM );
+/*				Memory_Copy( 32000, lpDegas->mPixels, lpLogic->mpVRAM );*/
 /*				lpLogic->mpFuncs->CopyScreen( lpLogic, lpDegas->mPixels );*/
+				Screen_Back_CopyScreen( lpDegas->mPixels );
 			}
 			else
 			{

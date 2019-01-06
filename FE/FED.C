@@ -4,7 +4,6 @@
 
 #include	"FED.H"
 
-#include	<GODLIB/ASSET/CONTEXT.H>
 #include	<GODLIB/AUDIO/AMIXER.H>
 #include	<GODLIB/DEBUGLOG/DEBUGLOG.H>
 #include	<GODLIB/FE/R_FED.H>

@@ -6,7 +6,6 @@
 ################################################################################### */
 
 #include	<GODLIB/BASE/BASE.H>
-#include	<GODLIB/ASSET/CONTEXT.H>
 
 
 /* ###################################################################################
@@ -14,7 +13,7 @@
 ################################################################################### */
 
 typedef	U32	(*fAsset)( void * apData, const U32 aSize, const U32 aUserData );
-struct sContext;
+
 
 /* ###################################################################################
 #  ENUMS
@@ -48,7 +47,8 @@ typedef	struct sAssetClient
 	/* start to consolidate this into a single structure */
 	char	mFileName[ 12 ];
 	U32		mHashKey;
-	struct sContext * mpContext;
+/*	struct sContext * mpContext;*/
+	void * mpContext;
 
 	fAsset	OnLoad;
 	fAsset	OnUnLoad;
@@ -58,7 +58,6 @@ typedef	struct sAssetClient
 	struct	sAssetClient *	mpNext;
 	struct	sAssetClient *	mpContextNext;
 } sAssetClient;
-
 
 
 /* ###################################################################################

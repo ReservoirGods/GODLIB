@@ -5,6 +5,8 @@
 #include	"GUIFS.H"
 
 #include	"GUI.H"
+#include	"GUIDATA.H"
+#include	"GUIEDIT.H"
 
 #include	<GODLIB/DEBUGLOG/DEBUGLOG.H>
 #include	<GODLIB/DRIVE/DRIVE.H>
