@@ -33,6 +33,22 @@ enum
 
 
 /* ###################################################################################
+#  STRUCTS
+################################################################################### */
+
+typedef	struct	sScreenClass
+{
+	U16 *	mpMemBase;
+	U16 *	mpBuffers[ eSCREEN_LIMIT ];
+	U32		mFrameRate;
+	U32		mLastVbl;
+	U16		mScrollY;
+	U16		mPhysicIndex;
+	U16		mFirstTimeFlag;
+} sScreenClass;
+
+
+/* ###################################################################################
 #  PROTOTYPES
 ################################################################################### */
 
@@ -40,24 +56,17 @@ void	Screen_Init( const U16 aWidth, const U16 aHeight, const U16 aBitDepth, cons
 void	Screen_Update( void );
 void	Screen_DeInit( void );
 
-U16 *	Screen_GetpPhysic( void );
-U16 *	Screen_GetpLogic( void );
-U16 *	Screen_GetpBack( void );
-U16		Screen_GetpBuffer( U16 aScreen );
-
-U16 *	Screen_GetpMemBase( void );
-
-U16		Screen_GetPhysicIndex( void );
-U16		Screen_GetLogicIndex( void );
-
-void	Screen_SetFrameRate( U32 aRate );
-U16		Screen_GetScrollY( void );
-void	Screen_SetScrollY( U16 aScrollY );
-
 extern	sGraphicCanvas	gScreenBackGraphic;
 extern	sGraphicCanvas	gScreenLogicGraphic;
 extern	sGraphicCanvas	gScreenPhysicGraphic;
 extern	sGraphicCanvas	gScreenMiscGraphic;
+
+extern	sScreenClass	gScreenClass;
+
+
+/* ###################################################################################
+#  HELPER FUNCTIONS
+################################################################################### */
 
 #define	Screen_GetpPhysicGraphic()	(&gScreenPhysicGraphic)
 #define	Screen_GetpLogicGraphic()	(&gScreenLogicGraphic)
@@ -65,9 +74,18 @@ extern	sGraphicCanvas	gScreenMiscGraphic;
 #define	Screen_GetpMiscGraphic()	(&gScreenMiscGraphic)
 
 
-/* ###################################################################################
-#  HELPER FUNCTIONS
-################################################################################### */
+#define	Screen_GetpPhysic()			gScreenClass.mpBuffers[ gScreenClass.mPhysicIndex ]
+#define	Screen_GetpLogic()			gScreenClass.mpBuffers[ gScreenClass.mPhysicIndex ^ 1 ]
+#define	Screen_GetpBack()			gScreenClass.mpBuffers[ eSCREEN_BACK ]
+
+#define	Screen_GetPhysicIndex()		gScreenClass.mPhysicIndex
+#define	Screen_GetLogicIndex()		(gScreenClass.mPhysicIndex ^ 1)
+
+#define	Screen_SetFrameRate( _aRate )	gScreenClass.mFrameRate = _aRate
+#define	Screen_GetScrollY()				gScreenClass.mScrollY
+#define Screen_SetScrollY( _aY )		gScreenClass.mScrollY = _aY
+
+#define	Screen_GetpMemBase()			gScreenClass.mpMemBase
 
 #define Screen_Logic_Blit( apCoords, apRect, apSrc )				gScreenLogicGraphic.mpFuncs->Blit( &gScreenLogicGraphic, apCoords, apRect, apSrc )
 #define Screen_Logic_ClearScreen()									gScreenLogicGraphic.mpFuncs->ClearScreen( &gScreenLogicGraphic )

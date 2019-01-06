@@ -8,14 +8,17 @@
 #include	<GODLIB/DEBUG/DBGCHAN.H>
 #endif
 
+
+#ifdef	dGODLIB_SYSTEM_D3D
+
 #include	<GODLIB/FILE/FILE.H>
 #include	<GODLIB/IKBD/IKBD_DI.H>
 #include	<GODLIB/KERNEL/KERNEL.H>
 #include	<GODLIB/VIDEO/VID_D3D.H>
 
-#ifdef	dGODLIB_SYSTEM_D3D
 #include	<d3dx9.h>
 #endif
+
 #ifdef	dGODLIB_PLATFORM_WIN
 #include	<windows.h>
 #endif
@@ -145,7 +148,7 @@ INT WINAPI	WinMain( HINSTANCE hInst,HINSTANCE a0,LPSTR a1,INT a2 )
 	if( RegisterClassEx( &lWC ) )
 	{
 		gGodLibMainWindowHandle = CreateWindow( "GodLib", "GodLib: Game",
-								  WS_OVERLAPPEDWINDOW, 100, 100, 340, 280,
+								  WS_OVERLAPPEDWINDOW, 100, 100, 10*340, 280,
 								  GetDesktopWindow(), NULL, lWC.hInstance, NULL );
 		VideoD3D_SetWindowHandle( gGodLibMainWindowHandle );
 		IKBD_DI_SetWindowHandle( gGodLibMainWindowHandle );

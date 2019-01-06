@@ -23,6 +23,8 @@ U32						gVideoD3DPal[ 16 ];
 U16						gVideoD3DColourMode = 0;
 U16						gVideoD3DShadowPal[ 16 ];
 DWORD					gVideoD3DTicks = 0;
+U16						gVideoScaleX = 2;
+U16						gVideoScaleY = 2;
 
 
 /* ###################################################################################
@@ -149,8 +151,8 @@ void	VideoD3D_ResolutionUpdate( void )
 	MoveWindow( gVideoD3DHwnd,
 		dVIDEOD3D_WINDOW_X,
 		dVIDEOD3D_WINDOW_Y,
-		lConfig.mWidth + dVIDEOD3D_BORDER_WIDTH,
-		lConfig.mHeight + dVIDEOD3D_BORDER_HEIGHT,
+		(lConfig.mWidth * gVideoScaleX) + dVIDEOD3D_BORDER_WIDTH,
+		(lConfig.mHeight * gVideoScaleY) + dVIDEOD3D_BORDER_HEIGHT,
 		1 );
 
 	VideoD3D_Init();
@@ -397,10 +399,21 @@ void VideoD3D_4BP_ToU8(const U8 * apSrc,U8 * apDst,const U16 aWidth,const U16 aH
 
 			lMask >>= 1;
 
-			*lpDst1++ = (U8)( gVideoD3DPal[ lColour ] & 0xFF );
+			{
+				U16 x,y;
+				for(  y=0;y<gVideoScaleY;x++ )
+				{
+					for( x=0;x<gVideoScaleX;x++ )
+					{
+						lpDst1[(y*aDstPitch)+x] = (U8)( gVideoD3DPal[ lColour ] & 0xFF );
+					}
+				}
+			}
+
+			lpDst1 += gVideoScaleX;
 		}
 		lpSrc0 += aSrcPitch;
-		lpDst0 += aDstPitch;
+		lpDst0 += aDstPitch * gVideoScaleY;
 	}
 }
 
@@ -636,10 +649,23 @@ void VideoD3D_4BP_ToU32(const U8 * apSrc,U32 * apDst,const U16 aWidth,const U16 
 
 			lMask >>= 1;
 
-			*lpDst1++ = gVideoD3DPal[ lColour ];
+/*			*lpDst1++ = gVideoD3DPal[ lColour ];*/
+
+			{
+				U16 x,y;
+				for(  y=0;y<gVideoScaleY;y++ )
+				{
+					for( x=0;x<gVideoScaleX;x++ )
+					{
+						lpDst1[(y*(aDstPitch>>2))+x] = gVideoD3DPal[ lColour ];
+					}
+				}
+				lpDst1 += (gVideoScaleX);
+			}
+
 		}
 		lpSrc0 += aSrcPitch;
-		lpDst0 += (aDstPitch>>2);
+		lpDst0 += (aDstPitch>>2) * gVideoScaleY;
 	}
 }
 
@@ -672,6 +698,10 @@ void	VideoD3D_16BPP_Display( const U16 * apSrc,U8 * apDst,const U16 aWidth,const
 
 		while( lW-- )
 		{
+			U16 x,y;
+			U8 * lpDst2=lpDst1;
+			U16 pixelDepth = 4;
+
 
 			Endian_ReadBigU16( lpSrc1, lColour );
 			lpSrc1++;
@@ -687,58 +717,76 @@ void	VideoD3D_16BPP_Display( const U16 * apSrc,U8 * apDst,const U16 aWidth,const
 			lR &= 0x1F;
 			lG &= 0x3F;
 
-			switch( gVideoD3DColourMode )
+			for(  y=0;y<gVideoScaleY;y++ )
 			{
-			case	D3DFMT_R8G8B8:
-					lpDst1[ 0 ] = (U8)(lR);
-					lpDst1[ 1 ] = (U8)(lG);
-					lpDst1[ 2 ] = (U8)(lB);
-					lpDst1 += 3;
-					break;
-			case	D3DFMT_A8R8G8B8:
-			case	D3DFMT_X8R8G8B8:
-					lpDst1[ 0 ] = (U8)(lB<<3);
-					lpDst1[ 1 ] = (U8)(lG<<2);
-					lpDst1[ 2 ] = (U8)(lR<<3);
-/*					gVideoD3DPal[ i ] = (lR<<20) | (lG<<12) | (lB<<4);*/
-					lpDst1 += 4;
-					break;
-			case	D3DFMT_R5G6B5:
-					*(U16*)lpDst1 = (U16)((lR<<11) | (lG<<5) | (lB));
-					lpDst1 += 2;
-					break;
-			case	D3DFMT_X1R5G5B5:
-			case	D3DFMT_A1R5G5B5:
-					*(U16*)lpDst1 = (U16)((lR<<10) | ((lG>>1)<<5) | (lB));
-					lpDst1 += 2;
-					break;
-			case	D3DFMT_A4R4G4B4:
-			case	D3DFMT_X4R4G4B4:
-					lpDst1[ 0 ] = (U8)(lR >> 1);
-					lpDst1[ 1 ] = (U8)(((lG>>2)<<4) | (lB>>1));
-					lpDst1 += 2;
-					break;
-			case	D3DFMT_R3G3B2:
-					lpDst1[ 0 ] = (U8)((lR>>2) | (lG>>3) | (lB>>3));
-					lpDst1++;
-					break;
-			case	D3DFMT_A8R3G3B2:
-					lpDst1[ 0 ] = (U8)((lR>>2) | (lG>>3) | (lB>>3));
-					lpDst1++;
-					break;
-			case	D3DFMT_A2B10G10R10:
-					*(U32*)lpDst1 = (lB<<5) | (lG<<4) | (lR<<5);
-					lpDst1 += 4;
-					break;
-			case	D3DFMT_G16R16:
-					*(U32*)lpDst1 = (lG<<10) | (lR<<11);
-					lpDst1 += 4;
-					break;
+				for( x=0;x<gVideoScaleX;x++ )
+				{
+					lpDst1 = lpDst2 + (y*aDstPitch) + x*pixelDepth;
+
+					switch( gVideoD3DColourMode )
+					{
+					case	D3DFMT_R8G8B8:
+							lpDst1[ 0 ] = (U8)(lR);
+							lpDst1[ 1 ] = (U8)(lG);
+							lpDst1[ 2 ] = (U8)(lB);
+							lpDst1 += 3;
+							pixelDepth = 3;
+							break;
+					case	D3DFMT_A8R8G8B8:
+					case	D3DFMT_X8R8G8B8:
+							lpDst1[ 0 ] = (U8)(lB<<3);
+							lpDst1[ 1 ] = (U8)(lG<<2);
+							lpDst1[ 2 ] = (U8)(lR<<3);
+		/*					gVideoD3DPal[ i ] = (lR<<20) | (lG<<12) | (lB<<4);*/
+							lpDst1 += 4;
+							pixelDepth = 4;
+							break;
+					case	D3DFMT_R5G6B5:
+							*(U16*)lpDst1 = (U16)((lR<<11) | (lG<<5) | (lB));
+							lpDst1 += 2;
+							pixelDepth = 2;
+							break;
+					case	D3DFMT_X1R5G5B5:
+					case	D3DFMT_A1R5G5B5:
+							*(U16*)lpDst1 = (U16)((lR<<10) | ((lG>>1)<<5) | (lB));
+							lpDst1 += 2;
+							pixelDepth = 2;
+							break;
+					case	D3DFMT_A4R4G4B4:
+					case	D3DFMT_X4R4G4B4:
+							lpDst1[ 0 ] = (U8)(lR >> 1);
+							lpDst1[ 1 ] = (U8)(((lG>>2)<<4) | (lB>>1));
+							lpDst1 += 2;
+							pixelDepth = 2;
+							break;
+					case	D3DFMT_R3G3B2:
+							lpDst1[ 0 ] = (U8)((lR>>2) | (lG>>3) | (lB>>3));
+							lpDst1++;
+							pixelDepth = 1;
+							break;
+					case	D3DFMT_A8R3G3B2:
+							lpDst1[ 0 ] = (U8)((lR>>2) | (lG>>3) | (lB>>3));
+							lpDst1++;
+							pixelDepth = 1;
+							break;
+					case	D3DFMT_A2B10G10R10:
+							*(U32*)lpDst1 = (lB<<5) | (lG<<4) | (lR<<5);
+							lpDst1 += 4;
+							pixelDepth = 4;
+							break;
+					case	D3DFMT_G16R16:
+							*(U32*)lpDst1 = (lG<<10) | (lR<<11);
+							lpDst1 += 4;
+							pixelDepth = 4;
+							break;
+					}
+				}
 			}
+			lpDst1 = lpDst2 + (gVideoScaleX * pixelDepth);
 
 		}
 		lpSrc0 += aSrcPitch >> 1;
-		lpDst0 += aDstPitch;
+		lpDst0 += aDstPitch * gVideoScaleY;
 	}
 }
 

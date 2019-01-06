@@ -13,20 +13,6 @@
 #include	<GODLIB/VIDEO/VIDEO.H>
 
 
-/* ###################################################################################
-#  STRUCTS
-################################################################################### */
-
-typedef	struct	sScreenClass
-{
-	U16 *	mpMemBase;
-	U16 *	mpBuffers[ eSCREEN_LIMIT ];
-	U32		mFrameRate;
-	U32		mLastVbl;
-	U16		mScrollY;
-	U16		mPhysicIndex;
-	U16		mFirstTimeFlag;
-} sScreenClass;
 
 
 /* ###################################################################################
@@ -39,11 +25,6 @@ sGraphicCanvas	gScreenPhysicGraphic;
 sGraphicCanvas	gScreenMiscGraphic;
 
 sScreenClass	gScreenClass;
-
-
-/* ###################################################################################
-#  PROTOTYPES
-################################################################################### */
 
 
 /* ###################################################################################
@@ -230,105 +211,5 @@ void	Screen_Update( void )
 	gScreenPhysicGraphic.mpVRAM = gScreenClass.mpBuffers[ gScreenClass.mPhysicIndex     ];
 }
 
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : Screen_GetpPhysic( void )
-* ACTION   : Screen_GetpPhysic
-* CREATION : 01.04.2005 PNK
-*-----------------------------------------------------------------------------------*/
-
-U16 *	Screen_GetpPhysic( void )
-{
-	return( gScreenClass.mpBuffers[ gScreenClass.mPhysicIndex ] );
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : Screen_GetpLogic( void )
-* ACTION   : Screen_GetpLogic
-* CREATION : 01.04.2005 PNK
-*-----------------------------------------------------------------------------------*/
-
-U16 *	Screen_GetpLogic( void )
-{
-	return( gScreenClass.mpBuffers[ gScreenClass.mPhysicIndex ^ 1 ] );
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : Screen_GetpBack( void )
-* ACTION   : Screen_GetpBack
-* CREATION : 01.04.2005 PNK
-*-----------------------------------------------------------------------------------*/
-
-U16 *	Screen_GetpBack( void )
-{
-	return( gScreenClass.mpBuffers[ eSCREEN_BACK ] );
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : Screen_GetPhysicIndex( void )
-* ACTION   : Screen_GetPhysicIndex
-* CREATION : 01.04.2005 PNK
-*-----------------------------------------------------------------------------------*/
-
-U16	Screen_GetPhysicIndex( void )
-{
-	return( gScreenClass.mPhysicIndex );
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : Screen_GetLogicIndex( void )
-* ACTION   : Screen_GetLogicIndex
-* CREATION : 01.04.2005 PNK
-*-----------------------------------------------------------------------------------*/
-
-U16	Screen_GetLogicIndex( void )
-{
-	return( (U16)(gScreenClass.mPhysicIndex ^ 1) );
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : Screen_SetFrameRate( U32 aRate )
-* ACTION   : Screen_SetFrameRate
-* CREATION : 01.04.2005 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	Screen_SetFrameRate( U32 aRate )
-{
-	gScreenClass.mFrameRate = aRate;
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : Screen_SetScrollY( U16 aScrollY )
-* ACTION   : Screen_SetScrollY
-* CREATION : 11.04.2005 PNK
-*-----------------------------------------------------------------------------------*/
-
-void	Screen_SetScrollY( U16 aScrollY )
-{
-	gScreenClass.mScrollY = aScrollY;
-}
-
-
-/*-----------------------------------------------------------------------------------*
-* FUNCTION : Screen_GetScrollY( void )
-* ACTION   : Screen_GetScrollY
-* CREATION : 15.04.2005 PNK
-*-----------------------------------------------------------------------------------*/
-
-U16	Screen_GetScrollY( void )
-{
-	return( gScreenClass.mScrollY );
-}
-
-U16 *	Screen_GetpMemBase( void )
-{
-	return( gScreenClass.mpMemBase );
-}
 
 /* ################################################################################ */
