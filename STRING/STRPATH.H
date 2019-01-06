@@ -7,6 +7,8 @@
 
 #include	<GODLIB/BASE/BASE.H>
 
+#include	<GODLIB/STRING/STRING.H>
+
 
 /* ###################################################################################
 #  STRUCTS

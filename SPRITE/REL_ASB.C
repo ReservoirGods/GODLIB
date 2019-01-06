@@ -79,7 +79,7 @@ U32	Relocator_ASB_DoDelocate( sAssetItem * apAsset )
 
 
 /*-----------------------------------------------------------------------------------*
-* FUNCTION : Relocator_ASB_DoRelocate( sAsset * apAsset )
+* FUNCTION : Relocator_ASB_DoRelocate( sAssetItem * apAsset )
 * ACTION   : Relocator_ASB_DoRelocate
 * CREATION : 06.01.2004 PNK
 *-----------------------------------------------------------------------------------*/

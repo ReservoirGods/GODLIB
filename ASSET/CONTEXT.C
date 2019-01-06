@@ -34,7 +34,6 @@ void				Context_Init( sContext * apContext, const char * apName )
 	U16			i;
 
 	apContext->mID        = Asset_BuildHash( apName, sizeof(apContext->mName) );
-	apContext->mpAssets   = 0;
 	apContext->mpAssetClients = 0;
 	apContext->mpNext     = gpContexts;
 	apContext->mpPackages = 0;
@@ -168,10 +167,6 @@ void	ContextManager_DeInit( void )
 
 		lpContextNext = lpContext->mpNext;
 		lpContext->mpNext = 0;
-
-		/* we should have unregistered all assets at this point */
-		GODLIB_ASSERT( !lpContext->mpAssets );
-		lpContext->mpAssets = 0;
 
 		/* we should have unregistered all packages at this point */
 		GODLIB_ASSERT( !lpContext->mpPackages );

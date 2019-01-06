@@ -8,6 +8,7 @@
 #include	<GODLIB/BASE/BASE.H>
 #include	<GODLIB/ASSET/ASSET.H>
 #include	<GODLIB/ASSET/CONTEXT.H>
+#include	<GODLIB/LINKFILE/LINKFILE.H>
 
 
 /* ###################################################################################

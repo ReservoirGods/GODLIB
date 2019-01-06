@@ -7,6 +7,7 @@
 
 #include	<GODLIB/BASE/BASE.H>
 #include	<GODLIB/ASSET/ASSET.H>
+#include	<GODLIB/ASSET/PACKAGE.H>
 
 
 /* ###################################################################################

@@ -27,7 +27,6 @@ typedef	struct sContext
 	U16					mAllocFlag;
 	S32					mRefCount;
 	struct sPackage *	mpPackages;
-	struct sAsset *		mpAssets;
 	struct sAssetClient *		mpAssetClients;
 	struct sContext *	mpNext;
 } sContext;

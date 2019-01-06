@@ -4,11 +4,8 @@
 
 #include	"PKG_DIR.H"
 
-#include	"ASSET.H"
-#include	"CONTEXT.H"
 #include	"RELOCATE.H"
 
-#include	<GODLIB/ASSET/ASSET.H>
 #include	<GODLIB/DEBUG/DBGCHAN.H>
 #include	<GODLIB/CLI/CLI.H>
 #include	<GODLIB/FILE/FILE.H>
@@ -23,7 +20,6 @@
 #  DATA
 ################################################################################### */
 
-struct sAsset;
 sGemDosDTA	gPackageDirDTA;
 
 
