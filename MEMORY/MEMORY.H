@@ -50,6 +50,8 @@ S32		_Memory_Release( void * apMem );
 void	Memory_Clear( U32 aSize, void * apMem );
 void	Memory_Copy_Internal(  U32 aSize, const void * apSrc, void * apDst );
 
+#if 0
+
 #define Memory_Copy( aSize, apSrc, apDst )						\
 		if( (apSrc) && (apDst) )								\
 		{														\
@@ -70,6 +72,12 @@ void	Memory_Copy_Internal(  U32 aSize, const void * apSrc, void * apDst );
 				Memory_Copy_Internal( aSize, apSrc, apDst );	\
 			}													\
 		}
+
+#else
+
+#define Memory_Copy( aSize, apSrc, apDst )	Memory_Copy_Internal( aSize, apSrc, apDst )
+
+#endif
 
 U32		Memory_GetAllocCount( void );
 U32		Memory_GetAllocatedSize( void );

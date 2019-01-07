@@ -91,9 +91,9 @@ GOD_UNIT_TEST( Lexer )
 
 		for( lpS=lpNonSymbols;*lpS; lpS++ )
 		{
-			char lChar[ 2 ] = { 0,0 };
+/*			char lChar[ 2 ] = { 0,0 };*/
 			lp0[ 1 ] = *lpS;
-			lChar[ 0 ] = *lpS;
+/*			lChar[ 0 ] = *lpS;*/
 			Lexer_TokeniseValidate( lp0, lp0, 0L );
 			lp1[ 4 ] = *lpS;
 			Lexer_TokeniseValidate( lp1, "two", &lp1[4], 0L );

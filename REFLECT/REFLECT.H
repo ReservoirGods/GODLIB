@@ -28,7 +28,7 @@ typedef struct sReflectElement
 	char *				mpTypeName;
 	char *				mpElementName;
 	U32					mOffset;
-	struct sLexerType *	mpType;
+	void *	mpType;
 } sReflectElement;
 
 typedef struct sReflectType

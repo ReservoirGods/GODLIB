@@ -166,12 +166,12 @@ GOD_UNIT_TEST( String )
 		sStrPathTestDef * lpDef = &gStrPathTestDefs[ i ];
 		const char * lpExt;
 		const char * lpFileName;
-		char lDrive;
+/*		char lDrive;*/
 
 		StringPath_SetNT( &lPath0, lpDef->mpPath );
 		lpExt		= StringPath_GetpExt( lPath0.mChars );
 		lpFileName	= StringPath_GetpFileName( lPath0.mChars );
-		lDrive		= StringPath_GetDrive( lPath0.mChars );
+/*		lDrive		= StringPath_GetDrive( lPath0.mChars );*/
 		StringPath_GetFolder( &lFolder, lPath0.mChars );
 		StringPath_GetDirectory( &lDir, lPath0.mChars );
 /*		printf( "dir: %s [%s]\n", lDir.mChars, lpDef->mpDir );*/

@@ -966,9 +966,11 @@ sGuiData *	GuiData_Serialise( sGuiData * apData )
 		}
 	}
 	{
+/*		
 		char * begin = (char*)lpData;
 		char * end = begin + lSize;
-		GODLIB_ASSERT( lpStrings == end );
+*/		
+		GODLIB_ASSERT( lpStrings == (((char*)lpData)+lSize) );
 	}
 
 	return( lpData );

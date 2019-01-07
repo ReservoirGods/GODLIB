@@ -8,6 +8,7 @@
 #include	<GODLIB\FILE\FILE.H>
 #include	<STRING.H>
 
+#ifdef	dDEBUG
 
 /* ###################################################################################
 #  STRUCTS
@@ -269,3 +270,5 @@ U8	DebugChannel_GetActiveFlag( U16 aChannel )
 {
 	return( gDebugChannels[ aChannel ].mActiveFlag );
 }
+
+#endif

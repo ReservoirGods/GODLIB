@@ -56,6 +56,8 @@ enum
 #define	DebugChannel_Printf4( _aChannel, _aString, _aArg0, _aArg1, _aArg2, _aArg3 )				{ sprintf(gDebugChannelString,_aString,_aArg0,_aArg1,_aArg2,_aArg3); DebugChannel_StringAdd_Internal( _aChannel, gDebugChannelString ); }
 #define	DebugChannel_Printf5( _aChannel, _aString, _aArg0, _aArg1, _aArg2, _aArg3, _aArg4 )		{ sprintf(gDebugChannelString,_aString,_aArg0,_aArg1,_aArg2,_aArg3,_aArg4); DebugChannel_StringAdd_Internal( _aChannel, gDebugChannelString ); }
 
+void	DebugChannel_Activate( U16 aChannel, U16 aDestFlags );
+
 #else
 
 #define	DebugChannel_Action( _aChannel, _aAction )
@@ -68,12 +70,13 @@ enum
 #define	DebugChannel_Printf4( _aChannel, _aString, _aArg0, _aArg1, _aArg2, _aArg3 )
 #define	DebugChannel_Printf5( _aChannel, _aString, _aArg0, _aArg1, _aArg2, _aArg3, _aArg4 )
 
+#define	DebugChannel_Activate( aChannel, aDestFlags )
+
 #endif
 
 void	DebugChannel_AppInit( void );
 void	DebugChannel_AppDeInit( void );
 
-void	DebugChannel_Activate( U16 aChannel, U16 aDestFlags );
 void	DebugChannel_DeActivate( U16 aChannel );
 U8		DebugChannel_GetActiveFlag( U16 aChannel );
 
