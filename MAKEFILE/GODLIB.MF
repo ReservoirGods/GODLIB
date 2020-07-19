@@ -1,9 +1,9 @@
 ###############################################################################
-#	CWMON GENERIC MAKEFILE
-#	(c) 2011 Leon O'Reilly / CwmOcean
+#	GODLIB GENERIC MAKEFILE
+#	(c) 2020 Leon O'Reilly 
 ###############################################################################
 
-#include $(LIB_DIR)/MAKEFILES/PLATFORM/CWMON_MAKEFILE_$(PLATFORM).MF
+#include $(LIB_DIR)/MAKEFILES/PLATFORM/GODBLIB_$(PLATFORM).MF
 
 
 ###############################################################################
@@ -60,6 +60,9 @@ CC_FLAGS	+= $(CC_DEF)dCWMON_BUILD_$(CONFIGURATION)
 CC_FLAGS	+= $(CC_DEF)dCWMON_PLATFORM_$(PLATFORM)
 CC_FLAGS	+= $(CC_DEF)dCWMON_BUILD_UNITY
 CC_INCLUDES	+= $(CC_INC)$(LIB_DIR)
+CC_INCLUDES	+= $(CC_INC)$(LIB_DIR)/..
+CC_INCLUDES += $(CC_INC)../../TOOLS.RG/VBCC/0.9g/vbcc_target_m68k-atari/targets/m68k-atari/include
+
 
 EXECUTABLE_DIR ?=/PRG/$(PLATFORM)
 EXECUTABLE_FILENAME ?= $(PROJECT)$(PRG_EXT)
@@ -126,6 +129,8 @@ $(OBJ_DIR)/%$(OBJ_EXT): $(LIB_DIR)/%.S
 $(OBJ_DIR)/%$(OBJ_EXT): $(APP_DIR)/%.S
 	$(AS_ACTION)
 
+$(OBJ_DIR)/%$(OBJ_EXT): %.S
+	@$(AS_ACTION)
 
 $(OBJ_DIR)/%$(OBJ_EXT): %.C
 	@$(CC_ACTION)

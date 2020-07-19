@@ -1,0 +1,1382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="..\ACHIEVE\ACH_COM.C">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_COM.H">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_DISP.C">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_DISP.H">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_GFX.C">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_GFX.H">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_GOD.C">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_GOD.H">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_LOGN.C">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_LOGN.H">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_MAIN.C">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_MAIN.H">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_SHOW.C">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_SHOW.H">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_SIGN.C">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_SIGN.H">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_UNLK.C">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ACHIEVE\ACH_UNLK.H">
+      <Filter>ACHIEVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSERT\ASSERT.C">
+      <Filter>ASSERT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSERT\ASSERT.H">
+      <Filter>ASSERT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSET\ASSET.C">
+      <Filter>ASSET</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSET\ASSET.H">
+      <Filter>ASSET</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSET\CONTEXT.C">
+      <Filter>ASSET</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSET\CONTEXT.H">
+      <Filter>ASSET</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSET\PACKAGE.C">
+      <Filter>ASSET</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSET\PACKAGE.H">
+      <Filter>ASSET</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSET\PKG_DIR.C">
+      <Filter>ASSET</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSET\PKG_DIR.H">
+      <Filter>ASSET</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSET\PKG_LNK.C">
+      <Filter>ASSET</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSET\PKG_LNK.H">
+      <Filter>ASSET</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSET\RELOCATE.C">
+      <Filter>ASSET</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ASSET\RELOCATE.H">
+      <Filter>ASSET</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\AM_COS.H">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\AM_MUL.H">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\AM_SINE.H">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\AMIX_BLD.C">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\AMIXER.C">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\AMIXER.H">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\AMIXER_S.S">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\AMPANLAW.H">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\AUDIO.C">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\AUDIO.H">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\AUDIO_S.S">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\REL_SPL.C">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\REL_SPL.H">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\SSD.C">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\SSD.H">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\AUDIO\SSD_S.S">
+      <Filter>AUDIO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BASE\BASE.C">
+      <Filter>BASE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BASE\BASE.H">
+      <Filter>BASE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BASE\TEST\UT_BASE.C">
+      <Filter>BASE\TEST</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BIOS\BIOS.C">
+      <Filter>BIOS</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BIOS\BIOS.H">
+      <Filter>BIOS</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BIOS\BIOS_S.S">
+      <Filter>BIOS</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BLITTER\BLITTER.C">
+      <Filter>BLITTER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BLITTER\BLITTER.H">
+      <Filter>BLITTER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CHECKSUM\CHECKSUM.C">
+      <Filter>CHECKSUM</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CHECKSUM\CHECKSUM.H">
+      <Filter>CHECKSUM</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CHUNKY\C2P_S.S">
+      <Filter>CHUNKY</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CHUNKY\CHUNKY.C">
+      <Filter>CHUNKY</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CHUNKY\CHUNKY.H">
+      <Filter>CHUNKY</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CHUNKY\CHUNKY.S">
+      <Filter>CHUNKY</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CHUNKY\CHUNKY_S.S">
+      <Filter>CHUNKY</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CLI\CLI.C">
+      <Filter>CLI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CLI\CLI.H">
+      <Filter>CLI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CLOCK\CLOCK.C">
+      <Filter>CLOCK</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CLOCK\CLOCK.H">
+      <Filter>CLOCK</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CLOCK\CLOCK_S.S">
+      <Filter>CLOCK</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\COOKIE\COOKIE.C">
+      <Filter>COOKIE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\COOKIE\COOKIE.H">
+      <Filter>COOKIE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CUTSCENE\CUT_SYS.C">
+      <Filter>CUTSCENE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CUTSCENE\CUT_SYS.H">
+      <Filter>CUTSCENE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CUTSCENE\CUTPARSE.C">
+      <Filter>CUTSCENE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CUTSCENE\CUTPARSE.H">
+      <Filter>CUTSCENE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CUTSCENE\CUTSCENE.C">
+      <Filter>CUTSCENE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CUTSCENE\CUTSCENE.H">
+      <Filter>CUTSCENE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CUTSCENE\REL_CUT.C">
+      <Filter>CUTSCENE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\CUTSCENE\REL_CUT.H">
+      <Filter>CUTSCENE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\DEBUG\DBGCHAN.C">
+      <Filter>DEBUG</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\DEBUG\DBGCHAN.H">
+      <Filter>DEBUG</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\DEBUG\DEBUG.C">
+      <Filter>DEBUG</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\DEBUG\DEBUG.H">
+      <Filter>DEBUG</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\DEBUGLOG\DBGLOG_S.S">
+      <Filter>DEBUGLOG</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\DEBUGLOG\DEBUGLOG.C">
+      <Filter>DEBUGLOG</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\DEBUGLOG\DEBUGLOG.H">
+      <Filter>DEBUGLOG</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\DRIVE\DISK_IO.C">
+      <Filter>DRIVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\DRIVE\DISK_IO.H">
+      <Filter>DRIVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\DRIVE\DRIVE.C">
+      <Filter>DRIVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\DRIVE\DRIVE.H">
+      <Filter>DRIVE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\DRIVE\TEST\UT_DISK.C">
+      <Filter>DRIVE\TEST</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\DUMMY.C">
+    </CustomBuild>
+    <CustomBuild Include="..\ELFHASH\ELFHASH.C">
+      <Filter>ELFHASH</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ELFHASH\ELFHASH.H">
+      <Filter>ELFHASH</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ENCRYPT\ENCRYPT.C">
+      <Filter>ENCRYPT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ENCRYPT\ENCRYPT.H">
+      <Filter>ENCRYPT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ENCRYPT\TEST\UTENCRYP.C">
+      <Filter>ENCRYPT\TEST</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\EXCEPT\EXCEPT.C">
+      <Filter>EXCEPT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\EXCEPT\EXCEPT.H">
+      <Filter>EXCEPT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\EXCEPT\EXCEPT_S.S">
+      <Filter>EXCEPT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FADE\FADE.C">
+      <Filter>FADE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FADE\FADE.H">
+      <Filter>FADE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FADE\FADE_GOD.C">
+      <Filter>FADE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FADE\FADE_S.S">
+      <Filter>FADE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FE\FED.C">
+      <Filter>FE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FE\FED.H">
+      <Filter>FE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FE\FED_JSON.C">
+      <Filter>FE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FE\FED_JSON.H">
+      <Filter>FE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FE\FEDPARSE.C">
+      <Filter>FE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FE\FEDPARSE.H">
+      <Filter>FE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FE\R_FED.C">
+      <Filter>FE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FE\R_FED.H">
+      <Filter>FE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FE\REL_FED.C">
+      <Filter>FE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FE\REL_FED.H">
+      <Filter>FE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FILE\FILE.C">
+      <Filter>FILE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FILE\FILE.H">
+      <Filter>FILE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FILE\FILE_PTN.C">
+      <Filter>FILE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FILE\FILE_PTN.H">
+      <Filter>FILE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FILE\FILE_S.S">
+      <Filter>FILE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FONT8X8\FONT8X8.C">
+      <Filter>FONT8X8</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FONT8X8\FONT8X8.H">
+      <Filter>FONT8X8</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FONT8X8\FONTDATA.C">
+      <Filter>FONT8X8</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FONT\FONT.C">
+      <Filter>FONT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FONT\FONT.H">
+      <Filter>FONT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FONT\REL_BFB.C">
+      <Filter>FONT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\FONT\REL_BFB.H">
+      <Filter>FONT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GEMDOS\GEMDOS.C">
+      <Filter>GEMDOS</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GEMDOS\GEMDOS.H">
+      <Filter>GEMDOS</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GEMDOS\GEMDOS_S.S">
+      <Filter>GEMDOS</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GRAPHIC\GRAPHIC.C">
+      <Filter>GRAPHIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GRAPHIC\GRAPHIC.H">
+      <Filter>GRAPHIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GRAPHIC\GRF_16.C">
+      <Filter>GRAPHIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GRAPHIC\GRF_16.H">
+      <Filter>GRAPHIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GRAPHIC\GRF_16_S.S">
+      <Filter>GRAPHIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GRAPHIC\GRF_4.C">
+      <Filter>GRAPHIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GRAPHIC\GRF_4.H">
+      <Filter>GRAPHIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GRAPHIC\GRF_4_S.S">
+      <Filter>GRAPHIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GRAPHIC\GRF_B4_S.S">
+      <Filter>GRAPHIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GRAPHIC\GRF_TC_S.S">
+      <Filter>GRAPHIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GUI\GUI.C">
+      <Filter>GUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GUI\GUI.H">
+      <Filter>GUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GUI\GUIDATA.C">
+      <Filter>GUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GUI\GUIDATA.H">
+      <Filter>GUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GUI\GUIEDIT.C">
+      <Filter>GUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GUI\GUIEDIT.H">
+      <Filter>GUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GUI\GUIFS.C">
+      <Filter>GUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GUI\GUIFS.H">
+      <Filter>GUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GUI\GUIPARSE.C">
+      <Filter>GUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GUI\GUIPARSE.H">
+      <Filter>GUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GUI\R_GUI.C">
+      <Filter>GUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\GUI\R_GUI.H">
+      <Filter>GUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\HASHLIST\HASHLIST.C">
+      <Filter>HASHLIST</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\HASHLIST\HASHLIST.H">
+      <Filter>HASHLIST</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\HASHTREE\HASHTREE.C">
+      <Filter>HASHTREE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\HASHTREE\HASHTREE.H">
+      <Filter>HASHTREE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\HASHTREE\TEST\UT_HASHT.C">
+      <Filter>HASHTREE\TEST</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\IKBD\IKBD.C">
+      <Filter>IKBD</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\IKBD\IKBD.H">
+      <Filter>IKBD</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\IKBD\IKBD_DI.C">
+      <Filter>IKBD</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\IKBD\IKBD_DI.H">
+      <Filter>IKBD</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\IKBD\IKBD_S.S">
+      <Filter>IKBD</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\IKBD\IKBD_SDL.C">
+      <Filter>IKBD</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\IKBD\IKBD_SDL.H">
+      <Filter>IKBD</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\INPUT\INPUT.C">
+      <Filter>INPUT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\INPUT\INPUT.H">
+      <Filter>INPUT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\KERNEL\KERNEL.C">
+      <Filter>KERNEL</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\KERNEL\KERNEL.H">
+      <Filter>KERNEL</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\LEXER\JSON.C">
+      <Filter>LEXER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\LEXER\JSON.H">
+      <Filter>LEXER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\LEXER\LEXER.C">
+      <Filter>LEXER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\LEXER\LEXER.H">
+      <Filter>LEXER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\LEXER\TEST\UT_JSON.C">
+      <Filter>LEXER\TEST</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\LEXER\TEST\UT_LEXER.C">
+      <Filter>LEXER\TEST</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\LINEA\LINEA.C">
+      <Filter>LINEA</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\LINEA\LINEA.H">
+      <Filter>LINEA</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\LINEA\LINEA_S.S">
+      <Filter>LINEA</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\LINKFILE\LINKFILE.C">
+      <Filter>LINKFILE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\LINKFILE\LINKFILE.H">
+      <Filter>LINKFILE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\LINKLIST\GOD_LL.H">
+      <Filter>LINKLIST</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\LINKLIST\UNIT\UT_GODLL.C">
+      <Filter>LINKLIST\UNIT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MAIN\GOD_MAIN.C">
+      <Filter>MAIN</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MAIN\GOD_MAIN.H">
+      <Filter>MAIN</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MATHS\FMAT_S.S">
+      <Filter>MATHS</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MATHS\FVEC_S.S">
+      <Filter>MATHS</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MEMORY\HEAP.C">
+      <Filter>MEMORY</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MEMORY\HEAP.H">
+      <Filter>MEMORY</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MEMORY\MEMORY.C">
+      <Filter>MEMORY</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MEMORY\MEMORY.H">
+      <Filter>MEMORY</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MEMORY\MEMORY_S.S">
+      <Filter>MEMORY</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MFP\MFP.C">
+      <Filter>MFP</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MFP\MFP.H">
+      <Filter>MFP</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MFP\MFP_S.S">
+      <Filter>MFP</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MUSIC\PINKNOTE.C">
+      <Filter>MUSIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MUSIC\PINKNOTE.H">
+      <Filter>MUSIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MUSIC\PNKNOT_S.S">
+      <Filter>MUSIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MUSIC\SND.C">
+      <Filter>MUSIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MUSIC\SND.H">
+      <Filter>MUSIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\MUSIC\SND_S.S">
+      <Filter>MUSIC</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\ARI_DEC.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\ARI_ENC.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\BWT_DEC.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\BWT_ENC.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\GODPACK.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\GODPACK.H">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\GODPACKP.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\LZ77_DEC.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\LZ77_ENC.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\LZ77_S.S">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\LZ77B_S.S">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\LZ77BDEC.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\LZ77BENC.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\MTF_DEC.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\MTF_ENC.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\PACKER.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\PACKER.H">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\PACKER_S.S">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\RLE.C">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PACKER\RLE_S.S">
+      <Filter>PACKER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\ANI.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\ART.C">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\ART.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\ASB.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\CANVAS.C">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\CANVAS.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\CANVASIC.C">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\CANVASIC.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\CE1.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\COLQUANT.C">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\COLQUANT.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\DEGAS.C">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\DEGAS.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\DOO.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\FLM.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\GFX.C">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\GFX.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\GFX_S.S">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\GIF.C">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\GIF.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\GOD.C">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\GOD.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\GSM.C">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\GSM.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\IC1.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\IFF.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\IMG.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\MAC.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\MBK.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\MUR.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\NEO.C">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\NEO.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\OCTTREE.C">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\OCTTREE.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\PAC.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\REL_GSM.C">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\REL_GSM.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\RGB.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\SEQ.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\SPC.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\SPS.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\SPU.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\TGA.C">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PICTYPES\TGA.H">
+      <Filter>PICTYPES</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PLATFORM\PLATFORM.C">
+      <Filter>PLATFORM</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PLATFORM\PLATFORM.H">
+      <Filter>PLATFORM</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PROFILER\PROFILE.C">
+      <Filter>PROFILER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PROFILER\PROFILE.H">
+      <Filter>PROFILER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PROFILER\PROFILER.C">
+      <Filter>PROFILER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PROFILER\PROFILER.H">
+      <Filter>PROFILER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PROFILER\PROFILES.S">
+      <Filter>PROFILER</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PROGRAM\PROG_S.S">
+      <Filter>PROGRAM</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PROGRAM\PROGRAM.C">
+      <Filter>PROGRAM</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PROGRAM\PROGRAM.H">
+      <Filter>PROGRAM</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\RANDOM\RANDOM.C">
+      <Filter>RANDOM</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\RANDOM\RANDOM.H">
+      <Filter>RANDOM</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\REFLECT\REFLECT.C">
+      <Filter>REFLECT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\REFLECT\REFLECT.H">
+      <Filter>REFLECT</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\REGISTRY\REGISTRY.C">
+      <Filter>REGISTRY</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\REGISTRY\REGISTRY.H">
+      <Filter>REGISTRY</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\REGISTRY\TEST\UT_REGIS.C">
+      <Filter>REGISTRY\TEST</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SCREEN\SCREEN.C">
+      <Filter>SCREEN</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SCREEN\SCREEN.H">
+      <Filter>SCREEN</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SCRNGRAB\SCRGRABS.S">
+      <Filter>SCRNGRAB</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SCRNGRAB\SCRNGRAB.C">
+      <Filter>SCRNGRAB</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SCRNGRAB\SCRNGRAB.H">
+      <Filter>SCRNGRAB</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\ASPRIT_S.S">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\ASPRITE.C">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\ASPRITE.H">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\REL_ASB.C">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\REL_ASB.H">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\REL_BSB.C">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\REL_BSB.H">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\REL_RSB.C">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\REL_RSB.H">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\RSPRIT_S.S">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\RSPRITE.C">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\RSPRITE.H">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\SPRITE.C">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SPRITE\SPRITE.H">
+      <Filter>SPRITE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\STRING\STRING.C">
+      <Filter>STRING</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\STRING\STRING.H">
+      <Filter>STRING</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\STRING\STRLIST.C">
+      <Filter>STRING</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\STRING\STRLIST.H">
+      <Filter>STRING</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\STRING\STRPATH.C">
+      <Filter>STRING</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\STRING\STRPATH.H">
+      <Filter>STRING</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\STRING\TEST\UT_STR.C">
+      <Filter>STRING\TEST</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SYSTEM\SYSTEM.C">
+      <Filter>SYSTEM</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SYSTEM\SYSTEM.H">
+      <Filter>SYSTEM</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\SYSTEM\SYSTEM_S.S">
+      <Filter>SYSTEM</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\THREAD\THREAD.H">
+      <Filter>THREAD</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\TOKENISE\TOKENISE.C">
+      <Filter>TOKENISE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\TOKENISE\TOKENISE.H">
+      <Filter>TOKENISE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\UNITTEST\UNITTEST.C">
+      <Filter>UNITTEST</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\UNITTEST\UNITTEST.H">
+      <Filter>UNITTEST</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VBL\VBL.C">
+      <Filter>VBL</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VBL\VBL.H">
+      <Filter>VBL</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VBL\VBL_S.S">
+      <Filter>VBL</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VECTOR\VECTOR.H">
+      <Filter>VECTOR</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VECTOR\VECTOR_S.S">
+      <Filter>VECTOR</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VIDEO\VID_D3D.C">
+      <Filter>VIDEO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VIDEO\VID_D3D.H">
+      <Filter>VIDEO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VIDEO\VID_IMG.C">
+      <Filter>VIDEO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VIDEO\VID_IMG.H">
+      <Filter>VIDEO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VIDEO\VID_SDL.C">
+      <Filter>VIDEO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VIDEO\VID_SDL.H">
+      <Filter>VIDEO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VIDEO\VIDEL.C">
+      <Filter>VIDEO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VIDEO\VIDEO.C">
+      <Filter>VIDEO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VIDEO\VIDEO.H">
+      <Filter>VIDEO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\VIDEO\VIDEO_S.S">
+      <Filter>VIDEO</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\WIPE\WIPE.H">
+      <Filter>WIPE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\WIPE\WIPE_S.S">
+      <Filter>WIPE</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\XBIOS\XBIOS.C">
+      <Filter>XBIOS</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\XBIOS\XBIOS.H">
+      <Filter>XBIOS</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\XBIOS\XBIOS_S.S">
+      <Filter>XBIOS</Filter>
+    </CustomBuild>
+    <CustomBuild Include="base.bff">
+    </CustomBuild>
+    <CustomBuild Include="Clang.bff">
+    </CustomBuild>
+    <CustomBuild Include="combine.bff">
+    </CustomBuild>
+    <CustomBuild Include="configs.bff">
+    </CustomBuild>
+    <CustomBuild Include="head.bff">
+    </CustomBuild>
+    <CustomBuild Include="Linux.bff">
+    </CustomBuild>
+    <CustomBuild Include="OSX.bff">
+    </CustomBuild>
+    <CustomBuild Include="project.bff">
+    </CustomBuild>
+    <CustomBuild Include="VisualStudio.bff">
+    </CustomBuild>
+    <CustomBuild Include="VS_2008.bff">
+    </CustomBuild>
+    <CustomBuild Include="VS_2010.bff">
+    </CustomBuild>
+    <CustomBuild Include="VS_2012.bff">
+    </CustomBuild>
+    <CustomBuild Include="VS_2013.bff">
+    </CustomBuild>
+    <CustomBuild Include="VS_2015.bff">
+    </CustomBuild>
+    <CustomBuild Include="VS_2017.bff">
+    </CustomBuild>
+    <CustomBuild Include="WindowsSDK.bff">
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ACHIEVE">
+      <UniqueIdentifier>{1420c5ce-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ASSERT">
+      <UniqueIdentifier>{9f3e4f49-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ASSET">
+      <UniqueIdentifier>{7aaaa625-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="AUDIO">
+      <UniqueIdentifier>{47308535-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="BASE">
+      <UniqueIdentifier>{3fde7b24-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="BASE\TEST">
+      <UniqueIdentifier>{4ea68812-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="BIOS">
+      <UniqueIdentifier>{0e859154-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="BLITTER">
+      <UniqueIdentifier>{c251b3f1-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CHECKSUM">
+      <UniqueIdentifier>{82e3ca00-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CHUNKY">
+      <UniqueIdentifier>{60c60061-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CLI">
+      <UniqueIdentifier>{016b2008-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CLOCK">
+      <UniqueIdentifier>{3d2cccec-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="COOKIE">
+      <UniqueIdentifier>{e6977ab4-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CUTSCENE">
+      <UniqueIdentifier>{3c416154-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="DEBUG">
+      <UniqueIdentifier>{cdcc5c69-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="DEBUGLOG">
+      <UniqueIdentifier>{043fe1a7-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="DRIVE">
+      <UniqueIdentifier>{a26c6294-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="DRIVE\TEST">
+      <UniqueIdentifier>{0bddda91-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ELFHASH">
+      <UniqueIdentifier>{98ee2678-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ENCRYPT">
+      <UniqueIdentifier>{3718cd88-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ENCRYPT\TEST">
+      <UniqueIdentifier>{721239bd-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="EXCEPT">
+      <UniqueIdentifier>{97a8a2a7-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="FADE">
+      <UniqueIdentifier>{d002d397-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="FE">
+      <UniqueIdentifier>{31d8c2e1-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="FILE">
+      <UniqueIdentifier>{49b641b4-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="FONT8X8">
+      <UniqueIdentifier>{6b48c308-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="FONT">
+      <UniqueIdentifier>{6df9f983-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="GEMDOS">
+      <UniqueIdentifier>{104e8d2a-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="GRAPHIC">
+      <UniqueIdentifier>{976e5e7f-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{3a9ec118-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="HASHLIST">
+      <UniqueIdentifier>{808cf9db-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="HASHTREE">
+      <UniqueIdentifier>{c4da1d8c-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="HASHTREE\TEST">
+      <UniqueIdentifier>{d976046b-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="IKBD">
+      <UniqueIdentifier>{99dd6a20-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="INPUT">
+      <UniqueIdentifier>{e8496206-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="KERNEL">
+      <UniqueIdentifier>{82d75bea-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="LEXER">
+      <UniqueIdentifier>{23dba1c5-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="LEXER\TEST">
+      <UniqueIdentifier>{3c59ae26-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="LINEA">
+      <UniqueIdentifier>{916e4ba0-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="LINKFILE">
+      <UniqueIdentifier>{35f19670-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="LINKLIST">
+      <UniqueIdentifier>{393aada5-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="LINKLIST\UNIT">
+      <UniqueIdentifier>{2c2bdcf9-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="MAIN">
+      <UniqueIdentifier>{5a511d72-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="MATHS">
+      <UniqueIdentifier>{f4941e69-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="MEMORY">
+      <UniqueIdentifier>{b171a555-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="MFP">
+      <UniqueIdentifier>{e759c34b-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="MUSIC">
+      <UniqueIdentifier>{df008d33-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="PACKER">
+      <UniqueIdentifier>{ea17fc97-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="PICTYPES">
+      <UniqueIdentifier>{29fc5633-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="PLATFORM">
+      <UniqueIdentifier>{80374d47-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="PROFILER">
+      <UniqueIdentifier>{0d09e3e3-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="PROGRAM">
+      <UniqueIdentifier>{6aaaa6f3-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="RANDOM">
+      <UniqueIdentifier>{0cf39d47-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="REFLECT">
+      <UniqueIdentifier>{3a8143e4-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="REGISTRY">
+      <UniqueIdentifier>{7ab4d144-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="REGISTRY\TEST">
+      <UniqueIdentifier>{daa7a10a-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="SCREEN">
+      <UniqueIdentifier>{1d8d68a9-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="SCRNGRAB">
+      <UniqueIdentifier>{4a72de85-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="SPRITE">
+      <UniqueIdentifier>{e8f30898-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="STRING">
+      <UniqueIdentifier>{130ae852-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="STRING\TEST">
+      <UniqueIdentifier>{6fa859d0-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="SYSTEM">
+      <UniqueIdentifier>{2477cd7f-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="THREAD">
+      <UniqueIdentifier>{ca27d8a6-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="TOKENISE">
+      <UniqueIdentifier>{4dc3a319-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="UNITTEST">
+      <UniqueIdentifier>{bcc2fc20-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="VBL">
+      <UniqueIdentifier>{20b22751-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="VECTOR">
+      <UniqueIdentifier>{ad35762c-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="VIDEO">
+      <UniqueIdentifier>{ea14f2c1-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="WIPE">
+      <UniqueIdentifier>{5f52fb15-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="XBIOS">
+      <UniqueIdentifier>{1fd620ae-6c94-4f93-bc2a-7f5284b7d434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -10,7 +10,7 @@
 .WindowsSDK_10_Settings =
 [
     .WinSDK_BasePath            = 'C:\Program Files (x86)\Windows Kits\10'
-    .WinSDK_SubPath             = '10.0.17134.0'
+    .WinSDK_SubPath             = '10.0.14393.0'
     .WinSDK_X86_CompilerOptions = ' "-I$WinSDK_BasePath$/Include/$WinSDK_SubPath$/ucrt"'
                                 + ' "-I$WinSDK_BasePath$/Include/$WinSDK_SubPath$/um"'
                                 + ' "-I$WinSDK_BasePath$/Include/$WinSDK_SubPath$/shared"'

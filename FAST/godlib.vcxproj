@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="x86-Debug|Win32">
+      <Configuration>x86-Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="x86-Profile|Win32">
+      <Configuration>x86-Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="x86-Release|Win32">
+      <Configuration>x86-Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\ACHIEVE\ACH_COM.C" />
+    <CustomBuild Include="..\ACHIEVE\ACH_COM.H" />
+    <CustomBuild Include="..\ACHIEVE\ACH_DISP.C" />
+    <CustomBuild Include="..\ACHIEVE\ACH_DISP.H" />
+    <CustomBuild Include="..\ACHIEVE\ACH_GFX.C" />
+    <CustomBuild Include="..\ACHIEVE\ACH_GFX.H" />
+    <CustomBuild Include="..\ACHIEVE\ACH_GOD.C" />
+    <CustomBuild Include="..\ACHIEVE\ACH_GOD.H" />
+    <CustomBuild Include="..\ACHIEVE\ACH_LOGN.C" />
+    <CustomBuild Include="..\ACHIEVE\ACH_LOGN.H" />
+    <CustomBuild Include="..\ACHIEVE\ACH_MAIN.C" />
+    <CustomBuild Include="..\ACHIEVE\ACH_MAIN.H" />
+    <CustomBuild Include="..\ACHIEVE\ACH_SHOW.C" />
+    <CustomBuild Include="..\ACHIEVE\ACH_SHOW.H" />
+    <CustomBuild Include="..\ACHIEVE\ACH_SIGN.C" />
+    <CustomBuild Include="..\ACHIEVE\ACH_SIGN.H" />
+    <CustomBuild Include="..\ACHIEVE\ACH_UNLK.C" />
+    <CustomBuild Include="..\ACHIEVE\ACH_UNLK.H" />
+    <CustomBuild Include="..\ASSERT\ASSERT.C" />
+    <CustomBuild Include="..\ASSERT\ASSERT.H" />
+    <CustomBuild Include="..\ASSET\ASSET.C" />
+    <CustomBuild Include="..\ASSET\ASSET.H" />
+    <CustomBuild Include="..\ASSET\CONTEXT.C" />
+    <CustomBuild Include="..\ASSET\CONTEXT.H" />
+    <CustomBuild Include="..\ASSET\PACKAGE.C" />
+    <CustomBuild Include="..\ASSET\PACKAGE.H" />
+    <CustomBuild Include="..\ASSET\PKG_DIR.C" />
+    <CustomBuild Include="..\ASSET\PKG_DIR.H" />
+    <CustomBuild Include="..\ASSET\PKG_LNK.C" />
+    <CustomBuild Include="..\ASSET\PKG_LNK.H" />
+    <CustomBuild Include="..\ASSET\RELOCATE.C" />
+    <CustomBuild Include="..\ASSET\RELOCATE.H" />
+    <CustomBuild Include="..\AUDIO\AM_COS.H" />
+    <CustomBuild Include="..\AUDIO\AM_MUL.H" />
+    <CustomBuild Include="..\AUDIO\AM_SINE.H" />
+    <CustomBuild Include="..\AUDIO\AMIX_BLD.C" />
+    <CustomBuild Include="..\AUDIO\AMIXER.C" />
+    <CustomBuild Include="..\AUDIO\AMIXER.H" />
+    <CustomBuild Include="..\AUDIO\AMIXER_S.S" />
+    <CustomBuild Include="..\AUDIO\AMPANLAW.H" />
+    <CustomBuild Include="..\AUDIO\AUDIO.C" />
+    <CustomBuild Include="..\AUDIO\AUDIO.H" />
+    <CustomBuild Include="..\AUDIO\AUDIO_S.S" />
+    <CustomBuild Include="..\AUDIO\REL_SPL.C" />
+    <CustomBuild Include="..\AUDIO\REL_SPL.H" />
+    <CustomBuild Include="..\AUDIO\SSD.C" />
+    <CustomBuild Include="..\AUDIO\SSD.H" />
+    <CustomBuild Include="..\AUDIO\SSD_S.S" />
+    <CustomBuild Include="..\BASE\BASE.C" />
+    <CustomBuild Include="..\BASE\BASE.H" />
+    <CustomBuild Include="..\BASE\TEST\UT_BASE.C" />
+    <CustomBuild Include="..\BIOS\BIOS.C" />
+    <CustomBuild Include="..\BIOS\BIOS.H" />
+    <CustomBuild Include="..\BIOS\BIOS_S.S" />
+    <CustomBuild Include="..\BLITTER\BLITTER.C" />
+    <CustomBuild Include="..\BLITTER\BLITTER.H" />
+    <CustomBuild Include="..\CHECKSUM\CHECKSUM.C" />
+    <CustomBuild Include="..\CHECKSUM\CHECKSUM.H" />
+    <CustomBuild Include="..\CHUNKY\C2P_S.S" />
+    <CustomBuild Include="..\CHUNKY\CHUNKY.C" />
+    <CustomBuild Include="..\CHUNKY\CHUNKY.H" />
+    <CustomBuild Include="..\CHUNKY\CHUNKY.S" />
+    <CustomBuild Include="..\CHUNKY\CHUNKY_S.S" />
+    <CustomBuild Include="..\CLI\CLI.C" />
+    <CustomBuild Include="..\CLI\CLI.H" />
+    <CustomBuild Include="..\CLOCK\CLOCK.C" />
+    <CustomBuild Include="..\CLOCK\CLOCK.H" />
+    <CustomBuild Include="..\CLOCK\CLOCK_S.S" />
+    <CustomBuild Include="..\COOKIE\COOKIE.C" />
+    <CustomBuild Include="..\COOKIE\COOKIE.H" />
+    <CustomBuild Include="..\CUTSCENE\CUT_SYS.C" />
+    <CustomBuild Include="..\CUTSCENE\CUT_SYS.H" />
+    <CustomBuild Include="..\CUTSCENE\CUTPARSE.C" />
+    <CustomBuild Include="..\CUTSCENE\CUTPARSE.H" />
+    <CustomBuild Include="..\CUTSCENE\CUTSCENE.C" />
+    <CustomBuild Include="..\CUTSCENE\CUTSCENE.H" />
+    <CustomBuild Include="..\CUTSCENE\REL_CUT.C" />
+    <CustomBuild Include="..\CUTSCENE\REL_CUT.H" />
+    <CustomBuild Include="..\DEBUG\DBGCHAN.C" />
+    <CustomBuild Include="..\DEBUG\DBGCHAN.H" />
+    <CustomBuild Include="..\DEBUG\DEBUG.C" />
+    <CustomBuild Include="..\DEBUG\DEBUG.H" />
+    <CustomBuild Include="..\DEBUGLOG\DBGLOG_S.S" />
+    <CustomBuild Include="..\DEBUGLOG\DEBUGLOG.C" />
+    <CustomBuild Include="..\DEBUGLOG\DEBUGLOG.H" />
+    <CustomBuild Include="..\DRIVE\DISK_IO.C" />
+    <CustomBuild Include="..\DRIVE\DISK_IO.H" />
+    <CustomBuild Include="..\DRIVE\DRIVE.C" />
+    <CustomBuild Include="..\DRIVE\DRIVE.H" />
+    <CustomBuild Include="..\DRIVE\TEST\UT_DISK.C" />
+    <CustomBuild Include="..\DUMMY.C" />
+    <CustomBuild Include="..\ELFHASH\ELFHASH.C" />
+    <CustomBuild Include="..\ELFHASH\ELFHASH.H" />
+    <CustomBuild Include="..\ENCRYPT\ENCRYPT.C" />
+    <CustomBuild Include="..\ENCRYPT\ENCRYPT.H" />
+    <CustomBuild Include="..\ENCRYPT\TEST\UTENCRYP.C" />
+    <CustomBuild Include="..\EXCEPT\EXCEPT.C" />
+    <CustomBuild Include="..\EXCEPT\EXCEPT.H" />
+    <CustomBuild Include="..\EXCEPT\EXCEPT_S.S" />
+    <CustomBuild Include="..\FADE\FADE.C" />
+    <CustomBuild Include="..\FADE\FADE.H" />
+    <CustomBuild Include="..\FADE\FADE_GOD.C" />
+    <CustomBuild Include="..\FADE\FADE_S.S" />
+    <CustomBuild Include="..\FE\FED.C" />
+    <CustomBuild Include="..\FE\FED.H" />
+    <CustomBuild Include="..\FE\FED_JSON.C" />
+    <CustomBuild Include="..\FE\FED_JSON.H" />
+    <CustomBuild Include="..\FE\FEDPARSE.C" />
+    <CustomBuild Include="..\FE\FEDPARSE.H" />
+    <CustomBuild Include="..\FE\R_FED.C" />
+    <CustomBuild Include="..\FE\R_FED.H" />
+    <CustomBuild Include="..\FE\REL_FED.C" />
+    <CustomBuild Include="..\FE\REL_FED.H" />
+    <CustomBuild Include="..\FILE\FILE.C" />
+    <CustomBuild Include="..\FILE\FILE.H" />
+    <CustomBuild Include="..\FILE\FILE_PTN.C" />
+    <CustomBuild Include="..\FILE\FILE_PTN.H" />
+    <CustomBuild Include="..\FILE\FILE_S.S" />
+    <CustomBuild Include="..\FONT8X8\FONT8X8.C" />
+    <CustomBuild Include="..\FONT8X8\FONT8X8.H" />
+    <CustomBuild Include="..\FONT8X8\FONTDATA.C" />
+    <CustomBuild Include="..\FONT\FONT.C" />
+    <CustomBuild Include="..\FONT\FONT.H" />
+    <CustomBuild Include="..\FONT\REL_BFB.C" />
+    <CustomBuild Include="..\FONT\REL_BFB.H" />
+    <CustomBuild Include="..\GEMDOS\GEMDOS.C" />
+    <CustomBuild Include="..\GEMDOS\GEMDOS.H" />
+    <CustomBuild Include="..\GEMDOS\GEMDOS_S.S" />
+    <CustomBuild Include="..\GRAPHIC\GRAPHIC.C" />
+    <CustomBuild Include="..\GRAPHIC\GRAPHIC.H" />
+    <CustomBuild Include="..\GRAPHIC\GRF_16.C" />
+    <CustomBuild Include="..\GRAPHIC\GRF_16.H" />
+    <CustomBuild Include="..\GRAPHIC\GRF_16_S.S" />
+    <CustomBuild Include="..\GRAPHIC\GRF_4.C" />
+    <CustomBuild Include="..\GRAPHIC\GRF_4.H" />
+    <CustomBuild Include="..\GRAPHIC\GRF_4_S.S" />
+    <CustomBuild Include="..\GRAPHIC\GRF_B4_S.S" />
+    <CustomBuild Include="..\GRAPHIC\GRF_TC_S.S" />
+    <CustomBuild Include="..\GUI\GUI.C" />
+    <CustomBuild Include="..\GUI\GUI.H" />
+    <CustomBuild Include="..\GUI\GUIDATA.C" />
+    <CustomBuild Include="..\GUI\GUIDATA.H" />
+    <CustomBuild Include="..\GUI\GUIEDIT.C" />
+    <CustomBuild Include="..\GUI\GUIEDIT.H" />
+    <CustomBuild Include="..\GUI\GUIFS.C" />
+    <CustomBuild Include="..\GUI\GUIFS.H" />
+    <CustomBuild Include="..\GUI\GUIPARSE.C" />
+    <CustomBuild Include="..\GUI\GUIPARSE.H" />
+    <CustomBuild Include="..\GUI\R_GUI.C" />
+    <CustomBuild Include="..\GUI\R_GUI.H" />
+    <CustomBuild Include="..\HASHLIST\HASHLIST.C" />
+    <CustomBuild Include="..\HASHLIST\HASHLIST.H" />
+    <CustomBuild Include="..\HASHTREE\HASHTREE.C" />
+    <CustomBuild Include="..\HASHTREE\HASHTREE.H" />
+    <CustomBuild Include="..\HASHTREE\TEST\UT_HASHT.C" />
+    <CustomBuild Include="..\IKBD\IKBD.C" />
+    <CustomBuild Include="..\IKBD\IKBD.H" />
+    <CustomBuild Include="..\IKBD\IKBD_DI.C" />
+    <CustomBuild Include="..\IKBD\IKBD_DI.H" />
+    <CustomBuild Include="..\IKBD\IKBD_S.S" />
+    <CustomBuild Include="..\IKBD\IKBD_SDL.C" />
+    <CustomBuild Include="..\IKBD\IKBD_SDL.H" />
+    <CustomBuild Include="..\INPUT\INPUT.C" />
+    <CustomBuild Include="..\INPUT\INPUT.H" />
+    <CustomBuild Include="..\KERNEL\KERNEL.C" />
+    <CustomBuild Include="..\KERNEL\KERNEL.H" />
+    <CustomBuild Include="..\LEXER\JSON.C" />
+    <CustomBuild Include="..\LEXER\JSON.H" />
+    <CustomBuild Include="..\LEXER\LEXER.C" />
+    <CustomBuild Include="..\LEXER\LEXER.H" />
+    <CustomBuild Include="..\LEXER\TEST\UT_JSON.C" />
+    <CustomBuild Include="..\LEXER\TEST\UT_LEXER.C" />
+    <CustomBuild Include="..\LINEA\LINEA.C" />
+    <CustomBuild Include="..\LINEA\LINEA.H" />
+    <CustomBuild Include="..\LINEA\LINEA_S.S" />
+    <CustomBuild Include="..\LINKFILE\LINKFILE.C" />
+    <CustomBuild Include="..\LINKFILE\LINKFILE.H" />
+    <CustomBuild Include="..\LINKLIST\GOD_LL.H" />
+    <CustomBuild Include="..\LINKLIST\UNIT\UT_GODLL.C" />
+    <CustomBuild Include="..\MAIN\GOD_MAIN.C" />
+    <CustomBuild Include="..\MAIN\GOD_MAIN.H" />
+    <CustomBuild Include="..\MATHS\FMAT_S.S" />
+    <CustomBuild Include="..\MATHS\FVEC_S.S" />
+    <CustomBuild Include="..\MEMORY\HEAP.C" />
+    <CustomBuild Include="..\MEMORY\HEAP.H" />
+    <CustomBuild Include="..\MEMORY\MEMORY.C" />
+    <CustomBuild Include="..\MEMORY\MEMORY.H" />
+    <CustomBuild Include="..\MEMORY\MEMORY_S.S" />
+    <CustomBuild Include="..\MFP\MFP.C" />
+    <CustomBuild Include="..\MFP\MFP.H" />
+    <CustomBuild Include="..\MFP\MFP_S.S" />
+    <CustomBuild Include="..\MUSIC\PINKNOTE.C" />
+    <CustomBuild Include="..\MUSIC\PINKNOTE.H" />
+    <CustomBuild Include="..\MUSIC\PNKNOT_S.S" />
+    <CustomBuild Include="..\MUSIC\SND.C" />
+    <CustomBuild Include="..\MUSIC\SND.H" />
+    <CustomBuild Include="..\MUSIC\SND_S.S" />
+    <CustomBuild Include="..\PACKER\ARI_DEC.C" />
+    <CustomBuild Include="..\PACKER\ARI_ENC.C" />
+    <CustomBuild Include="..\PACKER\BWT_DEC.C" />
+    <CustomBuild Include="..\PACKER\BWT_ENC.C" />
+    <CustomBuild Include="..\PACKER\GODPACK.C" />
+    <CustomBuild Include="..\PACKER\GODPACK.H" />
+    <CustomBuild Include="..\PACKER\GODPACKP.C" />
+    <CustomBuild Include="..\PACKER\LZ77_DEC.C" />
+    <CustomBuild Include="..\PACKER\LZ77_ENC.C" />
+    <CustomBuild Include="..\PACKER\LZ77_S.S" />
+    <CustomBuild Include="..\PACKER\LZ77B_S.S" />
+    <CustomBuild Include="..\PACKER\LZ77BDEC.C" />
+    <CustomBuild Include="..\PACKER\LZ77BENC.C" />
+    <CustomBuild Include="..\PACKER\MTF_DEC.C" />
+    <CustomBuild Include="..\PACKER\MTF_ENC.C" />
+    <CustomBuild Include="..\PACKER\PACKER.C" />
+    <CustomBuild Include="..\PACKER\PACKER.H" />
+    <CustomBuild Include="..\PACKER\PACKER_S.S" />
+    <CustomBuild Include="..\PACKER\RLE.C" />
+    <CustomBuild Include="..\PACKER\RLE_S.S" />
+    <CustomBuild Include="..\PICTYPES\ANI.H" />
+    <CustomBuild Include="..\PICTYPES\ART.C" />
+    <CustomBuild Include="..\PICTYPES\ART.H" />
+    <CustomBuild Include="..\PICTYPES\ASB.H" />
+    <CustomBuild Include="..\PICTYPES\CANVAS.C" />
+    <CustomBuild Include="..\PICTYPES\CANVAS.H" />
+    <CustomBuild Include="..\PICTYPES\CANVASIC.C" />
+    <CustomBuild Include="..\PICTYPES\CANVASIC.H" />
+    <CustomBuild Include="..\PICTYPES\CE1.H" />
+    <CustomBuild Include="..\PICTYPES\COLQUANT.C" />
+    <CustomBuild Include="..\PICTYPES\COLQUANT.H" />
+    <CustomBuild Include="..\PICTYPES\DEGAS.C" />
+    <CustomBuild Include="..\PICTYPES\DEGAS.H" />
+    <CustomBuild Include="..\PICTYPES\DOO.H" />
+    <CustomBuild Include="..\PICTYPES\FLM.H" />
+    <CustomBuild Include="..\PICTYPES\GFX.C" />
+    <CustomBuild Include="..\PICTYPES\GFX.H" />
+    <CustomBuild Include="..\PICTYPES\GFX_S.S" />
+    <CustomBuild Include="..\PICTYPES\GIF.C" />
+    <CustomBuild Include="..\PICTYPES\GIF.H" />
+    <CustomBuild Include="..\PICTYPES\GOD.C" />
+    <CustomBuild Include="..\PICTYPES\GOD.H" />
+    <CustomBuild Include="..\PICTYPES\GSM.C" />
+    <CustomBuild Include="..\PICTYPES\GSM.H" />
+    <CustomBuild Include="..\PICTYPES\IC1.H" />
+    <CustomBuild Include="..\PICTYPES\IFF.H" />
+    <CustomBuild Include="..\PICTYPES\IMG.H" />
+    <CustomBuild Include="..\PICTYPES\MAC.H" />
+    <CustomBuild Include="..\PICTYPES\MBK.H" />
+    <CustomBuild Include="..\PICTYPES\MUR.H" />
+    <CustomBuild Include="..\PICTYPES\NEO.C" />
+    <CustomBuild Include="..\PICTYPES\NEO.H" />
+    <CustomBuild Include="..\PICTYPES\OCTTREE.C" />
+    <CustomBuild Include="..\PICTYPES\OCTTREE.H" />
+    <CustomBuild Include="..\PICTYPES\PAC.H" />
+    <CustomBuild Include="..\PICTYPES\REL_GSM.C" />
+    <CustomBuild Include="..\PICTYPES\REL_GSM.H" />
+    <CustomBuild Include="..\PICTYPES\RGB.H" />
+    <CustomBuild Include="..\PICTYPES\SEQ.H" />
+    <CustomBuild Include="..\PICTYPES\SPC.H" />
+    <CustomBuild Include="..\PICTYPES\SPS.H" />
+    <CustomBuild Include="..\PICTYPES\SPU.H" />
+    <CustomBuild Include="..\PICTYPES\TGA.C" />
+    <CustomBuild Include="..\PICTYPES\TGA.H" />
+    <CustomBuild Include="..\PLATFORM\PLATFORM.C" />
+    <CustomBuild Include="..\PLATFORM\PLATFORM.H" />
+    <CustomBuild Include="..\PROFILER\PROFILE.C" />
+    <CustomBuild Include="..\PROFILER\PROFILE.H" />
+    <CustomBuild Include="..\PROFILER\PROFILER.C" />
+    <CustomBuild Include="..\PROFILER\PROFILER.H" />
+    <CustomBuild Include="..\PROFILER\PROFILES.S" />
+    <CustomBuild Include="..\PROGRAM\PROG_S.S" />
+    <CustomBuild Include="..\PROGRAM\PROGRAM.C" />
+    <CustomBuild Include="..\PROGRAM\PROGRAM.H" />
+    <CustomBuild Include="..\RANDOM\RANDOM.C" />
+    <CustomBuild Include="..\RANDOM\RANDOM.H" />
+    <CustomBuild Include="..\REFLECT\REFLECT.C" />
+    <CustomBuild Include="..\REFLECT\REFLECT.H" />
+    <CustomBuild Include="..\REGISTRY\REGISTRY.C" />
+    <CustomBuild Include="..\REGISTRY\REGISTRY.H" />
+    <CustomBuild Include="..\REGISTRY\TEST\UT_REGIS.C" />
+    <CustomBuild Include="..\SCREEN\SCREEN.C" />
+    <CustomBuild Include="..\SCREEN\SCREEN.H" />
+    <CustomBuild Include="..\SCRNGRAB\SCRGRABS.S" />
+    <CustomBuild Include="..\SCRNGRAB\SCRNGRAB.C" />
+    <CustomBuild Include="..\SCRNGRAB\SCRNGRAB.H" />
+    <CustomBuild Include="..\SPRITE\ASPRIT_S.S" />
+    <CustomBuild Include="..\SPRITE\ASPRITE.C" />
+    <CustomBuild Include="..\SPRITE\ASPRITE.H" />
+    <CustomBuild Include="..\SPRITE\REL_ASB.C" />
+    <CustomBuild Include="..\SPRITE\REL_ASB.H" />
+    <CustomBuild Include="..\SPRITE\REL_BSB.C" />
+    <CustomBuild Include="..\SPRITE\REL_BSB.H" />
+    <CustomBuild Include="..\SPRITE\REL_RSB.C" />
+    <CustomBuild Include="..\SPRITE\REL_RSB.H" />
+    <CustomBuild Include="..\SPRITE\RSPRIT_S.S" />
+    <CustomBuild Include="..\SPRITE\RSPRITE.C" />
+    <CustomBuild Include="..\SPRITE\RSPRITE.H" />
+    <CustomBuild Include="..\SPRITE\SPRITE.C" />
+    <CustomBuild Include="..\SPRITE\SPRITE.H" />
+    <CustomBuild Include="..\STRING\STRING.C" />
+    <CustomBuild Include="..\STRING\STRING.H" />
+    <CustomBuild Include="..\STRING\STRLIST.C" />
+    <CustomBuild Include="..\STRING\STRLIST.H" />
+    <CustomBuild Include="..\STRING\STRPATH.C" />
+    <CustomBuild Include="..\STRING\STRPATH.H" />
+    <CustomBuild Include="..\STRING\TEST\UT_STR.C" />
+    <CustomBuild Include="..\SYSTEM\SYSTEM.C" />
+    <CustomBuild Include="..\SYSTEM\SYSTEM.H" />
+    <CustomBuild Include="..\SYSTEM\SYSTEM_S.S" />
+    <CustomBuild Include="..\THREAD\THREAD.H" />
+    <CustomBuild Include="..\TOKENISE\TOKENISE.C" />
+    <CustomBuild Include="..\TOKENISE\TOKENISE.H" />
+    <CustomBuild Include="..\UNITTEST\UNITTEST.C" />
+    <CustomBuild Include="..\UNITTEST\UNITTEST.H" />
+    <CustomBuild Include="..\VBL\VBL.C" />
+    <CustomBuild Include="..\VBL\VBL.H" />
+    <CustomBuild Include="..\VBL\VBL_S.S" />
+    <CustomBuild Include="..\VECTOR\VECTOR.H" />
+    <CustomBuild Include="..\VECTOR\VECTOR_S.S" />
+    <CustomBuild Include="..\VIDEO\VID_D3D.C" />
+    <CustomBuild Include="..\VIDEO\VID_D3D.H" />
+    <CustomBuild Include="..\VIDEO\VID_IMG.C" />
+    <CustomBuild Include="..\VIDEO\VID_IMG.H" />
+    <CustomBuild Include="..\VIDEO\VID_SDL.C" />
+    <CustomBuild Include="..\VIDEO\VID_SDL.H" />
+    <CustomBuild Include="..\VIDEO\VIDEL.C" />
+    <CustomBuild Include="..\VIDEO\VIDEO.C" />
+    <CustomBuild Include="..\VIDEO\VIDEO.H" />
+    <CustomBuild Include="..\VIDEO\VIDEO_S.S" />
+    <CustomBuild Include="..\WIPE\WIPE.H" />
+    <CustomBuild Include="..\WIPE\WIPE_S.S" />
+    <CustomBuild Include="..\XBIOS\XBIOS.C" />
+    <CustomBuild Include="..\XBIOS\XBIOS.H" />
+    <CustomBuild Include="..\XBIOS\XBIOS_S.S" />
+    <CustomBuild Include="base.bff" />
+    <CustomBuild Include="Clang.bff" />
+    <CustomBuild Include="combine.bff" />
+    <CustomBuild Include="configs.bff" />
+    <CustomBuild Include="head.bff" />
+    <CustomBuild Include="Linux.bff" />
+    <CustomBuild Include="OSX.bff" />
+    <CustomBuild Include="project.bff" />
+    <CustomBuild Include="VisualStudio.bff" />
+    <CustomBuild Include="VS_2008.bff" />
+    <CustomBuild Include="VS_2010.bff" />
+    <CustomBuild Include="VS_2012.bff" />
+    <CustomBuild Include="VS_2013.bff" />
+    <CustomBuild Include="VS_2015.bff" />
+    <CustomBuild Include="VS_2017.bff" />
+    <CustomBuild Include="WindowsSDK.bff" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9181b29f-6c94-4f93-bc2a-7f5284b7d434}</ProjectGuid>
+    <Keyword>MakeFileProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x86-Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x86-Profile|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x86-Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='x86-Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='x86-Profile|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='x86-Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x86-Debug|Win32'">
+    <NMakeBuildCommandLine>cd $(SolutionDir) &amp; "..\..\..\TOOLS.RG\FASTBUILD\Windows-x64-v0.96-RG\fbuild" -vs -dist -monitor -fastcancel -cache $(ProjectName)-exe-$(Configuration) ExtraBuild</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>cd $(SolutionDir) &amp; "..\..\..\TOOLS.RG\FASTBUILD\Windows-x64-v0.96-RG\fbuild" -vs -dist -monitor -fastcancel -cache -clean $(ProjectName)-exe-$(Configuration) sln</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;dDEBUGLOG;DEBUG;PROFILING_ENABLED;</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>..\..\dev.rg\TOOLBASE\FAST\;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\ucrt;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\shared;..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\;..\..\dev.rg\..;</NMakeIncludeSearchPath>
+    <IntDir>$(ProjectDir)\Int</IntDir>
+    <OutDir>$(ProjectDir)\Out</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x86-Profile|Win32'">
+    <NMakeBuildCommandLine>cd $(SolutionDir) &amp; "..\..\..\TOOLS.RG\FASTBUILD\Windows-x64-v0.96-RG\fbuild" -vs -dist -monitor -fastcancel -cache $(ProjectName)-exe-$(Configuration) ExtraBuild</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>cd $(SolutionDir) &amp; "..\..\..\TOOLS.RG\FASTBUILD\Windows-x64-v0.96-RG\fbuild" -vs -dist -monitor -fastcancel -cache -clean $(ProjectName)-exe-$(Configuration) sln</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;dDEBUGLOG;RELEASE;PROFILING_ENABLED;</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>..\..\dev.rg\TOOLBASE\FAST\;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\ucrt;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\shared;..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\;..\..\dev.rg\..;</NMakeIncludeSearchPath>
+    <IntDir>$(ProjectDir)\Int</IntDir>
+    <OutDir>$(ProjectDir)\Out</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x86-Release|Win32'">
+    <NMakeBuildCommandLine>cd $(SolutionDir) &amp; "..\..\..\TOOLS.RG\FASTBUILD\Windows-x64-v0.96-RG\fbuild" -vs -dist -monitor -fastcancel -cache $(ProjectName)-exe-$(Configuration) ExtraBuild</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>cd $(SolutionDir) &amp; "..\..\..\TOOLS.RG\FASTBUILD\Windows-x64-v0.96-RG\fbuild" -vs -dist -monitor -fastcancel -cache -clean $(ProjectName)-exe-$(Configuration) sln</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;dDEBUGLOG;RELEASE;</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>..\..\dev.rg\TOOLBASE\FAST\;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\ucrt;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\shared;..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\;..\..\dev.rg\..;</NMakeIncludeSearchPath>
+    <IntDir>$(ProjectDir)\Int</IntDir>
+    <OutDir>$(ProjectDir)\Out</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x86-Debug|Win32'">
+    <BuildLog>
+    <Path>$(ProjectDir)\Log\$(ProjectName)-VS_2015-$(Configuration).log</Path>
+    </BuildLog>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x86-Profile|Win32'">
+    <BuildLog>
+    <Path>$(ProjectDir)\Log\$(ProjectName)-VS_2015-$(Configuration).log</Path>
+    </BuildLog>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x86-Release|Win32'">
+    <BuildLog>
+    <Path>$(ProjectDir)\Log\$(ProjectName)-VS_2015-$(Configuration).log</Path>
+    </BuildLog>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
+</Project>

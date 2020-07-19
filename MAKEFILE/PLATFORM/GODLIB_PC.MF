@@ -17,15 +17,25 @@ LD		= $(VC_DIR)link
 #	these are the cygwin/gnu tools
 ###############################################################################
 
-CAT		= /usr/bin/cat
-CP		= /usr/bin/cp
-ECHO	= /usr/bin/echo
-GAWK	= /usr/bin/gawk
-MKDIR	= /usr/bin/mkdir
-MAKE	= /usr/bin/make
-MV		= /usr/bin/mv
-RM		= /usr/bin/rm
-SED		= /usr/bin/sed
+#CAT		= /usr/bin/cat
+#CP		= /usr/bin/cp
+#ECHO	= /usr/bin/echo
+#GAWK	= /usr/bin/gawk
+#MKDIR	= /usr/bin/mkdir
+#MAKE	= /usr/bin/make
+#MV		= /usr/bin/mv
+#RM		= /usr/bin/rm
+#SED		= /usr/bin/sed
+
+CAT		= cat
+CP		= cp
+ECHO	= echo
+GAWK	= gawk
+MKDIR	= mkdir
+MAKE	= make
+MV		= mv
+RM		= rm
+SED		= sed
 
 
 ###############################################################################
