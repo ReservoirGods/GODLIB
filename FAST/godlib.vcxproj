@@ -362,29 +362,31 @@
     <CustomBuild Include="VS_2013.bff" />
     <CustomBuild Include="VS_2015.bff" />
     <CustomBuild Include="VS_2017.bff" />
+    <CustomBuild Include="VS_2019.bff" />
+    <CustomBuild Include="VS_2022.bff" />
     <CustomBuild Include="WindowsSDK.bff" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9181b29f-6c94-4f93-bc2a-7f5284b7d434}</ProjectGuid>
+    <ProjectGuid>{51cbb77b-6c94-4f93-bc2a-7f5284b7d434}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x86-Debug|Win32'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x86-Profile|Win32'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x86-Release|Win32'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -402,40 +404,40 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x86-Debug|Win32'">
     <NMakeBuildCommandLine>cd $(SolutionDir) &amp; "..\..\..\TOOLS.RG\FASTBUILD\Windows-x64-v0.96-RG\fbuild" -vs -dist -monitor -fastcancel -cache $(ProjectName)-exe-$(Configuration) ExtraBuild</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>cd $(SolutionDir) &amp; "..\..\..\TOOLS.RG\FASTBUILD\Windows-x64-v0.96-RG\fbuild" -vs -dist -monitor -fastcancel -cache -clean $(ProjectName)-exe-$(Configuration) sln</NMakeReBuildCommandLine>
-    <NMakePreprocessorDefinitions>WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;dDEBUGLOG;DEBUG;PROFILING_ENABLED;</NMakePreprocessorDefinitions>
-    <NMakeIncludeSearchPath>..\..\dev.rg\TOOLBASE\FAST\;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\ucrt;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\shared;..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\;..\..\dev.rg\..;</NMakeIncludeSearchPath>
+    <NMakePreprocessorDefinitions>WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;WINDOWS_IGNORE_PACKING_MISMATCH;dCLI=1;dEXCEPTION_SCREEN;dGODLIB_FADE;dSCREENGRAB;dMEMORY_TRACK;dDEBUG;dDEBUGLOG;DEBUG;PROFILING_ENABLED;</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>..\..\dev.rg\GODPEY\FAST\;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\ucrt;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\shared;..\..\..\..\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\winrt;..\..\dev.rg\..;</NMakeIncludeSearchPath>
     <IntDir>$(ProjectDir)\Int</IntDir>
     <OutDir>$(ProjectDir)\Out</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x86-Profile|Win32'">
     <NMakeBuildCommandLine>cd $(SolutionDir) &amp; "..\..\..\TOOLS.RG\FASTBUILD\Windows-x64-v0.96-RG\fbuild" -vs -dist -monitor -fastcancel -cache $(ProjectName)-exe-$(Configuration) ExtraBuild</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>cd $(SolutionDir) &amp; "..\..\..\TOOLS.RG\FASTBUILD\Windows-x64-v0.96-RG\fbuild" -vs -dist -monitor -fastcancel -cache -clean $(ProjectName)-exe-$(Configuration) sln</NMakeReBuildCommandLine>
-    <NMakePreprocessorDefinitions>WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;dDEBUGLOG;RELEASE;PROFILING_ENABLED;</NMakePreprocessorDefinitions>
-    <NMakeIncludeSearchPath>..\..\dev.rg\TOOLBASE\FAST\;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\ucrt;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\shared;..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\;..\..\dev.rg\..;</NMakeIncludeSearchPath>
+    <NMakePreprocessorDefinitions>WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;WINDOWS_IGNORE_PACKING_MISMATCH;dCLI=1;dEXCEPTION_SCREEN;dGODLIB_FADE;dSCREENGRAB;dMEMORY_TRACK;dDEBUG;dDEBUGLOG;RELEASE;PROFILING_ENABLED;</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>..\..\dev.rg\GODPEY\FAST\;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\ucrt;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\shared;..\..\..\..\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\winrt;..\..\dev.rg\..;</NMakeIncludeSearchPath>
     <IntDir>$(ProjectDir)\Int</IntDir>
     <OutDir>$(ProjectDir)\Out</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x86-Release|Win32'">
     <NMakeBuildCommandLine>cd $(SolutionDir) &amp; "..\..\..\TOOLS.RG\FASTBUILD\Windows-x64-v0.96-RG\fbuild" -vs -dist -monitor -fastcancel -cache $(ProjectName)-exe-$(Configuration) ExtraBuild</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>cd $(SolutionDir) &amp; "..\..\..\TOOLS.RG\FASTBUILD\Windows-x64-v0.96-RG\fbuild" -vs -dist -monitor -fastcancel -cache -clean $(ProjectName)-exe-$(Configuration) sln</NMakeReBuildCommandLine>
-    <NMakePreprocessorDefinitions>WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;dDEBUGLOG;RELEASE;</NMakePreprocessorDefinitions>
-    <NMakeIncludeSearchPath>..\..\dev.rg\TOOLBASE\FAST\;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\ucrt;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\shared;..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\;..\..\dev.rg\..;</NMakeIncludeSearchPath>
+    <NMakePreprocessorDefinitions>WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32_LEAN_AND_MEAN;WIN32;_WIN32;__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;WINDOWS_IGNORE_PACKING_MISMATCH;dCLI=1;dEXCEPTION_SCREEN;dGODLIB_FADE;dSCREENGRAB;dMEMORY_TRACK;dDEBUG;dDEBUGLOG;RELEASE;</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>..\..\dev.rg\GODPEY\FAST\;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\ucrt;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\shared;..\..\..\..\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um;..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\winrt;..\..\dev.rg\..;</NMakeIncludeSearchPath>
     <IntDir>$(ProjectDir)\Int</IntDir>
     <OutDir>$(ProjectDir)\Out</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x86-Debug|Win32'">
     <BuildLog>
-    <Path>$(ProjectDir)\Log\$(ProjectName)-VS_2015-$(Configuration).log</Path>
+    <Path>$(ProjectDir)\Log\$(ProjectName)-VS_2022-$(Configuration).log</Path>
     </BuildLog>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x86-Profile|Win32'">
     <BuildLog>
-    <Path>$(ProjectDir)\Log\$(ProjectName)-VS_2015-$(Configuration).log</Path>
+    <Path>$(ProjectDir)\Log\$(ProjectName)-VS_2022-$(Configuration).log</Path>
     </BuildLog>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x86-Release|Win32'">
     <BuildLog>
-    <Path>$(ProjectDir)\Log\$(ProjectName)-VS_2015-$(Configuration).log</Path>
+    <Path>$(ProjectDir)\Log\$(ProjectName)-VS_2022-$(Configuration).log</Path>
     </BuildLog>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

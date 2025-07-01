@@ -1,0 +1,124 @@
+//------------------------------------------------------------------------------
+.VS2022_BasePath       = 'C:\Program Files\Microsoft Visual Studio\2022\Community' // Note: Default install path changed for VS2022
+.VS2022_Version        = '14.44.35207' // Common toolchain version for VS2022 
+
+.WindowsSDK_BasePath   = 'C:\Program Files (x86)\Windows Kits\10'
+.WindowsSDK_Folder = '10.0.22621.0' // Example: Use the latest installed SDK version on your system
+
+
+Compiler( 'VS_2022-Compiler-x86' )
+{
+    .Root          = '$VS2022_BasePath$/VC/Tools/MSVC/$VS2022_Version$/bin/Hostx64/x86'
+    .Executable    = '$Root$/cl.exe'
+    .ExtraFiles    =
+    {
+        '$Root$/c1.dll'
+        '$Root$/c1xx.dll',
+        '$Root$/c2.dll',
+        '$Root$/../x64/msobj140.dll' // These might still be named 140, or 143 for VS2022, depending on specifics
+        '$Root$/../x64/mspdb140.dll' // Verify these paths if you encounter issues
+        '$Root$/../x64/mspdbcore.dll'
+        '$Root$/../x64/mspdbsrv.exe'
+        '$Root$/../x64/mspft140.dll'
+        '$Root$/msvcp140.dll'
+        '$Root$/vcruntime140.dll'
+        '$Root$/1033/clui.dll'
+    }
+}
+
+Compiler( 'VS_2022-Compiler-x64' )
+{
+    .Root          = '$VS2022_BasePath$/VC/Tools/MSVC/$VS2022_Version$/bin/Hostx64/x64'
+    .Executable    = '$Root$/cl.exe'
+    .ExtraFiles    =
+    {
+        '$Root$/c1.dll'
+        '$Root$/c1xx.dll',
+        '$Root$/c2.dll',
+        '$Root$/msobj140.dll' // These might still be named 140, or 143 for VS2022, depending on specifics
+        '$Root$/mspdb140.dll' // Verify these paths if you encounter issues
+        '$Root$/mspdbcore.dll'
+        '$Root$/mspdbsrv.exe'
+        '$Root$/mspft140.dll'
+        '$Root$/msvcp140.dll'
+        '$Root$/vcruntime140.dll'
+        '$Root$/1033/clui.dll'
+    }
+}
+
+.VS_2022_Base_Options =
+[
+    .VS_MSC_VER             = "1939" // _MSC_VER for VS2022 (v143 toolset), e.g., 19.39.33519 for 17.9.5
+
+    .VS_BasePath           = .VS2022_BasePath
+    .VS_SubPath            = .VS2022_Version
+    .VS_BinPath            = '$VS_BasePath$/VC/Tools/MSVC/$VS_SubPath$/bin'
+
+    .VS_CRT_Static         = ' libcmt.lib'          // native static CRT (opt:/MT def:_MT)
+                           + ' libvcruntime.lib'    // VC extended CRT   (opt:/MT def:_MT)
+                           + ' libucrt.lib'         // Universal CRT     (opt:/MT def:_MT)
+
+    .VS_CRT_Static_Debug   = ' libcmtd.lib'          // native static CRT (opt:/MT def:_MT, _DEBUG)
+                           + ' libvcruntimed.lib'    // VC extended CRT   (opt:/MT def:_MT, _DEBUG)
+                           + ' libucrt.lib'          // Universal CRT     (opt:/MT def:_MT, _DEBUG)
+
+    .VS_CRT_DLL            = ' msvcrt.lib'           // native DLL CRT    (opt:/MD def:_MT,_DLL)
+                           + ' vcruntime.lib'        // VC extended DLL CRT (opt:/MD def:_MT,_DLL)
+                           + ' ucrt.lib'             // unversal DLL CRT    (opt:/MD def:_MT,_DLL)
+
+    .VS_CRT_DLL_Debug      = ' msvcrtd.lib'          // native DLL CRT    (opt:/MD def:_MT,_DLL, _DEBUG)
+                           + ' vcruntimed.lib'       // VC extended DLL CRT (opt:/MD def:_MT,_DLL, _DEBUG)
+                           + ' ucrtd.lib'            // unversal DLL CRT    (opt:/MD def:_MT,_DLL, _DEBUG)
+
+    .VS_IncludePaths       = ' -I"$VS_BinPath$/../include/"' // MSVC headers
+                           + ' -I"$WindowsSDK_BasePath$/Include/$WindowsSDK_Folder$/ucrt"' // Universal CRT headers
+                           + ' -I"$WindowsSDK_BasePath$/Include/$WindowsSDK_Folder$/shared"' // Windows shared headers
+                           + ' -I"$WindowsSDK_BasePath$/Include/$WindowsSDK_Folder$/um"'     // Windows user mode headers
+                           + ' -I"$WindowsSDK_BasePath$/Include/$WindowsSDK_Folder$/winrt"'  // Windows Runtime headers
+
+    .CompilerOptions       = ' $VS_IncludePaths$'
+                           + ' /Zc:inline'          // Remove unreferenced COMDATs at compile time (VS2013.2+)
+                           + ' /Zc:strictStrings'    // Require const only usage of string literals (VS2013+)
+                           + ' /U__midl'            // Add this define to resolve issues with WINNT.H and __C_ASSERT__
+                           + ' /TC'                 // **NEW**: Force compilation of .C files as C
+                           + ' /wd4431'             // Disable warning C4431: missing type specifier - int assumed
+                           + ' /wd4218'             // Disable warning C4218: nonstandard extension used
+                           + ' /DNOMINMAX'          // **NEW**: Prevent definition of min/max macros
+                           + ' /DWIN32_LEAN_AND_MEAN' // **NEW**: Exclude rarely used headers from windows.h
+                           + ' /DWINDOWS_IGNORE_PACKING_MISMATCH'
+                           + ' /WX- /wd4324'
+
+//                           + ' /std:c11'            // **NEW**: Explicitly set C standard to C11
+
+    .Librarian             = '$VS_BinPath$/Hostx64/x86/lib.exe'
+    .Linker                = '$VS_BinPath$/Hostx64/x86/link.exe'
+    .LinkerOptions         = ' /DEBUG:FASTLINK'      // VS2015 and later only
+]
+
+.VS_2022_X86_Options =
+[
+    Using( .VS_2022_Base_Options )
+
+    .CompilerOptions   + ' /arch:SSE2'
+    .VS_LinkerPaths     = ' /LIBPATH:"$VS_BinPath$/../lib/x86"'
+                        + ' /LIBPATH:"$WindowsSDK_BasePath$/Lib/$WindowsSDK_Folder$/ucrt/x86"'
+                        + ' /LIBPATH:"$WindowsSDK_BasePath$/Lib/$WindowsSDK_Folder$/um/x86"'
+    .LinkerOptions     + .VS_LinkerPaths
+]
+
+.VS_2022_X64_Options =
+[
+    Using( .VS_2022_Base_Options )
+
+    .Librarian             = '$VS_BinPath$/Hostx64/x64/lib.exe'
+    .Linker                = '$VS_BinPath$/Hostx64/x64/link.exe'
+    .VS_LinkerPaths     = ' /LIBPATH:"$VS_BinPath$/../lib/x64"'
+                        + ' /LIBPATH:"$WindowsSDK_BasePath$/Lib/$WindowsSDK_Folder$/ucrt/x64"'
+                        + ' /LIBPATH:"$WindowsSDK_BasePath$/Lib/$WindowsSDK_Folder$/um/x64"'
+    .LinkerOptions     + .VS_LinkerPaths
+]
+
+.VS_Name            = "VS_2022"
+.VS_PATH            = '$VS2022_BasePath$/Common7/IDE/;$VS2022_BasePath$/VC/Tools/MSVC/$VS2022_Version$/bin/Hostx64/x64'
+.VS_PlatformToolset = "v143" // For Visual Studio 2022
+.WindowsSDK_Version = "10"

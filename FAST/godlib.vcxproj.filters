@@ -1026,6 +1026,10 @@
     </CustomBuild>
     <CustomBuild Include="VS_2017.bff">
     </CustomBuild>
+    <CustomBuild Include="VS_2019.bff">
+    </CustomBuild>
+    <CustomBuild Include="VS_2022.bff">
+    </CustomBuild>
     <CustomBuild Include="WindowsSDK.bff">
     </CustomBuild>
   </ItemGroup>
